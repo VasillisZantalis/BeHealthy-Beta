@@ -1,11 +1,13 @@
 ﻿using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Patient;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeHealthy.Controllers;
 
 [Route("api/patients")]
 [ApiController]
+[Authorize]
 public class PatientsController : ControllerBase
 {
     private readonly IPatientService _patientService;

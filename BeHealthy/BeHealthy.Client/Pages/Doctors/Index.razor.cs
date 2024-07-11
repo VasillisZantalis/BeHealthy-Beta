@@ -8,6 +8,7 @@ public partial class Index
 {
     private string _createUserHref { get; set; } = default!;
     [Inject] IUserService _userService { get; set; } = default!;
+    [Inject] NavigationManager _navigationManager { get; set; } = default!;
 
     private List<ApplicationUser> _doctors { get; set; } = default!;
 
@@ -24,5 +25,6 @@ public partial class Index
     private async Task DeleteDoctor(string id)
     {
         await _userService.DeleteUserAsync(id);
+        _navigationManager.Refresh(forceReload: true);
     }
 }

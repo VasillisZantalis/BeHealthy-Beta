@@ -1,11 +1,13 @@
 ﻿using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Department;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeHealthy.Controllers;
 
 [Route("api/departments")]
 [ApiController]
+[Authorize]
 public class DepartmentsController : ControllerBase
 {
     private readonly IDepartmentService _departmentService;

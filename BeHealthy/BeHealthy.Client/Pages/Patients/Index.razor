@@ -1,7 +1,34 @@
 ﻿@page "/patients"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 <PageTitle>Patients</PageTitle>
 
 <h3>Patients</h3>
 
 <CreateUserButton Href="@_createUserHref" />
+
+@if (_patients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!_patients.Any())
+{
+    <p>No patients available</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var patient in _patients)
+        {
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
+                <div class="mb-3">
+                    <UserCard Id="@patient.Id"
+                              FullName="@patient.FullName"
+                              Email="@patient.Email"
+                              Edit="@EditPatient"
+                              Delete="@DeletePatient" />
+                </div>
+            </div>
+        }
+    </div>
+}

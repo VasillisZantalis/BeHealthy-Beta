@@ -1,11 +1,13 @@
 ﻿using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Appointment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeHealthy.Controllers;
 
 [Route("api/appointments")]
 [ApiController]
+[Authorize]
 public class AppointmentsController : ControllerBase
 {
     private readonly IAppointmentService _appointmentService;

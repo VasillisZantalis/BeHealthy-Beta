@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Shared.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,6 +7,7 @@ namespace BeHealthy.Controllers;
 
 [Route("api/users")]
 [ApiController]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;

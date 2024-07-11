@@ -11,15 +11,24 @@
 {
     <p><em>Loading...</em></p>
 }
+else if (!_doctors.Any())
+{
+    <p>No Doctors available</p>
+}
 else
 {
-    foreach (var doctor in _doctors)
-    {
-        <GenericEntityCard 
-            Title="Doctor Details"
-            FullName="@doctor.FullName"
-            Id="@doctor.Id"
-            Edit="@EditDoctor"
-            Delete="@DeleteDoctor" />
-    }
+    <div class="row">
+        @foreach (var doctor in _doctors)
+        {
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
+                <div class="mb-3">
+                    <UserCard Id="@doctor.Id"
+                              FullName="@doctor.FullName"
+                              Email="@doctor.Email"
+                              Edit="@EditDoctor"
+                              Delete="@DeleteDoctor" />
+                </div>
+            </div>
+        }
+    </div>
 }

@@ -22,27 +22,14 @@ public partial class CreateAppointmentModal
     private bool _isEdit;
     private int _appointmentId;
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    await Task.Delay(2000);
-    //    _appointmentForCreationDto.PatientId = Patients?.FirstOrDefault()?.Id;
-    //    _appointmentForCreationDto.DoctorId = Doctors?.FirstOrDefault()?.Id;
-    //}
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _appointmentForCreationDto.PatientId = Patients?.FirstOrDefault()?.Id;
-            _appointmentForCreationDto.DoctorId = Doctors?.FirstOrDefault()?.Id;
-        }
-    }
-
     public void Open()
     {
         _show = true;
         _isEdit = false;
         _appointmentForCreationDto = new();
         _appointmentId = 0;
+        _appointmentForCreationDto.PatientId = Patients?.FirstOrDefault()?.Id;
+        _appointmentForCreationDto.DoctorId = Doctors?.FirstOrDefault()?.Id;
     }
 
     public void OpenForEdit(AppointmentDto appointment)
