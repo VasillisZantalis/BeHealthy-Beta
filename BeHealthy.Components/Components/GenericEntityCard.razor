@@ -1,5 +1,4 @@
-﻿<!-- GenericCard.razor -->
-<div class="card">
+﻿<div class="card my-3" style="width: 18rem;">
     <div class="card-header">
         <h5 class="card-title">@Title</h5>
     </div>
@@ -17,9 +16,9 @@
             }
         </dl>
     </div>
-    <div class="card-footer">
-        <button class="btn btn-primary btn-sm" @onclick="() => Edit.InvokeAsync(Id)">Edit</button>
-        <button class="btn btn-danger btn-sm" @onclick="() => Delete.InvokeAsync(Id)">Delete</button>
+    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center m-2">
+        <button class="btn btn-primary btn-sm px-3" @onclick="() => Edit.InvokeAsync(Id)">Edit</button>
+        <button class="btn btn-danger btn-sm px-3" @onclick="() => Delete.InvokeAsync(Id)">Delete</button>
     </div>
 </div>
 
@@ -33,6 +32,9 @@
 
     [Parameter]
     public string? FullName { get; set; }
+
+    [Parameter]
+    public string? Email { get; set; }
 
     [Parameter]
     public string? Specialty { get; set; }

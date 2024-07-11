@@ -47,15 +47,15 @@ public class UsersController : ControllerBase
         return Ok(staff);
     }
 
-    // GET: api/users/Staff
-    [HttpDelete("{id:string}")]
+    // DELETE: api/users/id
+    [HttpDelete("{id}", Name = nameof(DeleteUser))]
     public async Task<ActionResult> DeleteUser(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
 
         if (user is null) return NotFound();
         await _userManager.DeleteAsync(user);
-        
+
         return NoContent();
     }
 
