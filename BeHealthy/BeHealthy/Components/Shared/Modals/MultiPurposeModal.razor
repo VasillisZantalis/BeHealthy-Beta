@@ -1,0 +1,61 @@
+﻿@using BeHealthy.States
+@inject ModalStateService ModalStateService
+
+@if (ShowModal)
+{
+    <div class="modal" tabindex="-1" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@ModalStateService.Title</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    @ModalStateService.ChildContent
+                </div>
+                <div class="d-flex flex-row justify-content-end m-3">
+                    <button type="button" class="btn btn-outline-secondary px-4 me-2" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-@actionButtonColor px-4">@actionButtonText</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool ShowModal { get; set; }
+
+    private string actionButtonColor = string.Empty;
+    private string actionButtonText = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        ModalStateService.OnShow += ShowModalHandler;
+        ModalStateService.OnHide += HideModalHandler;
+    }
+
+    private void ShowModalHandler()
+    {
+        ShowModal = true;
+        ForDelete(ModalStateService.IsForDelete);
+        StateHasChanged();
+    }
+
+    private void HideModalHandler()
+    {
+        ShowModal = false;
+        StateHasChanged();
+    }
+
+    private void ForDelete(bool isForDelete)
+    {
+        actionButtonColor = isForDelete ? "danger" : "primary";
+        actionButtonText = isForDelete ? "Confirm" : "Save";
+    }
+
+    private void CloseModal()
+    {
+        ShowModal = false;
+        ModalStateService.Hide();
+    }
+}

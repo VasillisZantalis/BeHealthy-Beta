@@ -1,0 +1,221 @@
+﻿@page "/Account/Register"
+@rendermode InteractiveServer
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using BeHealthy.Services.Interfaces
+@using BeHealthy.Shared.Models
+@using BeHealthy.Shared.Models.Entities
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject IDoctorService DoctorService
+@inject SignInManager<ApplicationUser> SignInManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-4 rounded p-4 shadow">
+        <h3 class="alert-danger">@Message</h3>
+
+        <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
+            <DataAnnotationsValidator />
+            <h2>Create a new account</h2>
+            <hr />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" placeholder="" />
+                <label for="firstName">First Name</label>
+                <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="username" aria-required="true" placeholder="" />
+                <label for="lastName">Last Name</label>
+                <ValidationMessage For="() => Input.LastName" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label for="email">Email</label>
+                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label for="password">Password</label>
+                <ValidationMessage For="() => Input.Password" class="text-danger" />
+            </div>
+            <div class="form-floating mb-3">
+                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <label for="confirm-password">Confirm Password</label>
+                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+            </div>
+            @if (Input.Role == nameof(UserRole.Doctor))
+            {
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
+                    <label for="specialty">Specialty</label>
+                    <ValidationMessage For="() => Input.Specialty" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                    <label for="phoneNumber">Phone Number</label>
+                    <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+                </div>
+            }
+            <div class="form-floating mb-3">
+                <InputSelect @bind-Value="Input.Role" class="form-control" disabled="@_isDisabled">
+                    @foreach (var role in Enum.GetNames(typeof(UserRole)))
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </InputSelect>
+                <label for="role">Role</label>
+                <ValidationMessage For="() => Input.Role" class="text-danger" />
+            </div>
+            <div class="d-flex flex-lg-row flex-column gap-2 justify-content-evenly">
+                <a class="btn btn-outline-dark px-3 w-100" href="/">Cancel</a>
+                <button type="submit" class="btn btn-primary w-100">Create</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+    //private List<string> Roles = new List<string>();
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    private bool _isDisabled { get; set; } = false;
+
+
+    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+
+    protected override void OnInitialized()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var roleFromQuery = QueryHelpers.ParseQuery(uri.Query).TryGetValue("role", out var role) ? role.ToString() : null;
+        if (!string.IsNullOrEmpty(roleFromQuery))
+        {
+            Input.Role = roleFromQuery;
+            _isDisabled = true;
+        }
+        //Roles = RoleManager.Roles.Select(r => r.Name).ToList()!;
+    }
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        var user = CreateUser();
+        user.FirstName = Input.FirstName;
+        user.LastName = Input.LastName;
+
+        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        await UserManager.SetEmailAsync(user, Input.Email);
+        user.EmailConfirmed = true;
+
+
+        var result = await UserManager.CreateAsync(user, Input.Password);
+
+        if (!result.Succeeded)
+        {
+            identityErrors = result.Errors;
+            return;
+        }
+
+        // Assign roles to the user
+        // if (!string.IsNullOrEmpty(Input.Role) && Roles.Contains(Input.Role))
+        // {
+        //     await UserManager.AddToRoleAsync(user, Input.Role);
+        // }
+
+        if (!await RoleManager.RoleExistsAsync(Input.Role))
+        {
+            await RoleManager.CreateAsync(new IdentityRole(Input.Role));
+        }
+        await UserManager.AddToRoleAsync(user, Input.Role);
+
+        var userId = await UserManager.GetUserIdAsync(user);
+
+        // switch (Input.Role)
+        // {
+        //     case nameof(UserRole.Doctor):
+        //         var doctorDto = CreateDoctor(userId);
+        //         await DoctorService.AddDoctorAsync(doctorDto);
+        //         break;
+        // }
+
+        NavigationManager.NavigateTo("/");
+        //await SignInManager.SignInAsync(user, isPersistent: false);
+    }
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private DoctorForCreationDto CreateDoctor(string userId)
+    {
+        return new DoctorForCreationDto
+        {
+            FirstName = Input.FirstName,
+            LastName = Input.LastName,
+            Specialty = Input.Specialty ?? string.Empty,
+            PhoneNumber = Input.PhoneNumber ?? string.Empty,
+            DateOfBirth = DateTime.Now,
+            Address = string.Empty,
+            Gender = string.Empty,
+            UserId = userId
+        };
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; } = "";
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; } = "";
+
+        // Doctor specific fields
+        public string? Specialty { get; set; }
+        public string? PhoneNumber { get; set; }
+    }
+}

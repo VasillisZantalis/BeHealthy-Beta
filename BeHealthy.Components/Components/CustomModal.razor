@@ -1,0 +1,49 @@
+﻿@if (ShowModal)
+{
+    <div class="modal" tabindex="-1" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    @ChildContent
+                </div>
+                <div class="d-flex flex-row justify-content-end m-3">
+                    <button type="button" class="btn btn-outline-secondary px-4 me-2" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-@actionButtonColor px-4" @onclick="OnSave">@actionButtonText</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool ShowModal { get; set; }
+    [Parameter] public bool IsForDelete { get; set; }
+    [Parameter] public EventCallback<bool> ShowModalChanged { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnSave { get; set; }
+
+    private string actionButtonColor = string.Empty;
+    private string actionButtonText = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        ForDelete(IsForDelete);
+    }
+
+    private void ForDelete(bool isForDelete)
+    {
+        actionButtonColor = isForDelete ? "danger" : "primary";
+        actionButtonText = isForDelete ? "Confirm" : "Save";
+    } 
+
+    private void CloseModal()
+    {
+        ShowModal = false;
+        ShowModalChanged.InvokeAsync(ShowModal);
+    }
+}

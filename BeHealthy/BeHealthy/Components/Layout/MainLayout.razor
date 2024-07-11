@@ -1,0 +1,52 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <AuthorizeView>
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    </AuthorizeView>
+
+    <main>
+        <div class="top-row px-4">
+            <AuthorizeView>
+                @* <NotAuthorized>
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="Account/Login">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
+                        </NavLink>
+                    </div>
+
+                    <div class="nav-item">
+                        <NavLink class="nav-link" href="Account/Register">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Register
+                        </NavLink>
+                    </div>
+                </NotAuthorized> *@
+                <Authorized>
+                    <div class="d-flex flex-row gap-3">
+                        <p>Hello, @context.User.Identity?.Name</p>
+                        <div class="nav-item">
+                            <form action="Account/Logout" method="post">
+                                <AntiforgeryToken />
+                                <button type="submit" class="nav-link text-primary">
+                                    <span class="bi bi-arrow-left-nav-menu" aria-hidden="true"></span> Log out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

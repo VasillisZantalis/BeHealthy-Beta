@@ -1,0 +1,56 @@
+﻿@page "/appointment"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+<h3>Appointments Overview</h3>
+
+<button class="btn btn-outline-dark px-4 mb-3" @onclick="() => _createAppointmentModal.Open()">
+    Add
+</button>
+
+@if (_appointments == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!_appointments.Any())
+{
+    <p>No Appointments available.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Appointment Date</th>
+                <th>Notes</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (_appointments != null)
+            {
+                @foreach (var appointment in _appointments)
+                {
+                    <tr>
+                        <td>@appointment.AppointmentDate.ToShortDateString()</td>
+                        <td>@(string.IsNullOrEmpty(appointment.Notes) ? "-" : appointment.Notes)</td>
+                        <td>@(appointment.Patient != null ? $"{appointment.Patient.FullName}" : "N/A")</td>
+                        <td>@(appointment.Doctor != null ? $"{appointment.Doctor.FullName}" : "N/A")</td>
+                        <td>
+                            @if (_hasActionRights)
+                            {
+                                <button class="btn btn-primary btn-sm" @onclick="() => EditAppointment(appointment.Id)">Edit</button>
+                                <button class="btn btn-danger btn-sm" @onclick="() => DeleteAppointment(appointment.Id)">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+<CreateAppointmentModal @ref="_createAppointmentModal"
+                        OnFormSubmit="HandleAppointmentFormSubmission" 
+                        Doctors="_doctors"
+                        Patients="_patients"/>

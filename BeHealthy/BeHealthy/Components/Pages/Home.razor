@@ -1,0 +1,32 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using BeHealthy.Components.Components
+@using BeHealthy.Services.Interfaces
+@attribute [StreamRendering]
+@attribute [Authorize]
+
+<PageTitle>Home</PageTitle>
+
+<div class="d-flex flex-row gap-2">
+    <button type="button" class="btn btn-primary" @onclick="ShowModal">
+        Launch modal
+    </button>
+</div>
+
+<CustomModal
+    ShowModal="@showModal"
+    ShowModalChanged="@((value) => showModal = value)"
+    Title="Parameter Title">
+    <p>Modal body text goes here.</p>
+</CustomModal>
+@* 
+    <CreateAppointmentModal
+        @ref="_newCustomModal"
+        OnFormSubmit="HandleAppointmentFormSubmission"/> *@
+
+@code {
+
+    private bool showModal = false;
+    private void ShowModal() => showModal = true;
+
+}
