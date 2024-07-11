@@ -6,4 +6,5 @@ public interface IUserService
 {
     Task<IEnumerable<ApplicationUser>> GetAllDoctorsAsync();
     Task<IEnumerable<ApplicationUser>> GetAllPatientsAsync();
+    Task DeleteUserAsync(string id);
 }

@@ -31,4 +31,32 @@ public class UsersController : ControllerBase
         return Ok(patients);
     }
 
+    // GET: api/users/nurses
+    [HttpGet("nurses")]
+    public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetNurses()
+    {
+        var nurses = await _userManager.GetUsersInRoleAsync("Nurse");
+        return Ok(nurses);
+    }
+
+    // GET: api/users/Staff
+    [HttpGet("staff")]
+    public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetStaff()
+    {
+        var staff = await _userManager.GetUsersInRoleAsync("Staff");
+        return Ok(staff);
+    }
+
+    // GET: api/users/Staff
+    [HttpDelete("{id:string}")]
+    public async Task<ActionResult> DeleteUser(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+
+        if (user is null) return NotFound();
+        await _userManager.DeleteAsync(user);
+        
+        return NoContent();
+    }
+
 }

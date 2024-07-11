@@ -6,6 +6,6 @@ public partial class Index
 
     protected override void OnInitialized()
     {
-        _createUserHref = "Account/Register";
+        _createUserHref = "Account/Register?role=Nurse";
     }
 }

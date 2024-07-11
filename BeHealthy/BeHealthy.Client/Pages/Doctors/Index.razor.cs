@@ -1,6 +1,4 @@
-﻿using BeHealthy.Client.Services;
-using BeHealthy.Client.Services.Interfaces;
-using BeHealthy.Shared.Models.Dtos.Doctor;
+﻿using BeHealthy.Client.Services.Interfaces;
 using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 
@@ -19,4 +17,12 @@ public partial class Index
         _doctors = (await _userService.GetAllDoctorsAsync()).ToList();
     }
 
+    private async Task EditDoctor(string id)
+    {
+    }
+
+    private async Task DeleteDoctor(string id)
+    {
+        await _userService.DeleteUserAsync(id);
+    }
 }

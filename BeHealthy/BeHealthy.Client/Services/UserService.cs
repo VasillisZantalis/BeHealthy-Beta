@@ -23,4 +23,19 @@ public class UserService : IUserService
     {
         return await _httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/users/patients") ?? new List<ApplicationUser>();
     }
+
+    public async Task<IEnumerable<ApplicationUser>> GetAllNursesAsync()
+    {
+        return await _httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/users/nurses") ?? new List<ApplicationUser>();
+    }
+
+    public async Task<IEnumerable<ApplicationUser>> GetAllStaffAsync()
+    {
+        return await _httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/users/staff") ?? new List<ApplicationUser>();
+    }
+
+    public async Task DeleteUserAsync(string id)
+    {
+        await _httpClient.DeleteAsync($"api/users/{id}");
+    }
 }

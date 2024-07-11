@@ -15,6 +15,11 @@ else
 {
     foreach (var doctor in _doctors)
     {
-        <p>@doctor.FirstName @doctor.LastName</p>
+        <GenericEntityCard 
+            Title="Doctor Details"
+            FullName="@doctor.FullName"
+            Id="@doctor.Id"
+            Edit="@EditDoctor"
+            Delete="@DeleteDoctor" />
     }
 }

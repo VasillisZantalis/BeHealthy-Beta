@@ -1,0 +1,45 @@
+﻿<!-- GenericCard.razor -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">@Title</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            @if (!string.IsNullOrEmpty(FullName))
+            {
+                <dt class="col-sm-4">Full Name</dt>
+                <dd class="col-sm-8">@FullName</dd>
+            }
+            @if (!string.IsNullOrEmpty(Specialty))
+            {
+                <dt class="col-sm-4">Specialty</dt>
+                <dd class="col-sm-8">@Specialty</dd>
+            }
+        </dl>
+    </div>
+    <div class="card-footer">
+        <button class="btn btn-primary btn-sm" @onclick="() => Edit.InvokeAsync(Id)">Edit</button>
+        <button class="btn btn-danger btn-sm" @onclick="() => Delete.InvokeAsync(Id)">Delete</button>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public string? FullName { get; set; }
+
+    [Parameter]
+    public string? Specialty { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Edit { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Delete { get; set; }
+}
