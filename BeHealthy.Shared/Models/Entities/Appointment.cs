@@ -4,14 +4,14 @@ public class Appointment
 {
     public int Id { get; set; }
     public DateTime AppointmentDate { get; set; }
-    public string Notes { get; set; } = string.Empty;
+    public string? Notes { get; set; }
 
+    public int PatientId { get; set; }
+    public Patient? Patient { get; set; }
 
-    // Patient relationship
-    public string? PatientId { get; set; }
-    public virtual ApplicationUser? Patient { get; set; }
+    public int DoctorId { get; set; }
+    public Doctor? Doctor { get; set; }
 
-    // Doctor relationship
-    public string? DoctorId { get; set; }
-    public virtual ApplicationUser? Doctor { get; set; }
+    public int RoomId { get; set; }
+    public Room? Room { get; set; }
 }
