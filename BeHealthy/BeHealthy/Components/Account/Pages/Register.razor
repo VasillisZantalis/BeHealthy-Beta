@@ -114,7 +114,7 @@
 
     public async Task RegisterUser(EditContext editContext)
     {
-        var user = CreateUser();
+        var user = new ApplicationUser();
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
 
@@ -145,30 +145,30 @@
 
         var userId = await UserManager.GetUserIdAsync(user);
 
-        // switch (Input.Role)
-        // {
-        //     case nameof(UserRole.Doctor):
-        //         var doctorDto = CreateDoctor(userId);
-        //         await DoctorService.AddDoctorAsync(doctorDto);
-        //         break;
-        // }
+        switch (Input.Role)
+        {
+            case nameof(UserRole.Doctor):
+                var doctorDto = CreateDoctor(userId);
+                await DoctorService.AddDoctorAsync(doctorDto);
+                break;
+        }
 
         NavigationManager.NavigateTo("/");
         //await SignInManager.SignInAsync(user, isPersistent: false);
     }
 
-    private ApplicationUser CreateUser()
-    {
-        try
-        {
-            return Activator.CreateInstance<ApplicationUser>();
-        }
-        catch
-        {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
-        }
-    }
+    // private ApplicationUser CreateUser()
+    // {
+    //     try
+    //     {
+    //         return Activator.CreateInstance<ApplicationUser>();
+    //     }
+    //     catch
+    //     {
+    //         throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+    //             $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+    //     }
+    // }
 
     private DoctorForCreationDto CreateDoctor(string userId)
     {

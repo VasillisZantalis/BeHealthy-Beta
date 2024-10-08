@@ -16,6 +16,9 @@ public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.Property(d => d.Specialty)
+            .IsRequired(false);
+
         builder.HasMany(d => d.Appointments)
             .WithOne(a => a.Doctor)
             .HasForeignKey(a => a.DoctorId);
@@ -30,11 +33,8 @@ public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
 
         builder.HasOne(d => d.User)
             .WithOne(u => u.Doctor)
-            .HasForeignKey<Doctor>(d => d.UserId);
-
-        builder.HasOne(d => d.Department)
-            .WithMany(d => d.Doctors)
-            .HasForeignKey(d => d.DepartmentId);
+            .HasForeignKey<Doctor>(d => d.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Configure Appointments relationship
         builder.HasMany(d => d.Appointments)

@@ -26,18 +26,5 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.Property(u => u.Address)
             .HasMaxLength(200);
-
-        // Relationships
-        builder.HasOne(u => u.Doctor)
-            .WithOne()
-            .HasForeignKey<ApplicationUser>(u => u.Id);
-
-        builder.HasOne(u => u.Patient)
-            .WithOne()
-            .HasForeignKey<ApplicationUser>(u => u.Id);
-
-        builder.HasOne(u => u.Nurse)
-            .WithOne()
-            .HasForeignKey<ApplicationUser>(u => u.Id);
     }
 }

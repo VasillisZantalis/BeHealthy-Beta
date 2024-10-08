@@ -7,7 +7,7 @@ public class Room
     public int Number { get; set; }
 
     public int DepartmentId { get; set; }
-    public Department Department { get; set; } = new();
+    public Department? Department { get; set; }
 
     public int AppointmentId { get; set; }
     public Appointment? Appointment { get; set; }

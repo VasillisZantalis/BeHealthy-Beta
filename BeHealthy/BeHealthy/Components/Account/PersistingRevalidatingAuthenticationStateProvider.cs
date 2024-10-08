@@ -86,7 +86,7 @@ namespace BeHealthy.Components.Account
             {
                 var userId = principal.FindFirst(options.ClaimsIdentity.UserIdClaimType)?.Value;
                 var email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
-                var username = principal.FindFirst(options.ClaimsIdentity.UserNameClaimType)?.Value;
+                var username = principal.FindFirst(options.ClaimsIdentity.UserNameClaimType)?.Value ?? "Unknown";
                 var role = principal.FindFirst(options.ClaimsIdentity.RoleClaimType)?.Value;
 
                 if (userId != null && email != null && role != null)

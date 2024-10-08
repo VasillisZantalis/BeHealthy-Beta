@@ -11,12 +11,7 @@ public class ApplicationUser : IdentityUser
     public string? Address { get; set; }
     public string FullName => $"{FirstName} {LastName}";
 
-    public int? DoctorId { get; set; }
     public virtual Doctor? Doctor { get; set; }
-
-    public int? PatientId { get; set; }
     public virtual Patient? Patient { get; set; }
-
-    public int? NurseId { get; set; }
     public virtual Nurse? Nurse { get; set; }
 }

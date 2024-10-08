@@ -3,7 +3,7 @@
 public class DoctorDto
 {
     public int Id { get; set; }
-    public required string UserId { get; set; }
+    public string UserId { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Specialty { get; set; } = string.Empty;
