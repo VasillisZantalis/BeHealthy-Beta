@@ -18,7 +18,20 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _context.Set<T>().ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<IEnumerable<T>> GetAllPagedAsync(int? pageNumber = null, int? pageSize = null)
+    {
+        var query = _context.Set<T>().AsQueryable();
+
+        if (pageNumber.HasValue && pageSize.HasValue)
+        {
+            query = query.Skip((pageNumber.Value - 1) * pageSize.Value)
+                         .Take(pageSize.Value);
+        }
+
+        return await query.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<T?> GetByIdAsync(int id)
     {
         return await _context.Set<T>().FindAsync(id);
     }
@@ -43,5 +56,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task DeleteEntityAsync(T entity)
+    {
+        _context.Set<T>().Remove(entity);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ExistsAsync(int id)
+    {
+        return await _context.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id);
     }
 }
