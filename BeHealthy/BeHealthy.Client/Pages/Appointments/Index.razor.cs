@@ -81,12 +81,12 @@ public partial class Index
 
     private async Task LoadAppointmentsForDoctor(string doctorId)
     {
-        _appointments = await _appointmentService.GetAppointmentsByDoctorIdAsync(doctorId);
+        //_appointments = await _appointmentService.GetAppointmentsByDoctorIdAsync(doctorId);
     }
 
     private async Task LoadAppointmentsForPatient(string patientId)
     {
-        _appointments = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+        //_appointments = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId);
     }
 
     private async Task LoadDoctors()

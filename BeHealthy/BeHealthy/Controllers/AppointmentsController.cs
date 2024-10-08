@@ -30,7 +30,7 @@ public class AppointmentsController : ControllerBase
     [HttpGet("doctor/{doctorId}", Name = nameof(GetAppointmentsByDoctorId))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByDoctorId(string doctorId)
+    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByDoctorId(int doctorId)
     {
         var appointment = await _appointmentService.GetAllAppointmentsByDoctorIdAsync(doctorId);
         return appointment == null ? NotFound() : Ok(appointment);
@@ -39,7 +39,7 @@ public class AppointmentsController : ControllerBase
     [HttpGet("patient/{patientId}", Name = nameof(GetAppointmentsByPatientId))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByPatientId(string patientId)
+    public async Task<ActionResult<IEnumerable<AppointmentDto>>> GetAppointmentsByPatientId(int patientId)
     {
         var appointment = await _appointmentService.GetAllAppointmentsByPatientIdAsync(patientId);
         return appointment == null ? NotFound() : Ok(appointment);

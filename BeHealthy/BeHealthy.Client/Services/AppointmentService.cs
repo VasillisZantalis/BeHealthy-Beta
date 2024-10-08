@@ -19,12 +19,12 @@ public class AppointmentService : IAppointmentService
         return appointments ?? new List<AppointmentDto>();
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByDoctorIdAsync(string doctorId)
+    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByDoctorIdAsync(int doctorId)
     {
         return await _httpClient.GetFromJsonAsync<IEnumerable<AppointmentDto>>($"api/appointments/doctor/{doctorId}") ?? new List<AppointmentDto>();
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByPatientIdAsync(string patientId)
+    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByPatientIdAsync(int patientId)
     {
         return await _httpClient.GetFromJsonAsync<IEnumerable<AppointmentDto>>($"api/appointments/patient/{patientId}") ?? new List<AppointmentDto>();
     }

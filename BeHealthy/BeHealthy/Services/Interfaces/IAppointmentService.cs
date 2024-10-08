@@ -6,8 +6,8 @@ namespace BeHealthy.Services.Interfaces;
 public interface IAppointmentService
 {
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync();
-    Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(string doctorId);
-    Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(string patientId);
+    Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(int doctorId);
+    Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(int patientId);
     Task<AppointmentDto> GetAppointmentByIdAsync(int id);
     Task AddAppointmentAsync(AppointmentForCreationDto appointment);
     Task UpdateAppointmentAsync(AppointmentForUpdateDto appointment);

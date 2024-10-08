@@ -24,13 +24,13 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(string doctorId)
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
     {
         var appointment = await _appointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
         return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(string patientId)
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
         var appointment = await _appointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
         return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);

@@ -21,7 +21,7 @@ public class RoomsController : ControllerBase
     public async Task<ActionResult<IEnumerable<RoomDto>>> GetAllRooms()
     {
         var rooms = await _roomService.GetAllRoomsAsync();
-        return !rooms.Any() ? NotFound() : Ok(rooms);
+        return rooms is null ? NotFound() : Ok(rooms);
     }
 
     [HttpGet("{id:int}", Name = nameof(GetRoomById))]
