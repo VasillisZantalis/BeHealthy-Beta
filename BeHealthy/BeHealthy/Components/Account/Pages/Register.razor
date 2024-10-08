@@ -4,8 +4,10 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
+@using AutoMapper
 @using BeHealthy.Services.Interfaces
 @using BeHealthy.Shared.Models
+@using BeHealthy.Shared.Models.Dtos.Nurse
 @using BeHealthy.Shared.Models.Entities
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
@@ -13,6 +15,8 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject IDoctorService DoctorService
+@inject INurseService NurseService
+@inject IPatientService PatientService
 @inject SignInManager<ApplicationUser> SignInManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject NavigationManager NavigationManager
@@ -91,9 +95,11 @@
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
+    private string returnUrl = "/";
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "ReturnUrl")]
+    public string? ReturnUrl { get; set; }
 
     private bool _isDisabled { get; set; } = false;
 
@@ -109,7 +115,6 @@
             Input.Role = roleFromQuery;
             _isDisabled = true;
         }
-        //Roles = RoleManager.Roles.Select(r => r.Name).ToList()!;
     }
 
     public async Task RegisterUser(EditContext editContext)
@@ -131,12 +136,6 @@
             return;
         }
 
-        // Assign roles to the user
-        // if (!string.IsNullOrEmpty(Input.Role) && Roles.Contains(Input.Role))
-        // {
-        //     await UserManager.AddToRoleAsync(user, Input.Role);
-        // }
-
         if (!await RoleManager.RoleExistsAsync(Input.Role))
         {
             await RoleManager.CreateAsync(new IdentityRole(Input.Role));
@@ -148,39 +147,50 @@
         switch (Input.Role)
         {
             case nameof(UserRole.Doctor):
-                var doctorDto = CreateDoctor(userId);
+                var doctorDto = ToDoctor(userId);
                 await DoctorService.AddDoctorAsync(doctorDto);
+                break;
+            case nameof(UserRole.Nurse):
+                var nurseDto = ToNurse(userId);
+                await NurseService.AddNurseAsync(nurseDto);
+                break;
+            case nameof(UserRole.Patient):
+                var patientDto = ToPatient(userId);
+                await PatientService.AddPatientAsync(patientDto);
                 break;
         }
 
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo(returnUrl);
         //await SignInManager.SignInAsync(user, isPersistent: false);
     }
 
-    // private ApplicationUser CreateUser()
-    // {
-    //     try
-    //     {
-    //         return Activator.CreateInstance<ApplicationUser>();
-    //     }
-    //     catch
-    //     {
-    //         throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-    //             $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
-    //     }
-    // }
-
-    private DoctorForCreationDto CreateDoctor(string userId)
+    private DoctorForCreationDto ToDoctor(string userId)
     {
         return new DoctorForCreationDto
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
             Specialty = Input.Specialty ?? string.Empty,
-            PhoneNumber = Input.PhoneNumber ?? string.Empty,
-            DateOfBirth = DateTime.Now,
-            Address = string.Empty,
-            Gender = string.Empty,
+            UserId = userId
+        };
+    }
+
+    private NurseForCreationDto ToNurse(string userId)
+    {
+        return new NurseForCreationDto
+        {
+            FirstName = Input.FirstName,
+            LastName = Input.LastName,
+            UserId = userId
+        };
+    }
+
+    private PatientForCreationDto ToPatient(string userId)
+    {
+        return new PatientForCreationDto
+        {
+            FirstName = Input.FirstName,
+            LastName = Input.LastName,
             UserId = userId
         };
     }

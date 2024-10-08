@@ -11,6 +11,6 @@ public class Nurse
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser? User { get; set; }
 
-    public int DepartmentId { get; set; }
+    public int? DepartmentId { get; set; }
     public Department? Department { get; set; }
 }
