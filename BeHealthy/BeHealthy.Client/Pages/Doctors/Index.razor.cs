@@ -15,7 +15,7 @@ public partial class Index
 
     protected override async Task OnInitializedAsync()
     {
-        _createUserHref = "Account/Register?role=Doctor";
+        _createUserHref = "Account/Register?role=Doctor&redirectUrl=doctors";
         //_doctors = (await _userService.GetAllDoctorsAsync()).ToList();
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
     }

@@ -1,4 +1,6 @@
 ﻿using BeHealthy.Shared.Models.Dtos.Appointment;
+using BeHealthy.Shared.Models.Dtos.Doctor;
+using BeHealthy.Shared.Models.Dtos.Patient;
 using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 
@@ -13,9 +15,9 @@ public partial class CreateAppointmentModal
     private AppointmentForCreationDto _appointmentForCreationDto { get; set; } = new();
 
     [Parameter]
-    public List<ApplicationUser> Doctors { get; set; } = default!;
+    public List<DoctorDto> Doctors { get; set; } = default!;
     [Parameter]
-    public List<ApplicationUser> Patients { get; set; } = default!;
+    public List<PatientDto> Patients { get; set; } = default!;
 
     private DateTime _date { get; set; } = DateTime.Now;
     private bool _show;

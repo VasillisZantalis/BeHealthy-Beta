@@ -9,5 +9,4 @@ public interface IPatientService
     Task AddPatientAsync(PatientForCreationDto patientDto);
     Task UpdatePatientAsync(int id, PatientForUpdateDto patientDto);
     Task DeletePatientAsync(int id);
-    Task<List<PatientDto>> GetDummyPatientsAsync();
 }

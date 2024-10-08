@@ -97,12 +97,7 @@
     private InputModel Input { get; set; } = new();
     private string returnUrl = "/";
 
-    [Parameter]
-    [SupplyParameterFromQuery(Name = "ReturnUrl")]
-    public string? ReturnUrl { get; set; }
-
     private bool _isDisabled { get; set; } = false;
-
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
@@ -110,11 +105,16 @@
     {
         var uri = new Uri(NavigationManager.Uri);
         var roleFromQuery = QueryHelpers.ParseQuery(uri.Query).TryGetValue("role", out var role) ? role.ToString() : null;
+
         if (!string.IsNullOrEmpty(roleFromQuery))
         {
             Input.Role = roleFromQuery;
             _isDisabled = true;
         }
+
+        returnUrl = QueryHelpers.ParseQuery(uri.Query).TryGetValue("redirectUrl", out var returnTo) && !string.IsNullOrEmpty(returnTo)
+            ? $"/{returnTo.ToString()}"
+            : "/";
     }
 
     public async Task RegisterUser(EditContext editContext)

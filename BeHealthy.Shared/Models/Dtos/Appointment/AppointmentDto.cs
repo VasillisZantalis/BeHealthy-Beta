@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Models.Entities;
+﻿using BeHealthy.Shared.Models.Dtos.Doctor;
+using BeHealthy.Shared.Models.Dtos.Patient;
 
 namespace BeHealthy.Shared.Models.Dtos.Appointment;
 
@@ -9,8 +10,8 @@ public class AppointmentDto
     public string Notes { get; set; } = string.Empty;
 
 
-    public string? PatientId { get; set; }
-    public ApplicationUser? Patient { get; set; }
-    public string? DoctorId { get; set; }
-    public ApplicationUser? Doctor { get; set; }
+    public int? PatientId { get; set; }
+    public PatientDto? Patient { get; set; }
+    public int? DoctorId { get; set; }
+    public DoctorDto? Doctor { get; set; }
 }

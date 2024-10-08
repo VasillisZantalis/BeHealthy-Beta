@@ -2,6 +2,8 @@
 using BeHealthy.Client.Services.Interfaces;
 using BeHealthy.Components.Components;
 using BeHealthy.Shared.Models.Dtos.Appointment;
+using BeHealthy.Shared.Models.Dtos.Doctor;
+using BeHealthy.Shared.Models.Dtos.Patient;
 using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,11 +17,14 @@ public partial class Index
 
     [Inject] IAppointmentService _appointmentService { get; set; } = default!;
     [Inject] IUserService _userService { get; set; } = default!;
+    [Inject] IDoctorService _doctorService { get; set; } = default!;
+    [Inject] INurseService _nurseService { get; set; } = default!;
+    [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
-    private List<ApplicationUser>? _doctors { get; set; }
-    private List<ApplicationUser>? _patients { get; set; }
+    private List<DoctorDto>? _doctors { get; set; }
+    private List<PatientDto>? _patients { get; set; }
 
     private CreateAppointmentModal _createAppointmentModal { get; set; } = new();
     private string? _currentUserId;
@@ -91,12 +96,12 @@ public partial class Index
 
     private async Task LoadDoctors()
     {
-        _doctors = (await _userService.GetAllDoctorsAsync()).ToList();
+        _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
     }
 
     private async Task LoadPatients()
     {
-        _patients = (await _userService.GetAllPatientsAsync()).ToList();
+        _patients = (await _patientService.GetAllPatientsAsync()).ToList();
     }
 
     private void EditAppointment(int appointmentId)
