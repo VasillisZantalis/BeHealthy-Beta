@@ -27,7 +27,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
         return await _context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
-                .Where(a => a.DoctorId == doctorId)
+                //.Where(a => a.DoctorId == doctorId)
                 .ToListAsync();
     }
 
@@ -36,7 +36,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
         return await _context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
-                .Where(a => a.PatientId == patientId)
+                //.Where(a => a.PatientId == patientId)
                 .ToListAsync();
     }
 }

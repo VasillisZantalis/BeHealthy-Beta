@@ -10,15 +10,36 @@ public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
     {
         builder.ToTable("Doctors");
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(d => d.Id);
 
-        builder.Property(p => p.FirstName)
+        builder.Property(d => d.Specialty)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.HasMany(d => d.Appointments)
+            .WithOne(a => a.Doctor)
+            .HasForeignKey(a => a.DoctorId);
+
+        builder.HasOne(d => d.Department)
+            .WithMany(dept => dept.Doctors)
+            .HasForeignKey(d => d.DepartmentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(d => d.UserId)
             .IsRequired();
 
-        builder.Property(p => p.LastName)
-            .IsRequired();
+        builder.HasOne(d => d.User)
+            .WithOne(u => u.Doctor)
+            .HasForeignKey<Doctor>(d => d.UserId);
 
-        builder.Property(p => p.CreatedAt)
-            .IsRequired();
+        builder.HasOne(d => d.Department)
+            .WithMany(d => d.Doctors)
+            .HasForeignKey(d => d.DepartmentId);
+
+        // Configure Appointments relationship
+        builder.HasMany(d => d.Appointments)
+            .WithOne(a => a.Doctor)
+            .HasForeignKey(a => a.DoctorId);
+
     }
 }
