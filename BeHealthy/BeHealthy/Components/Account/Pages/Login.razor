@@ -21,7 +21,7 @@
         <section>
             <h3 class="alert-danger">@errorMessage</h3>
 
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+            <EditForm id="LoginForm" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
                 <h2>Login with your Credentials</h2>
                 <hr />
@@ -94,7 +94,7 @@
             //     switch (role)
             //     {
             //         case nameof(UserRole.Doctor):
-            //             var doctor = await DoctorService.GetDoctorByUserIdAsync(user.Id);
+            //             var doctor = await DoctorService.GetDoctorByIdAsync(user.Id);
             //             if (doctor != null)
             //             {
             //                 //identity.AddClaim(new Claim("Speciality", doctor.Speciality));
