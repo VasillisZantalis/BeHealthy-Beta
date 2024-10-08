@@ -8,10 +8,8 @@ namespace BeHealthy.Repositories;
 
 public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 {
-    protected readonly ApplicationDbContext _context;
     public DoctorRepository(ApplicationDbContext context) : base(context)
     {
-        _context = context;
     }
 
     //public async Task<Doctor> GetDoctorByUserIdAsync(string id)

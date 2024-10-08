@@ -7,11 +7,9 @@ namespace BeHealthy.Repositories;
 
 public class AppointmentRepository : GenericRepository<Appointment>, IAppointmentRepository
 {
-    private readonly ApplicationDbContext _context;
 
     public AppointmentRepository(ApplicationDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
@@ -22,21 +20,21 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .ToListAsync();
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(string doctorId)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
     {
         return await _context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
-                //.Where(a => a.DoctorId == doctorId)
+                .Where(a => a.DoctorId == doctorId)
                 .ToListAsync();
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(string patientId)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
         return await _context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
-                //.Where(a => a.PatientId == patientId)
+                .Where(a => a.PatientId == patientId)
                 .ToListAsync();
     }
 }
