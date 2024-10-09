@@ -21,18 +21,18 @@
         <section>
             <h3 class="alert-danger">@errorMessage</h3>
 
-            <EditForm id="LoginForm" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+            <EditForm id="LoginForm" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" Enhance>
                 <DataAnnotationsValidator />
                 <h2>Login with your Credentials</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <InputText id=email @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                     <label for="email" class="form-label">Email</label>
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                    <InputText id=password type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
                     <label for="password" class="form-label">Password</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>

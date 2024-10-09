@@ -28,51 +28,58 @@
     <div class="col-md-4 rounded p-4 shadow">
         <h3 class="alert-danger">@Message</h3>
 
-        <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
+        <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="Enhance">
             <DataAnnotationsValidator />
             <h2>Create a new account</h2>
             <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" placeholder="" />
-                <label for="firstName">First Name</label>
-                <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+            <div class="row">
+                @* <ValidationSummary class="text-danger" role="alert" /> *@
+                <div class="col-12 col-sm-6">
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                        <label for="firstName">First Name</label>
+                        <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                        <label for="lastName">Last Name</label>
+                        <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                    </div>
+                </div>
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="username" aria-required="true" placeholder="" />
-                <label for="lastName">Last Name</label>
-                <ValidationMessage For="() => Input.LastName" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
                 <label for="email">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
                 <label for="password">Password</label>
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
+                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
+                <label for="confirmPassword">Confirm Password</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
             @if (Input.Role == nameof(UserRole.Doctor))
             {
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
+                    <InputText id="specialty" @bind-Value="Input.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
                     <label for="specialty">Specialty</label>
                     <ValidationMessage For="() => Input.Specialty" class="text-danger" />
                 </div>
+
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-                    <label for="phoneNumber">Phone Number</label>
+                    <label for="@Input.PhoneNumber">Phone Number</label>
                     <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
                 </div>
             }
             <div class="form-floating mb-3">
-                <InputSelect @bind-Value="Input.Role" class="form-control" disabled="@_isDisabled">
+                <InputSelect id="role" @bind-Value="Input.Role" class="form-control" disabled="@_isDisabled">
                     @foreach (var role in Enum.GetNames(typeof(UserRole)))
                     {
                         <option value="@role">@role</option>
@@ -83,7 +90,13 @@
             </div>
             <div class="d-flex flex-lg-row flex-column gap-2 justify-content-evenly">
                 <a class="btn btn-outline-dark px-3 w-100" href="/">Cancel</a>
-                <button type="submit" class="btn btn-primary w-100">Create</button>
+                <button type="submit" class="btn btn-primary w-100" disabled="@_inProgress">
+                    @if (_inProgress)
+                    {
+                        <span class="spinner-border spinner-border-sm"></span>
+                    }
+                    Create
+                </button>
             </div>
         </EditForm>
     </div>
@@ -96,8 +109,8 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
     private string returnUrl = "/";
-
-    private bool _isDisabled { get; set; } = false;
+    private bool _inProgress = false;
+    private bool _isDisabled = false;
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
@@ -119,6 +132,7 @@
 
     public async Task RegisterUser(EditContext editContext)
     {
+        _inProgress = true;
         var user = new ApplicationUser();
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
@@ -127,11 +141,11 @@
         await UserManager.SetEmailAsync(user, Input.Email);
         user.EmailConfirmed = true;
 
-
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
         {
+            _inProgress = false;
             identityErrors = result.Errors;
             return;
         }
@@ -159,7 +173,7 @@
                 await PatientService.AddPatientAsync(patientDto);
                 break;
         }
-
+        _inProgress = false;
         NavigationManager.NavigateTo(returnUrl);
         //await SignInManager.SignInAsync(user, isPersistent: false);
     }
@@ -215,6 +229,7 @@
         [Display(Name = "Password")]
         public string Password { get; set; } = "";
 
+        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
