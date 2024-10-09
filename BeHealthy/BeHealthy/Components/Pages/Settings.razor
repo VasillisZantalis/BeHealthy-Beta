@@ -1,0 +1,41 @@
+﻿@page "/settings"
+
+@rendermode InteractiveServer
+
+<PageTitle>Settings</PageTitle>
+
+<h3>Settings</h3>
+
+@foreach (var setting in _settings)
+{
+    <div class="form-group">
+        <label>@setting.Key</label>
+
+        @switch (setting.Type)
+        {
+            case SettingType.Checkbox:
+                break;
+
+            case SettingType.SingleSelect:
+                <InputSelect @bind-Value="setting.Value">
+                    @foreach (var option in Enum.GetValues(typeof(LanguageOptions))) // Replace with your actual enum type
+                    {
+                        <option value="@option">@option</option>
+                    }
+                </InputSelect>
+                break;
+
+            case SettingType.MultiSelect:
+                // Implement MultiSelect logic here
+                break;
+
+            case SettingType.TextField:
+                <InputText @bind-Value="setting.Value" />
+                break;
+
+            default:
+                <p>Unknown setting type.</p>
+                break;
+        }
+    </div>
+}
