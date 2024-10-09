@@ -9,7 +9,7 @@
 
 @if (_appointments == null)
 {
-    <p><em>Loading...</em></p>
+    <Loader/>
 }
 else if (!_appointments.Any())
 {
@@ -24,6 +24,10 @@ else
                 <th>Notes</th>
                 <th>Patient</th>
                 <th>Doctor</th>
+                @if (_hasActionRights)
+                {
+                    <th></th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -36,13 +40,15 @@ else
                         <td>@(string.IsNullOrEmpty(appointment.Notes) ? "-" : appointment.Notes)</td>
                         <td>@(appointment.Patient != null ? $"{appointment.Patient.FullName}" : "N/A")</td>
                         <td>@(appointment.Doctor != null ? $"{appointment.Doctor.FullName}" : "N/A")</td>
-                        <td>
-                            @if (_hasActionRights)
-                            {
+                        @if (_hasActionRights)
+                        {
+                            <td>
+                            
                                 <button class="btn btn-primary btn-sm" @onclick="() => EditAppointment(appointment.Id)">Edit</button>
                                 <button class="btn btn-danger btn-sm" @onclick="() => DeleteAppointment(appointment.Id)">Delete</button>
-                            }
-                        </td>
+                            </td>
+                        }
+
                     </tr>
                 }
             }

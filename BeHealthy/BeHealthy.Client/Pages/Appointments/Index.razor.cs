@@ -1,13 +1,12 @@
-﻿using BeHealthy.Client.Services;
+﻿using BeHealthy.Client.Extensions;
 using BeHealthy.Client.Services.Interfaces;
 using BeHealthy.Components.Components;
+using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
-using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
 
 namespace BeHealthy.Client.Pages.Appointments;
 
@@ -33,24 +32,34 @@ public partial class Index
     protected override async Task OnInitializedAsync()
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        _currentUserId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        _currentUserId = authState.User.GetUserId();
 
-        _hasActionRights = user.IsInRole("Admin") || user.IsInRole("Doctor");
+        var roleClaim = authState.User.GetUserRole();
 
-        if (user.IsInRole("Admin"))
+        if (Enum.TryParse(typeof(UserRole), roleClaim, out var roleEnum) && roleEnum is UserRole userRole)
         {
-            await LoadAppointments();
+            _hasActionRights = userRole == UserRole.Admin || userRole == UserRole.Doctor;
+
+            switch (userRole)
+            {
+                case UserRole.Admin:
+                    await LoadAppointments();
+                    break;
+
+                case UserRole.Doctor when _currentUserId is not null:
+                    await LoadAppointmentsForDoctor(_currentUserId);
+                    break;
+
+                case UserRole.Patient when _currentUserId is not null:
+                    await LoadAppointmentsForPatient(_currentUserId);
+                    break;
+
+                default:
+                    await LoadAppointments();
+                    break;
+            }
         }
-        else if (user.IsInRole("Doctor") && _currentUserId is not null)
-        {
-            await LoadAppointmentsForDoctor(_currentUserId);
-        }
-        else if (user.IsInRole("Patient") && _currentUserId is not null)
-        {
-            await LoadAppointmentsForPatient(_currentUserId);
-        }
-       
+
         await LoadDoctors();
         await LoadPatients();
     }
