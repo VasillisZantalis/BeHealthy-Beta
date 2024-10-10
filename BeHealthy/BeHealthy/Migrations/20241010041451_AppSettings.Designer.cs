@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeHealthy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241009142907_AppSetting_Added")]
-    partial class AppSetting_Added
+    [Migration("20241010041451_AppSettings")]
+    partial class AppSettings
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,24 +28,32 @@ namespace BeHealthy.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("EnumType")
+                    b.Property<string>("Area")
+                        .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("BoolValue")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("InsDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2024, 10, 9, 14, 29, 6, 854, DateTimeKind.Utc).AddTicks(115));
+                        .HasDefaultValue(new DateTime(2024, 10, 10, 4, 14, 51, 536, DateTimeKind.Utc).AddTicks(2871));
 
-                    b.Property<string>("Key")
+                    b.Property<int?>("IntValue")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StringValue")
                         .HasColumnType("longtext");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

@@ -12,18 +12,25 @@ public class AppSettingConfiguration : IEntityTypeConfiguration<AppSetting>
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(p => p.Key)
+        builder.Property(p => p.Name)
             .IsRequired();
 
-        builder.Property(p => p.Value)
+        builder.Property(p => p.Area)
             .IsRequired();
+
+        builder.Property(p => p.StringValue)
+            .IsRequired(false);
+
+        builder.Property(p => p.IntValue)
+            .IsRequired(false);
+
+        builder.Property(p => p.BoolValue)
+            .IsRequired()
+            .HasDefaultValue(false);
 
         builder.Property(p => p.InsDate)
             .IsRequired()
             .HasDefaultValue(DateTime.UtcNow);
-
-        builder.Property(p => p.EnumType)
-            .IsRequired(false);
 
     }
 }

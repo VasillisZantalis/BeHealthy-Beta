@@ -4,8 +4,10 @@ public class AppSetting
 {
     public int Id { get; set; }
     public SettingType Type { get; set; }
-    public string Key { get; set; } = string.Empty;
-    public string Value { get; set; } = string.Empty;
+    public string Area { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? StringValue { get; set; }
+    public int? IntValue { get; set; }
+    public bool BoolValue { get; set; }
     public DateTime InsDate { get; set; }
-    public string EnumType { get; set; } = string.Empty;
 }

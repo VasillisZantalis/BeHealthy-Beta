@@ -14,38 +14,38 @@ public partial class Settings
             new AppSetting
             {
                 Id = 1,
-                Key = "Language",
-                Type = SettingType.SingleSelect, // Or use an enum if you have one
-                Value = "English", // Default value
+                Name = "Language",
+                Type = SettingType.SingleSelect,
+                StringValue = "English",
                 InsDate = DateTime.UtcNow
             },
             new AppSetting
             {
                 Id = 2,
-                Key = "Color",
+                Name = "Color",
                 Type = SettingType.MultiSelect,
-                Value = "Red, Green", // Default selected values
+                StringValue = "Red, Green",
                 InsDate = DateTime.UtcNow
             },
             new AppSetting
             {
                 Id = 3,
-                Key = "Has Edit Privilege",
+                Name = "Has Edit Privilege",
                 Type = SettingType.Checkbox,
-                Value = "true",
+                BoolValue = true,
                 InsDate = DateTime.UtcNow
             }
         };
 
     }
 
-    private bool GetCheckboxValue(AppSetting setting)
-    {
-        return bool.TryParse(setting.Value, out var result) && result;
-    }
+    //private bool GetCheckboxValue(AppSetting setting)
+    //{
+    //    return bool.TryParse(setting.Value, out var result) && result;
+    //}
 
-    private void SetCheckboxValue(AppSetting setting, bool value)
-    {
-        setting.Value = value.ToString();
-    }
+    //private void SetCheckboxValue(AppSetting setting, bool value)
+    //{
+    //    setting.Value = value.ToString();
+    //}
 }

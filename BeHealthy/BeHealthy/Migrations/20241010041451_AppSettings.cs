@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace BeHealthy.Migrations
 {
     /// <inheritdoc />
-    public partial class AppSetting_Added : Migration
+    public partial class AppSettings : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,10 +19,12 @@ namespace BeHealthy.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    Key = table.Column<string>(type: "longtext", nullable: false),
-                    Value = table.Column<string>(type: "longtext", nullable: false),
-                    InsDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2024, 10, 9, 14, 29, 6, 854, DateTimeKind.Utc).AddTicks(115)),
-                    EnumType = table.Column<string>(type: "longtext", nullable: true)
+                    Area = table.Column<string>(type: "longtext", nullable: false),
+                    Name = table.Column<string>(type: "longtext", nullable: false),
+                    StringValue = table.Column<string>(type: "longtext", nullable: true),
+                    IntValue = table.Column<int>(type: "int", nullable: true),
+                    BoolValue = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    InsDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2024, 10, 10, 4, 14, 51, 536, DateTimeKind.Utc).AddTicks(2871))
                 },
                 constraints: table =>
                 {

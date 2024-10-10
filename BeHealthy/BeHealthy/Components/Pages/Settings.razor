@@ -9,16 +9,17 @@
 @foreach (var setting in _settings)
 {
     <div class="form-group">
-        <label>@setting.Key</label>
+        <label>@setting.Name</label>
 
         @switch (setting.Type)
         {
             case SettingType.Checkbox:
+                <InputCheckbox @bind-Value="setting.BoolValue"/>
                 break;
 
             case SettingType.SingleSelect:
-                <InputSelect @bind-Value="setting.Value">
-                    @foreach (var option in Enum.GetValues(typeof(LanguageOptions))) // Replace with your actual enum type
+                <InputSelect @bind-Value="setting.StringValue">
+                    @foreach (var option in Enum.GetValues(typeof(LanguageOptions))) 
                     {
                         <option value="@option">@option</option>
                     }
@@ -30,7 +31,7 @@
                 break;
 
             case SettingType.TextField:
-                <InputText @bind-Value="setting.Value" />
+                <InputText @bind-Value="setting.StringValue" />
                 break;
 
             default:
