@@ -1,4 +1,6 @@
-﻿using BeHealthy.Client.Services.Interfaces;
+﻿using BeHealthy.Client.Persistance;
+using BeHealthy.Client.Services;
+using BeHealthy.Client.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using Microsoft.AspNetCore.Components;
 
@@ -13,11 +15,14 @@ public partial class Index
 
     private List<DoctorDto> _doctors { get; set; } = default!;
 
+    private bool _isLoading = default;
+
     protected override async Task OnInitializedAsync()
     {
-        _createUserHref = "Account/Register?role=Doctor&redirectUrl=doctors";
-        //_doctors = (await _userService.GetAllDoctorsAsync()).ToList();
+        _isLoading = true;
+        _createUserHref = $"Account/Register?role=Doctor&redirectUrl={RoutingEndpoints.DoctorsPage}";
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+        _isLoading = false;
     }
 
     private async Task EditDoctor(string id)

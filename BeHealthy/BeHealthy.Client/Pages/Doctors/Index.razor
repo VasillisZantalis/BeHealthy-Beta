@@ -6,7 +6,7 @@
 <h3>Doctors</h3>
 
 <CreateUserButton Href="@_createUserHref" />
-@if (_doctors == null)
+@if (_isLoading)
 {
     <Loader />
 }

@@ -25,5 +25,4 @@ builder.Services.AddScoped<INurseService, NurseService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 
-
 await builder.Build().RunAsync();
