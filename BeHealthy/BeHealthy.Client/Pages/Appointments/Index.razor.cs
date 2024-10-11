@@ -5,6 +5,7 @@ using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
+using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -42,18 +43,21 @@ public partial class Index
 
             switch (userRole)
             {
-                case UserRole.Admin:
-                    await LoadAppointments();
-                    break;
+                //case UserRole.Admin:
+                //    await LoadAppointments();
+                //    break;
+                //case UserRole.Doctor when _currentUserId is not null:
+                //    await LoadAppointmentsForDoctor(_currentUserId);
+                //    break;
+
+                //case UserRole.Patient when _currentUserId is not null:
+                //    await LoadAppointmentsForPatient(_currentUserId);
+                //    break;
 
                 case UserRole.Doctor when _currentUserId is not null:
-                    await LoadAppointmentsForDoctor(_currentUserId);
-                    break;
-
                 case UserRole.Patient when _currentUserId is not null:
-                    await LoadAppointmentsForPatient(_currentUserId);
+                    await LoadUserAppointments(_currentUserId);
                     break;
-
                 default:
                     await LoadAppointments();
                     break;
@@ -101,6 +105,11 @@ public partial class Index
     private async Task LoadAppointmentsForPatient(string patientId)
     {
         //_appointments = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+    }
+
+    private async Task LoadUserAppointments(string userId)
+    {
+        _appointments = await _appointmentService.GetAppointmentsByUserIdAsync(userId);
     }
 
     private async Task LoadDoctors()

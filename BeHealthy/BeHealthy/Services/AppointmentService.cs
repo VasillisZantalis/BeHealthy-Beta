@@ -36,6 +36,12 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
     }
 
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByUserIdAsync(string userId)
+    {
+        var appointment = await _appointmentRepository.GetAllAppointmentsByUserIdAsync(userId);
+        return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
+    }
+
     public async Task<AppointmentDto> GetAppointmentByIdAsync(int id)
     {
         var appointment = await _appointmentRepository.GetByIdAsync(id);
