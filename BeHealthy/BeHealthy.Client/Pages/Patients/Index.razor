@@ -25,7 +25,7 @@ else
                     <UserCard Id="@patient.Id"
                               FullName="@patient.FullName"
                               Email="@patient.Email"
-                              Edit="@EditPatient"
+                              Edit="@(() => {})"
                               Delete="@DeletePatient" />
                 </div>
             </div>

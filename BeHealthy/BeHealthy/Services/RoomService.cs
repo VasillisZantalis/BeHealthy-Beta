@@ -8,41 +8,41 @@ namespace BeHealthy.Services;
 
 public class RoomService : IRoomService
 {
-    private readonly IRoomRepository _roomRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public RoomService(IRoomRepository roomRepository, IMapper mapper)
+    public RoomService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _roomRepository = roomRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync()
     {
-        var rooms = await _roomRepository.GetAllAsync();
+        var rooms = await _unitOfWork.RoomRepository.GetAllAsync();
         return _mapper.Map<IEnumerable<RoomDto>>(rooms);
     }
 
     public async Task<RoomDto> GetRoomByIdAsync(int id)
     {
-        var room = await _roomRepository.GetByIdAsync(id);
+        var room = await _unitOfWork.RoomRepository.GetByIdAsync(id);
         return _mapper.Map<RoomDto>(room);
     }
 
     public async Task AddRoomAsync(RoomForCreationDto roomDto)
     {
         var room = _mapper.Map<Room>(roomDto);
-        await _roomRepository.AddAsync(room);
+        await _unitOfWork.RoomRepository.AddAsync(room);
     }
 
     public async Task UpdateRoomAsync(RoomForUpdateDto roomDto)
     {
         var room = _mapper.Map<Room>(roomDto);
-        await _roomRepository.UpdateAsync(room);
+        await _unitOfWork.RoomRepository.UpdateAsync(room);
     }
 
     public async Task DeleteRoomAsync(int id)
     {
-        await _roomRepository.DeleteAsync(id);
+        await _unitOfWork.RoomRepository.DeleteAsync(id);
     }
 }

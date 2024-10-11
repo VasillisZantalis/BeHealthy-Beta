@@ -9,41 +9,41 @@ namespace BeHealthy.Services;
 
 public class PrescriptionService : IPrescriptionService
 {
-    private readonly IPrescriptionRepository _prescriptionRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public PrescriptionService(IPrescriptionRepository prescriptionRepository, IMapper mapper)
+    public PrescriptionService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _prescriptionRepository = prescriptionRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     public async Task<IEnumerable<PrescriptionDto>> GetAllPrescriptionsAsync()
     {
-        var prescriptions = await _prescriptionRepository.GetAllAsync();
+        var prescriptions = await _unitOfWork.PrescriptionRepository.GetAllAsync();
         return _mapper.Map<IEnumerable<PrescriptionDto>>(prescriptions);
     }
 
     public async Task<PrescriptionDto> GetPrescriptionByIdAsync(int id)
     {
-        var prescription = await _prescriptionRepository.GetByIdAsync(id);
+        var prescription = await _unitOfWork.PrescriptionRepository.GetByIdAsync(id);
         return _mapper.Map<PrescriptionDto>(prescription);
     }
 
     public async Task AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)
     {
         var prescription = _mapper.Map<Prescription>(prescriptionDto);
-        await _prescriptionRepository.AddAsync(prescription);
+        await _unitOfWork.PrescriptionRepository.AddAsync(prescription);
     }
 
     public async Task UpdatePrescriptionAsync(PrescriptionForUpdateDto prescriptionDto)
     {
         var prescription = _mapper.Map<Prescription>(prescriptionDto);
-        await _prescriptionRepository.UpdateAsync(prescription);
+        await _unitOfWork.PrescriptionRepository.UpdateAsync(prescription);
     }
 
     public async Task DeletePrescriptionAsync(int id)
     {
-        await _prescriptionRepository.DeleteAsync(id);
+        await _unitOfWork.PrescriptionRepository.DeleteAsync(id);
     }
 }

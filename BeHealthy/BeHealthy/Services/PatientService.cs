@@ -8,41 +8,41 @@ namespace BeHealthy.Services;
 
 public class PatientService : IPatientService
 {
-    private readonly IPatientRepository _patientRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public PatientService(IPatientRepository patientRepository, IMapper mapper)
+    public PatientService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _patientRepository = patientRepository;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
     public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync()
     {
-        var patients = await _patientRepository.GetAllAsync();
+        var patients = await _unitOfWork.PatientRepository.GetAllAsync();
         return _mapper.Map<IEnumerable<PatientDto>>(patients);
     }
 
     public async Task<PatientDto> GetPatientByIdAsync(int id)
     {
-        var patient = await _patientRepository.GetByIdAsync(id);
+        var patient = await _unitOfWork.PatientRepository.GetByIdAsync(id);
         return _mapper.Map<PatientDto>(patient);
     }
 
     public async Task AddPatientAsync(PatientForCreationDto patientDto)
     {
         var patient = _mapper.Map<Patient>(patientDto);
-        await _patientRepository.AddAsync(patient);
+        await _unitOfWork.PatientRepository.AddAsync(patient);
     }
 
     public async Task UpdatePatientAsync(PatientForUpdateDto patientDto)
     {
         var patient = _mapper.Map<Patient>(patientDto);
-        await _patientRepository.UpdateAsync(patient);
+        await _unitOfWork.PatientRepository.UpdateAsync(patient);
     }
 
     public async Task DeletePatientAsync(int id)
     {
-        await _patientRepository.DeleteAsync(id);
+        await _unitOfWork.PatientRepository.DeleteAsync(id);
     }
 }

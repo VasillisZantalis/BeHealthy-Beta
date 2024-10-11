@@ -97,15 +97,15 @@ public partial class Index
         _appointments = await _appointmentService.GetAllAppointmentsAsync();
     }
 
-    private async Task LoadAppointmentsForDoctor(string doctorId)
-    {
-        //_appointments = await _appointmentService.GetAppointmentsByDoctorIdAsync(doctorId);
-    }
+    //private async Task LoadAppointmentsForDoctor(string doctorId)
+    //{
+    //    //_appointments = await _appointmentService.GetAppointmentsByDoctorIdAsync(doctorId);
+    //}
 
-    private async Task LoadAppointmentsForPatient(string patientId)
-    {
-        //_appointments = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId);
-    }
+    //private async Task LoadAppointmentsForPatient(string patientId)
+    //{
+    //    //_appointments = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId);
+    //}
 
     private async Task LoadUserAppointments(string userId)
     {

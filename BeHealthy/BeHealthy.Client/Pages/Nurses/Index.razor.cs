@@ -1,4 +1,5 @@
-﻿using BeHealthy.Client.Services.Interfaces;
+﻿using BeHealthy.Client.Persistance;
+using BeHealthy.Client.Services.Interfaces;
 using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 
@@ -15,13 +16,13 @@ public partial class Index
 
     protected override async Task OnInitializedAsync()
     {
-        _createUserHref = "Account/Register?role=Nurse&redirectUrl=nurses";
+        _createUserHref = $"Account/Register?role=Nurse&redirectUrl={RoutingEndpoints.NursesPage}";
         _nurses = (await _userService.GetAllNursesAsync()).ToList();
     }
 
-    private async Task EditNurse(string id)
-    {
-    }
+    //private async Task EditNurse(string id)
+    //{
+    //}
 
     private async Task DeleteNurse(string id)
     {
