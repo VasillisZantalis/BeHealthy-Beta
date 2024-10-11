@@ -2,6 +2,7 @@
 
 public static class RoutingEndpoints
 {
+    public const string HomePage = "/";
     public const string AppartmentsPage = "/apartments";
     public const string DoctorsPage = "/doctors";
     public const string PatientsPage = "/patients";

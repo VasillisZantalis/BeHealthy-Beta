@@ -89,29 +89,11 @@
             identity.AddClaim(new Claim(ClaimTypes.Surname, user.LastName));
             identity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            // foreach (var role in roles)
-            // {
-            //     switch (role)
-            //     {
-            //         case nameof(UserRole.Doctor):
-            //             var doctor = await DoctorService.GetDoctorByIdAsync(user.Id);
-            //             if (doctor != null)
-            //             {
-            //                 //identity.AddClaim(new Claim("Speciality", doctor.Speciality));
-            //                 identity.AddClaim(new Claim(ClaimTypes.GivenName, doctor.FirstName));
-            //                 identity.AddClaim(new Claim(ClaimTypes.Surname, doctor.LastName));
-            //                 identity.AddClaim(new Claim(ClaimTypes.Name, doctor.FullName));
-            //                 identity.AddClaim(new Claim("Speciality", doctor.Specialty));
-            //             }
-            //             break;
-            //     }
-            // }
-
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
 
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo(RoutingEndpoints.HomePage);
         }
         else
         {

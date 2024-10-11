@@ -1,7 +1,6 @@
 ﻿using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
-using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 
 
@@ -58,7 +57,5 @@ public partial class CreateAppointmentModal
     {
         _appointmentForCreationDto.AppointmentDate = _date;
         await OnFormSubmit.InvokeAsync((_appointmentForCreationDto, _isEdit, _appointmentId));
-
     }
-
 }

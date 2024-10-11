@@ -132,7 +132,7 @@
 
         returnUrl = QueryHelpers.ParseQuery(uri.Query).TryGetValue("redirectUrl", out var returnTo) && !string.IsNullOrEmpty(returnTo)
             ? returnTo.ToString()
-            : "/";
+            : RoutingEndpoints.HomePage;
     }
 
     public async Task RegisterUser(EditContext editContext)
