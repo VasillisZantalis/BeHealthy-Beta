@@ -10,6 +10,7 @@ public partial class CreateAppointmentModal
 {
     [Parameter]
     public EventCallback<(AppointmentForCreationDto, bool, int)> OnFormSubmit { get; set; }
+
     [SupplyParameterFromForm]
     private AppointmentForCreationDto _appointmentForCreationDto { get; set; } = new();
 
@@ -18,7 +19,6 @@ public partial class CreateAppointmentModal
     [Parameter]
     public List<PatientDto> Patients { get; set; } = default!;
 
-    private DateTime _date { get; set; } = DateTime.Now;
     private bool _show;
     private bool _isEdit;
     private int _appointmentId;
@@ -31,13 +31,13 @@ public partial class CreateAppointmentModal
         _appointmentId = 0;
         _appointmentForCreationDto.PatientId = Patients?.FirstOrDefault()?.Id;
         _appointmentForCreationDto.DoctorId = Doctors?.FirstOrDefault()?.Id;
+        _appointmentForCreationDto.AppointmentDate = DateTime.Now;
     }
 
     public void OpenForEdit(AppointmentDto appointment)
     {
         _show = true;
         _isEdit = true;
-        _date = appointment.AppointmentDate;
         _appointmentForCreationDto = new AppointmentForCreationDto
         {
             DoctorId = appointment.DoctorId,
@@ -55,7 +55,6 @@ public partial class CreateAppointmentModal
 
     public async Task HandleSaveClick()
     {
-        _appointmentForCreationDto.AppointmentDate = _date;
         await OnFormSubmit.InvokeAsync((_appointmentForCreationDto, _isEdit, _appointmentId));
     }
 }
