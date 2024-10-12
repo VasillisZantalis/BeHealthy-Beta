@@ -11,6 +11,9 @@ using BeHealthy.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;
 using BeHealthy.States;
 using System.Text.Json.Serialization;
+using BeHealthy.Endpoints.Appointments;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +46,11 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+
+builder.Services.AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -97,5 +105,6 @@ app.MapRazorComponents<App>()
 
 app.MapControllers();
 app.MapAdditionalIdentityEndpoints();
+app.MapAppointmentsEndpoints();
 
 app.Run();
