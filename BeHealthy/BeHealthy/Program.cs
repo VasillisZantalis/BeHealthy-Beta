@@ -17,6 +17,7 @@ using FluentValidation;
 using BeHealthy.Endpoints.Department;
 using BeHealthy.Endpoints.Doctors;
 using BeHealthy.Endpoints.Nurse;
+using BeHealthy.Endpoints.Patient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -112,5 +113,6 @@ app.MapAppointmentsEndpoints();
 app.MapDepartmentEndpoints();
 app.MapDoctorsEndpoints();
 app.MapNursesEndpoints();
+app.MapPatientEndpoints();
 
 app.Run();
