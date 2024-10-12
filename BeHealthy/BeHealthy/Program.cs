@@ -15,6 +15,7 @@ using BeHealthy.Endpoints.Appointments;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using BeHealthy.Endpoints.Department;
+using BeHealthy.Endpoints.Doctors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -108,5 +109,6 @@ app.MapControllers();
 app.MapAdditionalIdentityEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapDepartmentEndpoints();
+app.MapDoctorsEndpoints();
 
 app.Run();
