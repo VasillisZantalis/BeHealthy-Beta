@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 using BeHealthy.Endpoints.Appointments;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using BeHealthy.Endpoints.Department;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,5 +107,6 @@ app.MapRazorComponents<App>()
 app.MapControllers();
 app.MapAdditionalIdentityEndpoints();
 app.MapAppointmentsEndpoints();
+app.MapDepartmentEndpoints();
 
 app.Run();
