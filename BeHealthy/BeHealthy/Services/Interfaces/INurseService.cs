@@ -5,8 +5,8 @@ namespace BeHealthy.Services.Interfaces;
 
 public interface INurseService
 {
-    Task<IEnumerable<Nurse>> GetAllNursesAsync();
-    Task<Nurse> GetNurseByIdAsync(int id);
+    Task<IEnumerable<NurseDto>> GetAllNursesAsync();
+    Task<NurseDto> GetNurseByIdAsync(int id);
     Task AddNurseAsync(NurseForCreationDto nurse);
     Task UpdateNurseAsync(NurseForUpdateDto nurse);
     Task DeleteNurseAsync(int id);

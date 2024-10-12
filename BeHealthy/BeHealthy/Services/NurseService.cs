@@ -18,16 +18,16 @@ public class NurseService : INurseService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<Nurse>> GetAllNursesAsync()
+    public async Task<IEnumerable<NurseDto>> GetAllNursesAsync()
     {
         var nurses = await _unitOfWork.NurseRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<Nurse>>(nurses);
+        return _mapper.Map<IEnumerable<NurseDto>>(nurses);
     }
 
-    public async Task<Nurse> GetNurseByIdAsync(int id)
+    public async Task<NurseDto> GetNurseByIdAsync(int id)
     {
         var nurse = await _unitOfWork.NurseRepository.GetByIdAsync(id);
-        return _mapper.Map<Nurse>(nurse);
+        return _mapper.Map<NurseDto>(nurse);
     }
 
     public async Task AddNurseAsync(NurseForCreationDto nurseDto)
