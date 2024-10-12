@@ -20,6 +20,8 @@ using BeHealthy.Endpoints.Nurse;
 using BeHealthy.Endpoints.Patient;
 using BeHealthy.Endpoints.Prescription;
 using BeHealthy.Endpoints.Room;
+using BeHealthy.Endpoints.User;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,11 +49,10 @@ builder.Services.AddIdentityCore<ApplicationUser>()
     .AddSignInManager<SignInManager<ApplicationUser>>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    });
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 builder.Services.AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
@@ -109,7 +110,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BeHealthy.Client._Imports).Assembly);
 
-app.MapControllers();
 app.MapAdditionalIdentityEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapDepartmentEndpoints();
@@ -118,5 +118,6 @@ app.MapNursesEndpoints();
 app.MapPatientEndpoints();
 app.MapPrescriptionsEndpoints();
 app.MapRoomsEndpoints();
+app.MapUsersEndpoints();
 
 app.Run();
