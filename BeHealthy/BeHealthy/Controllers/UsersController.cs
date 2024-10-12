@@ -17,7 +17,6 @@ public class UsersController : ControllerBase
         _userManager = userManager;
     }
 
-    // GET: api/users/doctors
     [HttpGet("doctors")]
     public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetDoctors()
     {
@@ -25,7 +24,6 @@ public class UsersController : ControllerBase
         return Ok(doctors);
     }
 
-    // GET: api/users/patients
     [HttpGet("patients")]
     public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetPatients()
     {
@@ -33,7 +31,6 @@ public class UsersController : ControllerBase
         return Ok(patients);
     }
 
-    // GET: api/users/nurses
     [HttpGet("nurses")]
     public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetNurses()
     {
@@ -41,7 +38,6 @@ public class UsersController : ControllerBase
         return Ok(nurses);
     }
 
-    // GET: api/users/Staff
     [HttpGet("staff")]
     public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetStaff()
     {
@@ -49,7 +45,6 @@ public class UsersController : ControllerBase
         return Ok(staff);
     }
 
-    // DELETE: api/users/id
     [HttpDelete("{id}", Name = nameof(DeleteUser))]
     public async Task<ActionResult> DeleteUser(string id)
     {

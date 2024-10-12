@@ -18,6 +18,8 @@ using BeHealthy.Endpoints.Department;
 using BeHealthy.Endpoints.Doctors;
 using BeHealthy.Endpoints.Nurse;
 using BeHealthy.Endpoints.Patient;
+using BeHealthy.Endpoints.Prescription;
+using BeHealthy.Endpoints.Room;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -114,5 +116,7 @@ app.MapDepartmentEndpoints();
 app.MapDoctorsEndpoints();
 app.MapNursesEndpoints();
 app.MapPatientEndpoints();
+app.MapPrescriptionsEndpoints();
+app.MapRoomsEndpoints();
 
 app.Run();
