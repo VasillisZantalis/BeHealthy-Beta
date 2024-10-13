@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Filters;
 using BeHealthy.Services.Interfaces;
+using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,18 @@ public static class DoctorEndpoints
                 ? TypedResults.NotFound()
                 : TypedResults.Ok(doctors);
         }).WithName("GetDoctorById");
+
+        group.MapGet("{userId}/appointments", async Task<Results<NotFound, Ok<List<AppointmentDto>>>>
+        ([FromServices] IDoctorService doctorService, string userId) =>
+        {
+            // var doctorAppointments = await doctorService.GetDoctorAppointmentsByUserIdAsync(userId);
+            await Task.Delay(2000);
+            var doctorAppointments = new List<AppointmentDto>();
+
+            return doctorAppointments is null
+                ? TypedResults.NotFound()
+                : TypedResults.Ok(doctorAppointments);
+        }).WithName("GetDoctorAppointmentsByUserId");
 
         group.MapPost("", async Task<Results<Created, BadRequest, UnprocessableEntity>>
            ([FromServices] IDoctorService doctorService,

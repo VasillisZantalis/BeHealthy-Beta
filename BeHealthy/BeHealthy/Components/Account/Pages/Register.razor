@@ -26,7 +26,7 @@
 
 <div class="row d-flex justify-content-center">
     <div class="col-md-4 rounded p-4 shadow">
-        <h3 class="alert-danger">@Message</h3>
+        @* <h3 class="alert-danger">@Message</h3> *@
 
         <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="Enhance">
             <DataAnnotationsValidator />
@@ -102,7 +102,10 @@
     </div>
 </div>
 
-<Toast @ref="_toastModal" OnClose="HandleModalClose" Message="@_toastMessage" />
+<AlertModal @ref="_toastModal"
+    OnClose="HandleModalClose"
+    Success="@_toastSuccess"
+    Message="@_toastMessage" />
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
@@ -117,7 +120,8 @@
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     private string _toastMessage = string.Empty;
-    private Toast _toastModal = new();
+    private bool _toastSuccess;
+    private AlertModal _toastModal = new();
 
     protected override void OnInitialized()
     {
@@ -152,6 +156,9 @@
         {
             _inProgress = false;
             identityErrors = result.Errors;
+            _toastMessage = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
+            _toastSuccess = false;
+            _toastModal.OpenModal();
             return;
         }
 
@@ -178,13 +185,19 @@
                 await PatientService.AddPatientAsync(patientDto);
                 break;
         }
+
         _toastMessage = "Successful";
+        _toastSuccess = true;
         _toastModal.OpenModal();
     }
 
-    private void HandleModalClose()
+    private void HandleModalClose(bool success)
     {
         _inProgress = false;
+
+        if (!success)
+            return;
+
         NavigationManager.NavigateTo(returnUrl);
     }
 
