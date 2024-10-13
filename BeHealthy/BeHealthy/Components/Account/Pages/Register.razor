@@ -102,10 +102,10 @@
     </div>
 </div>
 
-<AlertModal @ref="_toastModal"
+<AlertModal @ref="_alertModal"
     OnClose="HandleModalClose"
-    Success="@_toastSuccess"
-    Message="@_toastMessage" />
+    Success="@_alertSuccess"
+    Message="@_alertMessage" />
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
@@ -119,9 +119,9 @@
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
-    private string _toastMessage = string.Empty;
-    private bool _toastSuccess;
-    private AlertModal _toastModal = new();
+    private string _alertMessage = string.Empty;
+    private bool _alertSuccess;
+    private AlertModal _alertModal = new();
 
     protected override void OnInitialized()
     {
@@ -156,9 +156,9 @@
         {
             _inProgress = false;
             identityErrors = result.Errors;
-            _toastMessage = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
-            _toastSuccess = false;
-            _toastModal.OpenModal();
+            _alertMessage = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
+            _alertSuccess = false;
+            _alertModal.OpenModal();
             return;
         }
 
@@ -186,9 +186,9 @@
                 break;
         }
 
-        _toastMessage = "Successful";
-        _toastSuccess = true;
-        _toastModal.OpenModal();
+        _alertMessage = "Successful";
+        _alertSuccess = true;
+        _alertModal.OpenModal();
     }
 
     private void HandleModalClose(bool success)
