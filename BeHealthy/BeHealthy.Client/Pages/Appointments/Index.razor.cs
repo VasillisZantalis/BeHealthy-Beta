@@ -30,8 +30,12 @@ public partial class Index
     private string? _currentUserId;
     private bool _hasActionRights;
 
+    private bool _isLoading = default;
+
     protected override async Task OnInitializedAsync()
     {
+        _isLoading = true;
+
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _currentUserId = authState.User.GetUserId();
 
@@ -55,6 +59,8 @@ public partial class Index
                 //    break;
 
                 case UserRole.Doctor when _currentUserId is not null:
+                    await LoadDoctorAppointments(_currentUserId);
+                    break;
                 case UserRole.Patient when _currentUserId is not null:
                     await LoadUserAppointments(_currentUserId);
                     break;
@@ -66,6 +72,8 @@ public partial class Index
 
         await LoadDoctors();
         await LoadPatients();
+
+        _isLoading = false;
     }
 
     private async Task HandleAppointmentFormSubmission((AppointmentForCreationDto, bool, int) submission)
@@ -110,6 +118,11 @@ public partial class Index
     private async Task LoadUserAppointments(string userId)
     {
         _appointments = await _appointmentService.GetAppointmentsByUserIdAsync(userId);
+    }
+
+    private async Task LoadDoctorAppointments(string userId)
+    {
+        _appointments = await _doctorService.GetDoctorAppointmentsByUserIdAsync(userId);
     }
 
     private async Task LoadDoctors()
