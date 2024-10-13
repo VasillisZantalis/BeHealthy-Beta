@@ -33,13 +33,11 @@ public static class DoctorEndpoints
                 : TypedResults.Ok(doctors);
         }).WithName("GetDoctorById");
 
-        group.MapGet("{userId}/appointments", async Task<Results<NotFound, Ok<List<AppointmentDto>>>>
+        group.MapGet("{userId}/appointments", async Task<Results<NotFound, Ok<IEnumerable<AppointmentDto>>>>
         ([FromServices] IDoctorService doctorService, string userId) =>
         {
-            // var doctorAppointments = await doctorService.GetDoctorAppointmentsByUserIdAsync(userId);
-            await Task.Delay(2000);
-            var doctorAppointments = new List<AppointmentDto>();
-
+            var doctorAppointments = await doctorService.GetDoctorAppointmentsByUserIdAsync(userId);
+            
             return doctorAppointments is null
                 ? TypedResults.NotFound()
                 : TypedResults.Ok(doctorAppointments);
