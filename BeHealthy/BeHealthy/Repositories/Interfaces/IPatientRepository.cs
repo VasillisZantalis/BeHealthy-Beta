@@ -4,4 +4,5 @@ namespace BeHealthy.Repositories.Interfaces;
 
 public interface IPatientRepository : IGenericRepository<Patient>
 {
+    Task<IEnumerable<Appointment>> GetPatientAppointmentsByUserIdAsync(string userId);
 }

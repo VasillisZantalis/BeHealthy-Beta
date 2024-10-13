@@ -34,7 +34,7 @@ public static class DoctorEndpoints
         }).WithName("GetDoctorById");
 
         group.MapGet("{userId}/appointments", async Task<Results<NotFound, Ok<IEnumerable<AppointmentDto>>>>
-        ([FromServices] IDoctorService doctorService, string userId) =>
+            ([FromServices] IDoctorService doctorService, string userId) =>
         {
             var doctorAppointments = await doctorService.GetDoctorAppointmentsByUserIdAsync(userId);
             

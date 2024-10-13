@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Client.Services.Interfaces;
+using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using System.Net.Http.Json;
 
@@ -41,5 +42,10 @@ public class PatientService : IPatientService
     {
         var response = await _httpClient.DeleteAsync($"api/patients/{id}");
         response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsByUserIdAsync(string userId)
+    {
+        return await _httpClient.GetFromJsonAsync<IEnumerable<AppointmentDto>>($"api/patients/{userId}/appointments") ?? new List<AppointmentDto>();
     }
 }

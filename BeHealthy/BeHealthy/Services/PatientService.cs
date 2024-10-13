@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BeHealthy.Repositories.Interfaces;
 using BeHealthy.Services.Interfaces;
+using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using BeHealthy.Shared.Models.Entities;
 
@@ -44,5 +45,12 @@ public class PatientService : IPatientService
     public async Task DeletePatientAsync(int id)
     {
         await _unitOfWork.PatientRepository.DeleteAsync(id);
+    }
+
+    public async Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsByUserIdAsync(string userId)
+    {
+        var patientAppointments = await _unitOfWork.PatientRepository.GetPatientAppointmentsByUserIdAsync(userId);
+
+        return _mapper.Map<IEnumerable<AppointmentDto>>(patientAppointments);
     }
 }

@@ -47,22 +47,11 @@ public partial class Index
 
             switch (userRole)
             {
-                //case UserRole.Admin:
-                //    await LoadAppointments();
-                //    break;
-                //case UserRole.Doctor when _currentUserId is not null:
-                //    await LoadAppointmentsForDoctor(_currentUserId);
-                //    break;
-
-                //case UserRole.Patient when _currentUserId is not null:
-                //    await LoadAppointmentsForPatient(_currentUserId);
-                //    break;
-
                 case UserRole.Doctor when _currentUserId is not null:
                     await LoadDoctorAppointments(_currentUserId);
                     break;
                 case UserRole.Patient when _currentUserId is not null:
-                    await LoadUserAppointments(_currentUserId);
+                    await LoadPatientAppointments(_currentUserId);
                     break;
                 default:
                     await LoadAppointments();
@@ -105,19 +94,9 @@ public partial class Index
         _appointments = await _appointmentService.GetAllAppointmentsAsync();
     }
 
-    //private async Task LoadAppointmentsForDoctor(string doctorId)
-    //{
-    //    //_appointments = await _appointmentService.GetAppointmentsByDoctorIdAsync(doctorId);
-    //}
-
-    //private async Task LoadAppointmentsForPatient(string patientId)
-    //{
-    //    //_appointments = await _appointmentService.GetAppointmentsByPatientIdAsync(patientId);
-    //}
-
-    private async Task LoadUserAppointments(string userId)
+    private async Task LoadPatientAppointments(string userId)
     {
-        _appointments = await _appointmentService.GetAppointmentsByUserIdAsync(userId);
+        _appointments = await _patientService.GetPatientAppointmentsByUserIdAsync(userId);
     }
 
     private async Task LoadDoctorAppointments(string userId)
