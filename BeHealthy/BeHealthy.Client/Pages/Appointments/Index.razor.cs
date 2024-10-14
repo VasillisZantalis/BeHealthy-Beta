@@ -25,7 +25,7 @@ public partial class Index
     private List<DoctorDto>? _doctors { get; set; }
     private List<PatientDto>? _patients { get; set; }
 
-    private CreateAppointmentModal _createAppointmentModal { get; set; } = new();
+    private AppointmentModal _appointmentModal { get; set; } = new();
     private string? _currentUserId;
     private bool _hasActionRights;
 
@@ -67,7 +67,7 @@ public partial class Index
     private async Task HandleAppointmentFormSubmission((AppointmentForCreationDto, bool, int) submission)
     {
         var (appointmentForCreation, isEdit, appointmentId) = submission;
-        _createAppointmentModal.Close();
+        _appointmentModal.Close();
         if (isEdit)
         {
             var appointmentForUpdate = new AppointmentForUpdateDto
@@ -118,7 +118,7 @@ public partial class Index
         var appointment = _appointments.FirstOrDefault(a => a.Id == appointmentId);
         if (appointment != null)
         {
-            _createAppointmentModal.OpenForEdit(appointment);
+            _appointmentModal.OpenForEdit(appointment);
         }
         else
         {

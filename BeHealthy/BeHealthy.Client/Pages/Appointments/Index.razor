@@ -4,7 +4,7 @@
 
 <h3>Appointments Overview</h3>
 
-<button class="btn btn-outline-dark px-4 mb-3" @onclick="() => _createAppointmentModal.Open()">
+<button class="btn btn-outline-dark px-4 mb-3" @onclick="() => _appointmentModal.Open()">
     Add
 </button>
 
@@ -57,7 +57,7 @@ else
     </table>
 }
 
-<AppointmentModal @ref="_createAppointmentModal"
+<AppointmentModal @ref="_appointmentModal"
                 OnFormSubmit="HandleAppointmentFormSubmission" 
                 Doctors="_doctors"
                 Patients="_patients"/>

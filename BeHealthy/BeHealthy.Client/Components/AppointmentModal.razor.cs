@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Client.Components;
 
-public partial class CreateAppointmentModal
+public partial class AppointmentModal
 {
     [Parameter]
     public EventCallback<(AppointmentForCreationDto, bool, int)> OnFormSubmit { get; set; }
