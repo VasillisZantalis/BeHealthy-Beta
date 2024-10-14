@@ -2,7 +2,7 @@ using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace Microsoft.AspNetCore.Routing;
+namespace BeHealthy.Components.Account;
 
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {

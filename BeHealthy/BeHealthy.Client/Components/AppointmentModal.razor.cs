@@ -4,7 +4,7 @@ using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
 
 
-namespace BeHealthy.Components.Components;
+namespace BeHealthy.Client.Components;
 
 public partial class CreateAppointmentModal
 {

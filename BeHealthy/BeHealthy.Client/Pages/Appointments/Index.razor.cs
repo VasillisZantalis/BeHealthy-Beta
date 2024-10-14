@@ -1,11 +1,10 @@
-﻿using BeHealthy.Client.Extensions;
+﻿using BeHealthy.Client.Components;
+using BeHealthy.Client.Extensions;
 using BeHealthy.Client.Services.Interfaces;
-using BeHealthy.Components.Components;
 using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
-using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
