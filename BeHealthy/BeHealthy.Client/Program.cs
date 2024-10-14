@@ -1,6 +1,5 @@
 using BeHealthy.Client;
-using BeHealthy.Client.Services;
-using BeHealthy.Client.Services.Interfaces;
+using BeHealthy.Client.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -18,11 +17,6 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 
-builder.Services.AddScoped<IAppointmentService, AppointmentService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IDoctorService, DoctorService>();
-builder.Services.AddScoped<INurseService, NurseService>();
-builder.Services.AddScoped<IPatientService, PatientService>();
-builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddClientServices();
 
 await builder.Build().RunAsync();
