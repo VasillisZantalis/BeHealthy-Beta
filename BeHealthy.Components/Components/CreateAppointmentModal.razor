@@ -18,10 +18,10 @@
                 {
                     <EditForm FormName="AppointmentForm" OnValidSubmit="HandleSaveClick" Model="_appointmentForCreationDto">
                         <DataAnnotationsValidator />
-                        <div class="d-flex flex-column gap-2">
+                        <div class="d-flex flex-column gap-3">
 
                             <div class="form-group">
-                                <label for="patientIdSelect">Patient</label>
+                                <label class="fw-bold" for="patientIdSelect">Patient</label>
                                 <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentForCreationDto.PatientId">
                                     @foreach (var patient in Patients)
                                     {
@@ -32,7 +32,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="doctorIdSelect">Doctor</label>
+                                <label class="fw-bold" for="doctorIdSelect">Doctor</label>
                                 <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentForCreationDto.DoctorId">
                                     @foreach (var doctor in Doctors)
                                     {
@@ -44,13 +44,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="appointmentDate">Appointment Date</label>
+                                <label class="fw-bold" for="appointmentDate">Appointment Date</label>
                                 <InputDate id="appointmentDate" class="form-control" @bind-Value="_appointmentForCreationDto.AppointmentDate" />
                                 <ValidationMessage For="@(() => _appointmentForCreationDto.AppointmentDate)" />
                             </div>
 
                             <div class="form-group">
-                                <label for="notes">Notes</label>
+                                <label class="fw-bold" for="notes">Notes</label>
                                 <InputTextArea id="notes" class="form-control" @bind-Value="_appointmentForCreationDto.Notes" style="resize: none;" />
                             </div>
 
