@@ -12,10 +12,6 @@
             <AuthorizeView>
                 <Authorized>
                     <div class="d-flex flex-row gap-3">
-                        <div>
-                            <SectionOutlet SectionName="page-title"></SectionOutlet>
-                        </div>
-
                         <p>Hello, @context.User.Identity?.Name</p>
                         <div class="nav-item">
                             <form action="Account/Logout" method="post">
@@ -31,6 +27,9 @@
         </div>
 
         <article class="content px-4">
+            <div class="main-color rounded-pill p-3 mt-2 mb-4 text-white fw-bold fs-5">
+                <SectionOutlet SectionName="page-title"></SectionOutlet>
+            </div>
             @Body
         </article>
     </main>
