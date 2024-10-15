@@ -1,15 +1,14 @@
-﻿using BeHealthy.Shared.Models.Dtos.Doctor;
+﻿using BeHealthy.Client.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Nurse;
-using System.Net.Http;
 using System.Net.Http.Json;
 
-namespace BeHealthy.Client.Services.Interfaces;
+namespace BeHealthy.Client.Services;
 
-public class NurseService : INurseService
+public class NurseClientService : INurseService
 {
     private readonly HttpClient _httpClient;
 
-    public NurseService(HttpClient httpClient)
+    public NurseClientService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }

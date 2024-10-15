@@ -1,11 +1,10 @@
 ﻿using BeHealthy.Client.Services.Interfaces;
 using BeHealthy.Shared.Models.Entities;
 using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
 
 namespace BeHealthy.Client.Services;
 
-public class UserClientService : IUserClientService
+public class UserClientService : IUserService
 {
     private readonly HttpClient _httpClient;
 

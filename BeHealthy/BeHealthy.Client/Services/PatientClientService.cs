@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 
 namespace BeHealthy.Client.Services;
 
-public class PatientClientService : IPatientClientService
+public class PatientClientService : IPatientService
 {
     private readonly HttpClient _httpClient;
 

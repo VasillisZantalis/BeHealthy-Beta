@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 
 namespace BeHealthy.Client.Services;
 
-public class RoomClientService : IRoomClientService
+public class RoomClientService : IRoomService
 {
     private readonly HttpClient _httpClient;
 

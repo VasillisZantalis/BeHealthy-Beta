@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 
 namespace BeHealthy.Client.Services;
 
-public class AppointmentClientService : IAppointmentClientService
+public class AppointmentClientService : IAppointmentService
 {
     private readonly HttpClient _httpClient;
 
