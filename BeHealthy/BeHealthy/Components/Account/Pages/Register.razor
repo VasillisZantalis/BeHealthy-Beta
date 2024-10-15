@@ -33,6 +33,7 @@
             <h2>Create a new account</h2>
             <hr />
             <div class="row">
+                <Alert @ref="_alert" />
                 @* <ValidationSummary class="text-danger" role="alert" /> *@
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
@@ -102,10 +103,10 @@
     </div>
 </div>
 
-<AlertModal @ref="_alertModal"
+@* <AlertModal @ref="_alertModal"
     OnClose="HandleModalClose"
     Success="@_alertSuccess"
-    Message="@_alertMessage" />
+    Message="@_alertMessage" /> *@
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;
@@ -119,9 +120,11 @@
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
-    private string _alertMessage = string.Empty;
-    private bool _alertSuccess;
-    private AlertModal _alertModal = new();
+    //private string _alertMessage = string.Empty;
+    //private bool _alertSuccess;
+    //private AlertModal _alertModal = new();
+
+    private Alert _alert = new();
 
     protected override void OnInitialized()
     {
@@ -156,9 +159,8 @@
         {
             _inProgress = false;
             identityErrors = result.Errors;
-            _alertMessage = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
-            _alertSuccess = false;
-            _alertModal.OpenModal();
+            var errors = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
+            _alert.ShowFailed(errors);
             return;
         }
 
@@ -186,9 +188,9 @@
                 break;
         }
 
-        _alertMessage = "Successful";
-        _alertSuccess = true;
-        _alertModal.OpenModal();
+        _inProgress = false;
+        string successMessage = "Successful";
+        _alert.ShowSuccess(successMessage);
     }
 
     private void HandleModalClose(bool success)

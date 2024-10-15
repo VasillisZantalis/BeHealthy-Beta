@@ -1,12 +1,6 @@
 ﻿@page "/Account/Login"
 
-@using System.ComponentModel.DataAnnotations
-@using BeHealthy.Services.Interfaces
-@using BeHealthy.Shared.Models
-@using BeHealthy.Shared.Models.Entities
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
+@layout EmptyLayout
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -19,13 +13,12 @@
 
     <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-4 rounded p-5 shadow">
         <section>
-            <h3 class="alert-danger">@errorMessage</h3>
-
+            @* <h3 class="alert-danger">@errorMessage</h3> *@
+            <Alert @ref="_alert" />
             <EditForm id="LoginForm" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" Enhance>
                 <DataAnnotationsValidator />
                 <h2>Login with your Credentials</h2>
                 <hr />
-                <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
                     <InputText id=email @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                     <label for="email" class="form-label">Email</label>
@@ -62,6 +55,8 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
+    private Alert _alert = new();
+
     protected override async Task OnInitializedAsync()
     {
         if (HttpMethods.IsGet(HttpContext.Request.Method))
@@ -97,7 +92,8 @@
         }
         else
         {
-            errorMessage = "Error: Invalid login attempt.";
+            errorMessage = "Invalid login attempt";
+            _alert.ShowFailed(errorMessage);
         }
     }
 
