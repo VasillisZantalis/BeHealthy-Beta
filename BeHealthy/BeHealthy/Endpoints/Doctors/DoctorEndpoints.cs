@@ -17,7 +17,6 @@ public static class DoctorEndpoints
             ([FromServices] IDoctorService doctorService) =>
         {
             var doctors = await doctorService.GetAllDoctorsAsync();
-
             return doctors is null
                 ? TypedResults.NotFound()
                 : TypedResults.Ok(doctors);

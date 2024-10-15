@@ -1,6 +1,6 @@
 ﻿@page "/patients"
 @attribute [Authorize]
-@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@rendermode InteractiveAuto
 
 <PageTitle>Patients</PageTitle>
 
@@ -8,7 +8,7 @@
 
 <CreateUserButton Href="@_createUserHref" />
 
-@if (_patients == null)
+@if (_isLoading)
 {
     <Loader />
 }
