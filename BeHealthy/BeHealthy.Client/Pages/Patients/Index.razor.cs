@@ -1,6 +1,6 @@
 ﻿using BeHealthy.Client.Persistance;
-using BeHealthy.Client.Services.Interfaces;
-using BeHealthy.Shared.Models.Entities;
+using BeHealthy.Shared.Interfaces;
+using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Client.Pages.Patients;
@@ -8,16 +8,16 @@ namespace BeHealthy.Client.Pages.Patients;
 public partial class Index
 {
     private string _createUserHref { get; set; } = default!;
-
     [Inject] IUserService _userService { get; set; } = default!;
+    [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
 
-    private List<ApplicationUser> _patients { get; set; } = default!;
+    private List<PatientDto> _patients { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
         _createUserHref = $"Account/Register?role=Patient&redirectUrl={RoutingEndpoints.PatientsPage}";
-        _patients = (await _userService.GetAllPatientsAsync()).ToList();
+        _patients = (await _patientService.GetAllPatientsAsync()).ToList();
     }
 
     //private async Task EditPatient(string id)

@@ -1,6 +1,6 @@
 ﻿using BeHealthy.Client.Components;
 using BeHealthy.Client.Extensions;
-using BeHealthy.Client.Services.Interfaces;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;

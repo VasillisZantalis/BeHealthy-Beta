@@ -23,9 +23,9 @@ else
         {
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
                 <div class="mb-3">
-                    <UserCard Id="@nurse.Id"
+                    <UserCard Id="@nurse.UserId"
                               FullName="@nurse.FullName"
-                              Email="@nurse.Email"
+                              Email="@string.Empty"
                               Edit="@(() => {})"
                               Delete="@DeleteNurse" />
                 </div>

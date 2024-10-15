@@ -1,6 +1,5 @@
 ﻿using BeHealthy.Client.Persistance;
-using BeHealthy.Client.Services;
-using BeHealthy.Client.Services.Interfaces;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using Microsoft.AspNetCore.Components;
 
