@@ -1,6 +1,6 @@
 ﻿@page "/nurses"
 @attribute [Authorize]
-@rendermode InteractiveAuto
+@rendermode InteractiveWebAssembly
 
 <PageTitle>Nurses</PageTitle>
 
@@ -8,11 +8,11 @@
 
 <CreateUserButton Href="@_createUserHref" />
 
-@if (_nurses == null)
+@if (_isLoading)
 {
     <Loader />
 }
-else if (!_nurses.Any())
+else if (_nurses is null)
 {
     <p>No Nurses available</p>
 }

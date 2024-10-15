@@ -1,6 +1,6 @@
 ﻿@page "/appointment"
 @attribute [Authorize]
-@rendermode InteractiveAuto
+@rendermode InteractiveWebAssembly
 
 <h3>Appointments Overview</h3>
 
@@ -12,7 +12,7 @@
 {
     <Loader/>
 }
-else if (!_appointments.Any())
+else if (_appointments is null)
 {
     <p>No Appointments available.</p>
 }

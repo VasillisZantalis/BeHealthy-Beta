@@ -14,10 +14,14 @@ public partial class Index
 
     private List<NurseDto> _nurses { get; set; } = default!;
 
+    private bool _isLoading = default;
+
     protected override async Task OnInitializedAsync()
     {
+        _isLoading = true;
         _createUserHref = $"Account/Register?role=Nurse&redirectUrl={RoutingEndpoints.NursesPage}";
         _nurses = (await _nurseService.GetAllNursesAsync()).ToList();
+        _isLoading = false;
     }
 
     //private async Task EditNurse(string id)

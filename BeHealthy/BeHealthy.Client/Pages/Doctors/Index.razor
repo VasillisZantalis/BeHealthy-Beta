@@ -1,6 +1,6 @@
 ﻿@page "/doctors"
 @attribute [Authorize]
-@rendermode InteractiveAuto
+@rendermode InteractiveWebAssembly
 
 <PageTitle>Doctors</PageTitle>
 
@@ -12,7 +12,7 @@
 {
     <Loader />
 }
-else if (!_doctors.Any())
+else if (_doctors is null)
 {
     <p>No Doctors available</p>
 }
