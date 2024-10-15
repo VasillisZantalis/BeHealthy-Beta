@@ -10,21 +10,12 @@
     <main>
         <div class="top-row px-4">
             <AuthorizeView>
-                @* <NotAuthorized>
-                    <div class="nav-item">
-                        <NavLink class="nav-link" href="Account/Login">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
-                        </NavLink>
-                    </div>
-
-                    <div class="nav-item">
-                        <NavLink class="nav-link" href="Account/Register">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Register
-                        </NavLink>
-                    </div>
-                </NotAuthorized> *@
                 <Authorized>
                     <div class="d-flex flex-row gap-3">
+                        <div>
+                            <SectionOutlet SectionName="page-title"></SectionOutlet>
+                        </div>
+
                         <p>Hello, @context.User.Identity?.Name</p>
                         <div class="nav-item">
                             <form action="Account/Logout" method="post">
