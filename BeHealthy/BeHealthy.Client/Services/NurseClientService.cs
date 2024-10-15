@@ -1,4 +1,4 @@
-﻿using BeHealthy.Client.Services.Interfaces;
+﻿using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Nurse;
 using System.Net.Http.Json;
 
@@ -30,4 +30,18 @@ public class NurseClientService : INurseService
         response.EnsureSuccessStatusCode();
     }
 
+    public Task<IEnumerable<NurseDto>> GetAllNursesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<NurseDto> GetNurseByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateNurseAsync(NurseForUpdateDto nurse)
+    {
+        throw new NotImplementedException();
+    }
 }

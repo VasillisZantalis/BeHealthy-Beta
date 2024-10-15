@@ -1,4 +1,4 @@
-﻿using BeHealthy.Client.Services.Interfaces;
+﻿using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Room;
 using System.Net.Http.Json;
 

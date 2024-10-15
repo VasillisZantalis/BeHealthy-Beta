@@ -1,4 +1,4 @@
-﻿using BeHealthy.Client.Services.Interfaces;
+﻿using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using System.Net.Http.Json;

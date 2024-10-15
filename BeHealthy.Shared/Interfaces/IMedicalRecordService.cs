@@ -1,6 +1,6 @@
 ﻿using BeHealthy.Shared.Models.Dtos.MedicalRecord;
 
-namespace BeHealthy.Services.Interfaces;
+namespace BeHealthy.Shared.Interfaces;
 
 public interface IMedicalRecordService
 {

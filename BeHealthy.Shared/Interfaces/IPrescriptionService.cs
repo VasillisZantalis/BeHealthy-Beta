@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Shared.Models.Dtos;
 using BeHealthy.Shared.Models.Dtos.Prescription;
 
-namespace BeHealthy.Services.Interfaces;
+namespace BeHealthy.Shared.Interfaces;
 
 public interface IPrescriptionService
 {

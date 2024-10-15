@@ -1,7 +1,6 @@
 ﻿using BeHealthy.Shared.Models.Dtos.Appointment;
-using BeHealthy.Shared.Models.Entities;
 
-namespace BeHealthy.Services.Interfaces;
+namespace BeHealthy.Shared.Interfaces;
 
 public interface IAppointmentService
 {
@@ -11,6 +10,6 @@ public interface IAppointmentService
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByUserIdAsync(string userId);
     Task<AppointmentDto> GetAppointmentByIdAsync(int id);
     Task AddAppointmentAsync(AppointmentForCreationDto appointment);
-    Task UpdateAppointmentAsync(AppointmentForUpdateDto appointment);
+    Task UpdateAppointmentAsync(int id, AppointmentForUpdateDto appointment);
     Task DeleteAppointmentAsync(int id);
 }

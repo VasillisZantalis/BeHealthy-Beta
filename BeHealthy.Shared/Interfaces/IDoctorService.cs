@@ -1,14 +1,15 @@
 ﻿using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
+using BeHealthy.Shared.Models.Entities;
 
-namespace BeHealthy.Client.Services.Interfaces;
+namespace BeHealthy.Shared.Interfaces;
 
 public interface IDoctorService
 {
     Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync();
-    Task<DoctorDto>? GetDoctorByIdAsync(int id);
+    Task<DoctorDto> GetDoctorByIdAsync(int id);
     Task<IEnumerable<AppointmentDto>> GetDoctorAppointmentsByUserIdAsync(string userId);
-    Task AddDoctorAsync(DoctorForCreationDto doctorDto);
-    Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctorDto);
+    Task AddDoctorAsync(DoctorForCreationDto doctor);
+    Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctor);
     Task DeleteDoctorAsync(int id);
 }

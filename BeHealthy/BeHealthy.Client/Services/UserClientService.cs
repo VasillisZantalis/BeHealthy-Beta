@@ -1,6 +1,4 @@
-﻿using BeHealthy.Client.Services.Interfaces;
-using BeHealthy.Shared.Models.Entities;
-using System.Net.Http.Json;
+﻿using BeHealthy.Shared.Interfaces;
 
 namespace BeHealthy.Client.Services;
 
@@ -11,26 +9,6 @@ public class UserClientService : IUserService
     public UserClientService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-    }
-
-    public async Task<IEnumerable<ApplicationUser>> GetAllDoctorsAsync()
-    {
-        return await _httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/users/doctors") ?? new List<ApplicationUser>();
-    }
-
-    public async Task<IEnumerable<ApplicationUser>> GetAllPatientsAsync()
-    {
-        return await _httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/users/patients") ?? new List<ApplicationUser>();
-    }
-
-    public async Task<IEnumerable<ApplicationUser>> GetAllNursesAsync()
-    {
-        return await _httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/users/nurses") ?? new List<ApplicationUser>();
-    }
-
-    public async Task<IEnumerable<ApplicationUser>> GetAllStaffAsync()
-    {
-        return await _httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/users/staff") ?? new List<ApplicationUser>();
     }
 
     public async Task DeleteUserAsync(string id)

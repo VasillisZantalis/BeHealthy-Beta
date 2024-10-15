@@ -1,4 +1,4 @@
-﻿using BeHealthy.Client.Services.Interfaces;
+﻿using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using System.Net.Http.Json;
 
@@ -19,17 +19,17 @@ public class AppointmentClientService : IAppointmentService
         return appointments ?? new List<AppointmentDto>();
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByDoctorIdAsync(int doctorId)
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
     {
         return await _httpClient.GetFromJsonAsync<IEnumerable<AppointmentDto>>($"api/appointments/doctor/{doctorId}") ?? new List<AppointmentDto>();
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
         return await _httpClient.GetFromJsonAsync<IEnumerable<AppointmentDto>>($"api/appointments/patient/{patientId}") ?? new List<AppointmentDto>();
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByUserIdAsync(string userId)
     {
         return await _httpClient.GetFromJsonAsync<IEnumerable<AppointmentDto>>($"api/appointments/user/{userId}") ?? new List<AppointmentDto>();
     }
