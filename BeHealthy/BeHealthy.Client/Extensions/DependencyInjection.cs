@@ -1,5 +1,5 @@
-﻿using BeHealthy.Client.Services.Interfaces;
-using BeHealthy.Client.Services;
+﻿using BeHealthy.Client.Services;
+using BeHealthy.Shared.Interfaces;
 
 namespace BeHealthy.Client.Extensions;
 

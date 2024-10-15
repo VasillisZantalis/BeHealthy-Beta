@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BeHealthy.Repositories.Interfaces;
-using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models.Dtos;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Prescription;
 using BeHealthy.Shared.Models.Entities;
 

@@ -1,5 +1,5 @@
 ﻿using BeHealthy.Filters;
-using BeHealthy.Services.Interfaces;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Room;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -45,13 +45,14 @@ public static class RoomEndpoints
         }).AddEndpointFilter<ValidationFilter<RoomForCreationDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
-          ([FromServices] IRoomService roomService,
-           RoomForUpdateDto roomDto) =>
+            ([FromServices] IRoomService roomService,
+            int id,
+            RoomForUpdateDto roomDto) =>
         {
             if (roomDto is null)
                 return TypedResults.BadRequest();
 
-            await roomService.UpdateRoomAsync(roomDto);
+            await roomService.UpdateRoomAsync(id, roomDto);
 
             return TypedResults.NoContent();
         });

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BeHealthy.Repositories.Interfaces;
-using BeHealthy.Services.Interfaces;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using BeHealthy.Shared.Models.Entities;
@@ -36,7 +36,7 @@ public class PatientService : IPatientService
         await _unitOfWork.PatientRepository.AddAsync(patient);
     }
 
-    public async Task UpdatePatientAsync(PatientForUpdateDto patientDto)
+    public async Task UpdatePatientAsync(int id, PatientForUpdateDto patientDto)
     {
         var patient = _mapper.Map<Patient>(patientDto);
         await _unitOfWork.PatientRepository.UpdateAsync(patient);

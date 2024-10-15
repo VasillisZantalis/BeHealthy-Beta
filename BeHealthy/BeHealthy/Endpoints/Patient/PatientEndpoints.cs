@@ -1,5 +1,5 @@
 ﻿using BeHealthy.Filters;
-using BeHealthy.Services.Interfaces;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -56,13 +56,14 @@ public static class PatientEndpoints
         }).AddEndpointFilter<ValidationFilter<PatientForCreationDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
-          ([FromServices] IPatientService patientService,
-           PatientForUpdateDto patientDto) =>
+            ([FromServices] IPatientService patientService,
+            int id,
+            PatientForUpdateDto patientDto) =>
         {
             if (patientDto is null)
                 return TypedResults.BadRequest();
 
-            await patientService.UpdatePatientAsync(patientDto);
+            await patientService.UpdatePatientAsync(id, patientDto);
 
             return TypedResults.NoContent();
         });

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BeHealthy.Repositories.Interfaces;
-using BeHealthy.Services.Interfaces;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Entities;
 
@@ -53,7 +53,7 @@ public class AppointmentService : IAppointmentService
         await _unitOfWork.AppointmentRepository.AddAsync(appointment);
     }
 
-    public async Task UpdateAppointmentAsync(AppointmentForUpdateDto appointmentDto)
+    public async Task UpdateAppointmentAsync(int id, AppointmentForUpdateDto appointmentDto)
     {
         var appointment = _mapper.Map<Appointment>(appointmentDto);
         await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);

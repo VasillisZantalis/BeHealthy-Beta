@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BeHealthy.Repositories.Interfaces;
-using BeHealthy.Services.Interfaces;
+using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Room;
 using BeHealthy.Shared.Models.Entities;
 
@@ -35,7 +35,7 @@ public class RoomService : IRoomService
         await _unitOfWork.RoomRepository.AddAsync(room);
     }
 
-    public async Task UpdateRoomAsync(RoomForUpdateDto roomDto)
+    public async Task UpdateRoomAsync(int id, RoomForUpdateDto roomDto)
     {
         var room = _mapper.Map<Room>(roomDto);
         await _unitOfWork.RoomRepository.UpdateAsync(room);
