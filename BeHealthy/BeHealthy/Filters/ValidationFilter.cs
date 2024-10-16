@@ -11,17 +11,17 @@ public class ValidationFilter<TRequest> : IEndpointFilter
         _validator = validator;
     }
 
-    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
+    public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext contextFactory, EndpointFilterDelegate next)
     {
-        var request = context.Arguments.OfType<TRequest>().First();
+        var request = contextFactory.Arguments.OfType<TRequest>().First();
 
-        var result = await _validator.ValidateAsync(request, context.HttpContext.RequestAborted);
+        var result = await _validator.ValidateAsync(request, contextFactory.HttpContext.RequestAborted);
 
         if (!result.IsValid)
         {
             return TypedResults.ValidationProblem(result.ToDictionary());
         }
 
-        return await next(context);
+        return await next(contextFactory);
     }
 }

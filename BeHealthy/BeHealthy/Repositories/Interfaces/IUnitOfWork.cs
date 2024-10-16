@@ -1,6 +1,6 @@
 ﻿namespace BeHealthy.Repositories.Interfaces;
 
-public interface IUnitOfWork : IDisposable
+public interface IUnitOfWork
 {
     IPatientRepository PatientRepository { get; }
     IDoctorRepository DoctorRepository { get; }
@@ -11,5 +11,4 @@ public interface IUnitOfWork : IDisposable
     IPrescriptionRepository PrescriptionRepository { get; }
     IRoomRepository RoomRepository { get; }
 
-    Task SaveChangesAsync();
 }

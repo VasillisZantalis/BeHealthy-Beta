@@ -1,71 +1,98 @@
 ﻿using BeHealthy.Data;
 using BeHealthy.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BeHealthy.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    protected readonly ApplicationDbContext _context;
+    protected readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
 
-    public GenericRepository(ApplicationDbContext context)
+    public GenericRepository(IDbContextFactory<ApplicationDbContext> contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await _context.Set<T>().ToListAsync();
+        using (var contextFactory = _contextFactory.CreateDbContext())
+        {
+            return await contextFactory.Set<T>().ToListAsync();
+        }
     }
 
     public async Task<IEnumerable<T>> GetAllPagedAsync(int? pageNumber = null, int? pageSize = null)
     {
-        var query = _context.Set<T>().AsQueryable();
-
-        if (pageNumber.HasValue && pageSize.HasValue)
+        using (var contextFactory = _contextFactory.CreateDbContext())
         {
-            query = query.Skip((pageNumber.Value - 1) * pageSize.Value)
-                         .Take(pageSize.Value);
-        }
+            var query = contextFactory.Set<T>().AsQueryable();
 
-        return await query.AsNoTracking().ToListAsync();
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                query = query.Skip((pageNumber.Value - 1) * pageSize.Value)
+                             .Take(pageSize.Value);
+            }
+
+            return await query.AsNoTracking().ToListAsync();
+        }
+       
     }
 
     public async Task<T?> GetByIdAsync(int id)
     {
-        return await _context.Set<T>().FindAsync(id);
+        using (var contextFactory = _contextFactory.CreateDbContext())
+        {
+            return await contextFactory.Set<T>().FindAsync(id);
+        }
     }
 
     public async Task AddAsync(T entity)
     {
-        await _context.Set<T>().AddAsync(entity);
-        await _context.SaveChangesAsync();
+        using (var contextFactory = _contextFactory.CreateDbContext())
+        {
+            await contextFactory.Set<T>().AddAsync(entity);
+            await contextFactory.SaveChangesAsync();
+        }
     }
 
     public async Task UpdateAsync(T entity)
     {
-        _context.Set<T>().Update(entity);
-        await _context.SaveChangesAsync();
+        using (var contextFactory = _contextFactory.CreateDbContext())
+        {
+            contextFactory.Set<T>().Update(entity);
+            await contextFactory.SaveChangesAsync();
+        }
     }
 
     public async Task DeleteAsync(int id)
     {
-        var entity = await _context.Set<T>().FindAsync(id);
-        if (entity != null)
+        using (var contextFactory = _contextFactory.CreateDbContext())
         {
-            _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync();
+            var entity = await contextFactory.Set<T>().FindAsync(id);
+            if (entity != null)
+            {
+                contextFactory.Set<T>().Remove(entity);
+                await contextFactory.SaveChangesAsync();
+            }
         }
+        
     }
 
     public async Task DeleteEntityAsync(T entity)
     {
-        _context.Set<T>().Remove(entity);
-        await _context.SaveChangesAsync();
+        using (var contextFactory = _contextFactory.CreateDbContext())
+        {
+            contextFactory.Set<T>().Remove(entity);
+            await contextFactory.SaveChangesAsync();
+        }
     }
 
     public async Task<bool> ExistsAsync(int id)
     {
-        return await _context.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id);
+        using (var contextFactory = _contextFactory.CreateDbContext())
+        {
+            return await contextFactory.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id);
+        }
     }
 }

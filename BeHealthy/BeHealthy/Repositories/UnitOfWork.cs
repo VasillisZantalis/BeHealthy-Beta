@@ -6,11 +6,11 @@ namespace BeHealthy.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
 
-    public UnitOfWork(ApplicationDbContext context)
+    public UnitOfWork(IDbContextFactory<ApplicationDbContext> dbContextFactory)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     private IPatientRepository? _patientRepository;
@@ -23,36 +23,27 @@ public class UnitOfWork : IUnitOfWork
     private IRoomRepository? _roomRepository;
 
     public IPatientRepository PatientRepository =>
-        _patientRepository ??= new PatientRepository(_context);
+        _patientRepository ??= new PatientRepository(_dbContextFactory);
 
     public IDoctorRepository DoctorRepository =>
-        _doctorRepository ??= new DoctorRepository(_context);
+        _doctorRepository ??= new DoctorRepository(_dbContextFactory);
 
     public INurseRepository NurseRepository =>
-        _nurseRepository ??= new NurseRepository(_context);
+        _nurseRepository ??= new NurseRepository(_dbContextFactory);
 
     public IAppointmentRepository AppointmentRepository =>
-        _appointmentRepository ??= new AppointmentRepository(_context);
+        _appointmentRepository ??= new AppointmentRepository(_dbContextFactory);
 
     public IDepartmentRepository DepartmentRepository =>
-        _departmentRepository ??= new DepartmentRepository(_context);
+        _departmentRepository ??= new DepartmentRepository(_dbContextFactory);
 
     public IMedicalRecordRepository MedicalRecordRepository =>
-        _medicalRecordRepository ??= new MedicalRecordRepository(_context);
+        _medicalRecordRepository ??= new MedicalRecordRepository(_dbContextFactory);
 
     public IPrescriptionRepository PrescriptionRepository =>
-        _prescriptionRepository ??= new PrescriptionRepository(_context);
+        _prescriptionRepository ??= new PrescriptionRepository(_dbContextFactory);
 
     public IRoomRepository RoomRepository =>
-        _roomRepository ??= new RoomRepository(_context);
+        _roomRepository ??= new RoomRepository(_dbContextFactory);
 
-    public async Task SaveChangesAsync()
-    {
-        await _context.SaveChangesAsync();
-    }
-
-    public void Dispose()
-    {
-        _context.Dispose();
-    }
 }
