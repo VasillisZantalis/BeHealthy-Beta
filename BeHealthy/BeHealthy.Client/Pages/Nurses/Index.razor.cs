@@ -24,13 +24,13 @@ public partial class Index
         _isLoading = false;
     }
 
-    //private async Task EditNurse(string id)
-    //{
-    //}
-
-    private async Task DeleteNurse(string id)
+    private async Task EditNurse(int id)
     {
-        await _userService.DeleteUserAsync(id);
+    }
+
+    private async Task DeleteNurse(int id)
+    {
+        await _nurseService.DeleteNurseAsync(id);
         _navigationManager.Refresh(forceReload: true);
     }
 }

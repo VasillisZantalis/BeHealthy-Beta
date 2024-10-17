@@ -3,7 +3,7 @@
     <div class="alert alert-@_severity.ToString().ToLower() alert-dismissible fade show" role="alert">
         <div class="d-flex flex-row gap-2">
             <span class="fs-5 bi bi-@_icon text-@_severity.ToString().ToLower()"></span>
-            <h6>@Message</h6>
+            <span class="fw-bold">@Message</span>
             <button @onclick="CloseAlert" type="button" class="btn-close" aria-label="Close"></button>
         </div>
     </div>

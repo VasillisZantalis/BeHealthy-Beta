@@ -11,6 +11,27 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
     {
     }
 
+    public async Task DeleteDoctorAsync(int id)
+    {
+        using (var context = _contextFactory.CreateDbContext())
+        {
+            var doctor = await context.Doctors
+                .Include(d => d.User) 
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (doctor != null)
+            {
+                if (doctor.User != null)
+                {
+                    context.Users.Remove(doctor.User);
+                }
+
+                context.Doctors.Remove(doctor);
+                await context.SaveChangesAsync();
+            }
+        }
+    }
+
     public async Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId)
     {
         using (var context = _contextFactory.CreateDbContext())

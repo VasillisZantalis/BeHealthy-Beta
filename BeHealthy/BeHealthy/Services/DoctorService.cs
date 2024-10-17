@@ -44,7 +44,7 @@ public class DoctorService : IDoctorService
 
     public async Task DeleteDoctorAsync(int id)
     {
-        await _unitOfWork.DoctorRepository.DeleteAsync(id);
+        await _unitOfWork.DoctorRepository.DeleteDoctorAsync(id);
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetDoctorAppointmentsByUserIdAsync(string userId)

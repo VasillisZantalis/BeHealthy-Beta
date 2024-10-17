@@ -24,13 +24,14 @@ public partial class Index
         _isLoading = false;
     }
 
-    private async Task EditDoctor(string id)
+    private void EditDoctor(int id)
     {
+        _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/{id}");
     }
 
-    private async Task DeleteDoctor(string id)
+    private async Task DeleteDoctor(int id)
     {
-        await _userService.DeleteUserAsync(id);
+        await _doctorService.DeleteDoctorAsync(id);
         _navigationManager.Refresh(forceReload: true);
     }
 }

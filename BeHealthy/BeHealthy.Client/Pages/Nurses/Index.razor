@@ -23,10 +23,10 @@ else
         {
             <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
                 <div class="mb-3">
-                    <UserCard Id="@nurse.UserId"
+                    <UserCard Id="@nurse.Id"
                               FullName="@nurse.FullName"
                               Email="@string.Empty"
-                              Edit="@(() => {})"
+                              Edit="@EditNurse"
                               Delete="@DeleteNurse" />
                 </div>
             </div>

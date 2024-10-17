@@ -32,7 +32,7 @@
 @code {
 
     [Parameter]
-    public string? Id { get; set; }
+    public int Id { get; set; }
 
     [Parameter]
     public string? FullName { get; set; }
@@ -44,8 +44,8 @@
     public string? Specialty { get; set; }
 
     [Parameter]
-    public EventCallback<string> Edit { get; set; }
+    public EventCallback<int> Edit { get; set; }
 
     [Parameter]
-    public EventCallback<string> Delete { get; set; }
+    public EventCallback<int> Delete { get; set; }
 }

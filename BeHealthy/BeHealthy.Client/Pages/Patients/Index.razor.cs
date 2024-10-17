@@ -28,9 +28,9 @@ public partial class Index
     //{
     //}
 
-    private async Task DeletePatient(string id)
+    private async Task DeletePatient(int id)
     {
-        await _userService.DeleteUserAsync(id);
+        await _patientService.DeletePatientAsync(id);
         _navigationManager.Refresh(forceReload: true);
     }
 }
