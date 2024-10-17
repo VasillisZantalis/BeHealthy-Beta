@@ -19,7 +19,7 @@ public partial class Index
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
-        _createUserHref = $"Account/Register?role=Doctor&redirectUrl={RoutingEndpoints.DoctorsPage}";
+        _createUserHref = $"Account/Register?role=Doctor&redirectUrl={RoutingEndpoints.HOME_PAGE}";
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
         _isLoading = false;
     }

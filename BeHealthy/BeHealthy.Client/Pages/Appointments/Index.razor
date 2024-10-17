@@ -37,7 +37,7 @@ else
                 foreach (var appointment in _appointments)
                 {
                     <tr>
-                        <td>@appointment.AppointmentDate.ToShortDateString()</td>
+                        <td>@DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)</td>
                         <td>@(string.IsNullOrEmpty(appointment.Notes) ? "-" : appointment.Notes)</td>
                         <td>@(appointment.Patient != null ? $"{appointment.Patient.FullName}" : "N/A")</td>
                         <td>@(appointment.Doctor != null ? $"{appointment.Doctor.FullName}" : "N/A")</td>

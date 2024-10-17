@@ -2,11 +2,11 @@
 
 public static class RoutingEndpoints
 {
-    public const string HomePage = "/";
-    public const string AppartmentsPage = "/apartments";
-    public const string DoctorsPage = "/doctors";
-    public const string PatientsPage = "/patients";
-    public const string NursesPage = "/nurses";
-    public const string RoomsPage = "/rooms";
-    public const string SettingsPage = "/settings";
+    public const string HOME_PAGE = "/";
+    public const string APPOINTMENTS_PAGE = "/appointments";
+    public const string DOCTORS_PAGE = "/doctors";
+    public const string PATIENTS_PAGE = "/patients";
+    public const string NURSES_PAGE = "/nurses";
+    public const string ROOMS_PAGE = "/rooms";
+    public const string SETTINGS_PAGE = "/settings";
 }
