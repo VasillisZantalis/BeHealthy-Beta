@@ -22,4 +22,25 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
                 .ToListAsync();
         };
     }
+
+    public async Task DeletePatientAsync(int id)
+    {
+        using (var context = _contextFactory.CreateDbContext())
+        {
+            var patient = await context.Patients
+                .Include(d => d.User)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (patient != null)
+            {
+                if (patient.User != null)
+                {
+                    context.Users.Remove(patient.User);
+                }
+
+                context.Patients.Remove(patient);
+                await context.SaveChangesAsync();
+            }
+        }
+    }
 }

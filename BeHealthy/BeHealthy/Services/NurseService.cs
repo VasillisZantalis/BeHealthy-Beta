@@ -43,7 +43,7 @@ public class NurseService : INurseService
 
     public async Task DeleteNurseAsync(int id)
     {
-        await _unitOfWork.NurseRepository.DeleteAsync(id);
+        await _unitOfWork.NurseRepository.DeleteNurseAsync(id);
     }
 }
 
