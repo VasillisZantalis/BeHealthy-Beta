@@ -46,6 +46,10 @@ main {
     }
 }
 
+.snackbar {
+    background-color: #294975;
+}
+
 @media (min-width: 641px) {
     .page {
         flex-direction: row;

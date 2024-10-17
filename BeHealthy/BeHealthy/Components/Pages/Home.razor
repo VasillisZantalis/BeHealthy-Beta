@@ -1,14 +1,18 @@
 ﻿@page "/"
+@using BeHealthy.Client.Components
+@using BeHealthy.Client.Extensions
 @rendermode InteractiveServer
-
-@attribute [StreamRendering]
 @attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
 
 <SectionContent SectionName="page-title">Dashboard</SectionContent>
 
-<div class="d-flex flex-row gap-2">
+<UpcomingAppointments />
+
+
+
+@* <div class="d-flex flex-row gap-2">
     <button type="button" class="btn btn-primary" @onclick="ShowModal">
         Launch modal
     </button>
@@ -19,15 +23,8 @@
     ShowModalChanged="@((value) => showModal = value)"
     Title="Parameter Title">
     <p>Modal body text goes here.</p>
-</CustomModal>
+</CustomModal> *@
 @* 
     <CreateAppointmentModal
         @ref="_newCustomModal"
         OnFormSubmit="HandleAppointmentFormSubmission"/> *@
-
-@code {
-
-    private bool showModal = false;
-    private void ShowModal() => showModal = true;
-
-}

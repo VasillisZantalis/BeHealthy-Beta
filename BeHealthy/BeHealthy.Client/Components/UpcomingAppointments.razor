@@ -1,0 +1,42 @@
+﻿@inject IAppointmentService _appointmentService
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var appointment in _upcomingAppointments)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <strong>Date:</strong> @DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)
+                        </h5>
+                        <p class="card-text">
+                            <strong>Patient:</strong> @appointment?.Patient?.FullName
+                        </p>
+                        <p class="card-text">
+                            <strong>Doctor:</strong> @appointment?.Doctor?.FirstName
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">View Details</button>
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AppointmentDto> _upcomingAppointments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var today = DateTime.Now.Date;
+        var appointments = await _appointmentService.GetAllAppointmentsAsync();
+
+        _upcomingAppointments = appointments
+            .Where(a => a.AppointmentDate >= today && a.AppointmentDate <= today.AddDays(3))
+            .ToList();
+    }
+}
