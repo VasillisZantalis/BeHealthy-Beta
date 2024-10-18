@@ -8,4 +8,5 @@ public class NurseDto
     public string LastName { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public string FullName => $"{FirstName} {LastName}";
+    public DateTime? CreatedAt { get; set; }
 }

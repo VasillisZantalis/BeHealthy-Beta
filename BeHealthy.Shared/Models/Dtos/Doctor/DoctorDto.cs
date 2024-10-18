@@ -9,4 +9,5 @@ public class DoctorDto
     public string Specialty { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public string FullName => $"{FirstName} {LastName}";
+    public DateTime? CreatedAt { get; set; }
 }
