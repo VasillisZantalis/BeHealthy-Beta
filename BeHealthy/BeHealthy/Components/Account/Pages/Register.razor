@@ -254,7 +254,9 @@
         public string Role { get; set; } = "";
 
         // Doctor specific fields
-        public string? Specialty { get; set; }
+        [Required]
+        [Display(Name = "Speciality is Required")]
+        public string Specialty { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
     }
 }

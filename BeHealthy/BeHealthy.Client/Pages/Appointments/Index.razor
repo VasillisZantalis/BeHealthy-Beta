@@ -5,7 +5,7 @@
 <SectionContent SectionName="page-title">Appointments</SectionContent>
 
 <button class="btn btn-outline-dark px-4 mb-3" @onclick="() => _appointmentModal.Open()">
-    Add
+    <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
 </button>
 
 @if (_isLoading)
@@ -51,6 +51,10 @@ else
 
                     </tr>
                 }
+            }
+            else
+            {
+                <span>There are no upcoming appointments</span>
             }
         </tbody>
     </table>

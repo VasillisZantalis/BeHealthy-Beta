@@ -2,7 +2,7 @@
 
 <div id="upcomingAppointmentsDiv">
     <div class="card shadow-sm">
-        <h5 class="card-title bg-info p-3">Upcoming Appointments</h5>
+        <h5 class="card-title p-3">Upcoming Appointments</h5>
 
         <div class="d-flex flex-column">
             @foreach (var appointment in _upcomingAppointments)
@@ -44,6 +44,7 @@
         _upcomingAppointments = appointments
             .Where(a => a.AppointmentDate >= today && a.AppointmentDate <= today.AddDays(3))
             .OrderBy(a => a.AppointmentDate)
+            .Take(10)
             .ToList();
     }
 }

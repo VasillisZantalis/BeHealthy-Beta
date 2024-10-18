@@ -16,36 +16,14 @@ else if (_rooms is null)
 }
 else
 {
-    <h5>@GetRoomName(room)</h5>
-
-    <CustomDropdown 
-        TItem="RoomDto" 
-        Items="_rooms" 
-        GetDisplayText="GetRoomName" 
-        GetValue="GetRoomId"
-        OnSelectedValueChanged="OnRoomSelected"/>
+    
 }
 
 @code {
     private IEnumerable<RoomDto> _rooms = default!;
-    private RoomDto room = new();
-
-    private string? selectedRoomId;
-    private bool showModal = false;
 
     protected override async Task OnInitializedAsync()
     {
         _rooms = await RoomService.GetAllRoomsAsync();
-        room = _rooms.FirstOrDefault() ?? new RoomDto();
-    }
-
-    private string GetRoomName(RoomDto room) => $"{room.Name} {room.Number} ({room.Department})";
-
-    private string GetRoomId(RoomDto room) => room.Id.ToString();
-
-    private void OnRoomSelected(string roomId)
-    {
-        selectedRoomId = roomId;
-        room = _rooms.FirstOrDefault(w => w.Id.ToString() == selectedRoomId) ?? new RoomDto();
     }
 }
