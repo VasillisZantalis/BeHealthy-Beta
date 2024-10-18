@@ -1,0 +1,25 @@
+﻿<div class="dropdown">
+    <button class="btn btn-sm" type="button" @onclick="ToggleDropdown">
+        <span class="bi bi-three-dots-vertical"></span>
+        @if (!string.IsNullOrEmpty(ButtonText))
+        {
+            @ButtonText
+        }
+    </button>
+    <div class="dropdown-menu" style="@dropdownStyle">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    private bool isDropdownOpen = false;
+    private string dropdownStyle => isDropdownOpen ? "display: block;" : "display: none;";
+
+    [Parameter] public string? ButtonText { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    private void ToggleDropdown()
+    {
+        isDropdownOpen = !isDropdownOpen;
+    }
+}

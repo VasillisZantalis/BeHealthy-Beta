@@ -1,29 +1,39 @@
 ﻿@inject IAppointmentService _appointmentService
 
-<div class="container mt-5">
+<div class="container-fluid mt-5">
     <div class="row">
-        @foreach (var appointment in _upcomingAppointments)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <strong>Date:</strong> @DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)
-                        </h5>
-                        <p class="card-text">
-                            <strong>Patient:</strong> @appointment?.Patient?.FullName
-                        </p>
-                        <p class="card-text">
-                            <strong>Doctor:</strong> @appointment?.Doctor?.FirstName
-                        </p>
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-primary">View Details</button>
-                        <button class="btn btn-danger">Cancel</button>
-                    </div>
+        <div id="upcomingAppointmentsDiv" class="col-4">
+            <div class="card shadow-sm">
+                <h5 class="card-title bg-info p-3">Upcoming Appointments</h5>
+
+                <div class="d-flex flex-column">
+                    @foreach (var appointment in _upcomingAppointments)
+                    {
+                        <div class="list-group">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex flex-row align-items-center justify-content-between border-bottom">
+                                    <span><strong>Date:</strong> @DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)</span>
+                                    <div class="d-flex flex-column">
+                                        <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
+                                        <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
+                                    </div>
+                                    <div class="d-flex flex-column gap-2 align-items-end m-2">
+                                    </div>
+                                    <div class="align-self-start">
+                                        <ActionsDropdown>
+                                            <a class="dropdown-item" href="#"><span class="bi bi-info"></span>&nbsp; Details</a>
+                                            <a class="dropdown-item" href="#"><span class="bi bi-trash"></span>&nbsp; Cancel</a>
+                                        </ActionsDropdown>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    }
                 </div>
+
             </div>
-        }
+        </div>
     </div>
 </div>
 
@@ -37,6 +47,7 @@
 
         _upcomingAppointments = appointments
             .Where(a => a.AppointmentDate >= today && a.AppointmentDate <= today.AddDays(3))
+            .OrderBy(a => a.AppointmentDate)
             .ToList();
     }
 }
