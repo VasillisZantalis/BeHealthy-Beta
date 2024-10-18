@@ -2,7 +2,7 @@
 {
     <div class="alert alert-@_severity.ToString().ToLower() alert-dismissible fade show" role="alert">
         <div class="d-flex flex-row gap-2">
-            <span class="fs-5 bi bi-@_icon text-@_severity.ToString().ToLower()"></span>
+            <span class="fs-5 @_icon text-@_severity.ToString().ToLower()"></span>
             <span class="fw-bold">@Message</span>
             <button @onclick="CloseAlert" type="button" class="btn-close" aria-label="Close"></button>
         </div>
@@ -28,7 +28,7 @@
     {
         _showAlert = true;
         _severity = Severity.Danger;
-        _icon = "x-circle-fill";
+        _icon = "fa-regular fa-circle-xmark";
         Message = message;
         StateHasChanged();
     }
@@ -37,7 +37,7 @@
     {
         _showAlert = true;
         _severity = Severity.Success;
-        _icon = "check-circle-fill";
+        _icon = "fa-regular fa-circle-check";
         Message = message;
         StateHasChanged();
     }
@@ -46,7 +46,7 @@
     {
         _showAlert = true;
         _severity = Severity.Info;
-        _icon = "exclamation-circle-fill";
+        _icon = "fa-solid fa-circle-info";
         Message = message;
         StateHasChanged();
     }
@@ -55,7 +55,7 @@
     {
         _showAlert = true;
         _severity = Severity.Warning;
-        _icon = "exclamation-triangle-fill";
+        _icon = "fa-solid fa-triangle-exclamation";
         Message = message;
         StateHasChanged();
     }

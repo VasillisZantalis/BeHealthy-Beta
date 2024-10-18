@@ -14,19 +14,19 @@
         <nav class="flex-column">
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="bi bi-house-door-fill" aria-hidden="true"></span> Dashboard
+                    <span class="fa-solid fa-house fs-5"></span>&nbsp; Dashboard
                 </NavLink>
             </div>
 
             <AuthorizeView Roles="Admin, Doctor">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link px-1" href="doctors">
-                        <span class="bi bi-activity" aria-hidden="true"></span> Doctors
+                        <span class="fa-solid fa-user-doctor fs-5"></span>&nbsp; Doctors
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link px-1" href="nurses">
-                        <span class="bi bi-shield-fill-plus" aria-hidden="true"></span> Nurses
+                        <span class="fa-solid fa-user-nurse fs-5"></span>&nbsp; Nurses
                     </NavLink>
                 </div>
             </AuthorizeView>
@@ -34,7 +34,7 @@
             <AuthorizeView Roles="Admin, Doctor, Nurse">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link px-1" href="patients">
-                        <span class="bi bi-bandaid-fill" aria-hidden="true"></span> Patients
+                        <span class="fa-solid fa-viruses fs-5"></span>&nbsp; Patients
                     </NavLink>
                 </div>
             </AuthorizeView>
@@ -42,20 +42,20 @@
             <AuthorizeView Roles="Admin, Doctor, Patient">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link px-1" href="appointment">
-                        <span class="bi bi-calendar2-plus-fill" aria-hidden="true"></span> Appointments
+                        <span class="fa-solid fa-calendar-days fs-5"></span>&nbsp; Appointments
                     </NavLink>
                 </div>
             </AuthorizeView>
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link px-1" href="rooms">
-                    <span class="bi bi-house-heart-fill" aria-hidden="true"></span> Rooms
+                    <span class="fa-regular fa-hospital fs-5"></span>&nbsp; Rooms
                 </NavLink>
             </div>
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link px-1" href="auth">
-                    <span class="bi bi-person-fill-lock" aria-hidden="true"></span> Auth Required
+                    <span class="fa-solid fa-user-lock fs-5"></span>&nbsp; Auth Required
                 </NavLink>
             </div>
 
@@ -64,7 +64,7 @@
                     <h5 class="ms-2 text-white-50">Configuration</h5>
                     <div class="nav-item px-3 pt-0">
                         <NavLink class="nav-link px-1" href="settings">
-                            <span class="bi bi-gear-fill" aria-hidden="true"></span> Settings
+                            <span class="fa-solid fa-gear fs-5"></span>&nbsp; Settings
                         </NavLink>
                     </div>
                 </div>
