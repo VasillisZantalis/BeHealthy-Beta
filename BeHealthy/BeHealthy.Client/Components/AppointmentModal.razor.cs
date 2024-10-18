@@ -23,6 +23,9 @@ public partial class AppointmentModal
     private bool _isEdit;
     private int _appointmentId;
 
+    private int AppointmentHour { get; set; } = 0;
+    private int AppointmentMinute { get; set; } = 0;
+
     public void Open()
     {
         _show = true;
@@ -46,6 +49,8 @@ public partial class AppointmentModal
             AppointmentDate = appointment.AppointmentDate,
         };
         _appointmentId = appointment.Id;
+        AppointmentHour = appointment.AppointmentDate.Hour;
+        AppointmentMinute = appointment.AppointmentDate.Minute;
     }
 
     public void Close()
@@ -55,6 +60,16 @@ public partial class AppointmentModal
 
     public async Task HandleSaveClick()
     {
+        var appointmentTime = new TimeSpan(AppointmentHour, AppointmentMinute, 0);
+        _appointmentForCreationDto.AppointmentDate = 
+            new DateTime(
+                _appointmentForCreationDto.AppointmentDate.Year,
+                _appointmentForCreationDto.AppointmentDate.Month,
+                _appointmentForCreationDto.AppointmentDate.Day,
+                appointmentTime.Hours,
+                appointmentTime.Minutes,
+                0);
+
         await OnFormSubmit.InvokeAsync((_appointmentForCreationDto, _isEdit, _appointmentId));
     }
 }

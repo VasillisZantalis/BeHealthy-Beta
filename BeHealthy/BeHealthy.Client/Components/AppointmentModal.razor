@@ -50,6 +50,32 @@
                             </div>
 
                             <div class="form-group">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label class="fw-bold" for="appointmentHour">Hour</label>
+                                        <InputNumber id="appointmentHour"
+                                                     @bind-Value="AppointmentHour"
+                                                     TValue="int"
+                                                     min="0"
+                                                     max="23"
+                                                     class="form-control"
+                                                     placeholder="HH" />
+                                    </div>
+                                    <div class="col">
+                                        <label class="fw-bold" for="appointmentMinute">Minutes</label>
+                                        <InputNumber id="appointmentMinute"
+                                                     @bind-Value="AppointmentMinute"
+                                                     TValue="int"
+                                                     min="0"
+                                                     max="59"
+                                                     class="form-control"
+                                                     placeholder="MM" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
                                 <label class="fw-bold" for="notes">Notes</label>
                                 <InputTextArea id="notes" class="form-control" @bind-Value="_appointmentForCreationDto.Notes" style="resize: none;" />
                             </div>
