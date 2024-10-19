@@ -8,6 +8,8 @@ public class MedicalRecord
     public DateTime RecordDate { get; set; }
 
     public int PatientId { get; set; }
-    //public required Patient Patient { get; set; }
-    public ApplicationUser Patient { get; set; } = new();
+    public Patient Patient { get; set; } = new();
+
+    public int DoctorId { get; set; }
+    public Doctor Doctor { get; set; } = new();
 }

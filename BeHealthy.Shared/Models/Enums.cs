@@ -1,4 +1,6 @@
-﻿namespace BeHealthy.Shared.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BeHealthy.Shared.Models;
 
 public enum UserRole : short
 {
@@ -24,12 +26,27 @@ public enum LanguageOptions
     French
 }
 
-public enum ColorOptions
+public enum AppointmentStatus
 {
-    Red,
-    Purple,
-    Blue,
-    Green,
-    Black,
-    Yellow,
+    Scheduled,
+    Completed,
+    Cancelled
+}
+
+public enum AppointmentReason
+{
+    [Display(Name = "General Check-up")]
+    GeneralCheckup,
+
+    [Display(Name = "Follow Up")]
+    FollowUp,
+
+    [Display(Name = "Illness")]
+    Illness,
+
+    [Display(Name = "Injury")]
+    Injury,
+
+    [Display(Name = "Prescription")]
+    Prescription
 }

@@ -64,25 +64,37 @@ public partial class Index
         _isLoading = false;
     }
 
-    private async Task HandleAppointmentFormSubmission((AppointmentForCreationDto, bool, int) submission)
+    private async Task HandleAppointmentFormSubmission((AppointmentDto, bool, int) submission)
     {
-        var (appointmentForCreation, isEdit, appointmentId) = submission;
+        var (appointmentDto, isEdit, appointmentId) = submission;
         _appointmentModal.Close();
         if (isEdit)
         {
             var appointmentForUpdate = new AppointmentForUpdateDto
             {
                 Id = appointmentId,
-                DoctorId = appointmentForCreation.DoctorId,
-                PatientId = appointmentForCreation.PatientId,
-                Notes = appointmentForCreation.Notes,
-                AppointmentDate = appointmentForCreation.AppointmentDate
+                DoctorId = appointmentDto.DoctorId,
+                PatientId = appointmentDto.PatientId,
+                Notes = appointmentDto.Notes,
+                AppointmentDate = appointmentDto.AppointmentDate,
+                Status = appointmentDto.Status,
+                Reason = appointmentDto.Reason,
             };
 
             await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
         }
         else
         {
+            var appointmentForCreation = new AppointmentForCreationDto
+            {
+                DoctorId = appointmentDto.DoctorId,
+                PatientId = appointmentDto.PatientId,
+                Notes = appointmentDto.Notes,
+                AppointmentDate = appointmentDto.AppointmentDate,
+                Reason = appointmentDto.Reason,
+                Status = AppointmentStatus.Scheduled
+            };
+
             await _appointmentService.AddAppointmentAsync(appointmentForCreation);
         }
         _navigationManager.Refresh(forceReload: true);

@@ -1,17 +1,16 @@
 ﻿@using BeHealthy.Shared.Models.Dtos.Patient
 @inject IPatientService patientService
 
-<div id="recentlyAddedPatientsDiv">
-    <div class="border-0 rounded shadow p-3">
-        <h5>Recently Added Patients</h5>
+<div id="recentlyAddedPatientsDiv" class="overflow-auto rounded shadow p-3">
+    <h5>Recently Added Patients</h5>
+    <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th></th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>Given Name</th>
+                    <th>Surname</th>
                     <th>Joined At</th>
-                    <th>Phone</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,20 +19,19 @@
                     foreach (var patient in _patients)
                     {
                         <tr>
-                            <td style="width: 50px;"><img class="w-75 rounded-circle" src="images/generic.jpg"/></td>
+                            <td style="width: 50px;">
+                                <img class="w-75 rounded-circle" src="images/generic.jpg" />
+                            </td>
                             <td>@patient.FirstName</td>
                             <td>@patient.LastName</td>
                             <td>@DateTimeExtensions.ToShortDateString(patient.CreatedAt)</td>
-                            <td><span>-</span></td>
                         </tr>
                     }
-                    
                 }
             </tbody>
         </table>
     </div>
 </div>
-
 
 @code {
     private List<PatientDto> _patients { get; set; }
@@ -46,6 +44,5 @@
             .Where(p => p.CreatedAt > today.AddDays(-10))
             .Take(10)
             .ToList();
-
     }
 }

@@ -18,46 +18,54 @@ else if (_appointments is null)
 }
 else
 {
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Appointment Date</th>
-                <th>Notes</th>
-                <th>Patient</th>
-                <th>Doctor</th>
-                @if (_hasActionRights)
-                {
-                    <th></th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @if (_appointments != null)
-            {
-                foreach (var appointment in _appointments)
-                {
+    <div class="border-0 shadow p-3 rounded">
+        <div class="table-responsive">
+            <table class="table rounded">
+                <thead>
                     <tr>
-                        <td>@DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)</td>
-                        <td>@(string.IsNullOrEmpty(appointment.Notes) ? "-" : appointment.Notes)</td>
-                        <td>@(appointment.Patient != null ? $"{appointment.Patient.FullName}" : "N/A")</td>
-                        <td>@(appointment.Doctor != null ? $"{appointment.Doctor.FullName}" : "N/A")</td>
+                        <th>Appointment Date</th>
+                        <th>Notes</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Reason</th>
+                        <th>Status</th>
                         @if (_hasActionRights)
                         {
-                            <td>
-                                <button class="btn btn-primary btn-sm" @onclick="() => EditAppointment(appointment.Id)">Edit</button>
-                                <button class="btn btn-danger btn-sm" @onclick="() => DeleteAppointment(appointment.Id)">Delete</button>
-                            </td>
+                            <th></th>
                         }
-
                     </tr>
-                }
-            }
-            else
-            {
-                <span>There are no upcoming appointments</span>
-            }
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                    @if (_appointments != null)
+                    {
+                        foreach (var appointment in _appointments)
+                        {
+                            <tr>
+                                <td>@DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)</td>
+                                <td>@(string.IsNullOrEmpty(appointment.Notes) ? "-" : appointment.Notes)</td>
+                                <td>@(appointment.Patient != null ? $"{appointment.Patient.FullName}" : "N/A")</td>
+                                <td>@(appointment.Doctor != null ? $"{appointment.Doctor.FullName}" : "N/A")</td>
+                                <td>@EnumExtensions.GetDisplayName(@appointment.Reason)</td>
+                                <td><span class="badge @appointment.Status.GetBadgeClass()">@EnumExtensions.GetDisplayName(@appointment.Status)</span></td>
+                                @if (_hasActionRights)
+                                {
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" @onclick="() => EditAppointment(appointment.Id)">Edit</button>
+                                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteAppointment(appointment.Id)">Delete</button>
+                                    </td>
+                                }
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>There are no upcoming appointments</tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }
 
 <AppointmentModal @ref="_appointmentModal"

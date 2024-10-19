@@ -1,4 +1,5 @@
-﻿@using BeHealthy.Shared.Models.Dtos.Doctor
+﻿@using BeHealthy.Shared.Models
+@using BeHealthy.Shared.Models.Dtos.Doctor
 @using BeHealthy.Shared.Models.Dtos.Patient
 @using BeHealthy.Shared.Models.Entities
 
@@ -16,37 +17,36 @@
                 }
                 else
                 {
-                    <EditForm FormName="AppointmentForm" OnValidSubmit="HandleSaveClick" Model="_appointmentForCreationDto">
+                    <EditForm FormName="AppointmentForm" OnValidSubmit="HandleSaveClick" Model="_appointmentDto">
                         <DataAnnotationsValidator />
                         <div class="d-flex flex-column gap-3">
 
                             <div class="form-group">
                                 <label class="fw-bold" for="patientIdSelect">Patient</label>
-                                <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentForCreationDto.PatientId">
+                                <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentDto.PatientId">
                                     @foreach (var patient in Patients)
                                     {
                                         <option value="@patient.Id">@patient.FullName</option>
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => _appointmentForCreationDto.PatientId)" />
+                                <ValidationMessage For="@(() => _appointmentDto.PatientId)" />
                             </div>
 
                             <div class="form-group">
                                 <label class="fw-bold" for="doctorIdSelect">Doctor</label>
-                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentForCreationDto.DoctorId">
+                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentDto.DoctorId">
                                     @foreach (var doctor in Doctors)
                                     {
                                         <option value="@doctor.Id">@doctor.FullName</option>
                                     }
                                 </InputSelect>
-
-                                <ValidationMessage For="@(() => _appointmentForCreationDto.DoctorId)" />
+                                <ValidationMessage For="@(() => _appointmentDto.DoctorId)" />
                             </div>
 
                             <div class="form-group">
                                 <label class="fw-bold" for="appointmentDate">Appointment Date</label>
-                                <InputDate id="appointmentDate" class="form-control" @bind-Value="_appointmentForCreationDto.AppointmentDate" />
-                                <ValidationMessage For="@(() => _appointmentForCreationDto.AppointmentDate)" />
+                                <InputDate id="appointmentDate" class="form-control" @bind-Value="_appointmentDto.AppointmentDate" />
+                                <ValidationMessage For="@(() => _appointmentDto.AppointmentDate)" />
                             </div>
 
                             <div class="form-group">
@@ -74,10 +74,33 @@
                                 </div>
                             </div>
 
+                            @if (_isEdit)
+                            {
+                                <div class="form-group">
+                                    <label class="fw-bold" for="status">Status</label>
+                                    <InputSelect id="status" @bind-Value="_appointmentDto.Status" class="form-select">
+                                        @foreach (var status in Enum.GetValues(typeof(AppointmentStatus)).Cast<AppointmentStatus>())
+                                        {
+                                            <option value="@status">@status.GetDisplayName()</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <label class="fw-bold" for="reason">Reason</label>
+                                <InputSelect id="reason" @bind-Value="_appointmentDto.Reason" class="form-select">
+                                    @foreach (var reason in Enum.GetValues(typeof(AppointmentReason)).Cast<AppointmentReason>())
+                                    {
+                                        <option value="@reason">@reason.GetDisplayName()</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="() => _appointmentDto.Reason" class="text-danger" />
+                            </div>
 
                             <div class="form-group">
                                 <label class="fw-bold" for="notes">Notes</label>
-                                <InputTextArea id="notes" class="form-control" @bind-Value="_appointmentForCreationDto.Notes" style="resize: none;" />
+                                <InputTextArea id="notes" class="form-control" @bind-Value="_appointmentDto.Notes" style="resize: none;" />
                             </div>
 
                             <div class="d-flex flex-row justify-content-end">

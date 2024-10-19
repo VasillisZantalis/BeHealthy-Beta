@@ -1,8 +1,8 @@
 ﻿@inject IAppointmentService _appointmentService
 
 <div id="upcomingAppointmentsDiv">
-    <div class="card shadow-sm">
-        <h5 class="card-title p-3">Upcoming Appointments</h5>
+    <div class="card shadow border-0 rounded p-3">
+        <h5 class="card-title">Upcoming Appointments</h5>
 
         <div class="d-flex flex-column">
             @foreach (var appointment in _upcomingAppointments)
@@ -15,8 +15,7 @@
                                 <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
                                 <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
                             </div>
-                            <div class="d-flex flex-column gap-2 align-items-end m-2">
-                            </div>
+                            <div><span class="badge @EnumExtensions.GetBadgeClass(appointment.Status)">@appointment.Status</span></div>
                             <div class="align-self-start">
                                 <ActionsDropdown>
                                     <a class="dropdown-item" href="#"><span class="fa-solid fa-circle-info"></span>&nbsp; Details</a>

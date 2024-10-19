@@ -5,6 +5,8 @@ public class Appointment
     public int Id { get; set; }
     public DateTime AppointmentDate { get; set; }
     public string? Notes { get; set; }
+    public AppointmentStatus Status { get; set; }
+    public AppointmentReason Reason { get; set; }
 
     public int PatientId { get; set; }
     public Patient? Patient { get; set; }

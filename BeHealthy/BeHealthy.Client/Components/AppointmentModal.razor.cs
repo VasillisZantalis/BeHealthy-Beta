@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Models.Dtos.Appointment;
+﻿using BeHealthy.Shared.Models;
+using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
@@ -9,10 +10,10 @@ namespace BeHealthy.Client.Components;
 public partial class AppointmentModal
 {
     [Parameter]
-    public EventCallback<(AppointmentForCreationDto, bool, int)> OnFormSubmit { get; set; }
+    public EventCallback<(AppointmentDto, bool, int)> OnFormSubmit { get; set; }
 
     [SupplyParameterFromForm]
-    private AppointmentForCreationDto _appointmentForCreationDto { get; set; } = new();
+    private AppointmentDto _appointmentDto { get; set; } = new();
 
     [Parameter]
     public List<DoctorDto> Doctors { get; set; } = default!;
@@ -26,31 +27,31 @@ public partial class AppointmentModal
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;
 
+    private AppointmentStatus _appointmentStatus;
+
     public void Open()
     {
         _show = true;
         _isEdit = false;
-        _appointmentForCreationDto = new();
+        _appointmentDto = new();
         _appointmentId = 0;
-        _appointmentForCreationDto.PatientId = Patients?.FirstOrDefault()?.Id;
-        _appointmentForCreationDto.DoctorId = Doctors?.FirstOrDefault()?.Id;
-        _appointmentForCreationDto.AppointmentDate = DateTime.Now;
+        _appointmentDto.PatientId = Patients?.FirstOrDefault()?.Id;
+        _appointmentDto.DoctorId = Doctors?.FirstOrDefault()?.Id;
+        _appointmentDto.AppointmentDate = DateTime.Now;
     }
 
     public void OpenForEdit(AppointmentDto appointment)
     {
         _show = true;
         _isEdit = true;
-        _appointmentForCreationDto = new AppointmentForCreationDto
-        {
-            DoctorId = appointment.DoctorId,
-            PatientId = appointment.PatientId,
-            Notes = appointment.Notes,
-            AppointmentDate = appointment.AppointmentDate,
-        };
+        _appointmentDto.DoctorId = appointment.DoctorId;
+        _appointmentDto.PatientId = appointment.PatientId;
+        _appointmentDto.Notes = appointment.Notes;
+        _appointmentDto.AppointmentDate = appointment.AppointmentDate;
         _appointmentId = appointment.Id;
         AppointmentHour = appointment.AppointmentDate.Hour;
         AppointmentMinute = appointment.AppointmentDate.Minute;
+        _appointmentStatus = appointment.Status;
     }
 
     public void Close()
@@ -61,15 +62,15 @@ public partial class AppointmentModal
     public async Task HandleSaveClick()
     {
         var appointmentTime = new TimeSpan(AppointmentHour, AppointmentMinute, 0);
-        _appointmentForCreationDto.AppointmentDate = 
+        _appointmentDto.AppointmentDate = 
             new DateTime(
-                _appointmentForCreationDto.AppointmentDate.Year,
-                _appointmentForCreationDto.AppointmentDate.Month,
-                _appointmentForCreationDto.AppointmentDate.Day,
+                _appointmentDto.AppointmentDate.Year,
+                _appointmentDto.AppointmentDate.Month,
+                _appointmentDto.AppointmentDate.Day,
                 appointmentTime.Hours,
                 appointmentTime.Minutes,
                 0);
 
-        await OnFormSubmit.InvokeAsync((_appointmentForCreationDto, _isEdit, _appointmentId));
+        await OnFormSubmit.InvokeAsync((_appointmentDto, _isEdit, _appointmentId));
     }
 }

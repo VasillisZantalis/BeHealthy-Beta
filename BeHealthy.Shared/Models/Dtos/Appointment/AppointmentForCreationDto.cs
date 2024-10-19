@@ -12,6 +12,9 @@ public class AppointmentForCreationDto
 
     [Required(ErrorMessage = "Appointment Date is required")]
     public DateTime AppointmentDate { get; set; }
+    [Required(ErrorMessage = "Appointment Reason is required")]
+    public AppointmentReason Reason { get; set; }
+    public AppointmentStatus Status { get; set; }
 
     public string Notes { get; set; } = string.Empty;
 }

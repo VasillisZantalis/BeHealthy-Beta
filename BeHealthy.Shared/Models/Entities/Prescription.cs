@@ -7,9 +7,9 @@ public class Prescription
     public string Dosage { get; set; } = string.Empty;
     public DateTime DatePrescribed { get; set; }
 
-    public string? PatientId { get; set; }
-    public virtual ApplicationUser? Patient { get; set; }
+    public int PatientId { get; set; }
+    public Patient? Patient { get; set; }
 
-    public string? DoctorId { get; set; }
-    public virtual ApplicationUser? Doctor { get; set; }
+    public int DoctorId { get; set; }
+    public Doctor? Doctor { get; set; }
 }
