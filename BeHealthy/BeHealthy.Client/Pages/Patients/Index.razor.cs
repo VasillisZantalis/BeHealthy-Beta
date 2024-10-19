@@ -2,6 +2,7 @@
 using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Client.Pages.Patients;
 
@@ -16,6 +17,8 @@ public partial class Index
 
     private bool _isLoading = default;
 
+    private PaginationState _paginationState = new PaginationState { ItemsPerPage = 5 };
+
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
@@ -24,9 +27,17 @@ public partial class Index
         _isLoading = false;
     }
 
-    //private async Task EditPatient(string id)
-    //{
-    //}
+    private async Task EditPatient(int id)
+    {
+    }
+
+    private void OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (e.Value is not null)
+        {
+            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
+        }
+    }
 
     private async Task DeletePatient(int id)
     {
