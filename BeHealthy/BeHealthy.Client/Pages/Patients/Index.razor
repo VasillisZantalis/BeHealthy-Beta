@@ -6,7 +6,17 @@
 
 <SectionContent SectionName="page-title">Patients</SectionContent>
 
-<CreateUserButton Href="@_createUserHref" />
+<div class="d-flex flex-row gap-3">
+    <div class="">
+        <CreateUserButton Href="@_createUserHref" />
+    </div>
+    <div class="">
+        <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
+            <option value="Card">Card</option>
+            <option value="Grid">Grid</option>
+        </InputSelect>
+    </div>
+</div>
 
 @if (_isLoading)
 {
@@ -18,21 +28,25 @@ else if (_patients is null)
 }
 else
 {
-   @*  <div class="row">
-        @foreach (var patient in _patients)
-        {
-            <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
-                <div class="mb-3">
-                    <UserCard Id="@patient.Id"
-                              FullName="@patient.FullName"
-                              Email="@string.Empty"
-                              Edit="@(() => {})"
-                              Delete="@DeletePatient" />
+    @if (_selectedView == "Card")
+    {
+        <div class="row">
+            @foreach (var patient in _patients)
+            {
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
+                    <div class="mb-3">
+                        <UserCard Id="@patient.Id"
+                                  FullName="@patient.FullName"
+                                  Email="@string.Empty"
+                                  Edit="@(() => {})"
+                                  Delete="@DeletePatient" />
+                    </div>
                 </div>
-            </div>
-        }
-    </div> *@
-
+            }
+        </div>
+    }
+    else if (_selectedView == "Grid")
+    {
     <div class="patientsTableDiv mt-3">
         <div class="card">
             <div class="card-header d-flex flex-row justify-content-end">
@@ -79,4 +93,6 @@ else
             </div>
         </div>
     </div>
+        
+    }
 }

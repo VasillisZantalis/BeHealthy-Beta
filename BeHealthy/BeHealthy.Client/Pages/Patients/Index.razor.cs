@@ -16,6 +16,7 @@ public partial class Index
     private List<PatientDto> _patients { get; set; } = default!;
 
     private bool _isLoading = default;
+    private string _selectedView = "Card";
 
     private PaginationState _paginationState = new();
 
