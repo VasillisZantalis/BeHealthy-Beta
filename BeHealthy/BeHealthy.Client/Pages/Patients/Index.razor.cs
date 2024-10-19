@@ -17,13 +17,14 @@ public partial class Index
 
     private bool _isLoading = default;
 
-    private PaginationState _paginationState = new PaginationState { ItemsPerPage = 5 };
+    private PaginationState _paginationState = new();
 
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
         _createUserHref = $"Account/Register?role=Patient&redirectUrl={RoutingEndpoints.PATIENTS_PAGE}";
         _patients = (await _patientService.GetAllPatientsAsync()).ToList();
+        _paginationState.ItemsPerPage = 10;
         _isLoading = false;
     }
 

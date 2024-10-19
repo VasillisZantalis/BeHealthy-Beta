@@ -61,13 +61,12 @@
                     <label for="specialty">Specialty</label>
                     <ValidationMessage For="() => Input.Specialty" class="text-danger" />
                 </div>
-
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-                    <label for="@Input.PhoneNumber">Phone Number</label>
-                    <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
-                </div>
             }
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                <label for="@Input.PhoneNumber">Phone Number</label>
+                <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+            </div>
             <div class="form-floating mb-3">
                 <InputSelect id="role" @bind-Value="Input.Role" class="form-control" disabled="@_isDisabled">
                     @foreach (var role in Enum.GetNames(typeof(UserRole)))
@@ -243,9 +242,6 @@
         [Display(Name = "Role")]
         public string Role { get; set; } = "";
 
-        // Doctor specific fields
-        [Required]
-        [Display(Name = "Speciality is Required")]
         public string Specialty { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
     }
