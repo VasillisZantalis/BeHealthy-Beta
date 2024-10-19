@@ -27,6 +27,7 @@ public static class EnumExtensions
             AppointmentStatus.Scheduled => "bg-info",
             AppointmentStatus.Completed => "bg-success",
             AppointmentStatus.Cancelled => "bg-danger",
+            AppointmentStatus.Rescheduled => "bg-warning",
             _ => "bg-secondary"
         };
     }

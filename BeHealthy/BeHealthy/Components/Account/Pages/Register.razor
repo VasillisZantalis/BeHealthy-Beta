@@ -92,14 +92,8 @@
     </div>
 </div>
 
-@* <AlertModal @ref="_alertModal"
-    OnClose="HandleModalClose"
-    Success="@_alertSuccess"
-    Message="@_alertMessage" /> *@
-
 @code {
     private IEnumerable<IdentityError>? identityErrors;
-    //private List<string> Roles = new List<string>();
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -108,10 +102,6 @@
     private bool _isDisabled = false;
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
-
-    //private string _alertMessage = string.Empty;
-    //private bool _alertSuccess;
-    //private AlertModal _alertModal = new();
 
     private Alert _alert = new();
 

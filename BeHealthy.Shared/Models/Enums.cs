@@ -30,7 +30,8 @@ public enum AppointmentStatus
 {
     Scheduled,
     Completed,
-    Cancelled
+    Cancelled,
+    Rescheduled
 }
 
 public enum AppointmentReason
