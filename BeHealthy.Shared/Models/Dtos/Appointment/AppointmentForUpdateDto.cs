@@ -9,4 +9,5 @@ public class AppointmentForUpdateDto
     public string Notes { get; set; } = string.Empty;
     public AppointmentStatus Status { get; set; }
     public AppointmentReason Reason { get; set; }
+    public int Duration { get; set; }
 }

@@ -7,6 +7,7 @@ using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Client.Pages.Appointments;
 
@@ -31,9 +32,12 @@ public partial class Index
 
     private bool _isLoading = default;
 
+    private PaginationState _paginationState = new();
+
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
+        _paginationState.ItemsPerPage = 10;
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _currentUserId = authState.User.GetUserId();
@@ -62,6 +66,14 @@ public partial class Index
         await LoadPatients();
 
         _isLoading = false;
+    }
+
+    private void OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (e.Value is not null)
+        {
+            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
+        }
     }
 
     private async Task HandleAppointmentFormSubmission((AppointmentDto, bool, int) submission)

@@ -17,4 +17,5 @@ public class AppointmentForCreationDto
     public AppointmentStatus Status { get; set; }
 
     public string Notes { get; set; } = string.Empty;
+    public int Duration { get; set; }
 }

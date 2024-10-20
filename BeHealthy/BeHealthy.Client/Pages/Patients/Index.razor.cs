@@ -29,16 +29,16 @@ public partial class Index
         _isLoading = false;
     }
 
-    private async Task EditPatient(int id)
-    {
-    }
-
     private void OnPageSizeChanged(ChangeEventArgs e)
     {
         if (e.Value is not null)
         {
             _paginationState.ItemsPerPage = int.Parse((string)e.Value);
         }
+    }
+
+    private async Task EditPatient(int id)
+    {
     }
 
     private async Task DeletePatient(int id)

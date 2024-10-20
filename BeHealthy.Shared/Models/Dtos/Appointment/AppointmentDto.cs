@@ -10,6 +10,7 @@ public class AppointmentDto
     public string Notes { get; set; } = string.Empty;
     public AppointmentStatus Status { get; set; }
     public AppointmentReason Reason { get; set; }
+    public int Duration { get; set; }
 
     public int? PatientId { get; set; }
     public PatientDto? Patient { get; set; }

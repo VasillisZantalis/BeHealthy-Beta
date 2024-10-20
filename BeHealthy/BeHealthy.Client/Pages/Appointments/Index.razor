@@ -4,9 +4,11 @@
 
 <SectionContent SectionName="page-title">Appointments</SectionContent>
 
-<button class="btn btn-outline-dark px-4 mb-3" @onclick="() => _appointmentModal.Open()">
-    <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
-</button>
+<div class="">
+    <button class="btn btn-light px-4 mb-3" @onclick="() => _appointmentModal.Open()">
+        <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
+    </button>
+</div>
 
 @if (_isLoading)
 {
@@ -18,52 +20,71 @@ else if (_appointments is null)
 }
 else
 {
-    <div class="border-0 shadow p-3 rounded">
-        <div class="table-responsive">
-            <table class="table rounded">
-                <thead>
-                    <tr>
-                        <th>Appointment Date</th>
-                        <th>Notes</th>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Reason</th>
-                        <th>Status</th>
+    <div class="appointmentsTableDiv mt-3">
+        <div class="card">
+            <div class="card-header d-flex flex-row justify-content-end">
+                <div class="px-1">
+                    <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <div class="card-body pb-2 px-0 m-0">
+                    <QuickGrid Class="table rounded"
+                               Items="@_appointments.AsQueryable()"
+                               ItemKey="@(x => x.Id)"
+                               Pagination="_paginationState">
+                        <PropertyColumn Title="Date"
+                                        Property="@(x => x.AppointmentDate)"
+                                        Format="dd MMM yyyy HH:mm"
+                                        Sortable="true"
+                                        IsDefaultSortColumn="true"
+                                        InitialSortDirection="SortDirection.Descending" />
+                        <PropertyColumn Title="Notes"
+                                        Property="@(x => string.IsNullOrEmpty(x.Notes) ? "-" : x.Notes)" />
+                        <PropertyColumn Title="Patient"
+                                        Property="@(x => x.Patient != null ? x.Patient.FullName : "N/A")"
+                                        Sortable="true" />
+                        <PropertyColumn Title="Doctor"
+                                        Property="@(x => x.Doctor != null ? x.Doctor.FullName : "N/A")"
+                                        Sortable="true" />
+                        <PropertyColumn Title="Duration"
+                                        Property="@(x => x.Duration)"
+                                        Sortable="true" />
+                        <PropertyColumn Title="Reason"
+                                        Property="@(x => EnumExtensions.GetDisplayName(x.Reason))" />
+                        <TemplateColumn Title="Status"
+                                        TGridItem="AppointmentDto">
+                            <span class="badge @context.Status.GetBadgeClass()">
+                                @EnumExtensions.GetDisplayName(@context.Status)
+                            </span>
+                        </TemplateColumn>
+
                         @if (_hasActionRights)
                         {
-                            <th></th>
+                            <TemplateColumn>
+                                <ActionsDropdown>
+                                    <button class="btn w-100 text-start" @onclick="@(() => EditAppointment(context.Id))">
+                                        <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                    </button>
+                                    <button class="btn w-100 text-start" @onclick="async () => await DeleteAppointment(context.Id)">
+                                        <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                    </button>
+                                </ActionsDropdown>
+                            </TemplateColumn>
                         }
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (_appointments != null)
-                    {
-                        foreach (var appointment in _appointments)
-                        {
-                            <tr>
-                                <td>@DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)</td>
-                                <td>@(string.IsNullOrEmpty(appointment.Notes) ? "-" : appointment.Notes)</td>
-                                <td>@(appointment.Patient != null ? $"{appointment.Patient.FullName}" : "N/A")</td>
-                                <td>@(appointment.Doctor != null ? $"{appointment.Doctor.FullName}" : "N/A")</td>
-                                <td>@EnumExtensions.GetDisplayName(@appointment.Reason)</td>
-                                <td><span class="badge @appointment.Status.GetBadgeClass()">@EnumExtensions.GetDisplayName(@appointment.Status)</span></td>
-                                @if (_hasActionRights)
-                                {
-                                    <td>
-                                        <button class="btn btn-primary btn-sm" @onclick="() => EditAppointment(appointment.Id)">Edit</button>
-                                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteAppointment(appointment.Id)">Delete</button>
-                                    </td>
-                                }
+                    </QuickGrid>
 
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>There are no upcoming appointments</tr>
-                    }
-                </tbody>
-            </table>
+                </div>
+
+            </div>
+            <div id="paginatorDiv" class="px-3">
+                <Paginator State="_paginationState" />
+            </div>
         </div>
     </div>
 }

@@ -2,6 +2,7 @@
 using BeHealthy.Shared.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Client.Pages.Doctors;
 
@@ -15,16 +16,28 @@ public partial class Index
     private List<DoctorDto> _doctors { get; set; } = default!;
 
     private bool _isLoading = default;
+    private string _selectedView = "Card";
+
+    private PaginationState _paginationState = new();
 
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
         _createUserHref = $"Account/Register?role=Doctor&redirectUrl={RoutingEndpoints.HOME_PAGE}";
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+        _paginationState.ItemsPerPage = 10;
         _isLoading = false;
     }
 
-    private void EditDoctor(int id)
+    private void OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (e.Value is not null)
+        {
+            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
+        }
+    }
+
+    private async Task EditDoctor(int id)
     {
         _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/{id}");
     }

@@ -47,52 +47,56 @@ else
     }
     else if (_selectedView == "Grid")
     {
-    <div class="patientsTableDiv mt-3">
-        <div class="card">
-            <div class="card-header d-flex flex-row justify-content-end">
-                <div class="px-1">
-                    <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </InputSelect>
+        <div class="patientsTableDiv mt-3">
+            <div class="card">
+                <div class="card-header d-flex flex-row justify-content-end">
+                    <div class="px-1">
+                        <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="card-body pb-2 px-0 m-0">
+                    <QuickGrid  Class="table table-responsive"
+                                Items="@_patients.AsQueryable()"
+                                ItemKey="@(x => x.Id)"
+                               Pagination="_paginationState">
+                        <TemplateColumn Title="Image">
+                            <img class="rounded-circle" src="images/generic.jpg" alt="@context.FullName" width="25" height="25" />
+                        </TemplateColumn>
+                        <PropertyColumn Title="First Name" 
+                                        Property="@(x => x.FirstName)" 
+                                        Sortable="true"/>
+                        <PropertyColumn Title="Last Name" 
+                                        Property="@(x => x.LastName)"
+                                        Sortable="true" />
+                        <PropertyColumn Title="Created At" 
+                                        Property="@(x => x.CreatedAt)" 
+                                        Format="dd MMM yyyy HH:mm" 
+                                        Sortable="true" 
+                                        IsDefaultSortColumn="true" 
+                                        InitialSortDirection="SortDirection.Descending"/>
+                        <TemplateColumn>
+                            <ActionsDropdown>
+                                <button class="btn w-100 text-start" @onclick="async () => await EditPatient(context.Id)">
+                                    <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                </button>
+                                <button class="btn w-100 text-start" @onclick="async () => await DeletePatient(context.Id)">
+                                    <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                </button>
+                            </ActionsDropdown>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+                </div>
+                <div id="paginatorDiv" class="px-3">
+                    <Paginator State="_paginationState" />
                 </div>
             </div>
-            <div class="card-body pb-2 px-0 m-0">
-                <QuickGrid  Class="table table-responsive"
-                            Items="@_patients.AsQueryable()"
-                            ItemKey="@(x => x.Id)"
-                           Pagination="_paginationState">
-                    <PropertyColumn Title="First Name" 
-                                    Property="@(x => x.FirstName)" 
-                                    Sortable="true"/>
-                    <PropertyColumn Title="Last Name" 
-                                    Property="@(x => x.LastName)"
-                                    Sortable="true" />
-                    <PropertyColumn Title="Created At" 
-                                    Property="@(x => x.CreatedAt)" 
-                                    Format="dd MMM yyyy HH:mm" 
-                                    Sortable="true" 
-                                    IsDefaultSortColumn="true" 
-                                    InitialSortDirection="SortDirection.Descending"/>
-                    <TemplateColumn>
-                        <ActionsDropdown>
-                            <button class="btn w-100 text-start" @onclick="async () => await EditPatient(context.Id)">
-                                <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
-                            </button>
-                            <button class="btn w-100 text-start" @onclick="async () => await DeletePatient(context.Id)">
-                                <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
-                            </button>
-                        </ActionsDropdown>
-                    </TemplateColumn>
-                </QuickGrid>
-            </div>
-            <div id="paginatorDiv" class="px-3">
-                <Paginator State="_paginationState" />
-            </div>
         </div>
-    </div>
-        
     }
 }
