@@ -11,6 +11,16 @@ public class NurseRepository : GenericRepository<Nurse>, INurseRepository
     {
     }
 
+    public async Task<IEnumerable<Nurse>> GetAllNursesAsync()
+    {
+        using (var context = _contextFactory.CreateDbContext())
+        {
+            return await context.Nurses
+                    .Include(d => d.User)
+                    .ToListAsync();
+        }
+    }
+
     public async Task DeleteNurseAsync(int id)
     {
         using (var context = _contextFactory.CreateDbContext())

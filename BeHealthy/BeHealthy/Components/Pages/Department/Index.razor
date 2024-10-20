@@ -1,0 +1,25 @@
+﻿@page "/departments"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+<PageTitle>Departments</PageTitle>
+
+<SectionContent SectionName="page-title">Departments</SectionContent>
+
+<div class="">
+    <button class="btn btn-light px-4 mb-3" @onclick="() => {}">
+        <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
+    </button>
+</div>
+
+@if (_isLoading)
+{
+    <Loader/>
+}
+else if (_departments is null)
+{
+    <p>No Departments available.</p>
+}
+else
+{
+}

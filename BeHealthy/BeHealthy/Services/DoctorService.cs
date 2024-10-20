@@ -20,7 +20,7 @@ public class DoctorService : IDoctorService
 
     public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync()
     {
-        var doctors = await _unitOfWork.DoctorRepository.GetAllAsync();
+        var doctors = await _unitOfWork.DoctorRepository.GetAllDoctorsAsync();
         return _mapper.Map<IEnumerable<DoctorDto>>(doctors);
     }
 

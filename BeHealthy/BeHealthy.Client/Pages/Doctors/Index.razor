@@ -37,7 +37,8 @@ else
                     <div class="mb-3">
                         <UserCard Id="@doctor.Id"
                                   FullName="@doctor.FullName"
-                                  Email="@string.Empty"
+                                  Email="@doctor.Email"
+                                  Phone="@doctor.PhoneNumber"
                                   Specialty="@doctor.Specialty"
                                   Edit="@EditDoctor"
                                   Delete="@DeleteDoctor" />
@@ -66,7 +67,7 @@ else
                                Items="@_doctors.AsQueryable()"
                                ItemKey="@(x => x.Id)"
                                Pagination="_paginationState">
-                        <TemplateColumn Title="Image">
+                        <TemplateColumn>
                             <img class="rounded-circle" src="images/generic.jpg" alt="@context.FullName" width="25" height="25" />
                         </TemplateColumn>
                         <PropertyColumn Title="First Name"
@@ -84,6 +85,10 @@ else
                                         Sortable="true"
                                         IsDefaultSortColumn="true"
                                         InitialSortDirection="SortDirection.Descending" />
+                        <PropertyColumn Title="Email"
+                                        Property="@(x => x.Email)" />
+                        <PropertyColumn Title="Phone"
+                                        Property="@(x => x.PhoneNumber)" />
                         <TemplateColumn>
                             <ActionsDropdown>
                                 <button class="btn w-100 text-start" @onclick="async () => await EditDoctor(context.Id)">

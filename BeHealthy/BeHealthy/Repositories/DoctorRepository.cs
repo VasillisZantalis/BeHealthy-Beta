@@ -11,6 +11,16 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
     {
     }
 
+    public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
+    {
+        using (var context = _contextFactory.CreateDbContext())
+        {
+            return await context.Doctors
+                    .Include(d => d.User)
+                    .ToListAsync();
+        }
+    }
+
     public async Task DeleteDoctorAsync(int id)
     {
         using (var context = _contextFactory.CreateDbContext())
@@ -43,9 +53,4 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
                 .ToListAsync();
         };
     }
-
-    //public async Task<Doctor> GetDoctorByUserIdAsync(string id)
-    //{
-    //    return await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == id);
-    //}
 }

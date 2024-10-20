@@ -14,19 +14,19 @@ public class DoctorProfile : Profile
             .ForMember(dest => dest.FirstName, 
                 opt => opt.MapFrom(src => src.FirstName))
             .ForMember(dest => dest.LastName, 
-                opt => opt.MapFrom(src => src.LastName));
+                opt => opt.MapFrom(src => src.LastName))
+            .ForMember(dest => dest.Email,
+                opt => opt.MapFrom(src => src.User != null && src.User.Email != null
+                                  ? src.User.Email
+                                  : string.Empty))
+            .ForMember(dest => dest.PhoneNumber,
+                opt => opt.MapFrom(src => src.User != null && src.User.PhoneNumber != null
+                                  ? src.User.PhoneNumber
+                                  : string.Empty));
 
         CreateMap<DoctorForCreationDto, Doctor>();
-            //.ForMember(dest => dest.User.FirstName,
-            //    opt => opt.MapFrom(src => src.FirstName))
-            //.ForMember(dest => dest.User.LastName,
-            //    opt => opt.MapFrom(src => src.LastName));
 
         CreateMap<DoctorForUpdateDto, Doctor>()
-            //.ForMember(dest => dest.User.FirstName,
-            //    opt => opt.MapFrom(src => src.FirstName))
-            //.ForMember(dest => dest.User.LastName,
-            //    opt => opt.MapFrom(src => src.LastName))
             .ReverseMap();
     }
 }

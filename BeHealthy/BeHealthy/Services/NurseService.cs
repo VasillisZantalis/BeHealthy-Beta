@@ -19,7 +19,7 @@ public class NurseService : INurseService
 
     public async Task<IEnumerable<NurseDto>> GetAllNursesAsync()
     {
-        var nurses = await _unitOfWork.NurseRepository.GetAllAsync();
+        var nurses = await _unitOfWork.NurseRepository.GetAllNursesAsync();
         return _mapper.Map<IEnumerable<NurseDto>>(nurses);
     }
 
