@@ -91,6 +91,7 @@ public partial class Index
                 AppointmentDate = appointmentDto.AppointmentDate,
                 Status = appointmentDto.Status,
                 Reason = appointmentDto.Reason,
+                Duration = appointmentDto.Duration
             };
 
             await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
@@ -104,7 +105,8 @@ public partial class Index
                 Notes = appointmentDto.Notes,
                 AppointmentDate = appointmentDto.AppointmentDate,
                 Reason = appointmentDto.Reason,
-                Status = AppointmentStatus.Scheduled
+                Status = AppointmentStatus.Scheduled,
+                Duration = appointmentDto.Duration
             };
 
             await _appointmentService.AddAppointmentAsync(appointmentForCreation);
