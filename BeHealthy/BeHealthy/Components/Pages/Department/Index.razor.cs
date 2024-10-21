@@ -11,6 +11,7 @@ public partial class Index
     [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
+    [Inject] NavigationManager _navigationManager { get; set; } = default!;
 
     private List<DepartmentDto> _departments = new();
 
@@ -43,5 +44,10 @@ public partial class Index
     public void DeleteDepartment(int departmentId)
     {
 
+    }
+
+    private void Create()
+    {
+        _navigationManager.NavigateTo("/departments/create");
     }
 }
