@@ -16,7 +16,15 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .IsRequired()
             .HasMaxLength(100);
 
-        // Relationships
+        builder.Property(d => d.Location)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.HasOne(d => d.HeadOfDepartment)
+           .WithMany()
+           .HasForeignKey(d => d.HeadOfDepartmentId)
+           .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasMany(d => d.Doctors)
             .WithOne(d => d.Department)
             .HasForeignKey(d => d.DepartmentId)
@@ -35,6 +43,6 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
         builder.HasMany(d => d.Rooms)
             .WithOne(r => r.Department)
             .HasForeignKey(r => r.DepartmentId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

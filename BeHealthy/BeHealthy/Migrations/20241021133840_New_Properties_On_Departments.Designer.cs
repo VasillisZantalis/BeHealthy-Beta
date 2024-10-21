@@ -3,6 +3,7 @@ using System;
 using BeHealthy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeHealthy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241021133840_New_Properties_On_Departments")]
+    partial class New_Properties_On_Departments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace BeHealthy.Migrations
                     b.Property<DateTime>("InsDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2024, 10, 21, 13, 44, 35, 329, DateTimeKind.Utc).AddTicks(8754));
+                        .HasDefaultValue(new DateTime(2024, 10, 21, 13, 38, 40, 497, DateTimeKind.Utc).AddTicks(8168));
 
                     b.Property<int?>("IntValue")
                         .HasColumnType("int");
@@ -189,7 +192,9 @@ namespace BeHealthy.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValue(new DateTime(2024, 10, 21, 13, 38, 40, 498, DateTimeKind.Utc).AddTicks(1765));
 
                     b.Property<int?>("HeadOfDepartmentId")
                         .HasColumnType("int");
