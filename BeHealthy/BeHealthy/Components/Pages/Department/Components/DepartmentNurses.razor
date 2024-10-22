@@ -1,0 +1,11 @@
+﻿<ul>
+    @foreach (var nurse in Nurses)
+    {
+        <li>@nurse.FullName</li>
+    }
+</ul>
+
+@code {
+    [Parameter]
+    public List<NurseDto> Nurses { get; set; } = new();
+}

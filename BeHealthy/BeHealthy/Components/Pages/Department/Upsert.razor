@@ -1,0 +1,58 @@
+﻿@page "/departments/create"
+@page "/departments/edit/{id:int}"
+@using BeHealthy.Components.Pages.Department.Components
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+<PageTitle>@(IsEditMode ? "Edit" : "Create")</PageTitle>
+<SectionContent SectionName="page-title">
+    <a class="nav-link d-inline" href="departments">Department</a> / @(IsEditMode ? "Edit" : "Create")
+</SectionContent>
+
+<div class="container-fluid">
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">General Data</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">Doctors</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">Patients</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">Nurses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">Rooms</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3">
+        @if (activeTab == 0)
+        {
+            <div>
+                <GeneralData IsEditMode="IsEditMode" DepartmentDto="DepartmentDto" Doctors="Doctors" />
+            </div>
+        }
+        else if (activeTab == 1)
+        {
+            <DepartmentDoctors Doctors="DepartmentDto.Doctors.ToList()"/>
+        }
+        else if (activeTab == 2)
+        {
+            <DepartmentPatients Patients="DepartmentDto.Patients.ToList()" />
+        }
+        else if (activeTab == 3)
+        {
+            <DepartmentNurses Nurses="DepartmentDto.Nurses.ToList()" />
+        }
+        else if (activeTab == 4)
+        {
+            <h5>Rooms</h5>
+        }
+    </div>
+
+
+</div>

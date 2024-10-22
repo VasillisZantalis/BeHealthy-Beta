@@ -42,6 +42,10 @@ else
                                Pagination="_paginationState">
                         <PropertyColumn Title="Name"
                                         Property="@(x => x.Name)" />
+                        <PropertyColumn Title="Location"
+                                        Property="@(x => x.Location)" />
+                        <PropertyColumn Title="Head of Department"
+                                        Property="@(x => x.HeadOfDepartment != null ? x.HeadOfDepartment.FullName : "None")" />
                         @if (_hasActionRights)
                         {
                             <TemplateColumn>

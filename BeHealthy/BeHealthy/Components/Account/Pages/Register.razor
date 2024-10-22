@@ -1,4 +1,5 @@
 ﻿@page "/Account/Register"
+@using BeHealthy.Shared.Models.Dtos.Department
 @rendermode InteractiveServer
 
 @inject UserManager<ApplicationUser> UserManager
@@ -6,6 +7,7 @@
 @inject IDoctorService DoctorService
 @inject INurseService NurseService
 @inject IPatientService PatientService
+@inject IDepartmentService DepartmentService
 @inject SignInManager<ApplicationUser> SignInManager
 @inject RoleManager<IdentityRole> RoleManager
 @inject NavigationManager NavigationManager
@@ -67,6 +69,21 @@
                 <label for="@Input.PhoneNumber">Phone Number</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
+
+            @if (_departments is not null && _departments.Any())
+            {
+                <div class="form-floating mb-3">
+                    <InputSelect id="Department" @bind-Value="_departmentId" class="form-control">
+                        <option value="0">Please Select</option>
+                        @foreach (var department in _departments)
+                        {
+                            <option value="@department.Id">@department.Name</option>
+                        }
+                    </InputSelect>
+                    <label for="Department">Department</label>
+                </div>
+            }
+
             <div class="form-floating mb-3">
                 <InputSelect id="role" @bind-Value="Input.Role" class="form-control" disabled="@_isDisabled">
                     @foreach (var role in Enum.GetNames(typeof(UserRole)))
@@ -77,6 +94,7 @@
                 <label for="role">Role</label>
                 <ValidationMessage For="() => Input.Role" class="text-danger" />
             </div>
+            
             <div class="d-flex flex-lg-row flex-column gap-2 justify-content-evenly">
                 <a class="btn btn-outline-dark px-3 w-100" href="@returnUrl">Cancel</a>
                 <button type="submit" class="btn btn-primary w-100" disabled="@_inProgress">
@@ -99,12 +117,14 @@
     private string returnUrl = "/";
     private bool _inProgress = false;
     private bool _isDisabled = false;
+    private List<DepartmentDto>? _departments { get; set; }
+    private int? _departmentId;
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     private Alert _alert = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         var uri = new Uri(NavigationManager.Uri);
         var roleFromQuery = QueryHelpers.ParseQuery(uri.Query).TryGetValue("role", out var role) ? role.ToString() : null;
@@ -114,6 +134,8 @@
             Input.Role = roleFromQuery;
             _isDisabled = true;
         }
+
+        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
 
         returnUrl = QueryHelpers.ParseQuery(uri.Query).TryGetValue("redirectUrl", out var returnTo) && !string.IsNullOrEmpty(returnTo)
             ? returnTo.ToString()
@@ -188,7 +210,8 @@
             FirstName = Input.FirstName,
             LastName = Input.LastName,
             Specialty = Input.Specialty ?? string.Empty,
-            UserId = userId
+            UserId = userId,
+            DepartmentId = _departmentId
         };
     }
 
@@ -198,7 +221,8 @@
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
-            UserId = userId
+            UserId = userId,
+            DepartmentId = _departmentId
         };
     }
 
@@ -208,7 +232,8 @@
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
-            UserId = userId
+            UserId = userId,
+            DepartmentId = _departmentId
         };
     }
 

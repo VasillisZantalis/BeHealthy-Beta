@@ -13,7 +13,7 @@
 
 @code {
     private bool isDropdownOpen = false;
-    private string dropdownStyle => isDropdownOpen ? "display: block;" : "display: none;";
+    private string dropdownStyle => isDropdownOpen ? "display: block; position: fixed; transform: translateX(-100%);" : "display: none;";
 
     [Parameter] public string? ButtonText { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }

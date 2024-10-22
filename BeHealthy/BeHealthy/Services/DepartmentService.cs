@@ -25,7 +25,7 @@ public class DepartmentService : IDepartmentService
 
     public async Task<DepartmentDto> GetDepartmentByIdAsync(int id)
     {
-        var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(id);
+        var department = await _unitOfWork.DepartmentRepository.GetDepartmentByIdAsync(id);
         return _mapper.Map<DepartmentDto>(department);
     }
 

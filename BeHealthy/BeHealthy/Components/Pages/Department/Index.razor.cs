@@ -38,12 +38,13 @@ public partial class Index
 
     public void EditDepartment(int departmentId)
     {
-
+        _navigationManager.NavigateTo($"/departments/edit/{departmentId}");
     }
 
-    public void DeleteDepartment(int departmentId)
+    public async void DeleteDepartment(int departmentId)
     {
-
+        await _departmentService.DeleteDepartmentAsync(departmentId);
+        _navigationManager.Refresh(forceReload: true);
     }
 
     private void Create()

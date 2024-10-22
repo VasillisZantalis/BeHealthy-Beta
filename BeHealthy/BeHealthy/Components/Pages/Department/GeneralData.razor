@@ -1,0 +1,89 @@
+﻿@using BeHealthy.Shared.Models.Dtos.Department
+
+<div class="container-fluid my-3 p-3 border rounded">
+    <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
+        <Alert @ref="_alert" />
+        <DataAnnotationsValidator />
+        <div class="d-flex flex-column gap-2">
+            <div class="form-group">
+                <label class="fw-bold" for="name">Name</label>
+                <InputText id="name" class="form-control" @bind-Value="DepartmentDto.Name" />
+            </div>
+            <div class="form-group">
+                <label class="fw-bold" for="location">Location</label>
+                <InputText id="location" class="form-control" @bind-Value="DepartmentDto.Location" />
+            </div>
+             <div class="form-group">
+                <label class="fw-bold" for="headOfDepartment">Head of Department</label>
+                <InputSelect id="headOfDepartment" class="form-control" @bind-Value="DepartmentDto.HeadOfDepartmentId">
+                    <option value="">Select Doctor</option>
+                    @foreach (var doctor in Doctors)
+                    {
+                        <option value="@doctor.Id">@doctor.FullName</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mt-3 px-4 text-end">
+             @if (_inProgress)
+                {
+                    <span class="spinner-border spinner-border-sm"></span>
+                }
+                Save
+        </button>
+    </EditForm>
+</div>
+
+@code{
+    [Parameter]
+    public bool IsEditMode { get; set; } = false;
+
+    [Parameter]
+    public List<DoctorDto> Doctors { get; set; } = new();
+
+    [Parameter]
+    public DepartmentDto DepartmentDto { get; set; } = new();
+
+    [Inject]
+    private IDepartmentService _departmentService { get; set; } = default!;
+
+    private bool _inProgress = false;
+    private Alert _alert = new();
+
+    private async Task HandleSubmit()
+    {
+        _inProgress = true;
+        if (IsEditMode)
+        {
+            var updateDto = new DepartmentForUpdateDto
+                {
+                    Id = DepartmentDto.Id,
+                    Name = DepartmentDto.Name,
+                    Location = DepartmentDto.Location,
+                    HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
+                    Doctors = DepartmentDto.Doctors,
+                    Nurses = DepartmentDto.Nurses,
+                    Patients = DepartmentDto.Patients,
+                    Rooms = DepartmentDto.Rooms
+                };
+            await _departmentService.UpdateDepartmentAsync(updateDto);
+        }
+        else
+        {
+            var createDto = new DepartmentForCreationDto
+                {
+                    Name = DepartmentDto.Name,
+                    Location = DepartmentDto.Location,
+                    HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
+                    Doctors = DepartmentDto.Doctors,
+                    Nurses = DepartmentDto.Nurses,
+                    Patients = DepartmentDto.Patients,
+                    Rooms = DepartmentDto.Rooms
+                };
+            await _departmentService.AddDepartmentAsync(createDto);
+        }
+        _inProgress = false;
+        string successMessage = "Successful";
+        _alert.ShowSuccess(successMessage);
+    }
+}
