@@ -1,22 +1,43 @@
-﻿<ul class="list-group">
-    @foreach (var nurse in Nurses)
-    {
-        <li class="list-group-item px-3 my-2 border rounded-pill">
-            <div class="d-flex justify-content-between">
+﻿@inject NavigationManager NavigationManager
+
+<ul class="list-group">
+    <Virtualize Items="Nurses" Context="nurse">
+        <li class="list-group-item my-2 border rounded-pill clickable" @onclick="() => OnNurseClick(nurse)">
+            <div class="d-flex justify-content-between px-3">
                 <img class="rounded-circle" src="images/generic.jpg" alt="@nurse.FullName" width="35" height="35" />
-                <span>@nurse.FullName</span>
-                <span>@nurse.Email</span>
+                <div class="d-flex flex-column align-items-center">
+                    <span class="text-muted small-text">Name</span>
+                    <h6>@nurse.FullName</h6>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <span class="text-muted small-text">Email</span>
+                    <h6>@nurse.Email</h6>
+                </div>
                 @if (!string.IsNullOrEmpty(nurse.PhoneNumber))
                 {
-                    <span>@nurse.PhoneNumber</span>
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">Phone</span>
+                        <h6>@nurse.PhoneNumber</h6>
+
+                    </div>
                 }
-                <span>@DateTimeExtensions.ToFullDateTimeString(nurse.CreatedAt)</span>
+                <div class="d-flex flex-column align-items-center">
+                    <span class="text-muted small-text">Created</span>
+                    <h6>@DateTimeExtensions.ToFullDateTimeString(nurse.CreatedAt)</h6>
+                </div>
             </div>
         </li>
-    }
+    </Virtualize>
 </ul>
 
 @code {
     [Parameter]
     public List<NurseDto> Nurses { get; set; } = new();
+
+    private void OnNurseClick(NurseDto nurse)
+    {
+        NavigationManager.NavigateTo(RoutingEndpoints.NURSES_PAGE);
+        //NavigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/edit/{nurse.Id}");
+    }
+
 }

@@ -61,3 +61,11 @@ h1:focus {
 .auth-form {
     background-color: var(--primary-color);
 }
+
+.small-text {
+    font-size: 0.8rem;
+}
+
+.clickable {
+    cursor: pointer;
+}
