@@ -1,0 +1,38 @@
+﻿@typeparam TItem
+
+<select class="form-select" @onchange="HandleChange" disabled="@IsDisabled">
+    @if (Items != null)
+    {
+        @foreach (var item in Items)
+        {
+            <option value="@GetValue?.Invoke(item)">
+                @GetDisplayText?.Invoke(item)
+            </option>
+        }
+    }
+</select>
+
+@code {
+    [Parameter]
+    public IEnumerable<TItem>? Items { get; set; }
+
+    [Parameter]
+    public Func<TItem, string>? GetDisplayText { get; set; }
+
+    [Parameter]
+    public Func<TItem, string>? GetValue { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSelectedValueChanged { get; set; }
+
+    private async Task HandleChange(ChangeEventArgs e)
+    {
+        if (OnSelectedValueChanged.HasDelegate)
+        {
+            await OnSelectedValueChanged.InvokeAsync(e.Value?.ToString());
+        }
+    }
+}

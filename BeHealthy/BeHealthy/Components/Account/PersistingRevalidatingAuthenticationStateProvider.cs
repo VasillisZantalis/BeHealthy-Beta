@@ -1,4 +1,3 @@
-using BeHealthy.Client;
 using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -34,7 +33,7 @@ namespace BeHealthy.Components.Account
             options = optionsAccessor.Value;
 
             AuthenticationStateChanged += OnAuthenticationStateChanged;
-            subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveWebAssembly);
+            subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveServer);
         }
 
         protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
@@ -91,13 +90,13 @@ namespace BeHealthy.Components.Account
 
                 if (userId != null && email != null && role != null)
                 {
-                    state.PersistAsJson(nameof(UserInfo), new UserInfo
-                    {
-                        UserId = userId,
-                        Email = email,
-                        Username = username,
-                        Role = role
-                    });
+                    //state.PersistAsJson(nameof(UserInfo), new UserInfo
+                    //{
+                    //    UserId = userId,
+                    //    Email = email,
+                    //    Username = username,
+                    //    Role = role
+                    //});
                 }
             }
         }

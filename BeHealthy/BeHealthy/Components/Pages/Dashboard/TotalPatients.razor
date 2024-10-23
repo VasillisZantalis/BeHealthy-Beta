@@ -1,0 +1,24 @@
+﻿@inject IPatientService patientService
+
+<div id="totalPatientsDiv">
+    <div class="card rounded shadow border-0 border-start border-5 border-danger my-3">
+        <div class="card-body">
+            <div class="d-flex flex-row flex-wrap gap-2">
+                <span class="fa-solid fa-viruses fs-4"></span>
+                <h5 class="align-self-center">Patients</h5>
+            </div>
+            <h5 class="text-muted text-center fs-2">@totalPatientsCount</h5>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private int totalPatientsCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        totalPatientsCount = (await patientService.GetAllPatientsAsync()).Count();
+    }
+
+}

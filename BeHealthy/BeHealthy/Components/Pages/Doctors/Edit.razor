@@ -1,0 +1,29 @@
+﻿@page "/doctors/{DoctorId:int}"
+
+<EditForm FormName="DoctorForm" OnValidSubmit="UpdateDoctor" Model="_doctorForUpdateDto">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="fw-bold">
+            First Name
+            <InputText @bind-Value="_doctorForUpdateDto.FirstName"/>
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="fw-bold">
+            Last Name
+            <InputText @bind-Value="_doctorForUpdateDto.LastName" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="fw-bold">
+            Speciality
+            <InputText @bind-Value="_doctorForUpdateDto.Specialty" />
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="fw-bold">
+            Phone Number
+            <InputText @bind-Value="_doctorForUpdateDto.PhoneNumber" />
+        </label>
+    </div>
+</EditForm>

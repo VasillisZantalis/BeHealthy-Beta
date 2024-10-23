@@ -1,0 +1,107 @@
+﻿@page "/patients"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<PageTitle>Patients</PageTitle>
+
+<SectionContent SectionName="page-title">Patients</SectionContent>
+
+<div class="d-flex flex-row gap-3">
+    <div class="">
+        <CreateUserButton Href="@_createUserHref" />
+    </div>
+    <div class="">
+        <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
+            <option value="Card">Card</option>
+            <option value="Grid">Grid</option>
+        </InputSelect>
+    </div>
+</div>
+
+@if (_isLoading)
+{
+    <Loader />
+}
+else if (_patients is null)
+{
+    <p>No patients available</p>
+}
+else
+{
+    @if (_selectedView == "Card")
+    {
+        <div class="row">
+            @foreach (var patient in _patients)
+            {
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
+                    <div class="mb-3">
+                        <UserCard Id="@patient.Id"
+                                  FullName="@patient.FullName"
+                                  Email="@patient.Email"
+                                  Phone="@patient.PhoneNumber"
+                                  Edit="@(() => {})"
+                                  Delete="@DeletePatient" />
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else if (_selectedView == "Grid")
+    {
+        <div class="patientsTableDiv mt-3">
+            <div class="card">
+                <div class="card-header d-flex flex-row justify-content-end">
+                    <div class="px-1">
+                        <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="card-body pb-2 px-0 m-0">
+                    <QuickGrid  Class="table table-responsive"
+                                Items="@_patients.AsQueryable()"
+                                ItemKey="@(x => x.Id)"
+                               Pagination="_paginationState">
+                        <TemplateColumn>
+                            <img class="rounded-circle" src="images/generic.jpg" alt="@context.FullName" width="25" height="25" />
+                        </TemplateColumn>
+                        <PropertyColumn Title="First Name" 
+                                        Property="@(x => x.FirstName)" 
+                                        Sortable="true"/>
+                        <PropertyColumn Title="Last Name" 
+                                        Property="@(x => x.LastName)"
+                                        Sortable="true" />
+                        <PropertyColumn Title="Created At" 
+                                        Property="@(x => x.CreatedAt)" 
+                                        Format="dd MMM yyyy HH:mm" 
+                                        Sortable="true" 
+                                        IsDefaultSortColumn="true" 
+                                        InitialSortDirection="SortDirection.Descending"/>
+                        <PropertyColumn Title="Email" 
+                                        Property="@(x => x.Email)"/>
+                        <PropertyColumn Title="Phone"
+                                        Property="@(x => x.PhoneNumber)"/>
+                        <TemplateColumn>
+                            <ActionsDropdown>
+                                <button class="btn w-100 text-start" @onclick="async () => await EditPatient(context.Id)">
+                                    <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                </button>
+                                <button class="btn w-100 text-start" @onclick="async () => await DeletePatient(context.Id)">
+                                    <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                </button>
+                            </ActionsDropdown>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+                </div>
+                <div id="paginatorDiv" class="px-3">
+                    <Paginator State="_paginationState" />
+                </div>
+            </div>
+        </div>
+    }
+}

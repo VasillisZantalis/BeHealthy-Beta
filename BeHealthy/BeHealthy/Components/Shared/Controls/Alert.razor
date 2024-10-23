@@ -1,0 +1,70 @@
+﻿@if (_showAlert)
+{
+    <div class="alert alert-@_severity.ToString().ToLower() alert-dismissible fade show" role="alert">
+        <div class="d-flex flex-row gap-2">
+            <span class="fs-5 @_icon text-@_severity.ToString().ToLower()"></span>
+            <span class="fw-bold">@Message</span>
+            <button @onclick="CloseAlert" type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Message { get; set; } = string.Empty;
+
+    private Severity _severity { get; set; }
+
+    private bool _showAlert = false;
+
+    private string? _icon;
+
+    private void CloseAlert()
+    {
+        _showAlert = false;
+    }
+
+    public void ShowFailed(string message)
+    {
+        _showAlert = true;
+        _severity = Severity.Danger;
+        _icon = "fa-regular fa-circle-xmark";
+        Message = message;
+        StateHasChanged();
+    }
+
+    public void ShowSuccess(string message)
+    {
+        _showAlert = true;
+        _severity = Severity.Success;
+        _icon = "fa-regular fa-circle-check";
+        Message = message;
+        StateHasChanged();
+    }
+
+    public void ShowInfo(string message)
+    {
+        _showAlert = true;
+        _severity = Severity.Info;
+        _icon = "fa-solid fa-circle-info";
+        Message = message;
+        StateHasChanged();
+    }
+
+    public void ShowWarning(string message)
+    {
+        _showAlert = true;
+        _severity = Severity.Warning;
+        _icon = "fa-solid fa-triangle-exclamation";
+        Message = message;
+        StateHasChanged();
+    }
+
+    internal enum Severity
+    {
+        Info,
+        Warning,
+        Success,
+        Danger
+    }
+}
