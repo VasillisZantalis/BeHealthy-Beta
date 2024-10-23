@@ -1,7 +1,18 @@
-﻿<ul>
+﻿<ul class="list-group">
     @foreach (var patient in Patients)
     {
-        <li>@patient.FullName</li>
+        <li class="list-group-item px-3 my-2 border rounded-pill">
+            <div class="d-flex justify-content-between">
+                <img class="rounded-circle" src="images/generic.jpg" alt="@patient.FullName" width="35" height="35" />
+                <span>@patient.FullName</span>
+                <span>@patient.Email</span>
+                @if (!string.IsNullOrEmpty(patient.PhoneNumber))
+                {
+                    <span>@patient.PhoneNumber</span>
+                }
+                <span>@DateTimeExtensions.ToFullDateTimeString(patient.CreatedAt)</span>
+            </div>
+        </li>
     }
 </ul>
 

@@ -9,5 +9,5 @@ public class NurseDto
     public string PhoneNumber { get; set; } = string.Empty;
     public string FullName => $"{FirstName} {LastName}";
     public string Email { get; set; } = string.Empty;
-    public DateTime? CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

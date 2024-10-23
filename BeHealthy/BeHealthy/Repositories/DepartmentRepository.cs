@@ -31,10 +31,14 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
         {
             return await context.Departments
                     .Include(d => d.Doctors)
+                    .ThenInclude(doc => doc.User)
                     .Include(d => d.Patients)
+                    .ThenInclude(p => p.User)
                     .Include(d => d.Nurses)
+                    .ThenInclude(n => n.User)
                     .Include(d => d.Rooms)
                     .Include(d => d.HeadOfDepartment)
+                    .ThenInclude(hd => hd.User)
                     .FirstAsync(x => x.Id == departmentId);
         }
     }
