@@ -8,7 +8,9 @@
 
 <div class="d-flex flex-row gap-3">
     <div class="">
-        <CreateUserButton Href="@_createUserHref" />
+        <button class="btn btn-light px-3" @onclick="CreateNurse">
+            <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
+        </button>
     </div>
     <div class="">
         <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
@@ -87,7 +89,7 @@ else
                                         Property="@(x => x.PhoneNumber)" />
                         <TemplateColumn>
                             <ActionsDropdown>
-                                <button class="btn w-100 text-start" @onclick="async () => await EditNurse(context.Id)">
+                                <button class="btn w-100 text-start" @onclick="() => EditNurse(context.Id)">
                                     <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
                                 </button>
                                 <button class="btn w-100 text-start" @onclick="async () => await DeleteNurse(context.Id)">

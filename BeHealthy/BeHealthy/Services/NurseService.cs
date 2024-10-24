@@ -35,7 +35,7 @@ public class NurseService : INurseService
         await _unitOfWork.NurseRepository.AddAsync(nurse);
     }
 
-    public async Task UpdateNurseAsync(NurseForUpdateDto nurseDto)
+    public async Task UpdateNurseAsync(int id, NurseForUpdateDto nurseDto)
     {
         var nurse = _mapper.Map<Nurse>(nurseDto);
         await _unitOfWork.NurseRepository.UpdateAsync(nurse);

@@ -1,0 +1,180 @@
+﻿@page "/nurses/create"
+@rendermode InteractiveServer
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject INurseService NurseService
+@inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+<SectionContent SectionName="page-title">
+    <a class="nav-link d-inline" href="Nurse">Nurse</a> / Create
+</SectionContent>
+
+<div class="container-fluid p-5 border rounded shadow">
+    <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterNurse" FormName="Enhance">
+        <DataAnnotationsValidator />
+        <div class="row">
+            <Alert @ref="_alert" />
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <label for="firstName">First Name</label>
+                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <label for="lastName">Last Name</label>
+                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                </div>
+            </div>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
+            <label for="email">Email</label>
+            <ValidationMessage For="() => Input.Email" class="text-danger" />
+        </div>
+        <div class="form-floating mb-3">
+            <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
+            <label for="password">Password</label>
+            <ValidationMessage For="() => Input.Password" class="text-danger" />
+        </div>
+        <div class="form-floating mb-3">
+            <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
+            <label for="confirmPassword">Confirm Password</label>
+            <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+        </div>
+        <div class="form-floating mb-3">
+            <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <label for="@Input.PhoneNumber">Phone Number</label>
+            <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+        </div>
+
+        @if (_departments is not null && _departments.Any())
+        {
+            <div class="form-floating mb-3">
+                <InputSelect id="Department" @bind-Value="_departmentId" class="form-control">
+                    <option value="0">Please Select</option>
+                    @foreach (var department in _departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </InputSelect>
+                <label for="Department">Department</label>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-success px-5" disabled="@_inProgress">
+            @if (_inProgress)
+            {
+                <span class="spinner-border spinner-border-sm"></span>
+            }
+            Save
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    private IEnumerable<IdentityError>? identityErrors;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+    private bool _inProgress = false;
+    private bool _isDisabled = false;
+    private List<DepartmentDto>? _departments { get; set; }
+    private int? _departmentId;
+
+    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+
+    private Alert _alert = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+    }
+
+    public async Task RegisterNurse(EditContext editContext)
+    {
+        _inProgress = true;
+        var user = new ApplicationUser
+            {
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                PhoneNumber = Input.PhoneNumber
+            };
+
+        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        await UserManager.SetEmailAsync(user, Input.Email);
+
+        var result = await UserManager.CreateAsync(user, Input.Password);
+
+        if (!result.Succeeded)
+        {
+            _inProgress = false;
+            identityErrors = result.Errors;
+            var errors = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
+            _alert.ShowFailed(errors);
+            return;
+        }
+
+        await UserManager.AddToRoleAsync(user, EnumExtensions.GetDisplayName(UserRole.Nurse));
+
+        var userId = await UserManager.GetUserIdAsync(user);
+
+        var nurseForCreationDto = new NurseForCreationDto
+            {
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                UserId = userId,
+                DepartmentId = _departmentId
+            };
+
+        await NurseService.AddNurseAsync(nurseForCreationDto);
+
+        _inProgress = false;
+        string successMessage = "Successful";
+        _alert.ShowSuccess(successMessage);
+    }
+
+    private void HandleModalClose(bool success)
+    {
+        _inProgress = false;
+
+        if (!success)
+            return;
+
+        NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; } = "";
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
+
+        public string? PhoneNumber { get; set; }
+    }
+}

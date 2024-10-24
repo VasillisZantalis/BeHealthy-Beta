@@ -1,13 +1,13 @@
 ﻿<div class="card my-3 shadow border">
     <div class="card-body px-4">
-        <div class="d-flex flex-row flex-wrap gap-5">
+        <div class="d-flex flex-column flex-sm-row text-truncate gap-5">
             <img class="rounded-circle" src="images/generic.jpg" height="90" />
             <div>
                 @if (!string.IsNullOrEmpty(FullName))
                 {
                     <div class="form-group">
                         <label class="text-muted" for="fullName">Full Name</label>
-                        <h6 id="fullName">@FullName</h6>
+                        <h6 id="fullName" title="@FullName">@FullName</h6>
                     </div>
                 }
                 @if (!string.IsNullOrEmpty(Specialty))

@@ -1,46 +1,46 @@
-﻿@page "/patients/edit/{PatientId:int}"
+﻿@page "/nurses/edit/{NurseId:int}"
 @rendermode InteractiveServer
 
-@inject IPatientService PatientService
+@inject INurseService NurseService
 @inject IDepartmentService DepartmentService
 @inject IUserStore<ApplicationUser> UserStore
 @inject IMapper Mapper
 
 <PageTitle>Edit</PageTitle>
 <SectionContent SectionName="page-title">
-    <a class="nav-link d-inline" href="patients">Patients</a> / Edit / @PatientId
+    <a class="nav-link d-inline" href="nurses">Nurses</a> / Edit / @NurseId
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm id="UpdateForm" Model="_patientForUpdateDto" method="post" OnValidSubmit="UpdatePatient" FormName="Enhance">
+    <EditForm id="UpdateForm" Model="_nurseForUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="Enhance">
         <DataAnnotationsValidator />
         <div class="row">
             <Alert @ref="_alert" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_patientForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="_nurseForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">First Name</label>
-                    <ValidationMessage For="() => _patientForUpdateDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => _nurseForUpdateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_patientForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="_nurseForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">Last Name</label>
-                    <ValidationMessage For="() => _patientForUpdateDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => _nurseForUpdateDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
         <div class="form-floating mb-3">
-            <InputText @bind-Value="_patientForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="@_patientForUpdateDto.PhoneNumber">Phone Number</label>
-            <ValidationMessage For="() => _patientForUpdateDto.PhoneNumber" class="text-danger" />
+            <InputText @bind-Value="_nurseForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <label for="@_nurseForUpdateDto.PhoneNumber">Phone Number</label>
+            <ValidationMessage For="() => _nurseForUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 
         @if (_departments is not null && _departments.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_patientForUpdateDto.DepartmentId" class="form-control">
+                <InputSelect id="Department" @bind-Value="_nurseForUpdateDto.DepartmentId" class="form-control">
                     <option value="0">Please Select</option>
                     @foreach (var department in _departments)
                     {
@@ -64,10 +64,10 @@
 
 @code {
     [Parameter]
-    public int PatientId { get; set; }
+    public int NurseId { get; set; }
 
     [SupplyParameterFromForm]
-    private PatientForUpdateDto _patientForUpdateDto { get; set; } = new();
+    private NurseForUpdateDto _nurseForUpdateDto { get; set; } = new();
 
     private List<DepartmentDto>? _departments { get; set; }
 
@@ -77,22 +77,22 @@
     protected override async Task OnParametersSetAsync()
     {
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
-        var patient = await PatientService.GetPatientByIdAsync(PatientId);
-        //Mapper.Map(patient, _patientForUpdateDto);
+        var nurse = await NurseService.GetNurseByIdAsync(NurseId);
+        //Mapper.Map(nurse, _nurseForUpdateDto);
 
-        _patientForUpdateDto.Id = patient.Id;
-        _patientForUpdateDto.FirstName = patient.FirstName;
-        _patientForUpdateDto.LastName = patient.LastName;
-        _patientForUpdateDto.PhoneNumber = patient.PhoneNumber;
-        _patientForUpdateDto.UserId = patient.UserId ?? string.Empty;
+        _nurseForUpdateDto.Id = nurse.Id;
+        _nurseForUpdateDto.FirstName = nurse.FirstName;
+        _nurseForUpdateDto.LastName = nurse.LastName;
+        _nurseForUpdateDto.PhoneNumber = nurse.PhoneNumber;
+        _nurseForUpdateDto.UserId = nurse.UserId ?? string.Empty;
     }
 
-    private async Task UpdatePatient()
+    private async Task UpdateNurse()
     {
         var user = new ApplicationUser
             {
-                FirstName = _patientForUpdateDto.FirstName,
-                LastName = _patientForUpdateDto.LastName
+                FirstName = _nurseForUpdateDto.FirstName,
+                LastName = _nurseForUpdateDto.LastName
             };
 
         var result = await UserStore.UpdateAsync(user, CancellationToken.None);
@@ -103,7 +103,7 @@
             _alert.ShowSuccess("Something Went Wrong");
         }
 
-        await PatientService.UpdatePatientAsync(_patientForUpdateDto.Id, _patientForUpdateDto);
+        await NurseService.UpdateNurseAsync(_nurseForUpdateDto.Id, _nurseForUpdateDto);
 
         _inProgress = false;
         string successMessage = "Successful";
