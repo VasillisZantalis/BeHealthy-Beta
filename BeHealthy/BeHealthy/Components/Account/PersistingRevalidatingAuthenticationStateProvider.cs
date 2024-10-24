@@ -2,38 +2,29 @@ using BeHealthy.Shared.Models.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
 using System.Security.Claims;
 
 namespace BeHealthy.Components.Account
 {
-
     internal sealed class PersistingRevalidatingAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider
     {
         private readonly IServiceScopeFactory scopeFactory;
-        private readonly PersistentComponentState state;
         private readonly IdentityOptions options;
-
-        private readonly PersistingComponentStateSubscription subscription;
 
         private Task<AuthenticationState>? authenticationStateTask;
 
         public PersistingRevalidatingAuthenticationStateProvider(
             ILoggerFactory loggerFactory,
             IServiceScopeFactory serviceScopeFactory,
-            PersistentComponentState persistentComponentState,
             IOptions<IdentityOptions> optionsAccessor)
             : base(loggerFactory)
         {
             scopeFactory = serviceScopeFactory;
-            state = persistentComponentState;
             options = optionsAccessor.Value;
 
             AuthenticationStateChanged += OnAuthenticationStateChanged;
-            subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveServer);
         }
 
         protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
@@ -71,39 +62,8 @@ namespace BeHealthy.Components.Account
             authenticationStateTask = task;
         }
 
-        private async Task OnPersistingAsync()
-        {
-            if (authenticationStateTask is null)
-            {
-                throw new UnreachableException($"Authentication state not set in {nameof(OnPersistingAsync)}().");
-            }
-
-            var authenticationState = await authenticationStateTask;
-            var principal = authenticationState.User;
-
-            if (principal.Identity?.IsAuthenticated == true)
-            {
-                var userId = principal.FindFirst(options.ClaimsIdentity.UserIdClaimType)?.Value;
-                var email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
-                var username = principal.FindFirst(options.ClaimsIdentity.UserNameClaimType)?.Value ?? "Unknown";
-                var role = principal.FindFirst(options.ClaimsIdentity.RoleClaimType)?.Value;
-
-                if (userId != null && email != null && role != null)
-                {
-                    //state.PersistAsJson(nameof(UserInfo), new UserInfo
-                    //{
-                    //    UserId = userId,
-                    //    Email = email,
-                    //    Username = username,
-                    //    Role = role
-                    //});
-                }
-            }
-        }
-
         protected override void Dispose(bool disposing)
         {
-            subscription.Dispose();
             AuthenticationStateChanged -= OnAuthenticationStateChanged;
             base.Dispose(disposing);
         }
