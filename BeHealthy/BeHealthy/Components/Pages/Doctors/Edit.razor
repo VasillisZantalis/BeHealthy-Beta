@@ -1,29 +1,118 @@
-﻿@page "/doctors/{DoctorId:int}"
+﻿@page "/doctors/edit/{DoctorId:int}"
+@rendermode InteractiveServer
 
-<EditForm FormName="DoctorForm" OnValidSubmit="UpdateDoctor" Model="_doctorForUpdateDto">
-    <DataAnnotationsValidator />
-    <div class="form-group">
-        <label for="fw-bold">
-            First Name
-            <InputText @bind-Value="_doctorForUpdateDto.FirstName"/>
-        </label>
-    </div>
-    <div class="form-group">
-        <label for="fw-bold">
-            Last Name
-            <InputText @bind-Value="_doctorForUpdateDto.LastName" />
-        </label>
-    </div>
-    <div class="form-group">
-        <label for="fw-bold">
-            Speciality
-            <InputText @bind-Value="_doctorForUpdateDto.Specialty" />
-        </label>
-    </div>
-    <div class="form-group">
-        <label for="fw-bold">
-            Phone Number
-            <InputText @bind-Value="_doctorForUpdateDto.PhoneNumber" />
-        </label>
-    </div>
-</EditForm>
+@inject IDoctorService DoctorService
+@inject IDepartmentService DepartmentService
+@inject IUserStore<ApplicationUser> UserStore
+@inject IMapper Mapper
+
+<PageTitle>Edit</PageTitle>
+<SectionContent SectionName="page-title">
+    <a class="nav-link d-inline" href="doctors">Doctors</a> / Edit / @DoctorId
+</SectionContent>
+
+<div class="container-fluid p-5 border rounded shadow">
+    <EditForm id="UpdateForm" Model="_doctorForUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="Enhance">
+        <DataAnnotationsValidator />
+        <div class="row">
+            <Alert @ref="_alert" />
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="_doctorForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <label for="firstName">First Name</label>
+                    <ValidationMessage For="() => _doctorForUpdateDto.FirstName" class="text-danger" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="_doctorForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <label for="lastName">Last Name</label>
+                    <ValidationMessage For="() => _doctorForUpdateDto.LastName" class="text-danger" />
+                </div>
+            </div>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText id="specialty" @bind-Value="_doctorForUpdateDto.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
+            <label for="specialty">Specialty</label>
+            <ValidationMessage For="() => _doctorForUpdateDto.Specialty" class="text-danger" />
+        </div>
+        <div class="form-floating mb-3">
+            <InputText @bind-Value="_doctorForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <label for="@_doctorForUpdateDto.PhoneNumber">Phone Number</label>
+            <ValidationMessage For="() => _doctorForUpdateDto.PhoneNumber" class="text-danger" />
+        </div>
+
+        @if (_departments is not null && _departments.Any())
+        {
+            <div class="form-floating mb-3">
+                <InputSelect id="Department" @bind-Value="_doctorForUpdateDto.DepartmentId" class="form-control">
+                    <option value="0">Please Select</option>
+                    @foreach (var department in _departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </InputSelect>
+                <label for="Department">Department</label>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-success px-3" disabled="@_inProgress">
+            @if (_inProgress)
+            {
+                <span class="spinner-border spinner-border-sm"></span>
+            }
+            Create
+        </button>
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+    public int DoctorId { get; set; }
+
+    [SupplyParameterFromForm]
+    private DoctorForUpdateDto _doctorForUpdateDto { get; set; } = new();
+
+    private List<DepartmentDto>? _departments { get; set; }
+
+    private bool _inProgress = false;
+    private Alert _alert = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
+        //Mapper.Map(doctor, _doctorForUpdateDto);
+
+        _doctorForUpdateDto.Id = doctor.Id;
+        _doctorForUpdateDto.FirstName = doctor.FirstName;
+        _doctorForUpdateDto.LastName = doctor.LastName;
+        _doctorForUpdateDto.Specialty = doctor.Specialty;
+        _doctorForUpdateDto.PhoneNumber = doctor.PhoneNumber;
+        _doctorForUpdateDto.UserId = doctor.UserId;
+    }
+
+    private async Task UpdateDoctor()
+    {
+        var user = new ApplicationUser
+        {
+            FirstName = _doctorForUpdateDto.FirstName,
+            LastName = _doctorForUpdateDto.LastName
+        };
+
+        var result = await UserStore.UpdateAsync(user, CancellationToken.None);
+
+        if (!result.Succeeded)
+        {
+            _inProgress = false;
+            _alert.ShowSuccess("Something Went Wrong");
+        }
+        
+        await DoctorService.UpdateDoctorAsync(_doctorForUpdateDto.Id, _doctorForUpdateDto);
+
+        _inProgress = false;
+        string successMessage = "Successful";
+        _alert.ShowSuccess(successMessage);
+    }
+}

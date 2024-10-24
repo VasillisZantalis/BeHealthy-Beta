@@ -26,7 +26,17 @@ public class DoctorProfile : Profile
 
         CreateMap<DoctorForCreationDto, Doctor>();
 
-        CreateMap<DoctorForUpdateDto, Doctor>()
-            .ReverseMap();
+        CreateMap<DoctorForUpdateDto, Doctor>();
+        CreateMap<Doctor, DoctorForUpdateDto>()
+            .ForMember(dest => dest.FirstName,
+                opt => opt.MapFrom(src => src.FirstName))
+            .ForMember(dest => dest.LastName,
+                opt => opt.MapFrom(src => src.LastName))
+            .ForMember(dest => dest.PhoneNumber,
+                opt => opt.MapFrom(src => src.User != null && src.User.PhoneNumber != null
+                                  ? src.User.PhoneNumber
+                                  : string.Empty))
+            .ForMember(dest => dest.Specialty,
+                opt => opt.MapFrom(src => src.Specialty));
     }
 }

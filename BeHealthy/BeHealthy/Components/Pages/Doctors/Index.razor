@@ -8,7 +8,9 @@
 
 <div class="d-flex flex-row gap-3">
     <div class="">
-        <CreateUserButton Href="@_createUserHref" />
+        <button class="btn btn-light px-3" @onclick="CreateDoctor">
+            <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
+        </button>
     </div>
     <div class="">
         <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">

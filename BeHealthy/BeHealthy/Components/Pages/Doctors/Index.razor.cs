@@ -23,7 +23,7 @@ public partial class Index
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
-        _createUserHref = $"Account/Register?role=Doctor&redirectUrl={RoutingEndpoints.HOME_PAGE}";
+        _createUserHref = $"{RoutingEndpoints.HOME_PAGE}/create";
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
         _isLoading = false;
@@ -37,9 +37,14 @@ public partial class Index
         }
     }
 
-    private async Task EditDoctor(int id)
+    private void EditDoctor(int id)
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/{id}");
+        _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{id}");
+    }
+
+    private void CreateDoctor()
+    {
+        _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
     private async Task DeleteDoctor(int id)
