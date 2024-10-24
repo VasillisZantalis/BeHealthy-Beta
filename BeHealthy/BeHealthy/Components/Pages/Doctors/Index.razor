@@ -93,7 +93,7 @@ else
                                         Property="@(x => x.PhoneNumber)" />
                         <TemplateColumn>
                             <ActionsDropdown>
-                                <button class="btn w-100 text-start" @onclick="async () => await EditDoctor(context.Id)">
+                                <button class="btn w-100 text-start" @onclick="() => EditDoctor(context.Id)">
                                     <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
                                 </button>
                                 <button class="btn w-100 text-start" @onclick="async () => await DeleteDoctor(context.Id)">

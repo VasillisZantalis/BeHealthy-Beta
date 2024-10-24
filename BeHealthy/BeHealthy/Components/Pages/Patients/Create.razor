@@ -1,19 +1,19 @@
-﻿@page "/doctors/create"
+﻿@page "/patients/create"
 @rendermode InteractiveServer
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
-@inject IDoctorService DoctorService
+@inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Create</PageTitle>
 <SectionContent SectionName="page-title">
-    <a class="nav-link d-inline" href="doctors">Doctors</a> / Create
+    <a class="nav-link d-inline" href="Patient">Patient</a> / Create
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterDoctor" FormName="Enhance">
+    <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterPatient" FormName="Enhance">
         <DataAnnotationsValidator />
         <div class="row">
             <Alert @ref="_alert" />
@@ -46,11 +46,6 @@
             <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
             <label for="confirmPassword">Confirm Password</label>
             <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText id="specialty" @bind-Value="Input.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
-            <label for="specialty">Specialty</label>
-            <ValidationMessage For="() => Input.Specialty" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
             <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
@@ -101,7 +96,7 @@
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
     }
 
-    public async Task RegisterDoctor(EditContext editContext)
+    public async Task RegisterPatient(EditContext editContext)
     {
         _inProgress = true;
         var user = new ApplicationUser
@@ -125,20 +120,19 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, EnumExtensions.GetDisplayName(UserRole.Doctor));
+        await UserManager.AddToRoleAsync(user, EnumExtensions.GetDisplayName(UserRole.Patient));
 
         var userId = await UserManager.GetUserIdAsync(user);
 
-        var doctorForCreationDto = new DoctorForCreationDto
-        {
-            FirstName = Input.FirstName,
-            LastName = Input.LastName,
-            Specialty = Input.Specialty,
-            UserId = userId,
-            DepartmentId = _departmentId
-        };
+        var patientForCreationDto = new PatientForCreationDto
+            {
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                UserId = userId,
+                DepartmentId = _departmentId
+            };
 
-        await DoctorService.AddDoctorAsync(doctorForCreationDto);
+        await PatientService.AddPatientAsync(patientForCreationDto);
 
         _inProgress = false;
         string successMessage = "Successful";
@@ -152,7 +146,7 @@
         if (!success)
             return;
 
-        NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
+        NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
     }
 
     private sealed class InputModel
@@ -181,7 +175,6 @@
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
 
-        public string Specialty { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
     }
 }

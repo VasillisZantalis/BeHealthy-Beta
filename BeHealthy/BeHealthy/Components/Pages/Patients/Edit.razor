@@ -1,0 +1,112 @@
+﻿@page "/patients/edit/{PatientId:int}"
+@rendermode InteractiveServer
+
+@inject IPatientService PatientService
+@inject IDepartmentService DepartmentService
+@inject IUserStore<ApplicationUser> UserStore
+@inject IMapper Mapper
+
+<PageTitle>Edit</PageTitle>
+<SectionContent SectionName="page-title">
+    <a class="nav-link d-inline" href="patients">Patients</a> / Edit / @PatientId
+</SectionContent>
+
+<div class="container-fluid p-5 border rounded shadow">
+    <EditForm id="UpdateForm" Model="_patientForUpdateDto" method="post" OnValidSubmit="UpdatePatient" FormName="Enhance">
+        <DataAnnotationsValidator />
+        <div class="row">
+            <Alert @ref="_alert" />
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="_patientForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <label for="firstName">First Name</label>
+                    <ValidationMessage For="() => _patientForUpdateDto.FirstName" class="text-danger" />
+                </div>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="_patientForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <label for="lastName">Last Name</label>
+                    <ValidationMessage For="() => _patientForUpdateDto.LastName" class="text-danger" />
+                </div>
+            </div>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText @bind-Value="_patientForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <label for="@_patientForUpdateDto.PhoneNumber">Phone Number</label>
+            <ValidationMessage For="() => _patientForUpdateDto.PhoneNumber" class="text-danger" />
+        </div>
+
+        @if (_departments is not null && _departments.Any())
+        {
+            <div class="form-floating mb-3">
+                <InputSelect id="Department" @bind-Value="_patientForUpdateDto.DepartmentId" class="form-control">
+                    <option value="0">Please Select</option>
+                    @foreach (var department in _departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </InputSelect>
+                <label for="Department">Department</label>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-success px-5" disabled="@_inProgress">
+            @if (_inProgress)
+            {
+                <span class="spinner-border spinner-border-sm"></span>
+            }
+            Save
+        </button>
+    </EditForm>
+</div>
+
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+
+    [SupplyParameterFromForm]
+    private PatientForUpdateDto _patientForUpdateDto { get; set; } = new();
+
+    private List<DepartmentDto>? _departments { get; set; }
+
+    private bool _inProgress = false;
+    private Alert _alert = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        var patient = await PatientService.GetPatientByIdAsync(PatientId);
+        //Mapper.Map(patient, _patientForUpdateDto);
+
+        _patientForUpdateDto.Id = patient.Id;
+        _patientForUpdateDto.FirstName = patient.FirstName;
+        _patientForUpdateDto.LastName = patient.LastName;
+        _patientForUpdateDto.PhoneNumber = patient.PhoneNumber;
+        _patientForUpdateDto.UserId = patient.UserId;
+    }
+
+    private async Task UpdatePatient()
+    {
+        var user = new ApplicationUser
+            {
+                FirstName = _patientForUpdateDto.FirstName,
+                LastName = _patientForUpdateDto.LastName
+            };
+
+        var result = await UserStore.UpdateAsync(user, CancellationToken.None);
+
+        if (!result.Succeeded)
+        {
+            _inProgress = false;
+            _alert.ShowSuccess("Something Went Wrong");
+        }
+
+        await PatientService.UpdatePatientAsync(_patientForUpdateDto.Id, _patientForUpdateDto);
+
+        _inProgress = false;
+        string successMessage = "Successful";
+        _alert.ShowSuccess(successMessage);
+    }
+}

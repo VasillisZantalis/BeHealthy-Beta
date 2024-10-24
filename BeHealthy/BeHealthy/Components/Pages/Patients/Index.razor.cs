@@ -37,8 +37,14 @@ public partial class Index
         }
     }
 
-    private async Task EditPatient(int id)
+    private void EditPatient(int id)
     {
+        _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/edit/{id}");
+    }
+
+    private void CreatePatient()
+    {
+        _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
     }
 
     private async Task DeletePatient(int id)
