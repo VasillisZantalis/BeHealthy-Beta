@@ -38,5 +38,8 @@ public class DoctorProfile : Profile
                                   : string.Empty))
             .ForMember(dest => dest.Specialty,
                 opt => opt.MapFrom(src => src.Specialty));
+
+
+        CreateMap<DoctorDto, DoctorForUpdateDto>().ReverseMap();
     }
 }

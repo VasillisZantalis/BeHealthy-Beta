@@ -4,6 +4,7 @@
 @inject INurseService NurseService
 @inject IDepartmentService DepartmentService
 @inject IUserStore<ApplicationUser> UserStore
+@inject UserManager<ApplicationUser> UserManager
 @inject IMapper Mapper
 
 <PageTitle>Edit</PageTitle>
@@ -78,29 +79,26 @@
     {
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         var nurse = await NurseService.GetNurseByIdAsync(NurseId);
-        //Mapper.Map(nurse, _nurseForUpdateDto);
-
-        _nurseForUpdateDto.Id = nurse.Id;
-        _nurseForUpdateDto.FirstName = nurse.FirstName;
-        _nurseForUpdateDto.LastName = nurse.LastName;
-        _nurseForUpdateDto.PhoneNumber = nurse.PhoneNumber;
-        _nurseForUpdateDto.UserId = nurse.UserId ?? string.Empty;
+        Mapper.Map(nurse, _nurseForUpdateDto);
     }
 
     private async Task UpdateNurse()
     {
-        var user = new ApplicationUser
-            {
-                FirstName = _nurseForUpdateDto.FirstName,
-                LastName = _nurseForUpdateDto.LastName
-            };
+        var user = await UserManager.FindByIdAsync(_nurseForUpdateDto.UserId);
 
-        var result = await UserStore.UpdateAsync(user, CancellationToken.None);
-
-        if (!result.Succeeded)
+        if (user != null)
         {
-            _inProgress = false;
-            _alert.ShowSuccess("Something Went Wrong");
+            user.FirstName = _nurseForUpdateDto.FirstName;
+            user.LastName = _nurseForUpdateDto.LastName;
+            user.PhoneNumber = _nurseForUpdateDto.PhoneNumber;
+
+            var result = await UserManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                _inProgress = false;
+                _alert.ShowSuccess("Something Went Wrong");
+            }
         }
 
         await NurseService.UpdateNurseAsync(_nurseForUpdateDto.Id, _nurseForUpdateDto);

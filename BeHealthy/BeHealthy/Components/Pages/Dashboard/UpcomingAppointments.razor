@@ -1,4 +1,7 @@
-﻿@inject IAppointmentService _appointmentService
+﻿@rendermode InteractiveServer
+
+@inject IAppointmentService AppointmentService
+@inject NavigationManager NavigationManager
 
 <div id="upcomingAppointmentsDiv">
     <div class="card shadow border-0 rounded p-3">
@@ -20,8 +23,12 @@
                                 <div><span class="badge @EnumExtensions.GetBadgeClass(appointment.Status)">@appointment.Status</span></div>
                                 <div class="align-self-start">
                                     <ActionsDropdown>
-                                        <button class="btn w-100 text-start"><span class="fa-solid fa-circle-info text-primary"></span>&nbsp; Details</button>
-                                        <button class="btn w-100 text-start"><span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Cancel</button>
+                                        <button class="btn w-100 text-start">
+                                            <span class="fa-solid fa-circle-info text-primary"></span>&nbsp; Details
+                                        </button>
+                                        <button class="btn w-100 text-start" @onclick="async () => await DeleteAppointment(appointment.Id)">
+                                            <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Cancel
+                                        </button>
                                     </ActionsDropdown>
                                 </div>
                             </li>
@@ -45,12 +52,18 @@
     protected override async Task OnInitializedAsync()
     {
         var today = DateTime.Now.Date;
-        var appointments = await _appointmentService.GetAllAppointmentsAsync();
+        var appointments = await AppointmentService.GetAllAppointmentsAsync();
 
         _upcomingAppointments = appointments
             .Where(a => a.AppointmentDate >= today && a.AppointmentDate <= today.AddDays(3))
             .OrderBy(a => a.AppointmentDate)
             .Take(10)
             .ToList();
+    }
+
+    private async Task DeleteAppointment(int appointmentId)
+    {
+        await AppointmentService.DeleteAppointmentAsync(appointmentId);
+        NavigationManager.Refresh(forceReload: true);
     }
 }

@@ -31,5 +31,7 @@ public class NurseProfile : Profile
             //.ForMember(dest => dest.User.LastName,
             //    opt => opt.MapFrom(src => src.LastName))
             .ReverseMap();
+
+        CreateMap<NurseDto, NurseForUpdateDto>().ReverseMap();
     }
 }
