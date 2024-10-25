@@ -1,39 +1,46 @@
 ﻿@inject NavigationManager NavigationManager
 
-<ul class="list-group">
-    <Virtualize Items="Doctors" Context="doctor">
-        <li class="list-group-item my-2 border rounded-pill clickable" @onclick="() => OnDoctorClick(doctor)">
-            <div class="d-flex justify-content-between px-3">
-                <img class="rounded-circle" src="images/generic.jpg" alt="@doctor.FullName" width="35" height="35" />
-                <div class="d-flex flex-column align-items-center">
-                    <span class="text-muted small-text">Name</span>
-                    <h6>@doctor.FullName</h6>
-                </div>
-                <div class="d-flex flex-column align-items-center">
-                    <span class="text-muted small-text">Speciality</span>
-                    <h6>@doctor.Specialty</h6>
-                </div>
-                <div class="d-flex flex-column align-items-center">
-                    <span class="text-muted small-text">Email</span>
-                    <h6>@doctor.Email</h6>
-                </div>
-                @if (!string.IsNullOrEmpty(doctor.PhoneNumber))
-                {
+@if (Doctors.Any())
+{
+    <ul class="list-group">
+        <Virtualize Items="Doctors" Context="doctor">
+            <li class="list-group-item my-2 border rounded-pill clickable" @onclick="() => OnDoctorClick(doctor)">
+                <div class="d-flex justify-content-between px-3">
+                    <img class="rounded-circle" src="images/generic.jpg" alt="@doctor.FullName" width="35" height="35" />
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Phone</span>
-                        <h6>@doctor.PhoneNumber</h6>
-
+                        <span class="text-muted small-text">Name</span>
+                        <h6>@doctor.FullName</h6>
                     </div>
-                }
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">Speciality</span>
+                        <h6>@doctor.Specialty</h6>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">Email</span>
+                        <h6>@doctor.Email</h6>
+                    </div>
+                    @if (!string.IsNullOrEmpty(doctor.PhoneNumber))
+                    {
+                        <div class="d-flex flex-column align-items-center">
+                            <span class="text-muted small-text">Phone</span>
+                            <h6>@doctor.PhoneNumber</h6>
 
-                <div class="d-flex flex-column align-items-center">
-                    <span class="text-muted small-text">Created</span>
-                    <h6>@DateTimeExtensions.ToFullDateTimeString(doctor.CreatedAt)</h6>
+                        </div>
+                    }
+
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">Created</span>
+                        <h6>@DateTimeExtensions.ToFullDateTimeString(doctor.CreatedAt)</h6>
+                    </div>
                 </div>
-            </div>
-        </li>
-    </Virtualize>
-</ul>
+            </li>
+        </Virtualize>
+    </ul>
+}
+else
+{
+    <h6>No Doctors at this department</h6>
+}
 
 @code {
     [Parameter]

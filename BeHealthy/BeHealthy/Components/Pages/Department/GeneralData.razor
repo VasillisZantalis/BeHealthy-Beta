@@ -4,7 +4,7 @@
     <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
         <Alert @ref="_alert" />
         <DataAnnotationsValidator />
-        <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-column gap-3">
             <div class="form-group">
                 <label class="fw-bold" for="name">Name</label>
                 <InputText id="name" class="form-control" @bind-Value="DepartmentDto.Name" />

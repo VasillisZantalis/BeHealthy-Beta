@@ -27,8 +27,6 @@ public partial class AppointmentModal
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;
 
-    private AppointmentStatus _appointmentStatus;
-
     public void Open()
     {
         _show = true;
@@ -48,10 +46,11 @@ public partial class AppointmentModal
         _appointmentDto.PatientId = appointment.PatientId;
         _appointmentDto.Notes = appointment.Notes;
         _appointmentDto.AppointmentDate = appointment.AppointmentDate;
+        _appointmentDto.Duration = appointment.Duration;
         _appointmentId = appointment.Id;
         AppointmentHour = appointment.AppointmentDate.Hour;
         AppointmentMinute = appointment.AppointmentDate.Minute;
-        _appointmentStatus = appointment.Status;
+        _appointmentDto.Status = appointment.Status;
     }
 
     public void Close()
