@@ -19,7 +19,7 @@ public class DepartmentService : IDepartmentService
 
     public async Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync()
     {
-        var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
+        var departments = await _unitOfWork.DepartmentRepository.GetDepartmentsAsync();
         return _mapper.Map<IEnumerable<DepartmentDto>>(departments);
     }
 

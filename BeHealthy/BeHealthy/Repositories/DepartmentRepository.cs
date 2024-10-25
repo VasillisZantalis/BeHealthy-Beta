@@ -16,10 +16,6 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
         using (var context = _contextFactory.CreateDbContext())
         {
             return await context.Departments
-                    .Include(d => d.Doctors)
-                    .Include(d => d.Patients)
-                    .Include(d => d.Nurses)
-                    .Include(d => d.Rooms)
                     .Include(d => d.HeadOfDepartment)
                     .ToListAsync();
         }
