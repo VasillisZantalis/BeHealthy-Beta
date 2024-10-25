@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Shared.Models.Dtos.Nurse;
 using BeHealthy.Shared.Models.Entities;
 
-namespace BeHealthy.Shared.Interfaces;
+namespace BeHealthy.Services.Interfaces;
 
 public interface INurseService
 {

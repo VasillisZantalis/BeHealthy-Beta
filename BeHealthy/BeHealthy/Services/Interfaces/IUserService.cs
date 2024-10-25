@@ -1,4 +1,4 @@
-﻿namespace BeHealthy.Shared.Interfaces;
+﻿namespace BeHealthy.Services.Interfaces;
 
 public interface IUserService
 {

@@ -1,4 +1,4 @@
-﻿using BeHealthy.Shared.Interfaces;
+﻿using BeHealthy.Services.Interfaces;
 
 namespace BeHealthy.Services;
 

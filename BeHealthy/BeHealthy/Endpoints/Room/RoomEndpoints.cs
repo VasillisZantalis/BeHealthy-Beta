@@ -1,5 +1,5 @@
 ﻿using BeHealthy.Filters;
-using BeHealthy.Shared.Interfaces;
+using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Room;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

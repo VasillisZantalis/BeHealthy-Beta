@@ -12,7 +12,7 @@ using BeHealthy.Endpoints.User;
 using BeHealthy.Repositories;
 using BeHealthy.Repositories.Interfaces;
 using BeHealthy.Services;
-using BeHealthy.Shared.Interfaces;
+using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Entities;
 using BeHealthy.States;
 using FluentValidation;

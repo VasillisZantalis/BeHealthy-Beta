@@ -35,8 +35,8 @@ public partial class AppointmentModal
         _isEdit = false;
         _appointmentDto = new();
         _appointmentId = 0;
-        _appointmentDto.PatientId = Patients?.FirstOrDefault()?.Id;
-        _appointmentDto.DoctorId = Doctors?.FirstOrDefault()?.Id;
+        _appointmentDto.PatientId = Patients.First().Id;
+        _appointmentDto.DoctorId = Doctors.First().Id;
         _appointmentDto.AppointmentDate = DateTime.Now;
     }
 

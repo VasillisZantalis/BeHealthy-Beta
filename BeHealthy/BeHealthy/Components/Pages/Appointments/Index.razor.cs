@@ -1,5 +1,7 @@
-﻿using BeHealthy.Extensions;
-using BeHealthy.Shared.Interfaces;
+﻿using BeHealthy.Components.Shared.Controls;
+using BeHealthy.Extensions;
+using BeHealthy.Persistance;
+using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
@@ -26,6 +28,7 @@ public partial class Index
     private List<PatientDto>? _patients { get; set; }
 
     private AppointmentModal _appointmentModal { get; set; } = new();
+    private Alert _alert = new();
     private string? _currentUserId;
     private bool _hasActionRights;
 
@@ -79,6 +82,8 @@ public partial class Index
     {
         var (appointmentDto, isEdit, appointmentId) = submission;
         _appointmentModal.Close();
+        ServiceResponse result;
+
         if (isEdit)
         {
             var appointmentForUpdate = new AppointmentForUpdateDto
@@ -93,7 +98,7 @@ public partial class Index
                 Duration = appointmentDto.Duration
             };
 
-            await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
+            result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
         }
         else
         {
@@ -108,9 +113,17 @@ public partial class Index
                 Duration = appointmentDto.Duration
             };
 
-            await _appointmentService.AddAppointmentAsync(appointmentForCreation);
+            result = await _appointmentService.AddAppointmentAsync(appointmentForCreation);
         }
-        _navigationManager.Refresh(forceReload: true);
+
+        if (!result.Success)
+        {
+            _alert.ShowFailed(result.ErrorMessage);
+        }
+        else
+        {
+            _navigationManager.Refresh(forceReload: true);
+        }
     }
 
     private async Task LoadAppointments()

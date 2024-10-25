@@ -1,6 +1,6 @@
 ﻿using BeHealthy.Shared.Models.Dtos.Room;
 
-namespace BeHealthy.Shared.Interfaces;
+namespace BeHealthy.Services.Interfaces;
 
 public interface IRoomService
 {

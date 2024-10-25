@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Patient;
 
-namespace BeHealthy.Shared.Interfaces;
+namespace BeHealthy.Services.Interfaces;
 
 public interface IPatientService
 {

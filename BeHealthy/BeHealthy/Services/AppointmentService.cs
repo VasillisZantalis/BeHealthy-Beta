@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using BeHealthy.Persistance;
 using BeHealthy.Repositories.Interfaces;
-using BeHealthy.Shared.Interfaces;
+using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Entities;
 
@@ -47,21 +48,67 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<AppointmentDto>(appointment);
     }
 
-    public async Task AddAppointmentAsync(AppointmentForCreationDto appointmentDto)
+    public async Task<ServiceResponse> AddAppointmentAsync(AppointmentForCreationDto appointmentDto)
     {
         var appointment = _mapper.Map<Appointment>(appointmentDto);
+
+        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.AppointmentDate, appointmentDto.Duration);
+        if (!conflictCheck.Success)
+        {
+            return conflictCheck;
+        }
+
         await _unitOfWork.AppointmentRepository.AddAsync(appointment);
+        return ServiceResponse.Successful();
     }
 
-    public async Task UpdateAppointmentAsync(int id, AppointmentForUpdateDto appointmentDto)
+    public async Task<ServiceResponse> UpdateAppointmentAsync(int id, AppointmentForUpdateDto appointmentDto)
     {
         var appointment = _mapper.Map<Appointment>(appointmentDto);
+
+        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.AppointmentDate, appointmentDto.Duration);
+        if (!conflictCheck.Success)
+        {
+            return conflictCheck;
+        }
+
         await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
+
+        return ServiceResponse.Successful();
     }
 
     public async Task DeleteAppointmentAsync(int id)
     {
         await _unitOfWork.AppointmentRepository.DeleteAsync(id);
+    }
+
+    private async Task<ServiceResponse> CheckForConflictingAppointmentsAsync(int doctorId, DateTime appointmentDate, int duration, int? appointmentId = null)
+    {
+        var doctorsAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
+
+        var newAppointmentStart = appointmentDate;
+        var newAppointmentEnd = newAppointmentStart.AddMinutes(duration);
+
+        var conflictingAppointment = doctorsAppointments.FirstOrDefault(existingAppointment =>
+        {
+            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
+            {
+                return false;
+            }
+
+            var existingStart = existingAppointment.AppointmentDate;
+            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
+
+            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
+        });
+
+        if (conflictingAppointment != null)
+        {
+            var errorMessage = $"An appointment already exists for this doctor from {conflictingAppointment.AppointmentDate:HH:mm} to {conflictingAppointment.AppointmentDate.AddMinutes(conflictingAppointment.Duration):HH:mm}. Please choose a different time.";
+            return ServiceResponse.Failed(errorMessage);
+        }
+
+        return ServiceResponse.Successful();
     }
 }
 

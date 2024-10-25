@@ -12,8 +12,8 @@ public class AppointmentDto
     public AppointmentReason Reason { get; set; }
     public int Duration { get; set; }
 
-    public int? PatientId { get; set; }
+    public int PatientId { get; set; }
     public PatientDto? Patient { get; set; }
-    public int? DoctorId { get; set; }
+    public int DoctorId { get; set; }
     public DoctorDto? Doctor { get; set; }
 }
