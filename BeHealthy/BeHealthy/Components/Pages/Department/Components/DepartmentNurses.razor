@@ -36,8 +36,8 @@
 
     private void OnNurseClick(NurseDto nurse)
     {
-        NavigationManager.NavigateTo(RoutingEndpoints.NURSES_PAGE);
-        //NavigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/edit/{nurse.Id}");
+        //NavigationManager.NavigateTo(RoutingEndpoints.NURSES_PAGE);
+        NavigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/edit/{nurse.Id}");
     }
 
 }

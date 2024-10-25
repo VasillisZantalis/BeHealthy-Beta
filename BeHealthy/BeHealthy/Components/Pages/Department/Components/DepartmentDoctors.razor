@@ -41,7 +41,7 @@
 
     private void OnDoctorClick(DoctorDto doctor)
     {
-        NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
-        //NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{doctor.Id}");
+        //NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{doctor.Id}");
     }
 }
