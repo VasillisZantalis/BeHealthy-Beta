@@ -7,4 +7,5 @@ public class DoctorForCreationDto
     public string Specialty { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
     public int? DepartmentId { get; set; }
+    public string? Image { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿@page "/doctors/create"
+@attribute [Authorize]
 @rendermode InteractiveServer
 
 @inject UserManager<ApplicationUser> UserManager
@@ -13,10 +14,13 @@
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterDoctor" FormName="Enhance">
+    <EditForm Model="Input" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
         <DataAnnotationsValidator />
         <div class="row">
             <Alert @ref="_alert" />
+            <div class="text-center mb-3">
+                <img src="@(Input.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+            </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -31,6 +35,9 @@
                     <ValidationMessage For="() => Input.LastName" class="text-danger" />
                 </div>
             </div>
+        </div>
+        <div class="form-control mb-3">
+            <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
             <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
@@ -135,7 +142,8 @@
             LastName = Input.LastName,
             Specialty = Input.Specialty,
             UserId = userId,
-            DepartmentId = _departmentId
+            DepartmentId = _departmentId,
+            Image = Input.Image
         };
 
         await DoctorService.AddDoctorAsync(doctorForCreationDto);
@@ -153,6 +161,15 @@
             return;
 
         NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
+    }
+
+    async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        var format = e.File.ContentType;
+        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
+        var buffer = new byte[resizeImage.Size];
+        await resizeImage.OpenReadStream().ReadAsync(buffer);
+        Input.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 
     private sealed class InputModel
@@ -183,5 +200,6 @@
 
         public string Specialty { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
+        public string? Image;
     }
 }

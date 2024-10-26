@@ -38,6 +38,7 @@ else
                 <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                     <div class="mb-3">
                         <UserCard Id="@doctor.Id"
+                                  Image="@doctor.Image"
                                   FullName="@doctor.FullName"
                                   Email="@doctor.Email"
                                   Phone="@doctor.PhoneNumber"
@@ -70,7 +71,7 @@ else
                                ItemKey="@(x => x.Id)"
                                Pagination="_paginationState">
                         <TemplateColumn>
-                            <img class="rounded-circle" src="images/generic.jpg" alt="@context.FullName" width="25" height="25" />
+                                <img class="rounded-circle" src="@(context.Image ?? "images/generic.jpg")" alt="@context.FullName" width="25" height="25" />
                         </TemplateColumn>
                         <PropertyColumn Title="First Name"
                                         Property="@(x => x.FirstName)"

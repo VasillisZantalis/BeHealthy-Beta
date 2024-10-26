@@ -8,7 +8,7 @@ public class Doctor
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string FullName => $"{FirstName} {LastName}";
     public string Specialty { get; set; } = string.Empty;
-    public byte[]? ProfileImage { get; set; }
+    public string? Image { get; set; }
 
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser? User { get; set; }

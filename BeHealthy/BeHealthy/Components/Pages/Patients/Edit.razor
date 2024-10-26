@@ -1,4 +1,5 @@
 ﻿@page "/patients/edit/{PatientId:int}"
+@attribute [Authorize]
 @rendermode InteractiveServer
 
 @inject IPatientService PatientService
@@ -13,10 +14,13 @@
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm id="UpdateForm" Model="_patientForUpdateDto" method="post" OnValidSubmit="UpdatePatient" FormName="Enhance">
+    <EditForm Model="_patientForUpdateDto" method="post" OnValidSubmit="UpdatePatient" FormName="UpdateForm" Enhance>
         <DataAnnotationsValidator />
         <div class="row">
             <Alert @ref="_alert" />
+            <div class="text-center mb-3">
+                <img src="@(_patientForUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+            </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_patientForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -31,6 +35,9 @@
                     <ValidationMessage For="() => _patientForUpdateDto.LastName" class="text-danger" />
                 </div>
             </div>
+        </div>
+        <div class="form-control mb-3">
+            <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
             <InputText @bind-Value="_patientForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
@@ -80,6 +87,15 @@
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         var patient = await PatientService.GetPatientByIdAsync(PatientId);
         Mapper.Map(patient, _patientForUpdateDto);
+    }
+
+    async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        var format = e.File.ContentType;
+        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
+        var buffer = new byte[resizeImage.Size];
+        await resizeImage.OpenReadStream().ReadAsync(buffer);
+        _patientForUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 
     private async Task UpdatePatient()

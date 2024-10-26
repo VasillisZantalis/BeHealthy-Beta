@@ -1,4 +1,5 @@
 ﻿@page "/nurses/edit/{NurseId:int}"
+@attribute [Authorize]
 @rendermode InteractiveServer
 
 @inject INurseService NurseService
@@ -13,10 +14,13 @@
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm id="UpdateForm" Model="_nurseForUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="Enhance">
+    <EditForm Model="_nurseForUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
         <DataAnnotationsValidator />
         <div class="row">
             <Alert @ref="_alert" />
+            <div class="text-center mb-3">
+                <img src="@(_nurseForUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+            </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_nurseForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -31,6 +35,9 @@
                     <ValidationMessage For="() => _nurseForUpdateDto.LastName" class="text-danger" />
                 </div>
             </div>
+        </div>
+        <div class="form-control mb-3">
+            <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
             <InputText @bind-Value="_nurseForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
@@ -80,6 +87,15 @@
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         var nurse = await NurseService.GetNurseByIdAsync(NurseId);
         Mapper.Map(nurse, _nurseForUpdateDto);
+    }
+
+    async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        var format = e.File.ContentType;
+        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
+        var buffer = new byte[resizeImage.Size];
+        await resizeImage.OpenReadStream().ReadAsync(buffer);
+        _nurseForUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 
     private async Task UpdateNurse()

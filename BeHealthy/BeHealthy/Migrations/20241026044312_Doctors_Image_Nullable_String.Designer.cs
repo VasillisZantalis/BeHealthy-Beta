@@ -3,6 +3,7 @@ using System;
 using BeHealthy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeHealthy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241026044312_Doctors_Image_Nullable_String")]
+    partial class Doctors_Image_Nullable_String
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace BeHealthy.Migrations
                     b.Property<DateTime>("InsDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2024, 10, 26, 5, 42, 45, 518, DateTimeKind.Utc).AddTicks(5485));
+                        .HasDefaultValue(new DateTime(2024, 10, 26, 4, 43, 12, 469, DateTimeKind.Utc).AddTicks(6072));
 
                     b.Property<int?>("IntValue")
                         .HasColumnType("int");
@@ -268,9 +271,6 @@ namespace BeHealthy.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -303,9 +303,6 @@ namespace BeHealthy.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Image")
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")

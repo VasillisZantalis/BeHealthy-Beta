@@ -1,7 +1,7 @@
 ﻿<div class="card my-3 shadow border">
     <div class="card-body px-4">
         <div class="d-flex flex-column flex-xl-row text-truncate gap-2 gap-xl-5">
-            <img class="rounded-circle" src="images/generic.jpg" height="60" width="60"/>
+            <img class="rounded-circle" src="@(Image ?? "images/generic.jpg")" height="60" width="60" />
             <div>
                 @if (!string.IsNullOrEmpty(FullName))
                 {
@@ -46,6 +46,9 @@
 
     [Parameter]
     public string? FullName { get; set; }
+
+    [Parameter]
+    public string? Image { get; set; }
 
     [Parameter]
     public string? Email { get; set; }

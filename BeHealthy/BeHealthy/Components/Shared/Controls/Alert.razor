@@ -11,7 +11,7 @@
 
 @code {
     [Parameter]
-    public string Message { get; set; } = "Something went wrong";
+    public string Message { get; set; }
 
     private Severity _severity { get; set; }
 
@@ -24,7 +24,7 @@
         _showAlert = false;
     }
 
-    public void ShowFailed(string message)
+    public void ShowFailed(string message = "Something went wrong")
     {
         _showAlert = true;
         _severity = Severity.Danger;
@@ -33,7 +33,7 @@
         StateHasChanged();
     }
 
-    public void ShowSuccess(string message)
+    public void ShowSuccess(string message = "Successful")
     {
         _showAlert = true;
         _severity = Severity.Success;

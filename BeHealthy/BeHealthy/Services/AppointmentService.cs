@@ -104,7 +104,7 @@ public class AppointmentService : IAppointmentService
 
         if (conflictingAppointment != null)
         {
-            var errorMessage = $"An appointment already exists for this doctor from {conflictingAppointment.AppointmentDate:HH:mm} to {conflictingAppointment.AppointmentDate.AddMinutes(conflictingAppointment.Duration):HH:mm}. Please choose a different time.";
+            var errorMessage = $"An appointment already exists for doctor {conflictingAppointment?.Doctor?.FullName} from {conflictingAppointment?.AppointmentDate:HH:mm} to {conflictingAppointment?.AppointmentDate.AddMinutes(conflictingAppointment.Duration):HH:mm}. Please choose a different time.";
             return ServiceResponse.Failed(errorMessage);
         }
 

@@ -19,7 +19,7 @@
                     {
                         <tr>
                             <td style="width: 50px;">
-                                <img class="w-75 rounded-circle" src="images/generic.jpg" />
+                                <img class="rounded-circle" src="@(patient.Image ?? "images/generic.jpg")" height="35" width="35"/>
                             </td>
                             <td>@patient.FirstName</td>
                             <td>@patient.LastName</td>

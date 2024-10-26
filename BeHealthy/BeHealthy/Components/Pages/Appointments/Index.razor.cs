@@ -122,6 +122,7 @@ public partial class Index
         }
         else
         {
+            //_alert.ShowSuccess();
             _navigationManager.Refresh(forceReload: true);
         }
     }
