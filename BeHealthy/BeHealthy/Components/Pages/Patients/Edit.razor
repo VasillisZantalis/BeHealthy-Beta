@@ -40,8 +40,8 @@
             <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
-            <InputText @bind-Value="_patientForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="@_patientForUpdateDto.PhoneNumber">Phone Number</label>
+            <InputText id="phoneNumber" @bind-Value="_patientForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <label for="phoneNumber">Phone Number</label>
             <ValidationMessage For="() => _patientForUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 

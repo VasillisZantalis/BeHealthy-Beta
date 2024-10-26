@@ -60,8 +60,8 @@
             <ValidationMessage For="() => Input.Specialty" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="@Input.PhoneNumber">Phone Number</label>
+            <InputText id="phoneNumber" @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <label for="phoneNumber">Phone Number</label>
             <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
         </div>
 

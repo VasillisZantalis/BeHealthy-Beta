@@ -45,8 +45,8 @@
             <ValidationMessage For="() => _doctorForUpdateDto.Specialty" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText @bind-Value="_doctorForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="@_doctorForUpdateDto.PhoneNumber">Phone Number</label>
+            <InputText id="phoneNumber" @bind-Value="_doctorForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <label for="phoneNumber">Phone Number</label>
             <ValidationMessage For="() => _doctorForUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 

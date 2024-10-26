@@ -118,7 +118,7 @@ public partial class Index
 
         if (!result.Success)
         {
-            _alert.ShowFailed(result.ErrorMessage);
+            _alert.ShowFailed(result.ErrorMessage!);
         }
         else
         {
