@@ -13,19 +13,16 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
 
     public async Task<IEnumerable<Department>> GetDepartmentsAsync()
     {
-        using (var context = _contextFactory.CreateDbContext())
-        {
-            return await context.Departments
+        using var context = _contextFactory.CreateDbContext();
+        return await context.Departments
                     .Include(d => d.HeadOfDepartment)
                     .ToListAsync();
-        }
     }
 
     public async Task<Department> GetDepartmentByIdAsync(int departmentId)
     {
-        using (var context = _contextFactory.CreateDbContext())
-        {
-            return await context.Departments
+        using var context = _contextFactory.CreateDbContext();
+        return await context.Departments
                     .Include(d => d.Doctors)
                     .ThenInclude(doc => doc.User)
                     .Include(d => d.Patients)
@@ -36,6 +33,5 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
                     .Include(d => d.HeadOfDepartment)
                     .ThenInclude(hd => hd.User)
                     .FirstAsync(x => x.Id == departmentId);
-        }
     }
 }
