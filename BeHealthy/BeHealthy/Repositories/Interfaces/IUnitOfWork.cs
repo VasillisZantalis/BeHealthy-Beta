@@ -10,5 +10,6 @@ public interface IUnitOfWork
     IMedicalRecordRepository MedicalRecordRepository { get; }
     IPrescriptionRepository PrescriptionRepository { get; }
     IRoomRepository RoomRepository { get; }
+    IAppSettingsRepository AppSettingsRepository { get; }
 
 }

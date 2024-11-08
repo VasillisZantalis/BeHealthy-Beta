@@ -4,44 +4,54 @@
 
 <SectionContent SectionName="page-title">Settings</SectionContent>
 
-@foreach (var setting in _settings)
+@if (_settingsGroupedByArea is not null)
 {
-    <div class="form-group w-100 p-3 border shadow-sm rounded-3 mb-2">
-        <div class="d-flex flex-row justify-content-between px-5">
-            <div>
-                <label>@setting.Name</label>
-            </div>
+    foreach (var areaGroup in _settingsGroupedByArea)
+    {
+        <div class="mb-3">
+            <h4>@areaGroup.Key</h4>
+            @foreach (var setting in areaGroup)
+            {
+                <div class="form-group w-100 p-3 border shadow-sm rounded-3 mb-2">
+                    <div class="d-flex flex-row justify-content-between px-5">
+                        <div>
+                            <label>@setting.Name</label>
+                        </div>
 
-            <div>
-                @switch (setting.Type)
-                {
-                    case SettingType.Checkbox:
-                        <InputCheckbox @bind-Value="setting.BoolValue" class="form-check-input"/>
-                        break;
-
-                    case SettingType.SingleSelect:
-                        <InputSelect @bind-Value="setting.StringValue" class="form-select">
-                            @foreach (var option in Enum.GetValues(typeof(LanguageOptions))) 
+                        <div>
+                            @switch (setting.Type)
                             {
-                                <option value="@option">@option</option>
+                                case SettingType.Checkbox:
+                                    <InputCheckbox @bind-Value="setting.BoolValue" class="form-check-input" />
+                                    break;
+
+                                case SettingType.SingleSelect:
+                                    <InputSelect @bind-Value="setting.StringValue" class="form-select">
+                                        @foreach (var option in Enum.GetValues(typeof(LanguageOptions)))
+                                        {
+                                            <option value="@option">@option</option>
+                                        }
+                                    </InputSelect>
+                                    break;
+
+                                case SettingType.MultiSelect:
+                                    <!-- Implement MultiSelect logic here -->
+                                    break;
+
+                                case SettingType.TextField:
+                                    <InputText @bind-Value="setting.StringValue" />
+                                    break;
+
+                                default:
+                                    <p>Unknown setting type.</p>
+                                    break;
                             }
-                        </InputSelect>
-                        break;
+                        </div>
+                    </div>
+                </div>
+            }
 
-                    case SettingType.MultiSelect:
-                        // Implement MultiSelect logic here
-                        break;
-
-                    case SettingType.TextField:
-                        <InputText @bind-Value="setting.StringValue" />
-                        break;
-
-                    default:
-                        <p>Unknown setting type.</p>
-                        break;
-                }
-            </div>
         </div>
-
-    </div>
+    }
 }
+

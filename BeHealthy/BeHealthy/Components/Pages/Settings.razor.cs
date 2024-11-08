@@ -1,5 +1,6 @@
-﻿using BeHealthy.Shared.Models;
+﻿using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Entities;
+using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Components.Pages;
 
@@ -7,37 +8,16 @@ public partial class Settings
 {
     private List<AppSetting> _settings = default!;
 
-    protected override void OnInitialized()
-    {
-        _settings = new List<AppSetting>
-        {
-            new AppSetting
-            {
-                Id = 1,
-                Name = "Language",
-                Type = SettingType.SingleSelect,
-                StringValue = "English",
-                InsDate = DateTime.UtcNow
-            },
-            new AppSetting
-            {
-                Id = 2,
-                Name = "Color",
-                Type = SettingType.MultiSelect,
-                StringValue = "Red, Green",
-                InsDate = DateTime.UtcNow
-            },
-            new AppSetting
-            {
-                Id = 3,
-                Name = "Has Edit Privilege",
-                Type = SettingType.Checkbox,
-                BoolValue = true,
-                InsDate = DateTime.UtcNow
-            }
-        };
+    private IEnumerable<IGrouping<string, AppSetting>>? _settingsGroupedByArea;
 
+    [Inject] IAppSettingsService AppSettingsService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _settings = (await AppSettingsService.GetAppSettingsAsync()).ToList();
+        _settingsGroupedByArea = _settings.GroupBy(s => s.Area);
     }
+
 
     //private bool GetCheckboxValue(AppSetting setting)
     //{
