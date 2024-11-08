@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Models;
+﻿using BeHealthy.Extensions;
+using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
@@ -20,9 +21,15 @@ public partial class AppointmentModal
     [Parameter]
     public List<PatientDto> Patients { get; set; } = default!;
 
+    [Parameter]
+    public string? Role { get; set; }
+
+    private bool LockDoctorsDropdown => Role == UserRole.Doctor.GetDisplayName();
+
     private bool _show;
     private bool _isEdit;
     private int _appointmentId;
+    private bool isDoctor;
 
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;

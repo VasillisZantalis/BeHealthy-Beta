@@ -9,6 +9,7 @@ using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
+using System.Data;
 
 namespace BeHealthy.Components.Pages.Appointments;
 
@@ -33,6 +34,7 @@ public partial class Index
     private bool _hasActionRights;
 
     private bool _isLoading = default;
+    private string? roleClaim;
 
     private PaginationState _paginationState = new();
 
@@ -44,7 +46,7 @@ public partial class Index
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _currentUserId = authState.User.GetUserId();
 
-        var roleClaim = authState.User.GetUserRole();
+        roleClaim = authState.User.GetUserRole();
 
         if (Enum.TryParse(typeof(UserRole), roleClaim, out var roleEnum) && roleEnum is UserRole userRole)
         {
@@ -145,6 +147,11 @@ public partial class Index
     private async Task LoadDoctors()
     {
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+
+        if (roleClaim == UserRole.Doctor.GetDisplayName())
+        {
+            _doctors = _doctors.Where(d => d.UserId.ToString() == _currentUserId).ToList();
+        }
     }
 
     private async Task LoadPatients()
@@ -158,10 +165,6 @@ public partial class Index
         if (appointment != null)
         {
             _appointmentModal.OpenForEdit(appointment);
-        }
-        else
-        {
-            Console.WriteLine("BUT FOUND SHIT");
         }
     }
 

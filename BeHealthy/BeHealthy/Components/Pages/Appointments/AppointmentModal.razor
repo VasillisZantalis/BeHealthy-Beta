@@ -1,5 +1,5 @@
 ﻿<div class="modal" tabindex="-1" style="@(_show ? "display:block" : "display:none")">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@(_isEdit ? "Edit Appointment" : "Create Appointment")</h5>
@@ -16,9 +16,9 @@
                         <DataAnnotationsValidator />
                         <div class="d-flex flex-column gap-3">
 
-                            <div class="d-flex flex-row flex-wrap justify-content-between">
+                            <div class="row">
 
-                                <div class="form-group">
+                                <div class="form-group col-12 col-sm-6">
                                     <label class="fw-bold" for="patientIdSelect">Patient</label>
                                     <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentDto.PatientId">
                                         @foreach (var patient in Patients)
@@ -29,9 +29,9 @@
                                     <ValidationMessage For="@(() => _appointmentDto.PatientId)" />
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group col-12 col-sm-6">
                                     <label class="fw-bold" for="doctorIdSelect">Doctor</label>
-                                    <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentDto.DoctorId">
+                                    <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentDto.DoctorId" disabled="@LockDoctorsDropdown">
                                         @foreach (var doctor in Doctors)
                                         {
                                             <option value="@doctor.Id">@doctor.FullName</option>
