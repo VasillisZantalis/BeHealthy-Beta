@@ -6,7 +6,8 @@
 
 <PageTitle>@(IsEditMode ? "Edit" : "Create")</PageTitle>
 <SectionContent SectionName="page-title">
-    <a class="nav-link d-inline" href="departments">Department</a> / @(IsEditMode ? "Edit" : "Create")
+    <BackButton BackPath="@(RoutingEndpoints.DEPARTMENTS_PAGE)" />
+    <span>Department/@(IsEditMode ? "Edit" : "Create")</span>
 </SectionContent>
 
 <div class="container-fluid">

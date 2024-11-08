@@ -1,0 +1,17 @@
+﻿@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+
+<button class="btn btn-sm btn-light me-2 rounded-circle" @onclick="GoBack" disabled="@(!CanGoBack)">
+    <span class="fa-solid fa-chevron-left"></span>
+</button>
+
+@code {
+
+    [Parameter]
+    public string? BackPath { get; set; }
+
+    private bool CanGoBack => !string.IsNullOrEmpty(BackPath);
+
+    private void GoBack() => NavigationManager.NavigateTo(BackPath!);
+}
