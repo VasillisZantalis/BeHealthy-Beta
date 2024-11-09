@@ -14,7 +14,7 @@
                     <div class="d-flex flex-row gap-3">
                         <p>Hello, @context.User.Identity?.Name</p>
                         <div class="nav-item">
-                            <form action="Account/Logout" method="post">
+                            <form action="/logout" method="post">
                                 <AntiforgeryToken />
                                 <button type="submit" class="nav-link text-primary">
                                     Log out

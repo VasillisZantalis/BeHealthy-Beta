@@ -41,6 +41,15 @@ builder.Services.AddAuthentication(options =>
     options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
 }).AddIdentityCookies();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.AccessDeniedPath = "/accessdenied";
+    options.Cookie.Name = "auth_cookie";
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.LoginPath = "/login";
+});
+
 builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

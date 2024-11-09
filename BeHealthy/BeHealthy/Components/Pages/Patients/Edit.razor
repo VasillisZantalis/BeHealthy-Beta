@@ -1,5 +1,5 @@
 ﻿@page "/patients/edit/{PatientId:int}"
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
 
 @inject IPatientService PatientService

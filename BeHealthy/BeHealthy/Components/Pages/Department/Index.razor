@@ -1,6 +1,6 @@
 ﻿@page "/departments"
 @rendermode InteractiveServer
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Departments</PageTitle>
 

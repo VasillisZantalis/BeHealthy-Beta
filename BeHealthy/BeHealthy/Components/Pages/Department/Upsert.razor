@@ -2,7 +2,7 @@
 @page "/departments/edit/{id:int}"
 @using BeHealthy.Components.Pages.Department.Components
 @rendermode InteractiveServer
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>@(IsEditMode ? "Edit" : "Create")</PageTitle>
 <SectionContent SectionName="page-title">

@@ -10,14 +10,14 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(endpoints);
 
-        var accountGroup = endpoints.MapGroup("/Account");
+        var accountGroup = endpoints.MapGroup("/");
 
-        accountGroup.MapPost("/Logout", async (
+        accountGroup.MapPost("/logout", async (
             ClaimsPrincipal user,
             SignInManager<ApplicationUser> signInManager) =>
         {
             await signInManager.SignOutAsync();
-            return TypedResults.LocalRedirect("/Account/Login");
+            return TypedResults.LocalRedirect("/login");
         });
 
         return accountGroup;
