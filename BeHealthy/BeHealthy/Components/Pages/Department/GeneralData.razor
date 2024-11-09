@@ -16,10 +16,9 @@
              <div class="form-group">
                 <label class="fw-bold" for="headOfDepartment">Head of Department</label>
                 <InputSelect id="headOfDepartment" class="form-control" @bind-Value="DepartmentDto.HeadOfDepartmentId">
-                    <option value="">Select Doctor</option>
-                    @foreach (var doctor in Doctors)
+                    @foreach (var doctor in _doctorsSelect)
                     {
-                        <option value="@doctor.Id">@doctor.FullName</option>
+                        <option value="@doctor.Value">@doctor.Text</option>
                     }
                 </InputSelect>
             </div>
@@ -49,6 +48,18 @@
 
     private bool _inProgress = false;
     private Alert _alert = new();
+
+    private List<SelectItem> _doctorsSelect = new List<SelectItem>();
+
+    protected override void OnParametersSet()
+    {
+        _doctorsSelect = Doctors.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.FullName
+        }).ToList();
+        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+    }
 
     private async Task HandleSubmit()
     {

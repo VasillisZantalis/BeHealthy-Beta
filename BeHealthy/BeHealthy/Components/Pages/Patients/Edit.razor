@@ -50,10 +50,9 @@
         {
             <div class="form-floating mb-3">
                 <InputSelect id="Department" @bind-Value="_patientForUpdateDto.DepartmentId" class="form-control">
-                    <option value="0">Please Select</option>
-                    @foreach (var department in _departments)
+                    @foreach (var department in _departmentsSelect)
                     {
-                        <option value="@department.Id">@department.Name</option>
+                        <option value="@department.Value">@department.Text</option>
                     }
                 </InputSelect>
                 <label for="Department">Department</label>
@@ -83,10 +82,18 @@
     private bool _inProgress = false;
     private Alert _alert = new();
 
+    private List<SelectItem> _departmentsSelect = new List<SelectItem>();
+
     protected override async Task OnParametersSetAsync()
     {
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         var patient = await PatientService.GetPatientByIdAsync(PatientId);
+        _departmentsSelect = _departments.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
         Mapper.Map(patient, _patientForUpdateDto);
     }
 

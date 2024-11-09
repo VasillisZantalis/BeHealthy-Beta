@@ -97,8 +97,11 @@ else
     </div>
 }
 
-<AppointmentModal @ref="_appointmentModal"
-                OnFormSubmit="HandleAppointmentFormSubmission" 
-                Doctors="_doctors"
-                Patients="_patients"
-                Role="@roleClaim" />
+@if (_doctors != null && _patients != null)
+{
+    <AppointmentModal @ref="_appointmentModal"
+                      OnFormSubmit="HandleAppointmentFormSubmission"
+                      Doctors="_doctors"
+                      Patients="_patients"
+                      Role="@roleClaim" />
+}

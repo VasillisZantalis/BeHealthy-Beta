@@ -1,11 +1,10 @@
 ﻿using BeHealthy.Extensions;
+using BeHealthy.Shared.Common;
 using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel.DataAnnotations;
-
 
 namespace BeHealthy.Components.Pages.Appointments;
 
@@ -25,6 +24,9 @@ public partial class AppointmentModal
     [Parameter]
     public string? Role { get; set; }
 
+    private List<SelectItem> _doctorsSelect = new List<SelectItem>();
+    private List<SelectItem> _patientsSelect = new List<SelectItem>();
+
     private bool LockDoctorsDropdown => Role == UserRole.Doctor.GetDisplayName();
 
     private bool _show;
@@ -34,6 +36,23 @@ public partial class AppointmentModal
 
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;
+
+    protected override void OnParametersSet()
+    {
+        _doctorsSelect = Doctors.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.FullName
+        }).ToList();
+        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+
+        _patientsSelect = Patients.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.FullName
+        }).ToList();
+        _patientsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+    }
 
     public void Open()
     {

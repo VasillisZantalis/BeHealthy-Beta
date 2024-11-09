@@ -21,9 +21,9 @@
                                 <div class="form-group col-12 col-sm-6">
                                     <label class="fw-bold" for="patientIdSelect">Patient</label>
                                     <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentDto.PatientId">
-                                        @foreach (var patient in Patients)
+                                        @foreach (var patient in _patientsSelect)
                                         {
-                                            <option value="@patient.Id">@patient.FullName</option>
+                                            <option value="@patient.Value">@patient.Text</option>
                                         }
                                     </InputSelect>
                                     <ValidationMessage For="@(() => _appointmentDto.PatientId)" />
@@ -32,9 +32,9 @@
                                 <div class="form-group col-12 col-sm-6">
                                     <label class="fw-bold" for="doctorIdSelect">Doctor</label>
                                     <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentDto.DoctorId" disabled="@LockDoctorsDropdown">
-                                        @foreach (var doctor in Doctors)
+                                        @foreach (var doctor in _doctorsSelect)
                                         {
-                                            <option value="@doctor.Id">@doctor.FullName</option>
+                                            <option value="@doctor.Value">@doctor.Text</option>
                                         }
                                     </InputSelect>
                                     <ValidationMessage For="@(() => _appointmentDto.DoctorId)" />
