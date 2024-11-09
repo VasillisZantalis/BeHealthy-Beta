@@ -52,7 +52,7 @@ public class AppointmentService : IAppointmentService
     {
         var appointment = _mapper.Map<Appointment>(appointmentDto);
 
-        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.AppointmentDate, appointmentDto.Duration);
+        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.PatientId, appointmentDto.AppointmentDate, appointmentDto.Duration);
         if (!conflictCheck.Success)
         {
             return conflictCheck;
@@ -66,7 +66,7 @@ public class AppointmentService : IAppointmentService
     {
         var appointment = _mapper.Map<Appointment>(appointmentDto);
 
-        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.AppointmentDate, appointmentDto.Duration);
+        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.PatientId, appointmentDto.AppointmentDate, appointmentDto.Duration);
         if (!conflictCheck.Success)
         {
             return conflictCheck;
@@ -82,19 +82,18 @@ public class AppointmentService : IAppointmentService
         await _unitOfWork.AppointmentRepository.DeleteAsync(id);
     }
 
-    private async Task<ServiceResponse> CheckForConflictingAppointmentsAsync(int doctorId, DateTime appointmentDate, int duration, int? appointmentId = null)
+    private async Task<ServiceResponse> CheckForConflictingAppointmentsAsync(int doctorId, int patientId, DateTime appointmentDate, int duration, int? appointmentId = null)
     {
         var doctorsAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
+        var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
 
         var newAppointmentStart = appointmentDate;
         var newAppointmentEnd = newAppointmentStart.AddMinutes(duration);
 
-        var conflictingAppointment = doctorsAppointments.FirstOrDefault(existingAppointment =>
+        var doctorConflict = doctorsAppointments.FirstOrDefault(existingAppointment =>
         {
             if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
-            {
                 return false;
-            }
 
             var existingStart = existingAppointment.AppointmentDate;
             var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
@@ -102,9 +101,26 @@ public class AppointmentService : IAppointmentService
             return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
         });
 
-        if (conflictingAppointment != null)
+        var patientConflict = patientAppointments.FirstOrDefault(existingAppointment =>
         {
-            var errorMessage = $"An appointment already exists for doctor {conflictingAppointment?.Doctor?.FullName} from {conflictingAppointment?.AppointmentDate:HH:mm} to {conflictingAppointment?.AppointmentDate.AddMinutes(conflictingAppointment.Duration):HH:mm}. Please choose a different time.";
+            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
+                return false;
+
+            var existingStart = existingAppointment.AppointmentDate;
+            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
+
+            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
+        });
+
+        if (doctorConflict != null)
+        {
+            var errorMessage = $"An appointment already exists for doctor {doctorConflict?.Doctor?.FullName} from {doctorConflict?.AppointmentDate:HH:mm} to {doctorConflict?.AppointmentDate.AddMinutes(doctorConflict.Duration):HH:mm}. Please choose a different time.";
+            return ServiceResponse.Failed(errorMessage);
+        }
+
+        if (patientConflict != null)
+        {
+            var errorMessage = $"An appointment already exists for patient {patientConflict?.Patient?.FullName} from {patientConflict?.AppointmentDate:HH:mm} to {patientConflict?.AppointmentDate.AddMinutes(patientConflict.Duration):HH:mm}. Please choose a different time.";
             return ServiceResponse.Failed(errorMessage);
         }
 

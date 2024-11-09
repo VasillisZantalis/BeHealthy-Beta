@@ -66,16 +66,22 @@ else
                             </span>
                         </TemplateColumn>
 
-                        @if (_hasActionRights)
+                        @if (hasActionRights)
                         {
                             <TemplateColumn>
                                 <ActionsDropdown>
-                                    <button class="btn w-100 text-start" @onclick="@(() => EditAppointment(context.Id))">
-                                        <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
-                                    </button>
-                                    <button class="btn w-100 text-start" @onclick="async () => await DeleteAppointment(context.Id)">
-                                        <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
-                                    </button>
+                                    @if (hasEditRight)
+                                    {
+                                        <button class="btn w-100 text-start" @onclick="@(() => EditAppointment(context.Id))">
+                                            <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                        </button>
+                                    }
+                                    @if (hasDeleteRight)
+                                    {
+                                        <button class="btn w-100 text-start" @onclick="async () => await DeleteAppointment(context.Id)">
+                                            <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                        </button>
+                                    }
                                 </ActionsDropdown>
                             </TemplateColumn>
                         }

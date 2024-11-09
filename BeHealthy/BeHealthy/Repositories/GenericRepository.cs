@@ -2,6 +2,7 @@
 using BeHealthy.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq.Expressions;
 
 namespace BeHealthy.Repositories;
 
@@ -39,6 +40,20 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         using var context = _contextFactory.CreateDbContext();
         return await context.Set<T>().FindAsync(id);
+    }
+
+    public IQueryable<T> GetQueryable()
+    {
+        using var context = _contextFactory.CreateDbContext();
+        return context.Set<T>().AsQueryable();
+    }
+
+    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, bool trackChanges = false)
+    {
+        using var context = _contextFactory.CreateDbContext();
+        return trackChanges
+            ? await context.Set<T>().Where(predicate).ToListAsync()
+            : await context.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
     }
 
     public async Task AddAsync(T entity)

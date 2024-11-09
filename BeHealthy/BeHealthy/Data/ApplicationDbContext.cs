@@ -16,6 +16,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Department> Departments { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<AppSetting> AppSettings { get; set; }
+    public DbSet<Privilege> Privileges { get; set; }
+    public DbSet<RolePrivilege> RolePrivileges { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

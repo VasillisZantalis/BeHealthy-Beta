@@ -22,6 +22,7 @@ public partial class Index
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
+    [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -31,7 +32,9 @@ public partial class Index
     private AppointmentModal _appointmentModal { get; set; } = new();
     private Alert _alert = new();
     private string? _currentUserId;
-    private bool _hasActionRights;
+    private bool hasActionRights;
+    private bool hasEditRight;
+    private bool hasDeleteRight;
 
     private bool _isLoading = default;
     private string? roleClaim;
@@ -50,8 +53,6 @@ public partial class Index
 
         if (Enum.TryParse(typeof(UserRole), roleClaim, out var roleEnum) && roleEnum is UserRole userRole)
         {
-            _hasActionRights = userRole == UserRole.Admin || userRole == UserRole.Doctor;
-
             switch (userRole)
             {
                 case UserRole.Doctor when _currentUserId is not null:
@@ -64,6 +65,10 @@ public partial class Index
                     await LoadAppointments();
                     break;
             }
+
+            hasEditRight = await _privilegeService.HasPrivilege(userRole, "CanEditAppointment");
+            hasDeleteRight = await _privilegeService.HasPrivilege(userRole, "CanDeleteAppointment");
+            hasActionRights = hasEditRight || hasDeleteRight;
         }
 
         await LoadDoctors();
