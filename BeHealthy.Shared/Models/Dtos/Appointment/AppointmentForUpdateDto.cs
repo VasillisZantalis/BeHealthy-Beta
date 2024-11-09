@@ -1,4 +1,6 @@
-﻿namespace BeHealthy.Shared.Models.Dtos.Appointment;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BeHealthy.Shared.Models.Dtos.Appointment;
 
 public class AppointmentForUpdateDto
 {

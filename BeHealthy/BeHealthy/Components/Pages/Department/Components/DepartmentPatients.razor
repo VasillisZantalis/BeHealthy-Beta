@@ -15,14 +15,10 @@
                         <span class="text-muted small-text">Email</span>
                         <h6>@patient.Email</h6>
                     </div>
-                    @if (!string.IsNullOrEmpty(patient.PhoneNumber))
-                    {
-                        <div class="d-flex flex-column align-items-center">
-                            <span class="text-muted small-text">Phone</span>
-                            <h6>@patient.PhoneNumber</h6>
-
-                        </div>
-                    }
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">Phone</span>
+                        <h6>@(!string.IsNullOrEmpty(patient.PhoneNumber) ? patient.PhoneNumber : "-")</h6>
+                    </div>
                     <div class="d-flex flex-column align-items-center">
                         <span class="text-muted small-text">Created</span>
                         <h6>@DateTimeExtensions.ToFullDateTimeString(patient.CreatedAt)</h6>

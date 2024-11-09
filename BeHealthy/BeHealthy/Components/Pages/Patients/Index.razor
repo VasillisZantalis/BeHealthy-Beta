@@ -33,8 +33,7 @@ else
     @if (_selectedView == "Card")
     {
         <div class="row">
-            @foreach (var patient in _patients)
-            {
+            <Virtualize Items="@_patients" Context="patient" ItemSize="100">
                 <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                     <div class="mb-3">
                         <UserCard Id="@patient.Id"
@@ -42,11 +41,11 @@ else
                                   FullName="@patient.FullName"
                                   Email="@patient.Email"
                                   Phone="@patient.PhoneNumber"
-                                  Edit="EditPatient"
-                                  Delete="DeletePatient" />
+                                  Edit="() => EditPatient(patient.Id)"
+                                  Delete="() => DeletePatient(patient.Id)" />
                     </div>
                 </div>
-            }
+            </Virtualize>
         </div>
     }
     else if (_selectedView == "Grid")

@@ -11,11 +11,13 @@ public class AppointmentService : IAppointmentService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IValidationService _validationService;
 
-    public AppointmentService(IUnitOfWork unitOfWork, IMapper mapper)
+    public AppointmentService(IUnitOfWork unitOfWork, IMapper mapper, IValidationService validationService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _validationService = validationService;
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync()
@@ -50,9 +52,20 @@ public class AppointmentService : IAppointmentService
 
     public async Task<ServiceResponse> AddAppointmentAsync(AppointmentForCreationDto appointmentDto)
     {
+        //var validationResponse = await _validationService.ValidateAsync(appointmentDto);
+
+        //if (!validationResponse.Success)
+        //{
+        //    return validationResponse;
+        //}
         var appointment = _mapper.Map<Appointment>(appointmentDto);
 
-        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.PatientId, appointmentDto.AppointmentDate, appointmentDto.Duration);
+        var conflictCheck = await CheckForConflictingAppointmentsAsync(
+            appointmentDto.DoctorId, 
+            appointmentDto.PatientId, 
+            appointmentDto.AppointmentDate, 
+            appointmentDto.Duration);
+
         if (!conflictCheck.Success)
         {
             return conflictCheck;
@@ -66,7 +79,12 @@ public class AppointmentService : IAppointmentService
     {
         var appointment = _mapper.Map<Appointment>(appointmentDto);
 
-        var conflictCheck = await CheckForConflictingAppointmentsAsync(appointmentDto.DoctorId, appointmentDto.PatientId, appointmentDto.AppointmentDate, appointmentDto.Duration);
+        var conflictCheck = await CheckForConflictingAppointmentsAsync(
+            appointmentDto.DoctorId, 
+            appointmentDto.PatientId, 
+            appointmentDto.AppointmentDate, 
+            appointmentDto.Duration);
+
         if (!conflictCheck.Success)
         {
             return conflictCheck;

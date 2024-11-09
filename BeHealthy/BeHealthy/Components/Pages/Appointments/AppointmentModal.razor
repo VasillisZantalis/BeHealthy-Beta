@@ -92,9 +92,8 @@
                                 <InputNumber id="duration"
                                              @bind-Value="_appointmentDto.Duration"
                                              TValue="int"
-                                             min="0"
-                                             max="1440"
                                              class="form-control"/>
+                                <ValidationMessage For="@(() => _appointmentDto.Duration)" />
                             </div>
 
                             <div class="form-group">

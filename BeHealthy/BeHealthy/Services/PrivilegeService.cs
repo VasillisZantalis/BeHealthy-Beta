@@ -28,6 +28,6 @@ public class PrivilegeService : IPrivilegeService
 
     public async Task<bool> HasPrivilege(UserRole role, string privilegeName)
     {
-        return await _unitOfWork.PrivilegeRepository.HasPrivilegeAsync(role, privilegeName); 
+        return role == UserRole.Admin ? true : await _unitOfWork.PrivilegeRepository.HasPrivilegeAsync(role, privilegeName); 
     }
 }

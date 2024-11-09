@@ -86,6 +86,7 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAppSettingsService, AppSettingsService>();
 builder.Services.AddScoped<IPrivilegeService, PrivilegeService>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 
 // States
 builder.Services.AddScoped<ModalStateService>();

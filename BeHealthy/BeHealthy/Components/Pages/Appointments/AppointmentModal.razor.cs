@@ -4,6 +4,7 @@ using BeHealthy.Shared.Models.Dtos.Appointment;
 using BeHealthy.Shared.Models.Dtos.Doctor;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace BeHealthy.Components.Pages.Appointments;

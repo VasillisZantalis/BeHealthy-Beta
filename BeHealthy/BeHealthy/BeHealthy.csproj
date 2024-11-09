@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Services\Common\" />
+    <Folder Include="Validators\Appointment\" />
   </ItemGroup>
 
 </Project>
