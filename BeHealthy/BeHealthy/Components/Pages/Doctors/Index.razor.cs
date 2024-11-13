@@ -34,7 +34,7 @@ public partial class Index
         _isLoading = true;
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
 
-        var userRole = Enum.Parse<UserRole>(authState.User.FindFirst(c => c.Type == ClaimTypes.Role)?.Value!);
+        var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
 
         _createUserHref = $"{RoutingEndpoints.HOME_PAGE}/create";
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();

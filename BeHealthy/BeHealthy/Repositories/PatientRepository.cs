@@ -13,7 +13,7 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
 
     public async Task<IEnumerable<Patient>> GetAllPatientsAsync()
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Patients
                     .Include(d => d.User)
                     .ToListAsync();
@@ -21,7 +21,7 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
 
     public async Task<IEnumerable<Appointment>> GetPatientAppointmentsByUserIdAsync(string userId)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
                 .Include(a => a.Doctor)
                 .Include(a => a.Patient)
@@ -31,7 +31,7 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
 
     public async Task DeletePatientAsync(int id)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var patient = await context.Patients
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(d => d.Id == id);

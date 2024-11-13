@@ -13,7 +13,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 
     public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Doctors
                     .Include(d => d.User)
                     .ToListAsync();
@@ -21,7 +21,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 
     public async Task DeleteDoctorAsync(int id)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var doctor = await context.Doctors
                 .Include(d => d.User) 
                 .FirstOrDefaultAsync(d => d.Id == id);
@@ -40,7 +40,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 
     public async Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)

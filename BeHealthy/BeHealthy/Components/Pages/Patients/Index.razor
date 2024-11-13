@@ -41,6 +41,8 @@ else
                                   FullName="@patient.FullName"
                                   Email="@patient.Email"
                                   Phone="@patient.PhoneNumber"
+                                  CanEdit="hasEditRight"
+                                  CanDelete="hasDeleteRight"
                                   Edit="() => EditPatient(patient.Id)"
                                   Delete="() => DeletePatient(patient.Id)" />
                     </div>
@@ -87,16 +89,25 @@ else
                                         Property="@(x => x.Email)"/>
                         <PropertyColumn Title="Phone"
                                         Property="@(x => x.PhoneNumber)"/>
-                        <TemplateColumn>
-                            <ActionsDropdown>
-                                <button class="btn w-100 text-start" @onclick="() => EditPatient(context.Id)">
-                                    <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
-                                </button>
-                                <button class="btn w-100 text-start" @onclick="async () => await DeletePatient(context.Id)">
-                                    <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
-                                </button>
-                            </ActionsDropdown>
-                        </TemplateColumn>
+                        @if (hasActionRights)
+                        {
+                            <TemplateColumn>
+                                <ActionsDropdown>
+                                    @if (hasEditRight)
+                                    {
+                                        <button class="btn w-100 text-start" @onclick="() => EditPatient(context.Id)">
+                                            <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                        </button>
+                                    }
+                                    @if (hasDeleteRight)
+                                    {
+                                        <button class="btn w-100 text-start" @onclick="async () => await DeletePatient(context.Id)">
+                                            <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                        </button>
+                                    }
+                                </ActionsDropdown>
+                            </TemplateColumn>
+                        }
                     </QuickGrid>
                 </div>
                 </div>

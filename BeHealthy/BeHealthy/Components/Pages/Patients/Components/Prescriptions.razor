@@ -1,0 +1,90 @@
+﻿@using BeHealthy.Shared.Models.Dtos.Prescription
+
+@inject IPrescriptionService PrescriptionService
+@inject IPrivilegeService PrivilegeService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="py-3">
+    @if (_isLoading)
+    {
+        <Loader />
+    }
+    else if (_prescriptions is not null && _prescriptions.Any())
+    {
+        <QuickGrid Class="table table-responsive"
+            Items="@_prescriptions.AsQueryable()"
+            ItemKey="@(x => x.Id)">
+            <PropertyColumn Title="Medication"
+                Property="@(x => x.Medication)" />
+            <PropertyColumn Title="Last Name"
+                Property="@(x => x.Dosage)" />
+            <PropertyColumn Title="Date Prescribed"
+                Property="@(x => x.DatePrescribed)"
+                Format="dd MMM yyyy HH:mm"
+                IsDefaultSortColumn="true"
+                InitialSortDirection="SortDirection.Descending" />
+            @if (hasActionRights)
+            {
+                <TemplateColumn>
+                    <ActionsDropdown>
+                        @if (hasEditRight)
+                        {
+                            <button class="btn w-100 text-start" @onclick="() => EditPrescription(context.Id)">
+                                <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                            </button>
+                        }
+                        @if (hasDeleteRight)
+                        {
+                            <button class="btn w-100 text-start" @onclick="async () => await DeletePrescription(context.Id)">
+                                <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                            </button>
+                        }
+                    </ActionsDropdown>
+                </TemplateColumn>
+            }
+        </QuickGrid>
+    }
+    else
+    {
+        <h6>No Data to Display</h6>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+
+    private List<PrescriptionDto> _prescriptions { get; set; } = default!;
+
+    private bool _isLoading = default;
+
+    private bool hasActionRights;
+    private bool hasEditRight;
+    private bool hasDeleteRight;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
+
+        hasEditRight = await PrivilegeService.HasPrivilege(userRole, "CanEditAppointment");
+        hasDeleteRight = await PrivilegeService.HasPrivilege(userRole, "CanDeleteAppointment");
+        hasActionRights = hasEditRight || hasDeleteRight;
+
+        _prescriptions = (await PrescriptionService.GetPrescriptionsByPatientIdAsync(PatientId)).ToList();
+
+        _isLoading = false;
+    }
+
+    private void EditPrescription(int prescriptionId)
+    {
+
+    }
+
+    private async Task DeletePrescription(int prescriptionId)
+    {
+        await PrescriptionService.DeletePrescriptionAsync(prescriptionId);
+    }
+}

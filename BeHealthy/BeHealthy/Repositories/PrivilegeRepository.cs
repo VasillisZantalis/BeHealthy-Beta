@@ -14,7 +14,7 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
 
     public async Task<bool> HasPrivilegeAsync(UserRole role, string privilegeName)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
 
         var privilege = await context.Privileges
             .AsQueryable()

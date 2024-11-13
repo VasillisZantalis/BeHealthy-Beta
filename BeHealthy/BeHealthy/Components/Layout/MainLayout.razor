@@ -13,11 +13,11 @@
                 <Authorized>
                     <div class="d-flex flex-row gap-3">
                         <p>Hello, @context.User.Identity?.Name</p>
-                        <div class="nav-item">
+                        <div class="nav-item clickable">
                             <form action="/logout" method="post">
                                 <AntiforgeryToken />
-                                <button type="submit" class="nav-link text-primary">
-                                    Log out
+                                <button type="submit" class="btn m-0 p-0">
+                                    <span class="fa-solid fa-right-from-bracket"></span>
                                 </button>
                             </form>
                         </div>

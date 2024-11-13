@@ -14,7 +14,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
@@ -23,7 +23,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
@@ -33,7 +33,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
@@ -43,7 +43,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)
@@ -53,7 +53,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetUserAppointmentsAsync(string userId)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)

@@ -17,13 +17,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Set<T>().ToListAsync();
     }
 
     public async Task<IEnumerable<T>> GetAllPagedAsync(int? pageNumber = null, int? pageSize = null)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var query = context.Set<T>().AsQueryable();
 
         if (pageNumber.HasValue && pageSize.HasValue)
@@ -38,7 +38,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<T?> GetByIdAsync(int id)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Set<T>().FindAsync(id);
     }
 
@@ -50,7 +50,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, bool trackChanges = false)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return trackChanges
             ? await context.Set<T>().Where(predicate).ToListAsync()
             : await context.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
@@ -58,21 +58,21 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task AddAsync(T entity)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         await context.Set<T>().AddAsync(entity);
         await context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(T entity)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         context.Set<T>().Update(entity);
         await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         var entity = await context.Set<T>().FindAsync(id);
         if (entity != null)
         {
@@ -84,14 +84,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task DeleteEntityAsync(T entity)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         context.Set<T>().Remove(entity);
         await context.SaveChangesAsync();
     }
 
     public async Task<bool> ExistsAsync(int id)
     {
-        using var context = _contextFactory.CreateDbContext();
+        using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id);
     }
 }

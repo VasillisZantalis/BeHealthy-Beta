@@ -3,6 +3,8 @@ using BeHealthy.Repositories.Interfaces;
 using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models.Dtos.Prescription;
 using BeHealthy.Shared.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 
 namespace BeHealthy.Services;
 
@@ -44,5 +46,12 @@ public class PrescriptionService : IPrescriptionService
     public async Task DeletePrescriptionAsync(int id)
     {
         await _unitOfWork.PrescriptionRepository.DeleteAsync(id);
+    }
+
+    public async Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByPatientIdAsync(int id)
+    {
+        var prescriptions = await _unitOfWork.PrescriptionRepository.GetPrescriptionsByPatientIdAsync(id);
+
+        return _mapper.Map<IEnumerable<PrescriptionDto>>(prescriptions);
     }
 }

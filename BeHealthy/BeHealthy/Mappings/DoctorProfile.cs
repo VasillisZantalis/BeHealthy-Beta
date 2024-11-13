@@ -41,5 +41,7 @@ public class DoctorProfile : Profile
 
 
         CreateMap<DoctorDto, DoctorForUpdateDto>().ReverseMap();
+
+        CreateMap<Doctor, DoctorSimpleDto>();
     }
 }
