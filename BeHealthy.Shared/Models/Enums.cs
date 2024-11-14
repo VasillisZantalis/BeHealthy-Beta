@@ -51,3 +51,11 @@ public enum AppointmentReason
     [Display(Name = "Prescription")]
     Prescription
 }
+
+public enum Severity
+{
+    Info,
+    Warning,
+    Success,
+    Danger
+}

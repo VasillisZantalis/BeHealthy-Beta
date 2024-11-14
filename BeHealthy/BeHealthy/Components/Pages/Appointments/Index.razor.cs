@@ -33,6 +33,8 @@ public partial class Index
 
     private AppointmentModal _appointmentModal { get; set; } = new();
     private Alert _alert = new();
+    private Toastr _toastr = new();
+
     private string? _currentUserId;
     private bool hasActionRights;
     private bool hasEditRight;
@@ -77,7 +79,6 @@ public partial class Index
 
         await LoadDoctors();
         await LoadPatients();
-
         _isLoading = false;
     }
 
@@ -133,7 +134,7 @@ public partial class Index
         }
         else
         {
-            //_alert.ShowSuccess();
+            await _toastr.ShowSuccess();
             _navigationManager.Refresh(forceReload: true);
         }
     }

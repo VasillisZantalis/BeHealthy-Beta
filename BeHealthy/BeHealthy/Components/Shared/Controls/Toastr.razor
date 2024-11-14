@@ -1,0 +1,79 @@
+﻿<div class="toaster-container" style="position: fixed; top: 60px; right: 20px; z-index: 9999;">
+    @if (_showToastr)
+    {
+        <div class="alert alert-@_severity.ToString().ToLower() alert-dismissible fade show">
+            <span class="fs-5 @_icon text-@_severity.ToString().ToLower()"></span>
+            <span class="fw-bold">@Message</span>
+            <button @onclick="CloseToastr" type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Message { get; set; }
+    [Parameter] public int Duration { get; set; } = 3000;
+    private bool _showToastr { get; set; } = false;
+    private Severity _severity { get; set; }
+    private string? _icon;
+
+    private void CloseToastr()
+    {
+        _showToastr = false;
+    }
+
+    public async Task ShowFailed(string message = "Something went wrong", int? duration = null)
+    {
+        _showToastr = true;
+        _severity = Severity.Danger;
+        _icon = "fa-regular fa-circle-xmark";
+        Message = message;
+        _showToastr = true;
+        StateHasChanged();
+
+        await Task.Delay(duration ?? Duration);
+        _showToastr = false;
+        StateHasChanged();
+    }
+
+    public async Task ShowSuccess(string message = "Successful", int? duration = null)
+    {
+        _showToastr = true;
+        _severity = Severity.Success;
+        _icon = "fa-regular fa-circle-check";
+        Message = message;
+        _showToastr = true;
+        StateHasChanged();
+
+        await Task.Delay(duration ?? Duration);
+        _showToastr = false;
+        StateHasChanged();
+    }
+
+    public async Task ShowInfo(string message, int? duration = null)
+    {
+        _showToastr = true;
+        _severity = Severity.Info;
+        _icon = "fa-solid fa-circle-info";
+        Message = message;
+        _showToastr = true;
+        StateHasChanged();
+
+        await Task.Delay(duration ?? Duration);
+        _showToastr = false;
+        StateHasChanged();
+    }
+
+    public async Task ShowWarning(string message, int? duration = null)
+    {
+        _showToastr = true;
+        _severity = Severity.Warning;
+        _icon = "fa-solid fa-triangle-exclamation";
+        Message = message;
+        _showToastr = true;
+        StateHasChanged();
+
+        await Task.Delay(duration ?? Duration);
+        _showToastr = false;
+        StateHasChanged();
+    }
+}
