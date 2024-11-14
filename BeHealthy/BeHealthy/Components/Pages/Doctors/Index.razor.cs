@@ -1,5 +1,7 @@
-﻿using BeHealthy.Extensions;
+﻿using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Extensions;
 using BeHealthy.Persistance;
+using BeHealthy.Services;
 using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Doctor;
@@ -20,12 +22,15 @@ public partial class Index
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<DoctorDto> _doctors { get; set; } = default!;
+    private ConfirmDeleteModal _confirmDeleteModal = new();
 
     private bool _isLoading = default;
     private string _selectedView = "Card";
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
+
+    private int deleteItemId;
 
     private PaginationState _paginationState = new();
 
@@ -63,9 +68,18 @@ public partial class Index
         _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
-    private async Task DeleteDoctor(int id)
+    private void ConfirmDelete(int id)
     {
-        await _doctorService.DeleteDoctorAsync(id);
-        _navigationManager.Refresh(forceReload: true);
+        deleteItemId = id;
+        _confirmDeleteModal.HandleOpen();
+    }
+
+    private async Task OnDeleteConfirmed(bool confirmed)
+    {
+        if (confirmed)
+        {
+            await _doctorService.DeleteDoctorAsync(deleteItemId);
+            _navigationManager.Refresh(forceReload: true);
+        }
     }
 }

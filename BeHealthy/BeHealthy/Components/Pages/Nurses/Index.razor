@@ -30,6 +30,9 @@ else if (_nurses is null)
 }
 else
 {
+    <ConfirmDeleteModal @ref="_confirmDeleteModal"
+                        OnConfirm="OnDeleteConfirmed" />
+
     @if (_selectedView == "Card")
     {
         <div class="row">
@@ -44,7 +47,7 @@ else
                                   CanEdit="hasEditRight"
                                   CanDelete="hasDeleteRight"
                                   Edit="() => EditNurse(nurse.Id)"
-                                  Delete="() => DeleteNurse(nurse.Id)" />
+                                  Delete="() => ConfirmDelete(nurse.Id)" />
                     </div>
                 </div>
             </Virtualize>
@@ -101,7 +104,7 @@ else
                                     }
                                     @if (hasDeleteRight)
                                     {
-                                        <button class="btn w-100 text-start" @onclick="async () => await DeleteNurse(context.Id)">
+                                        <button class="btn w-100 text-start" @onclick="() => ConfirmDelete(context.Id)">
                                             <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
                                         </button>
                                     }

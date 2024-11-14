@@ -1,0 +1,46 @@
+﻿
+@if (IsVisible)
+{
+    <div class="modal" tabindex="-1" role="dialog" style="display:block;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="HandleCancel">
+                    </button>
+                </div>
+                <div class="modal-body text-center row">
+                    <span class="fa-solid fa-triangle-exclamation text-danger fs-1"></span>
+                    <span class="fw-bold">This action cannot be undone</span>
+                    <span class="text-muted">Are you sure you want to continue ?</span>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="HandleCancel">Cancel</button>
+                    <button type="button" class="btn btn-danger rounded-pill px-4" @onclick="HandleConfirm">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
+    private bool IsVisible { get; set; }
+
+    public void HandleOpen()
+    {
+        IsVisible = true;
+    }
+
+    private async Task HandleConfirm()
+    {
+        await OnConfirm.InvokeAsync(true);
+        IsVisible = false;
+    }
+
+    private void HandleCancel()
+    {
+        IsVisible = false;
+    }
+}

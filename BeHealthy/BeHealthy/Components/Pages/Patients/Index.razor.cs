@@ -1,13 +1,12 @@
-﻿using BeHealthy.Extensions;
+﻿using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Extensions;
 using BeHealthy.Persistance;
-using BeHealthy.Services;
 using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Models;
 using BeHealthy.Shared.Models.Dtos.Patient;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
-using System.Security.Claims;
 
 namespace BeHealthy.Components.Pages.Patients;
 
@@ -21,12 +20,15 @@ public partial class Index
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<PatientDto> _patients { get; set; } = default!;
+    private ConfirmDeleteModal _confirmDeleteModal = new();
 
     private bool _isLoading = default;
     private string _selectedView = "Card";
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
+
+    private int deleteItemId;
 
     private PaginationState _paginationState = new();
 
@@ -62,9 +64,18 @@ public partial class Index
         _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
     }
 
-    private async Task DeletePatient(int id)
+    private void ConfirmDelete(int id)
     {
-        await _patientService.DeletePatientAsync(id);
-        _navigationManager.Refresh(forceReload: true);
+        deleteItemId = id;
+        _confirmDeleteModal.HandleOpen();
+    }
+
+    private async Task OnDeleteConfirmed(bool confirmed)
+    {
+        if (confirmed)
+        {
+            await _patientService.DeletePatientAsync(deleteItemId);
+            _navigationManager.Refresh(forceReload: true);
+        }
     }
 }

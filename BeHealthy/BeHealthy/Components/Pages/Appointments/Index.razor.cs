@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Components.Shared.Controls;
+using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Extensions;
 using BeHealthy.Persistance;
 using BeHealthy.Services.Interfaces;
@@ -28,6 +29,7 @@ public partial class Index
 
     private List<DoctorDto>? _doctors { get; set; }
     private List<PatientDto>? _patients { get; set; }
+    private ConfirmDeleteModal _confirmDeleteModal = new();
 
     private AppointmentModal _appointmentModal { get; set; } = new();
     private Alert _alert = new();
@@ -35,6 +37,8 @@ public partial class Index
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
+
+    private int deleteItemId;
 
     private bool _isLoading = default;
     private string? roleClaim;
@@ -173,9 +177,18 @@ public partial class Index
         }
     }
 
-    private async Task DeleteAppointment(int appointmentId)
+    private void ConfirmDelete(int id)
     {
-        await _appointmentService.DeleteAppointmentAsync(appointmentId);
-        _navigationManager.Refresh(forceReload: true);
+        deleteItemId = id;
+        _confirmDeleteModal.HandleOpen();
+    }
+
+    private async Task OnDeleteConfirmed(bool confirmed)
+    {
+        if (confirmed)
+        {
+            await _appointmentService.DeleteAppointmentAsync(deleteItemId);
+            _navigationManager.Refresh(forceReload: true);
+        }
     }
 }
