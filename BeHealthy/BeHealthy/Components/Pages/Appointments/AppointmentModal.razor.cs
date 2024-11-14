@@ -32,7 +32,6 @@ public partial class AppointmentModal
     private bool _show;
     private bool _isEdit;
     private int _appointmentId;
-    private bool isDoctor;
 
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;

@@ -37,7 +37,7 @@
 </div>
 
 @code {
-    private List<PatientDto> _patients { get; set; }
+    private List<PatientDto> _patients { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {

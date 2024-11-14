@@ -11,7 +11,7 @@
 
 @code {
     [Parameter]
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
     private Severity _severity { get; set; }
 
@@ -19,10 +19,7 @@
 
     private string? _icon;
 
-    private void CloseAlert()
-    {
-        _showAlert = false;
-    }
+    private void CloseAlert() => _showAlert = false;
 
     public void ShowFailed(string message = "Something went wrong")
     {

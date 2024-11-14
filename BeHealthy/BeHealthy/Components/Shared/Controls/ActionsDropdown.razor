@@ -16,7 +16,7 @@
     private string dropdownStyle => isDropdownOpen ? "display: block; position: fixed; transform: translateX(-100%);" : "display: none;";
 
     [Parameter] public string? ButtonText { get; set; }
-    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     private void ToggleDropdown()
     {

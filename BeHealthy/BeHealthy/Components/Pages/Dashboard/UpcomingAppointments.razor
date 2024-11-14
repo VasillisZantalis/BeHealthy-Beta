@@ -20,7 +20,7 @@
                                     <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
                                     <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
                                 </div>
-                                <div><span class="badge @EnumExtensions.GetBadgeClass(appointment.Status)">@appointment.Status</span></div>
+                                <div><span class="badge @EnumExtensions.GetBadgeClass(appointment!.Status)">@appointment.Status</span></div>
                                 <div class="align-self-start">
                                     <ActionsDropdown>
                                         <button class="btn w-100 text-start">

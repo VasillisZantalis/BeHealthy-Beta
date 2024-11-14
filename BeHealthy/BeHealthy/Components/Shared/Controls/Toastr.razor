@@ -10,23 +10,19 @@
 </div>
 
 @code {
-    [Parameter] public string Message { get; set; }
+    [Parameter] public string? Message { get; set; }
     [Parameter] public int Duration { get; set; } = 3000;
     private bool _showToastr { get; set; } = false;
     private Severity _severity { get; set; }
     private string? _icon;
 
-    private void CloseToastr()
-    {
-        _showToastr = false;
-    }
+    private void CloseToastr() => _showToastr = false;
 
-    public async Task ShowFailed(string message = "Something went wrong", int? duration = null)
+    private async Task ShowToast(string message, Severity severity, string icon, int? duration = null)
     {
-        _showToastr = true;
-        _severity = Severity.Danger;
-        _icon = "fa-regular fa-circle-xmark";
         Message = message;
+        _severity = severity;
+        _icon = icon;
         _showToastr = true;
         StateHasChanged();
 
@@ -35,45 +31,16 @@
         StateHasChanged();
     }
 
-    public async Task ShowSuccess(string message = "Successful", int? duration = null)
-    {
-        _showToastr = true;
-        _severity = Severity.Success;
-        _icon = "fa-regular fa-circle-check";
-        Message = message;
-        _showToastr = true;
-        StateHasChanged();
+    public Task ShowFailed(string message = "Something went wrong", int? duration = null) =>
+        ShowToast(message, Severity.Danger, "fa-regular fa-circle-xmark", duration);
 
-        await Task.Delay(duration ?? Duration);
-        _showToastr = false;
-        StateHasChanged();
-    }
+    public Task ShowSuccess(string message = "Successful", int? duration = null) =>
+        ShowToast(message, Severity.Success, "fa-regular fa-circle-check", duration);
 
-    public async Task ShowInfo(string message, int? duration = null)
-    {
-        _showToastr = true;
-        _severity = Severity.Info;
-        _icon = "fa-solid fa-circle-info";
-        Message = message;
-        _showToastr = true;
-        StateHasChanged();
+    public Task ShowInfo(string message, int? duration = null) =>
+        ShowToast(message, Severity.Info, "fa-solid fa-circle-info", duration);
 
-        await Task.Delay(duration ?? Duration);
-        _showToastr = false;
-        StateHasChanged();
-    }
+    public Task ShowWarning(string message, int? duration = null) =>
+        ShowToast(message, Severity.Warning, "fa-solid fa-triangle-exclamation", duration);
 
-    public async Task ShowWarning(string message, int? duration = null)
-    {
-        _showToastr = true;
-        _severity = Severity.Warning;
-        _icon = "fa-solid fa-triangle-exclamation";
-        Message = message;
-        _showToastr = true;
-        StateHasChanged();
-
-        await Task.Delay(duration ?? Duration);
-        _showToastr = false;
-        StateHasChanged();
-    }
 }
