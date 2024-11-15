@@ -1,13 +1,20 @@
 ﻿@using BeHealthy.Components.Layout
+@rendermode @(new InteractiveServerRenderMode(false))
 
 @page "/accessdenied"
 @layout EmptyLayout
 
-<div class="container-fluid d-flex flex-column justify-content-center align-items-center gap-2" style="min-height: 100vh;">
+<PageTitle>Unauthorized</PageTitle>
+
+@inject NavigationManager NavigationManager
+
+<div class="container-fluid d-flex flex-column align-items-center gap-4 mt-5 pt-5" style="min-height: 100vh;">
+    <h2 class="text-danger fw-bold">Access Denied</h2>
     <span class="fa-solid fa-ban text-danger" style="font-size: 100px;"></span>
-    <h6 class="text-danger fw-bold">Access Denied</h6>
+    <span class="text-muted fw-bold">You are not authorized to access this page</span>
+    <button class="btn btn-light mt-3" @onclick="GoToHome">Back to Dashboard</button>
 </div>
 
 @code {
-
+    public void GoToHome() => NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
 }
