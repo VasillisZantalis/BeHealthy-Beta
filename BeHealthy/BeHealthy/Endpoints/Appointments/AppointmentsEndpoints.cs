@@ -1,9 +1,9 @@
 ﻿using BeHealthy.Filters;
-using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models.Dtos.Appointment;
+using BeHealthy.Application.Dtos.Appointment;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using BeHealthy.Application.Services.Interfaces;
 
 namespace BeHealthy.Endpoints.Appointments;
 

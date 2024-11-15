@@ -1,6 +1,6 @@
-﻿using BeHealthy.Filters;
-using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models.Dtos.Room;
+﻿using BeHealthy.Application.Dtos.Room;
+using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Filters;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 

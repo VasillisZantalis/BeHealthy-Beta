@@ -1,6 +1,6 @@
-﻿using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models.Dtos.Department;
-using BeHealthy.Shared.Models.Dtos.Doctor;
+﻿using BeHealthy.Application.Dtos.Department;
+using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Components.Pages.Department;
@@ -13,7 +13,7 @@ public partial class Upsert
     private int activeTab = 0;
     private void SelectTab(int tabName) => activeTab = tabName;
 
-    private DepartmentDto DepartmentDto = new ();
+    private DepartmentDto DepartmentDto = new();
     private List<DoctorDto> Doctors = new();
 
     [Inject]

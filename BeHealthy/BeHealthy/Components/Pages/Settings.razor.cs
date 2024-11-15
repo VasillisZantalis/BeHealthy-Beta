@@ -1,5 +1,5 @@
-﻿using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models.Entities;
+﻿using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain.Entities;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Components.Pages;

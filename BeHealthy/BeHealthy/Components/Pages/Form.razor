@@ -2,9 +2,6 @@
 
 @rendermode InteractiveServer
 
-@using BeHealthy.Services.Interfaces
-@using BeHealthy.Shared.Models.Dtos.Appointment
-
 @inject IAppointmentService AppointmentService
 
 <EditForm Model="@_appointmentForCreation" OnValidSubmit="@HandleValidSubmit" FormName="UpsertAppointment">

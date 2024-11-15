@@ -1,5 +1,5 @@
-﻿using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models.Dtos.Department;
+﻿using BeHealthy.Application.Dtos.Department;
+using BeHealthy.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
 

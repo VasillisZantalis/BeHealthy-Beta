@@ -1,4 +1,4 @@
-﻿using BeHealthy.Shared.Models.Entities;
+﻿using BeHealthy.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace BeHealthy.Endpoints.User;

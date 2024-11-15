@@ -1,9 +1,9 @@
-﻿using BeHealthy.Extensions;
-using BeHealthy.Shared.Common;
-using BeHealthy.Shared.Models;
-using BeHealthy.Shared.Models.Dtos.Appointment;
-using BeHealthy.Shared.Models.Dtos.Doctor;
-using BeHealthy.Shared.Models.Dtos.Patient;
+﻿using BeHealthy.Application.Dtos.Appointment;
+using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Application.Extensions;
+using BeHealthy.Domain;
+using BeHealthy.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Components.Pages.Appointments;

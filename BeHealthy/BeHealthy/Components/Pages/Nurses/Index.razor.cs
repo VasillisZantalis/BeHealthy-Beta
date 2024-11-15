@@ -1,10 +1,9 @@
-﻿using BeHealthy.Components.Shared.Modals;
-using BeHealthy.Extensions;
+﻿using BeHealthy.Application.Dtos.Nurse;
+using BeHealthy.Application.Extensions;
+using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Domain;
 using BeHealthy.Persistance;
-using BeHealthy.Services;
-using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models;
-using BeHealthy.Shared.Models.Dtos.Nurse;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;

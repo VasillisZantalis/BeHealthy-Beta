@@ -1,7 +1,7 @@
-﻿using BeHealthy.Filters;
-using BeHealthy.Services.Interfaces;
-using BeHealthy.Shared.Models.Dtos.Appointment;
-using BeHealthy.Shared.Models.Dtos.Doctor;
+﻿using BeHealthy.Application.Dtos.Appointment;
+using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Filters;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
