@@ -117,10 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Appointments" xml:space="preserve">
+    <value>Ραντεβού</value>
+  </data>
+  <data name="Authorization" xml:space="preserve">
+    <value>Εξουσιοδότηση</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Ταμπλό</value>
+  </data>
+  <data name="Departments" xml:space="preserve">
+    <value>Τμήματα</value>
+  </data>
   <data name="Doctors" xml:space="preserve">
-    <value>Doctors</value>
+    <value>Γιατροί</value>
   </data>
   <data name="Hello" xml:space="preserve">
     <value>Γειά</value>
+  </data>
+  <data name="Management" xml:space="preserve">
+    <value>Διαχείριση</value>
+  </data>
+  <data name="Nurses" xml:space="preserve">
+    <value>Νοσοκόμες</value>
+  </data>
+  <data name="Patients" xml:space="preserve">
+    <value>Ασθενείς</value>
+  </data>
+  <data name="Rooms" xml:space="preserve">
+    <value>Δωμάτια</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ρυθμίσεις</value>
   </data>
 </root>

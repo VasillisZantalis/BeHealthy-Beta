@@ -25,8 +25,14 @@ namespace BeHealthy.States
             _privileges = await _privilegeService.GetPrivilegesForRoleAsync(userRole);
         }
 
-        public bool HasPrivilege(string privilegeName)
+        public async Task<bool> HasPrivilegeAsync(string privilegeName)
         {
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
+
+            if (userRole == UserRole.Admin)
+                return true;
+
             return _privileges.ContainsKey(privilegeName) && _privileges[privilegeName];
         }
     }

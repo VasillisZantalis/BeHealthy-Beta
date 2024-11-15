@@ -12,6 +12,7 @@
             <AuthorizeView>
                 <Authorized>
                     <div class="d-flex flex-row gap-3">
+                        <CultureSelector />
                         <p>Hello, @context.User.Identity?.Name</p>
                         <div class="nav-item clickable">
                             <form action="/logout" method="post">

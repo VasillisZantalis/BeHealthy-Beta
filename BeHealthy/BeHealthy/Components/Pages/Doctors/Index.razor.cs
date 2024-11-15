@@ -39,8 +39,8 @@ public partial class Index
         _isLoading = true;
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
-        hasEditRight = _privilegeStateService.HasPrivilege("CanEditAppointment");
-        hasDeleteRight = _privilegeStateService.HasPrivilege("CanDeleteAppointment");
+        hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
+        hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
         hasActionRights = hasEditRight || hasDeleteRight;
         _isLoading = false;
     }

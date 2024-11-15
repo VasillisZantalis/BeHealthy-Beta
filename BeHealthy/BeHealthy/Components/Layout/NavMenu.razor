@@ -13,23 +13,23 @@
     <div class="@NavMenuCssClass">
         <nav class="flex-column">
             <div class="m-3 ms-2">
-                <h5 class="text-white-50">Management @localizer["Hello"]</h5>
+                <h5 class="text-white-50">Management</h5>
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="fa-solid fa-house fs-5"></span>&nbsp; Dashboard
+                    <span class="fa-solid fa-house fs-5"></span>&nbsp; @localizer["Dashboard"]
                 </NavLink>
             </div>
 
             <AuthorizeView Roles="Admin, Doctor">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="doctors">
-                        <span class="fa-solid fa-user-doctor fs-5"></span>&nbsp; Doctors
+                        <span class="fa-solid fa-user-doctor fs-5"></span>&nbsp; @localizer["Doctors"]
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="nurses">
-                        <span class="fa-solid fa-user-nurse fs-5"></span>&nbsp; Nurses
+                        <span class="fa-solid fa-user-nurse fs-5"></span>&nbsp; @localizer["Nurses"]
                     </NavLink>
                 </div>
             </AuthorizeView>
@@ -37,7 +37,7 @@
             <AuthorizeView Roles="Admin, Doctor, Nurse">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="patients">
-                        <span class="fa-solid fa-viruses fs-5"></span>&nbsp; Patients
+                        <span class="fa-solid fa-viruses fs-5"></span>&nbsp; @localizer["Patients"]
                     </NavLink>
                 </div>
             </AuthorizeView>
@@ -45,20 +45,20 @@
             <AuthorizeView Roles="Admin, Doctor, Patient">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="appointment">
-                        <span class="fa-solid fa-calendar-days fs-5"></span>&nbsp; Appointments
+                        <span class="fa-solid fa-calendar-days fs-5"></span>&nbsp; @localizer["Appointments"]
                     </NavLink>
                 </div>
             </AuthorizeView>
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="rooms">
-                    <span class="fa-solid fa-bed-pulse fs-5"></span>&nbsp; Rooms
+                    <span class="fa-solid fa-bed-pulse fs-5"></span>&nbsp; @localizer["Rooms"]
                 </NavLink>
             </div>
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="auth">
-                    <span class="fa-solid fa-user-lock fs-5"></span>&nbsp; Auth Required
+                    <span class="fa-solid fa-user-lock fs-5"></span>&nbsp; @localizer["Authorization"]
                 </NavLink>
             </div>
 
@@ -67,13 +67,13 @@
                     <h5 class="ms-2 text-white-50">Configuration</h5>
                     <div class="nav-item px-3 pt-0">
                         <NavLink class="nav-link" href="settings">
-                            <span class="fa-solid fa-gear fs-5"></span>&nbsp; Settings
+                            <span class="fa-solid fa-gear fs-5"></span>&nbsp; @localizer["Settings"]
                         </NavLink>
                     </div>
                     
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="departments">
-                            <span class="fa-regular fa-hospital fs-5"></span>&nbsp; Departments
+                            <span class="fa-regular fa-hospital fs-5"></span>&nbsp; @localizer["Departments"]
                         </NavLink>
                     </div>
                 </div>

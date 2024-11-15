@@ -73,8 +73,8 @@ public partial class Index
                     break;
             }
 
-            hasEditRight = _privilegeStateService.HasPrivilege("CanEditAppointment");
-            hasDeleteRight = _privilegeStateService.HasPrivilege("CanDeleteAppointment");
+            hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
+            hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
             hasActionRights = hasEditRight || hasDeleteRight;
         }
 
