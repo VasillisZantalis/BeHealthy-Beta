@@ -2,7 +2,6 @@
 using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace BeHealthy.Application.Services;
 
@@ -15,13 +14,9 @@ public class PrivilegeService : IPrivilegeService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<List<Privilege>> GetPrivilegesForRoleAsync(UserRole role)
+    public async Task<Dictionary<string, bool>> GetPrivilegesForRoleAsync(UserRole role)
     {
-        var privileges = await _unitOfWork.PrivilegeRepository
-            .GetQueryable()
-            .Include(i => i.RolePrivileges)
-            .Where(p => p.RolePrivileges.Any(rp => rp.Role == role))
-            .ToListAsync();
+        var privileges = await _unitOfWork.PrivilegeRepository.GetUserPrivilegesAsync(role);
 
         return privileges;
     }

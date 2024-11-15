@@ -7,6 +7,7 @@ using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
+using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
@@ -23,7 +24,7 @@ public partial class Index
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
-    [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
+    [Inject] PrivilegeStateService _privilegeStateService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -72,8 +73,8 @@ public partial class Index
                     break;
             }
 
-            hasEditRight = await _privilegeService.HasPrivilege(userRole, "CanEditAppointment");
-            hasDeleteRight = await _privilegeService.HasPrivilege(userRole, "CanDeleteAppointment");
+            hasEditRight = _privilegeStateService.HasPrivilege("CanEditAppointment");
+            hasDeleteRight = _privilegeStateService.HasPrivilege("CanDeleteAppointment");
             hasActionRights = hasEditRight || hasDeleteRight;
         }
 

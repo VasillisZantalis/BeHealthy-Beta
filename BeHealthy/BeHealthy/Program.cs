@@ -52,6 +52,7 @@ builder.Services.Configure<JsonOptions>(options =>
 
 // States
 builder.Services.AddScoped<ModalStateService>();
+builder.Services.AddScoped<PrivilegeStateService>();
 
 var app = builder.Build();
 

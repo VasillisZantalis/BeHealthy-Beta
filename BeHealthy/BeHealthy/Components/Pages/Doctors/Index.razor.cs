@@ -4,6 +4,7 @@ using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
 using BeHealthy.Persistance;
+using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
@@ -17,6 +18,7 @@ public partial class Index
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
+    [Inject] PrivilegeStateService _privilegeStateService { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<DoctorDto> _doctors { get; set; } = default!;
@@ -35,15 +37,10 @@ public partial class Index
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-
-        var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
-
-        _createUserHref = $"{RoutingEndpoints.HOME_PAGE}/create";
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
-        hasEditRight = await _privilegeService.HasPrivilege(userRole, "CanEditAppointment");
-        hasDeleteRight = await _privilegeService.HasPrivilege(userRole, "CanDeleteAppointment");
+        hasEditRight = _privilegeStateService.HasPrivilege("CanEditAppointment");
+        hasDeleteRight = _privilegeStateService.HasPrivilege("CanDeleteAppointment");
         hasActionRights = hasEditRight || hasDeleteRight;
         _isLoading = false;
     }
