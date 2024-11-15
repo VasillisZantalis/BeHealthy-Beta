@@ -2,6 +2,7 @@ using BeHealthy.Application;
 using BeHealthy.Components;
 using BeHealthy.Components.Account;
 using BeHealthy.Endpoints.Appointments;
+using BeHealthy.Endpoints.Culture;
 using BeHealthy.Endpoints.Department;
 using BeHealthy.Endpoints.Doctors;
 using BeHealthy.Endpoints.Nurse;
@@ -42,6 +43,14 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
+builder.Services.AddLocalization();
+
+string[] supportedCultures = ["en-US", "el-GR"];
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(connectionString!);
 
@@ -71,10 +80,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.UseRequestLocalization(localizationOptions);
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.MapAdditionalIdentityEndpoints();
+app.MapCultureEndpoints();
 app.MapAppointmentsEndpoints();
 app.MapDepartmentEndpoints();
 app.MapDoctorsEndpoints();

@@ -1,8 +1,10 @@
 ﻿@page "/settings"
+@using BeHealthy.Components.Layout
 @attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
 
 <SectionContent SectionName="page-title">Settings</SectionContent>
+<CultureSelector />
 
 @if (_settingsGroupedByArea is not null)
 {
