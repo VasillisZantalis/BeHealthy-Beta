@@ -70,11 +70,92 @@ namespace BeHealthy.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Follow Up.
+        /// </summary>
+        public static string AppointmentReason_FollowUp {
+            get {
+                return ResourceManager.GetString("AppointmentReason_FollowUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General Checkup.
+        /// </summary>
+        public static string AppointmentReason_GeneralCheckup {
+            get {
+                return ResourceManager.GetString("AppointmentReason_GeneralCheckup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Illness.
+        /// </summary>
+        public static string AppointmentReason_Illness {
+            get {
+                return ResourceManager.GetString("AppointmentReason_Illness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Injury.
+        /// </summary>
+        public static string AppointmentReason_Injury {
+            get {
+                return ResourceManager.GetString("AppointmentReason_Injury", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prescription.
+        /// </summary>
+        public static string AppointmentReason_Prescription {
+            get {
+                return ResourceManager.GetString("AppointmentReason_Prescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Appointments.
         /// </summary>
         public static string Appointments {
             get {
                 return ResourceManager.GetString("Appointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancelled.
+        /// </summary>
+        public static string AppointmentStatus_Cancelled {
+            get {
+                return ResourceManager.GetString("AppointmentStatus_Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        public static string AppointmentStatus_Completed {
+            get {
+                return ResourceManager.GetString("AppointmentStatus_Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rescheduled.
+        /// </summary>
+        public static string AppointmentStatus_Rescheduled {
+            get {
+                return ResourceManager.GetString("AppointmentStatus_Rescheduled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scheduled.
+        /// </summary>
+        public static string AppointmentStatus_Scheduled {
+            get {
+                return ResourceManager.GetString("AppointmentStatus_Scheduled", resourceCulture);
             }
         }
         
@@ -205,6 +286,15 @@ namespace BeHealthy.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date Prescribed.
+        /// </summary>
+        public static string DatePrescribed {
+            get {
+                return ResourceManager.GetString("DatePrescribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         public static string Delete {
@@ -277,6 +367,15 @@ namespace BeHealthy.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string FirstName {
@@ -300,6 +399,15 @@ namespace BeHealthy.Locales {
         public static string GeneralData {
             get {
                 return ResourceManager.GetString("GeneralData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Greek.
+        /// </summary>
+        public static string Greek {
+            get {
+                return ResourceManager.GetString("Greek", resourceCulture);
             }
         }
         
@@ -349,6 +457,24 @@ namespace BeHealthy.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string LanguageOptions_English {
+            get {
+                return ResourceManager.GetString("LanguageOptions_English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Greek.
+        /// </summary>
+        public static string LanguageOptions_Greek {
+            get {
+                return ResourceManager.GetString("LanguageOptions_Greek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
         public static string LastName {
@@ -390,6 +516,15 @@ namespace BeHealthy.Locales {
         public static string Management {
             get {
                 return ResourceManager.GetString("Management", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medication.
+        /// </summary>
+        public static string Medication {
+            get {
+                return ResourceManager.GetString("Medication", resourceCulture);
             }
         }
         
@@ -583,6 +718,15 @@ namespace BeHealthy.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong.
+        /// </summary>
+        public static string SomethingWentWrong {
+            get {
+                return ResourceManager.GetString("SomethingWentWrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specialty.
         /// </summary>
         public static string Specialty {
@@ -597,6 +741,15 @@ namespace BeHealthy.Locales {
         public static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
             }
         }
         

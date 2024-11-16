@@ -2,6 +2,8 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
+<PageTitle>@Resource.Appointments</PageTitle>
+
 <SectionContent SectionName="page-title">@Resource.Appointments</SectionContent>
 
 <div class="">
@@ -63,11 +65,11 @@ else
                                         Property="@(x => x.Duration)"
                                         Sortable="true" />
                         <PropertyColumn Title="@Resource.Reason"
-                                        Property="@(x => EnumExtensions.GetDisplayName(x.Reason))" />
+                                        Property="@(x => x.Reason.ToLocalizedString())" />
                         <TemplateColumn Title="@Resource.Status"
                                         TGridItem="AppointmentDto">
                             <span class="badge @context.Status.GetBadgeClass()">
-                                @EnumExtensions.GetDisplayName(@context.Status)
+                                @context.Status.ToLocalizedString()
                             </span>
                         </TemplateColumn>
 

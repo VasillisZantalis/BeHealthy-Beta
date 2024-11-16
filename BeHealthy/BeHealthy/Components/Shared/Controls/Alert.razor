@@ -21,21 +21,21 @@
 
     private void CloseAlert() => _showAlert = false;
 
-    public void ShowFailed(string message = "Something went wrong")
+    public void ShowFailed(string? message)
     {
         _showAlert = true;
         _severity = Severity.Danger;
         _icon = "fa-regular fa-circle-xmark";
-        Message = message;
+        Message = message ?? Resource.SomethingWentWrong;
         StateHasChanged();
     }
 
-    public void ShowSuccess(string message = "Successful")
+    public void ShowSuccess(string? message)
     {
         _showAlert = true;
         _severity = Severity.Success;
         _icon = "fa-regular fa-circle-check";
-        Message = message;
+        Message = message ?? Resource.Success;
         StateHasChanged();
     }
 

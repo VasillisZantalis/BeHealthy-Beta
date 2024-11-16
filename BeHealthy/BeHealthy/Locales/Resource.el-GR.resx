@@ -120,8 +120,35 @@
   <data name="AccessDenied" xml:space="preserve">
     <value>Απαγόρευση Πρόσβασης</value>
   </data>
+  <data name="AppointmentReason_FollowUp" xml:space="preserve">
+    <value>Παρακολούθηση</value>
+  </data>
+  <data name="AppointmentReason_GeneralCheckup" xml:space="preserve">
+    <value>Γενικός έλεγχος</value>
+  </data>
+  <data name="AppointmentReason_Illness" xml:space="preserve">
+    <value>Ασθένεια</value>
+  </data>
+  <data name="AppointmentReason_Injury" xml:space="preserve">
+    <value>Τραυματισμός</value>
+  </data>
+  <data name="AppointmentReason_Prescription" xml:space="preserve">
+    <value>Συνταγή</value>
+  </data>
   <data name="Appointments" xml:space="preserve">
     <value>Ραντεβού</value>
+  </data>
+  <data name="AppointmentStatus_Cancelled" xml:space="preserve">
+    <value>Ακυρώθηκε</value>
+  </data>
+  <data name="AppointmentStatus_Completed" xml:space="preserve">
+    <value>Ολοκληρώθηκε</value>
+  </data>
+  <data name="AppointmentStatus_Rescheduled" xml:space="preserve">
+    <value>Επαναπρογραμματίστηκε</value>
+  </data>
+  <data name="AppointmentStatus_Scheduled" xml:space="preserve">
+    <value>Προγραμματίστηκε</value>
   </data>
   <data name="AreYouSureYouWantToContinue" xml:space="preserve">
     <value>Είσαι σίγουρος οτι θέλεις να συνεχίσεις ;</value>
@@ -165,6 +192,9 @@
   <data name="Date" xml:space="preserve">
     <value>Ημερομηνία</value>
   </data>
+  <data name="DatePrescribed" xml:space="preserve">
+    <value>Ημερομηνία συνταγογράφησης</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Διαγραφή</value>
   </data>
@@ -189,6 +219,9 @@
   <data name="Email" xml:space="preserve">
     <value>Ηλεκτρονικό Ταχυδρομείο</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>Αγγλικά</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>Όνομα</value>
   </data>
@@ -197,6 +230,9 @@
   </data>
   <data name="GeneralData" xml:space="preserve">
     <value>Γενικά στοιχεία</value>
+  </data>
+  <data name="Greek" xml:space="preserve">
+    <value>Ελληνικά</value>
   </data>
   <data name="Grid" xml:space="preserve">
     <value>Πλέγμα</value>
@@ -213,6 +249,12 @@
   <data name="Joined" xml:space="preserve">
     <value>Προστέθηκε</value>
   </data>
+  <data name="LanguageOptions_English" xml:space="preserve">
+    <value>Αγγλικά</value>
+  </data>
+  <data name="LanguageOptions_Greek" xml:space="preserve">
+    <value>Ελληνικά</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Επώνυμο</value>
   </data>
@@ -227,6 +269,9 @@
   </data>
   <data name="Management" xml:space="preserve">
     <value>Διαχείριση</value>
+  </data>
+  <data name="Medication" xml:space="preserve">
+    <value>Φάρμακο</value>
   </data>
   <data name="Minutes" xml:space="preserve">
     <value>Λεπτά</value>
@@ -291,11 +336,17 @@
   <data name="Settings" xml:space="preserve">
     <value>Ρυθμίσεις</value>
   </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Κάτι πήγε λάθος</value>
+  </data>
   <data name="Specialty" xml:space="preserve">
     <value>Ειδικότητα</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Κατάσταση</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Επιτυχία</value>
   </data>
   <data name="ThereAreNo" xml:space="preserve">
     <value>Δεν υπάρχουν {0}</value>

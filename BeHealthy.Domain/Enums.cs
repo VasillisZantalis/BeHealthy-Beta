@@ -22,8 +22,7 @@ public enum SettingType
 public enum LanguageOptions
 {
     English,
-    Spanish,
-    French
+    Greek
 }
 
 public enum AppointmentStatus
@@ -36,19 +35,10 @@ public enum AppointmentStatus
 
 public enum AppointmentReason
 {
-    [Display(Name = "General Check-up")]
     GeneralCheckup,
-
-    [Display(Name = "Follow Up")]
     FollowUp,
-
-    [Display(Name = "Illness")]
     Illness,
-
-    [Display(Name = "Injury")]
     Injury,
-
-    [Display(Name = "Prescription")]
     Prescription
 }
 

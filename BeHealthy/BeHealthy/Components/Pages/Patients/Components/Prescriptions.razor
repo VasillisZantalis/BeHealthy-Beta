@@ -12,11 +12,11 @@
         <QuickGrid Class="table table-responsive"
             Items="@_prescriptions.AsQueryable()"
             ItemKey="@(x => x.Id)">
-            <PropertyColumn Title="Medication"
+            <PropertyColumn Title="@Resource.Medication"
                 Property="@(x => x.Medication)" />
             <PropertyColumn Title="Last Name"
                 Property="@(x => x.Dosage)" />
-            <PropertyColumn Title="Date Prescribed"
+            <PropertyColumn Title="@Resource.DatePrescribed"
                 Property="@(x => x.DatePrescribed)"
                 Format="dd MMM yyyy HH:mm"
                 IsDefaultSortColumn="true"
@@ -28,13 +28,13 @@
                         @if (hasEditRight)
                         {
                             <button class="btn w-100 text-start" @onclick="() => EditPrescription(context.Id)">
-                                <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                <span class="fa-solid fa-pencil text-warning"></span>&nbsp; @Resource.Edit
                             </button>
                         }
                         @if (hasDeleteRight)
                         {
                             <button class="btn w-100 text-start" @onclick="async () => await DeletePrescription(context.Id)">
-                                <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; @Resource.Delete
                             </button>
                         }
                     </ActionsDropdown>
@@ -44,7 +44,7 @@
     }
     else
     {
-        <h6>No Data to Display</h6>
+        <h6>@Resource.NotAvailable</h6>
     }
 </div>
 
