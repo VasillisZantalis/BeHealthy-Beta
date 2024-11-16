@@ -2,13 +2,13 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
 
-<PageTitle>Departments</PageTitle>
+<PageTitle>@Resource.Departments</PageTitle>
 
-<SectionContent SectionName="page-title">Departments</SectionContent>
+<SectionContent SectionName="page-title">@Resource.Departments</SectionContent>
 
 <div class="">
     <button class="btn btn-outline-secondary rounded-pill px-4 mb-3" @onclick="Create">
-        <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
+        <span class="fa-solid fa-plus" aria-hidden="true"></span> @Resource.Create
     </button>
 </div>
 
@@ -18,7 +18,7 @@
 }
 else if (_departments is null || !_departments.Any())
 {
-    <p>No Departments available.</p>
+    <p>@string.Format(@Resource.NoAvailable, @Resource.Departments)</p>
 }
 else
 {
@@ -40,21 +40,21 @@ else
                                Items="@_departments.AsQueryable()"
                                ItemKey="@(x => x.Id)"
                                Pagination="_paginationState">
-                        <PropertyColumn Title="Name"
+                        <PropertyColumn Title="@Resource.Name"
                                         Property="@(x => x.Name)" />
-                        <PropertyColumn Title="Location"
+                        <PropertyColumn Title="@Resource.Location"
                                         Property="@(x => x.Location)" />
-                        <PropertyColumn Title="Head of Department"
+                        <PropertyColumn Title="@Resource.HeadΟfDepartment"
                                         Property="@(x => x.HeadOfDepartment != null ? x.HeadOfDepartment.FullName : "None")" />
                         @if (_hasActionRights)
                         {
                             <TemplateColumn>
                                 <ActionsDropdown>
                                     <button class="btn w-100 text-start" @onclick="@(() => EditDepartment(context.Id))">
-                                        <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                        <span class="fa-solid fa-pencil text-warning"></span>&nbsp; @Resource.Edit
                                     </button>
                                     <button class="btn w-100 text-start" @onclick="async () => DeleteDepartment(context.Id)">
-                                        <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                        <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; @Resource.Delete
                                     </button>
                                 </ActionsDropdown>
                             </TemplateColumn>

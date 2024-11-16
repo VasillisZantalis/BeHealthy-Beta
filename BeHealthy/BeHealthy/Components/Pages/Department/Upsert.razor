@@ -4,29 +4,30 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
 
-<PageTitle>@(IsEditMode ? "Edit" : "Create")</PageTitle>
+<PageTitle>@(IsEditMode ? Resource.Edit : Resource.Create)</PageTitle>
+
 <SectionContent SectionName="page-title">
     <BackButton BackPath="@(RoutingEndpoints.DEPARTMENTS_PAGE)" />
-    <span>Department/@(IsEditMode ? "Edit" : "Create")</span>
+    <span>@Resource.Department/@(IsEditMode ? Resource.Edit : Resource.Create)</span>
 </SectionContent>
 
 <div class="container-fluid">
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">General Data</a>
+            <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">Doctors</a>
+            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Doctors</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">Patients</a>
+            <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Patients</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">Nurses</a>
+            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.Nurses</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">Rooms</a>
+            <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">@Resource.Rooms</a>
         </li>
     </ul>
 
@@ -51,7 +52,7 @@
         }
         else if (activeTab == 4)
         {
-            <h5>Rooms</h5>
+            <h5>@Resource.Rooms</h5>
         }
     </div>
 

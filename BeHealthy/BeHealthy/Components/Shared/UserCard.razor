@@ -1,4 +1,7 @@
-﻿<div class="card my-3 shadow border">
+﻿<div class="card my-3 border @((isHovered ? "shadow" : "shadow-sm"))"
+    @onmouseover="() => isHovered = true"
+    @onmouseout="() => isHovered = false">
+
     <div class="card-body px-4">
         <div class="d-flex flex-column flex-xl-row text-truncate gap-2 gap-xl-5">
             <img class="rounded-circle" src="@(Image ?? "images/generic.jpg")" height="60" width="60" />
@@ -6,14 +9,14 @@
                 @if (!string.IsNullOrEmpty(FullName))
                 {
                     <div class="form-group">
-                        <span class="text-muted small-text" for="fullName">Full Name</span>
+                        <span class="text-muted small-text" for="fullName">@Resource.FullName</span>
                         <h6 id="fullName" title="@FullName">@FullName</h6>
                     </div>
                 }
                 @if (!string.IsNullOrEmpty(Specialty))
                 {
                     <div class="form-group">
-                        <span class="text-muted small-text" for="specialty">Specialty</span>
+                        <span class="text-muted small-text" for="specialty">@Resource.Specialty</span>
                         <h6 class="" id="specialty">@Specialty</h6>
                     </div>
                 }
@@ -23,12 +26,12 @@
         <div class="d-flex flex-column gap-2">
             <div class="form-group d-flex align-items-center gap-2">
                 <span class="fa-regular fa-envelope"></span>
-                <span class="fw-normal text-truncate" id="email" title="@Email">@(!string.IsNullOrEmpty(Email) ? Email : "Not provided")</span>
+                <span class="fw-normal text-truncate" id="email" title="@Email">@(!string.IsNullOrEmpty(Email) ? Email : @Resource.NotAvailable)</span>
             </div>
 
             <div class="form-group d-flex align-items-center gap-2">
                 <span class="fa-solid fa-mobile-screen-button"></span>
-                <span class="fw-normal m-0" id="phone">@(!string.IsNullOrEmpty(Phone) ? Phone : "-")</span>
+                <span class="fw-normal m-0" id="phone">@(!string.IsNullOrEmpty(Phone) ? Phone : @Resource.NotAvailable)</span>
             </div>
         </div>
        
@@ -36,12 +39,12 @@
     <div class="d-flex flex-row gap-3 justify-content-center mb-2 px-5">
         @if (CanEdit)
         {
-            <button class="btn btn-outline-dark btn-sm w-100" @onclick="() => Edit.InvokeAsync(Id)">Edit</button>
+            <button class="btn btn-outline-dark btn-sm w-100" @onclick="() => Edit.InvokeAsync(Id)">@Resource.Edit</button>
         }
 
         @if (CanDelete)
         {
-            <button class="btn btn-danger btn-sm w-100" @onclick="() => Delete.InvokeAsync(Id)">Delete</button>
+            <button class="btn btn-danger btn-sm w-100" @onclick="() => Delete.InvokeAsync(Id)">@Resource.Delete</button>
         }
     </div>
 </div>
@@ -77,4 +80,6 @@
 
     [Parameter]
     public EventCallback<int> Delete { get; set; }
+
+    private bool isHovered;
 }

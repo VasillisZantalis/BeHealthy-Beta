@@ -69,3 +69,7 @@ h1:focus {
 .clickable {
     cursor: pointer;
 }
+
+.hoverable:hover {
+    box-shadow: var(--bs-shadow-lg) !important;
+}

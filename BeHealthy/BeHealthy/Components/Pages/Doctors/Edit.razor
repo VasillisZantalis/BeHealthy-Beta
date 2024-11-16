@@ -8,10 +8,11 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IMapper Mapper
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>@Resource.Edit</PageTitle>
+
 <SectionContent SectionName="page-title">
     <BackButton BackPath="@(RoutingEndpoints.DOCTORS_PAGE)" />
-    <span>Doctors/Edit/@DoctorId</span>
+    <span>@Resource.Doctors/@Resource.Edit/@DoctorId</span>
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
@@ -25,14 +26,14 @@
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_doctorForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                    <label for="firstName">First Name</label>
+                    <label for="firstName">@Resource.FirstName</label>
                     <ValidationMessage For="() => _doctorForUpdateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_doctorForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                    <label for="lastName">Last Name</label>
+                    <label for="lastName">@Resource.LastName</label>
                     <ValidationMessage For="() => _doctorForUpdateDto.LastName" class="text-danger" />
                 </div>
             </div>
@@ -42,12 +43,12 @@
         </div>
         <div class="form-floating mb-3">
             <InputText id="specialty" @bind-Value="_doctorForUpdateDto.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
-            <label for="specialty">Specialty</label>
+            <label for="specialty">@Resource.Specialty</label>
             <ValidationMessage For="() => _doctorForUpdateDto.Specialty" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
             <InputText id="phoneNumber" @bind-Value="_doctorForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="phoneNumber">Phone Number</label>
+            <label for="phoneNumber">@Resource.PhoneNumber</label>
             <ValidationMessage For="() => _doctorForUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 
@@ -60,7 +61,7 @@
                         <option value="@department.Value">@department.Text</option>
                     }
                 </InputSelect>
-                <label for="Department">Department</label>
+                <label for="Department">@Resource.Department</label>
             </div>
         }
 
@@ -69,7 +70,7 @@
             {
                 <span class="spinner-border spinner-border-sm"></span>
             }
-            Save
+            @Resource.Save
         </button>
     </EditForm>
 </div>
@@ -98,7 +99,7 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
         Mapper.Map(doctor, _doctorForUpdateDto);
     }
 

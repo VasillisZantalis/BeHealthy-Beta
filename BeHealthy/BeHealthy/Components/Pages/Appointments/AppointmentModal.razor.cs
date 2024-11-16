@@ -3,6 +3,7 @@ using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Domain;
+using BeHealthy.Locales;
 using BeHealthy.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -43,14 +44,14 @@ public partial class AppointmentModal
             Value = s.Id,
             Text = s.FullName
         }).ToList();
-        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         _patientsSelect = Patients.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.FullName
         }).ToList();
-        _patientsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+        _patientsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     public void Open()

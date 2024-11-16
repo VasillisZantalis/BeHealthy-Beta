@@ -8,19 +8,19 @@
                 <div class="d-flex justify-content-between px-3">
                     <img class="rounded-circle" src="images/generic.jpg" alt="@patient.FullName" width="35" height="35" />
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Name</span>
+                        <span class="text-muted small-text">@Resource.Name</span>
                         <h6>@patient.FullName</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Email</span>
+                        <span class="text-muted small-text">@Resource.Email</span>
                         <h6>@patient.Email</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Phone</span>
-                        <h6>@(!string.IsNullOrEmpty(patient.PhoneNumber) ? patient.PhoneNumber : "-")</h6>
+                        <span class="text-muted small-text">@Resource.PhoneNumber</span>
+                        <h6>@(!string.IsNullOrEmpty(patient.PhoneNumber) ? patient.PhoneNumber : Resource.NotAvailable)</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Created</span>
+                        <span class="text-muted small-text">@Resource.Created</span>
                         <h6>@DateTimeExtensions.ToFullDateTimeString(patient.CreatedAt)</h6>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
 }
 else
 {
-    <h6>No Patients at this department</h6>
+    <h6>@string.Format(Resource.ThereAreNo, Resource.Patients)</h6>
 }
 
 

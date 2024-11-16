@@ -1,15 +1,15 @@
 ﻿@inject IPatientService patientService
 
 <div id="recentlyAddedPatientsDiv" class="overflow-auto rounded shadow p-3">
-    <h5>Recently Added Patients</h5>
+    <h5>@Resource.RecentlyAddedPatients</h5>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th></th>
-                    <th>Given Name</th>
-                    <th>Surname</th>
-                    <th>Joined At</th>
+                    <th>@Resource.FirstName</th>
+                    <th>@Resource.LastName</th>
+                    <th>@Resource.Joined</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,7 +29,7 @@
                 }
                 else
                 {
-                    <tr class="text-center"><td>No Patients added lately</td></tr>
+                    <tr class="text-center"><td>@string.Format(Resource.NoUsersJoinedLately, Resource.Patients)</td></tr>
                 }
             </tbody>
         </table>

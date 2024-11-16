@@ -12,16 +12,16 @@
 <PageTitle>Edit</PageTitle>
 <SectionContent SectionName="page-title">
     <BackButton BackPath="@(RoutingEndpoints.PATIENTS_PAGE)" />
-    <span>Patients/Edit/@PatientId</span>
+    <span>@Resource.Patients/@Resource.Edit/@PatientId</span>
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">General Data</a>
+            <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">Prescriptions</a>
+            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Prescriptions</a>
         </li>
     </ul>
     @if (activeTab == 0)
@@ -37,14 +37,14 @@
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
                         <InputText @bind-Value="_patientForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                        <label for="firstName">First Name</label>
+                        <label for="firstName">@Resource.FirstName</label>
                         <ValidationMessage For="() => _patientForUpdateDto.FirstName" class="text-danger" />
                     </div>
                 </div>
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
                         <InputText @bind-Value="_patientForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                        <label for="lastName">Last Name</label>
+                        <label for="lastName">@Resource.LastName</label>
                         <ValidationMessage For="() => _patientForUpdateDto.LastName" class="text-danger" />
                     </div>
                 </div>
@@ -54,7 +54,7 @@
             </div>
             <div class="form-floating mb-3">
                 <InputText id="phoneNumber" @bind-Value="_patientForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-                <label for="phoneNumber">Phone Number</label>
+                <label for="phoneNumber">@Resource.PhoneNumber</label>
                 <ValidationMessage For="() => _patientForUpdateDto.PhoneNumber" class="text-danger" />
             </div>
 
@@ -67,7 +67,7 @@
                             <option value="@department.Value">@department.Text</option>
                         }
                     </InputSelect>
-                    <label for="Department">Department</label>
+                    <label for="Department">@Resource.Department</label>
                 </div>
             }
 
@@ -76,7 +76,7 @@
                 {
                     <span class="spinner-border spinner-border-sm"></span>
                 }
-                Save
+                @Resource.Save
             </button>
         </EditForm>
         </div>
@@ -114,7 +114,7 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
         Mapper.Map(patient, _patientForUpdateDto);
     }
 

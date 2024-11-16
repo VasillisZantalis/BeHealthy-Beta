@@ -4,7 +4,9 @@
 
 @inject IRoomService RoomService
 
-<SectionContent SectionName="page-title">Rooms</SectionContent>
+<PageTitle>@Resource.Rooms</PageTitle>
+
+<SectionContent SectionName="page-title">@Resource.Rooms</SectionContent>
 
 @if (_rooms == null)
 {
@@ -12,7 +14,7 @@
 }
 else if (_rooms is null)
 {
-    <p>No rooms available.</p>
+    <p>@string.Format(Resource.NoAvailable, Resource.Rooms)</p>
 }
 else
 {

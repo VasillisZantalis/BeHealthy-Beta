@@ -8,10 +8,11 @@
 @inject IDepartmentService DepartmentService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>@Resource.Create</PageTitle>
+
 <SectionContent SectionName="page-title">
     <BackButton BackPath="@(RoutingEndpoints.PATIENTS_PAGE)" />
-    <span>Patients/Create</span>
+    <span>@Resource.Patients/@Resource.Create</span>
 </SectionContent>
 
 <div class="container-fluid p-5 border rounded shadow">
@@ -25,14 +26,14 @@
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                    <label for="firstName">First Name</label>
+                    <label for="firstName">@Resource.FirstName</label>
                     <ValidationMessage For="() => Input.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                    <label for="lastName">Last Name</label>
+                    <label for="lastName">@Resource.LastName</label>
                     <ValidationMessage For="() => Input.LastName" class="text-danger" />
                 </div>
             </div>
@@ -42,22 +43,22 @@
         </div>
         <div class="form-floating mb-3">
             <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
-            <label for="email">Email</label>
+            <label for="email">@Resource.Email</label>
             <ValidationMessage For="() => Input.Email" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
             <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
-            <label for="password">Password</label>
+            <label for="password">@Resource.Password</label>
             <ValidationMessage For="() => Input.Password" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
             <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
-            <label for="confirmPassword">Confirm Password</label>
+            <label for="confirmPassword">@Resource.ConfirmPassword</label>
             <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
             <InputText id="phoneNumber" @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="phoneNumber">Phone Number</label>
+            <label for="phoneNumber">@Resource.PhoneNumber</label>
             <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
         </div>
 
@@ -70,7 +71,7 @@
                         <option value="@department.Value">@department.Text</option>
                     }
                 </InputSelect>
-                <label for="Department">Department</label>
+                <label for="Department">@Resource.Department</label>
             </div>
         }
 
@@ -79,7 +80,7 @@
             {
                 <span class="spinner-border spinner-border-sm"></span>
             }
-            Save
+            @Resource.Save
         </button>
     </EditForm>
 </div>
@@ -107,7 +108,7 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     public async Task RegisterPatient(EditContext editContext)

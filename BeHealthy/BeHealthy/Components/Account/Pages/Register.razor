@@ -1,4 +1,4 @@
-﻿@page "/Account/Register"
+﻿@page "/register"
 @rendermode InteractiveServer
 
 @inject UserManager<ApplicationUser> UserManager
@@ -11,7 +11,7 @@
 @inject RoleManager<IdentityRole> RoleManager
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>@Resource.Create</PageTitle>
 
 
 <div class="row d-flex justify-content-center">
@@ -20,7 +20,7 @@
 
         <EditForm id="RegisterForm" Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="Enhance">
             <DataAnnotationsValidator />
-            <h2>Create a new account</h2>
+            <h2>@Resource.CreateNewAccount</h2>
             <hr />
             <div class="row">
                 <Alert @ref="_alert" />
@@ -28,44 +28,44 @@
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
                         <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                        <label for="firstName">First Name</label>
+                        <label for="firstName">@Resource.FirstName</label>
                         <ValidationMessage For="() => Input.FirstName" class="text-danger" />
                     </div>
                 </div>
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
                         <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                        <label for="lastName">Last Name</label>
+                        <label for="lastName">@Resource.LastName</label>
                         <ValidationMessage For="() => Input.LastName" class="text-danger" />
                     </div>
                 </div>
             </div>
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
-                <label for="email">Email</label>
+                <label for="email">@Resource.Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
-                <label for="password">Password</label>
+                <label for="password">@Resource.Password</label>
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
-                <label for="confirmPassword">Confirm Password</label>
+                <label for="confirmPassword">@Resource.ConfirmPassword</label>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
             @if (Input.Role == nameof(UserRole.Doctor))
             {
                 <div class="form-floating mb-3">
                     <InputText id="specialty" @bind-Value="Input.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
-                    <label for="specialty">Specialty</label>
+                    <label for="specialty">@Resource.Specialty</label>
                     <ValidationMessage For="() => Input.Specialty" class="text-danger" />
                 </div>
             }
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-                <label for="@Input.PhoneNumber">Phone Number</label>
+                <label for="@Input.PhoneNumber">@Resource.PhoneNumber</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
 
@@ -78,7 +78,7 @@
                             <option value="@department.Value">@department.Text</option>
                         }
                     </InputSelect>
-                    <label for="Department">Department</label>
+                    <label for="Department">@Resource.Department</label>
                 </div>
             }
 
@@ -100,7 +100,7 @@
                     {
                         <span class="spinner-border spinner-border-sm"></span>
                     }
-                    Create
+                    @Resource.Create
                 </button>
             </div>
         </EditForm>
@@ -143,7 +143,7 @@
             Text = s.Name
         }).ToList();
 
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         returnUrl = QueryHelpers.ParseQuery(uri.Query).TryGetValue("redirectUrl", out var returnTo) && !string.IsNullOrEmpty(returnTo)
             ? returnTo.ToString()

@@ -5,7 +5,7 @@
 
 <div id="upcomingAppointmentsDiv">
     <div class="card shadow border-0 rounded p-3">
-        <h5 class="card-title">Upcoming Appointments</h5>
+        <h5 class="card-title">@Resource.UpcomingAppointments</h5>
 
         <div class="d-flex flex-column">
             @if (_upcomingAppointments is not null && _upcomingAppointments.Any())
@@ -39,7 +39,7 @@
             }
             else
             {
-                <div class="text-center"><label>No upcoming Appointments found</label></div>
+                <div class="text-center"><label>@string.Format(Resource.NoAvailable, Resource.Appointments)</label></div>
             }
         </div>
 

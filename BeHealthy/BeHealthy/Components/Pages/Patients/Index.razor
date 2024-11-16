@@ -2,20 +2,20 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Patients</PageTitle>
+<PageTitle>@Resource.Patients</PageTitle>
 
-<SectionContent SectionName="page-title">Patients</SectionContent>
+<SectionContent SectionName="page-title">@Resource.Patients</SectionContent>
 
 <div class="d-flex flex-row gap-3">
     <div class="">
         <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreatePatient">
-            <span class="fa-solid fa-plus" aria-hidden="true"></span> Create
+            <span class="fa-solid fa-plus" aria-hidden="true"></span> @Resource.Create
         </button>
     </div>
     <div class="">
         <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
-            <option value="Card">Card</option>
-            <option value="Grid">Grid</option>
+            <option value="Card">@Resource.Card</option>
+            <option value="Grid">@Resource.Grid</option>
         </InputSelect>
     </div>
 </div>
@@ -26,7 +26,7 @@
 }
 else if (_patients is null)
 {
-    <p>No patients available</p>
+    <p>@string.Format(Resource.NoAvailable, Resource.Patients)</p>
 }
 else
 {
@@ -76,22 +76,22 @@ else
                         <TemplateColumn>
                             <img class="rounded-circle" src="@(context.Image ?? "images/generic.jpg")" alt="@context.FullName" width="25" height="25" />
                         </TemplateColumn>
-                        <PropertyColumn Title="First Name" 
-                                        Property="@(x => x.FirstName)" 
-                                        Sortable="true"/>
-                        <PropertyColumn Title="Last Name" 
+                        <PropertyColumn Title="@Resource.FirstName"
+                                        Property="@(x => x.FirstName)"
+                                        Sortable="true" />
+                        <PropertyColumn Title="@Resource.LastName"
                                         Property="@(x => x.LastName)"
                                         Sortable="true" />
-                        <PropertyColumn Title="Created At" 
-                                        Property="@(x => x.CreatedAt)" 
-                                        Format="dd MMM yyyy HH:mm" 
-                                        Sortable="true" 
-                                        IsDefaultSortColumn="true" 
-                                        InitialSortDirection="SortDirection.Descending"/>
-                        <PropertyColumn Title="Email" 
-                                        Property="@(x => x.Email)"/>
-                        <PropertyColumn Title="Phone"
-                                        Property="@(x => x.PhoneNumber)"/>
+                        <PropertyColumn Title="@Resource.Created"
+                                        Property="@(x => x.CreatedAt)"
+                                        Format="dd MMM yyyy HH:mm"
+                                        Sortable="true"
+                                        IsDefaultSortColumn="true"
+                                        InitialSortDirection="SortDirection.Descending" />
+                        <PropertyColumn Title="@Resource.Email"
+                                        Property="@(x => x.Email)" />
+                        <PropertyColumn Title="@Resource.PhoneNumber"
+                                        Property="@(x => x.PhoneNumber)" />
                         @if (hasActionRights)
                         {
                             <TemplateColumn>
@@ -99,13 +99,13 @@ else
                                     @if (hasEditRight)
                                     {
                                         <button class="btn w-100 text-start" @onclick="() => EditPatient(context.Id)">
-                                            <span class="fa-solid fa-pencil text-warning"></span>&nbsp; Edit
+                                            <span class="fa-solid fa-pencil text-warning"></span>&nbsp; @Resource.Edit
                                         </button>
                                     }
                                     @if (hasDeleteRight)
                                     {
                                         <button class="btn w-100 text-start" @onclick="() => ConfirmDelete(context.Id)">
-                                            <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Delete
+                                            <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; @Resource.Delete
                                         </button>
                                     }
                                 </ActionsDropdown>

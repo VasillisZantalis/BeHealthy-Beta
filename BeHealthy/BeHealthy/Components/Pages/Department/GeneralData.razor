@@ -4,15 +4,15 @@
         <DataAnnotationsValidator />
         <div class="d-flex flex-column gap-3">
             <div class="form-group">
-                <label class="fw-bold" for="name">Name</label>
+                <label class="fw-bold" for="name">@Resource.Name</label>
                 <InputText id="name" class="form-control" @bind-Value="DepartmentDto.Name" />
             </div>
             <div class="form-group">
-                <label class="fw-bold" for="location">Location</label>
+                <label class="fw-bold" for="location">@Resource.Location</label>
                 <InputText id="location" class="form-control" @bind-Value="DepartmentDto.Location" />
             </div>
              <div class="form-group">
-                <label class="fw-bold" for="headOfDepartment">Head of Department</label>
+                <label class="fw-bold" for="headOfDepartment">@Resource.HeadΟfDepartment</label>
                 <InputSelect id="headOfDepartment" class="form-control" @bind-Value="DepartmentDto.HeadOfDepartmentId">
                     @foreach (var doctor in _doctorsSelect)
                     {
@@ -22,11 +22,11 @@
             </div>
         </div>
         <button type="submit" class="btn btn-success mt-3 px-4 text-end">
-             @if (_inProgress)
-                {
-                    <span class="spinner-border spinner-border-sm"></span>
-                }
-                Save
+            @if (_inProgress)
+            {
+                <span class="spinner-border spinner-border-sm"></span>
+            }
+            @Resource.Save
         </button>
     </EditForm>
 </div>
@@ -56,7 +56,7 @@
             Value = s.Id,
             Text = s.FullName
         }).ToList();
-        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = "Please Select" });
+        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     private async Task HandleSubmit()

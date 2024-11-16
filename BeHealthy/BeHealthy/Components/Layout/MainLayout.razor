@@ -11,9 +11,9 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized>
-                    <div class="d-flex flex-row gap-3">
+                    <div class="d-flex flex-row align-items-center gap-3">
                         <CultureSelector />
-                        <p>Hello, @context.User.Identity?.Name</p>
+                        <p class="m-0 p-0">@Resource.Hello, @context.User.Identity?.Name</p>
                         <div class="nav-item clickable">
                             <form action="/logout" method="post">
                                 <AntiforgeryToken />

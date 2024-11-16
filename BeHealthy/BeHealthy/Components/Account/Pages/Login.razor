@@ -7,7 +7,7 @@
 @inject NavigationManager NavigationManager
 @inject IDoctorService DoctorService
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>@Resource.Login</PageTitle>
 
 <div class="row d-flex justify-content-center mt-5">
 
@@ -17,26 +17,26 @@
             <Alert @ref="_alert" />
             <EditForm id="LoginForm" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" Enhance>
                 <DataAnnotationsValidator />
-                <h2>Login with your Credentials</h2>
+                <h2>@Resource.LoginWithYourCredentials</h2>
                 <hr />
                 <div class="form-floating mb-3">
                     <InputText id=email @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">@Resource.Email</label>
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
                     <InputText id=password type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">@Resource.Password</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
+                        @Resource.RememberMe
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-primary">Log in</button>
+                    <button type="submit" class="w-100 btn btn-primary">@Resource.Login</button>
                 </div>
             </EditForm>
         </section>

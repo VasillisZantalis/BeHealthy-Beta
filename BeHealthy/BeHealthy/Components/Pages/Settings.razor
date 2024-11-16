@@ -3,7 +3,9 @@
 @attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
 
-<SectionContent SectionName="page-title">Settings</SectionContent>
+<PageTitle>@Resource.Settings</PageTitle>
+
+<SectionContent SectionName="page-title">@Resource.Settings</SectionContent>
 
 @if (_settingsGroupedByArea is not null)
 {

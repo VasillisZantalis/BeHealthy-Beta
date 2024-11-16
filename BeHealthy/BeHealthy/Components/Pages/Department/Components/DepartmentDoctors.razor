@@ -8,24 +8,24 @@
                 <div class="d-flex justify-content-between px-3">
                     <img class="rounded-circle" src="images/generic.jpg" alt="@doctor.FullName" width="35" height="35" />
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Name</span>
+                        <span class="text-muted small-text">@Resource.Name</span>
                         <h6>@doctor.FullName</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Speciality</span>
+                        <span class="text-muted small-text">@Resource.Specialty</span>
                         <h6>@doctor.Specialty</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Email</span>
+                        <span class="text-muted small-text">@Resource.Email</span>
                         <h6>@doctor.Email</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Phone</span>
-                        <h6>@(!string.IsNullOrEmpty(doctor.PhoneNumber) ? doctor.PhoneNumber : "-")</h6>
+                        <span class="text-muted small-text">@Resource.PhoneNumber</span>
+                        <h6>@(!string.IsNullOrEmpty(doctor.PhoneNumber) ? doctor.PhoneNumber : Resource.NotAvailable)</h6>
                     </div>
 
                     <div class="d-flex flex-column align-items-center">
-                        <span class="text-muted small-text">Created</span>
+                        <span class="text-muted small-text">@Resource.Created</span>
                         <h6>@DateTimeExtensions.ToFullDateTimeString(doctor.CreatedAt)</h6>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
 }
 else
 {
-    <h6>No Doctors at this department</h6>
+    <h6>@string.Format(Resource.ThereAreNo, Resource.Doctors)</h6>
 }
 
 @code {
@@ -44,7 +44,6 @@ else
 
     private void OnDoctorClick(DoctorDto doctor)
     {
-        //NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
         NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{doctor.Id}");
     }
 }
