@@ -3,6 +3,7 @@ using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Domain;
+using BeHealthy.Extensions;
 using BeHealthy.Locales;
 using BeHealthy.Models;
 using Microsoft.AspNetCore.Components;
@@ -25,8 +26,11 @@ public partial class AppointmentModal
     [Parameter]
     public string? Role { get; set; }
 
-    private List<SelectItem> _doctorsSelect = new List<SelectItem>();
-    private List<SelectItem> _patientsSelect = new List<SelectItem>();
+    private List<SelectItem> _doctorsSelect = new();
+    private List<SelectItem> _patientsSelect = new();
+
+    //private List<SelectItem> _statusDropdownItems = new();
+    //private List<SelectItem> _reasonDropdownItems = new();
 
     private bool LockDoctorsDropdown => Role == UserRole.Doctor.GetDisplayName();
 
@@ -52,6 +56,26 @@ public partial class AppointmentModal
             Text = s.FullName
         }).ToList();
         _patientsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        //_statusDropdownItems = Enum.GetValues(typeof(AppointmentStatus))
+        //    .Cast<AppointmentStatus>()
+        //    .Where(status => status != AppointmentStatus.Scheduled)
+        //    .Select(status => new SelectItem
+        //    {
+        //        Value = (int)status,
+        //        Text = status.ToLocalizedString(),
+        //        Selected = _appointmentDto.Status == status
+        //    })
+        //    .ToList();
+
+        //_reasonDropdownItems = Enum.GetValues(typeof(AppointmentReason))
+        //    .Cast<AppointmentReason>()
+        //    .Select(status => new SelectItem
+        //    {
+        //        Value = (int)status,
+        //        Text = status.ToLocalizedString()
+        //    })
+        //    .ToList();
     }
 
     public void Open()
