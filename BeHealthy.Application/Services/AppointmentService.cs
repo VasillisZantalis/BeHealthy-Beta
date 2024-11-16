@@ -83,7 +83,8 @@ public class AppointmentService : IAppointmentService
             appointmentDto.DoctorId,
             appointmentDto.PatientId,
             appointmentDto.AppointmentDate,
-            appointmentDto.Duration);
+            appointmentDto.Duration,
+            appointmentDto.Id);
 
         if (!conflictCheck.Success)
         {
