@@ -1,5 +1,4 @@
-﻿using BeHealthy.Locales;
-using Microsoft.Extensions.Localization;
+﻿using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Extensions;
 

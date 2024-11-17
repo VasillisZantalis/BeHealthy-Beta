@@ -118,249 +118,279 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessDenied" xml:space="preserve">
-    <value>Access Denied</value>
+    <value>Απαγόρευση Πρόσβασης</value>
+  </data>
+  <data name="AppointmentExistsForDoctor" xml:space="preserve">
+    <value>Υπάρχει ήδη ραντεβού για τον γιατρό {0} από {1} έως {2}</value>
+  </data>
+  <data name="AppointmentExistsForPatient" xml:space="preserve">
+    <value>Υπάρχει ήδη ραντεβού για τον ασθενή {0} από {1} έως {2}</value>
   </data>
   <data name="AppointmentReason_FollowUp" xml:space="preserve">
-    <value>Follow Up</value>
+    <value>Παρακολούθηση</value>
   </data>
   <data name="AppointmentReason_GeneralCheckup" xml:space="preserve">
-    <value>General Checkup</value>
+    <value>Γενικός έλεγχος</value>
   </data>
   <data name="AppointmentReason_Illness" xml:space="preserve">
-    <value>Illness</value>
+    <value>Ασθένεια</value>
   </data>
   <data name="AppointmentReason_Injury" xml:space="preserve">
-    <value>Injury</value>
+    <value>Τραυματισμός</value>
   </data>
   <data name="AppointmentReason_Prescription" xml:space="preserve">
-    <value>Prescription</value>
+    <value>Συνταγή</value>
   </data>
   <data name="Appointments" xml:space="preserve">
-    <value>Appointments</value>
+    <value>Ραντεβού</value>
   </data>
   <data name="AppointmentStatus_Cancelled" xml:space="preserve">
-    <value>Cancelled</value>
+    <value>Ακυρώθηκε</value>
   </data>
   <data name="AppointmentStatus_Completed" xml:space="preserve">
-    <value>Completed</value>
+    <value>Ολοκληρώθηκε</value>
   </data>
   <data name="AppointmentStatus_Rescheduled" xml:space="preserve">
-    <value>Rescheduled</value>
+    <value>Επαναπρογραμματίστηκε</value>
   </data>
   <data name="AppointmentStatus_Scheduled" xml:space="preserve">
-    <value>Scheduled</value>
+    <value>Προγραμματίστηκε</value>
   </data>
   <data name="AreYouSureYouWantToContinue" xml:space="preserve">
-    <value>Are you sure you want to continue ?</value>
+    <value>Είσαι σίγουρος οτι θέλεις να συνεχίσεις ;</value>
   </data>
   <data name="Authorization" xml:space="preserve">
-    <value>Authorization</value>
+    <value>Εξουσιοδότηση</value>
   </data>
   <data name="BackToDashboard" xml:space="preserve">
-    <value>Back to Dashboard</value>
+    <value>Πίσω στο ταμπλό</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Ακύρωση</value>
   </data>
   <data name="Card" xml:space="preserve">
-    <value>Card</value>
+    <value>Κάρτα</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Κλείσιμο</value>
   </data>
   <data name="Configuration" xml:space="preserve">
-    <value>Configuration</value>
+    <value>Παραμετροποίηση</value>
   </data>
   <data name="ConfirmDeletion" xml:space="preserve">
-    <value>ConfirmDeletion</value>
+    <value>Επιβεβαίωση Διαγραφής</value>
   </data>
   <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirm Password</value>
+    <value>Επιβεβαίωση Κωδικού</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Δημιουργία</value>
   </data>
   <data name="Created" xml:space="preserve">
-    <value>Created</value>
+    <value>Δημιουργήθηκε</value>
   </data>
   <data name="CreateNewAccount" xml:space="preserve">
-    <value>Create new account</value>
+    <value>Φτιάξε νέο λογαριασμό</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+    <value>Ταμπλό</value>
   </data>
   <data name="Date" xml:space="preserve">
-    <value>Date</value>
+    <value>Ημερομηνία</value>
   </data>
   <data name="DatePrescribed" xml:space="preserve">
-    <value>Date Prescribed</value>
+    <value>Ημερομηνία συνταγογράφησης</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Διαγραφή</value>
   </data>
   <data name="Department" xml:space="preserve">
-    <value>Department</value>
+    <value>Τμήμα</value>
   </data>
   <data name="Departments" xml:space="preserve">
-    <value>Departments</value>
+    <value>Τμήματα</value>
   </data>
   <data name="Doctor" xml:space="preserve">
-    <value>Doctor</value>
+    <value>Γιατρός</value>
   </data>
   <data name="Doctors" xml:space="preserve">
-    <value>Doctors</value>
+    <value>Γιατροί</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Duration</value>
+    <value>Διάρκεια</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Επεξεργασία</value>
   </data>
   <data name="Email" xml:space="preserve">
-    <value>Email</value>
+    <value>Ηλεκτρονικό Ταχυδρομείο</value>
+  </data>
+  <data name="EmailAlreadyUsed" xml:space="preserve">
+    <value>Το ηλεκτρονικό ταχυδρομείο χρησιμοποιείται ήδη</value>
   </data>
   <data name="English" xml:space="preserve">
-    <value>English</value>
+    <value>Αγγλικά</value>
   </data>
   <data name="FirstName" xml:space="preserve">
-    <value>First Name</value>
+    <value>Όνομα</value>
   </data>
   <data name="FullName" xml:space="preserve">
-    <value>Name</value>
+    <value>Oνοματεπώνυμο</value>
   </data>
   <data name="GeneralData" xml:space="preserve">
-    <value>GeneralData</value>
+    <value>Γενικά στοιχεία</value>
   </data>
   <data name="Greek" xml:space="preserve">
-    <value>Greek</value>
+    <value>Ελληνικά</value>
   </data>
   <data name="Grid" xml:space="preserve">
-    <value>Grid</value>
+    <value>Πλέγμα</value>
   </data>
   <data name="HeadΟfDepartment" xml:space="preserve">
-    <value>Head of Department</value>
+    <value>Προϊστάμενος Τμήματος</value>
   </data>
   <data name="Hello" xml:space="preserve">
-    <value>Hello</value>
+    <value>Γειά</value>
   </data>
   <data name="Hour" xml:space="preserve">
-    <value>Hour</value>
+    <value>Ώρα</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Μη έγκυρο ηλεκτρονικό ταχυδρομείο</value>
+  </data>
+  <data name="InvalidLoginCredentials" xml:space="preserve">
+    <value>Λανθασμένα διαπιστευτήρια σύνδεσης</value>
   </data>
   <data name="Joined" xml:space="preserve">
-    <value>Joined</value>
+    <value>Προστέθηκε</value>
   </data>
   <data name="LanguageOptions_English" xml:space="preserve">
-    <value>English</value>
+    <value>Αγγλικά</value>
   </data>
   <data name="LanguageOptions_Greek" xml:space="preserve">
-    <value>Greek</value>
+    <value>Ελληνικά</value>
   </data>
   <data name="LastName" xml:space="preserve">
-    <value>Last Name</value>
+    <value>Επώνυμο</value>
   </data>
   <data name="Location" xml:space="preserve">
-    <value>Location</value>
+    <value>Τοποθεσία</value>
   </data>
   <data name="Login" xml:space="preserve">
-    <value>Login</value>
+    <value>Σύνδεση</value>
   </data>
   <data name="LoginWithYourCredentials" xml:space="preserve">
-    <value>Login with your Credentials</value>
+    <value>Συνδέσου με τα στοιχεία σου</value>
   </data>
   <data name="Management" xml:space="preserve">
-    <value>Management</value>
+    <value>Διαχείριση</value>
   </data>
   <data name="Medication" xml:space="preserve">
-    <value>Medication</value>
+    <value>Φάρμακο</value>
   </data>
   <data name="Minutes" xml:space="preserve">
-    <value>Minutes</value>
+    <value>Λεπτά</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Όνομα</value>
   </data>
   <data name="NoAvailable" xml:space="preserve">
-    <value>No Available {0}</value>
+    <value>Μη διαθέσημα {0}</value>
   </data>
   <data name="NotAvailable" xml:space="preserve">
-    <value>Not Available</value>
+    <value>Μη διαθέσιμο</value>
   </data>
   <data name="Notes" xml:space="preserve">
-    <value>Notes</value>
+    <value>Σημειώσεις</value>
   </data>
   <data name="NoUsersJoinedLately" xml:space="preserve">
-    <value>No {0} Joined Lately</value>
+    <value>Δεν υπάρχουν {0} που προσχώρησαν πρόσφατα</value>
   </data>
   <data name="Nurses" xml:space="preserve">
-    <value>Nurses</value>
+    <value>Νοσοκόμες</value>
   </data>
   <data name="OK" xml:space="preserve">
-    <value>OK</value>
+    <value>Εντάξει</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Κωδικός</value>
+  </data>
+  <data name="PasswordNeedsDigit" xml:space="preserve">
+    <value>Ο κωδικός πρέπει να έχει τουλάχιστον ένα ψηφίο</value>
+  </data>
+  <data name="PasswordNeedsLowercase" xml:space="preserve">
+    <value>Ο κωδικός πρέπει να έχει τουλάχιστον έναν πεζό χαρακτήρα</value>
+  </data>
+  <data name="PasswordNeedsNonAlphanumericCharacter" xml:space="preserve">
+    <value>Ο κωδικός πρέπει να έχει τουλάχιστον έναν μη αλφαριθμητικό χαρακτήρα</value>
+  </data>
+  <data name="PasswordNeedsUppercase" xml:space="preserve">
+    <value>Ο κωδικός πρέπει να έχει τουλάχιστον έναν κεφαλαίο χαρακτήρα</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>Ο κωδικός πρέπει να είναι τουλάχιστον {0} χαρακτήρες</value>
   </data>
   <data name="Patient" xml:space="preserve">
-    <value>Patient</value>
+    <value>Ασθενής</value>
   </data>
   <data name="Patients" xml:space="preserve">
-    <value>Patients</value>
+    <value>Ασθενείς</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
-    <value>Phone Number</value>
+    <value>Αριθμός Τηλεφώνου</value>
   </data>
   <data name="PleaseSelect" xml:space="preserve">
-    <value>Please Select</value>
+    <value>Παρακαλώ Επιλέξτε</value>
   </data>
   <data name="Prescriptions" xml:space="preserve">
-    <value>Prescriptions</value>
+    <value>Συνταγές</value>
   </data>
   <data name="Reason" xml:space="preserve">
-    <value>Reason</value>
+    <value>Αιτία</value>
   </data>
   <data name="RecentlyAddedPatients" xml:space="preserve">
-    <value>Recently Added Patients</value>
+    <value>Πρόσφατα προστιθέμενοι ασθενείς</value>
   </data>
   <data name="RememberMe" xml:space="preserve">
-    <value>Remember me</value>
+    <value>Να με θυμάσαι</value>
   </data>
   <data name="Role" xml:space="preserve">
-    <value>Role</value>
+    <value>Ρόλος</value>
   </data>
   <data name="Rooms" xml:space="preserve">
-    <value>Rooms</value>
+    <value>Δωμάτια</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Αποθήκευση</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Ρυθμίσεις</value>
   </data>
   <data name="SomethingWentWrong" xml:space="preserve">
-    <value>Something went wrong</value>
+    <value>Κάτι πήγε λάθος</value>
   </data>
   <data name="Specialty" xml:space="preserve">
-    <value>Specialty</value>
+    <value>Ειδικότητα</value>
   </data>
   <data name="Status" xml:space="preserve">
-    <value>Status</value>
+    <value>Κατάσταση</value>
   </data>
   <data name="Success" xml:space="preserve">
-    <value>Success</value>
+    <value>Επιτυχία</value>
   </data>
   <data name="ThereAreNo" xml:space="preserve">
-    <value>There are no {0}</value>
+    <value>Δεν υπάρχουν {0}</value>
   </data>
   <data name="ThisActionCannotBeUndone" xml:space="preserve">
-    <value>This action cannot be undone</value>
+    <value>Αυτή η ενέργεια δεν μπορεί να αναιρεθεί</value>
   </data>
   <data name="Unauthorized" xml:space="preserve">
-    <value>Unauthorized</value>
+    <value>Μη εξουσιοδοτημένος</value>
   </data>
   <data name="UpcomingAppointments" xml:space="preserve">
-    <value>Upcoming Appointments</value>
+    <value>Επερχόμενα ραντεβού</value>
   </data>
   <data name="YouAreNotAuthorizedToAccessPage" xml:space="preserve">
-    <value>You are not authorized to access this page</value>
+    <value>Δεν έχεις πρόσβαση σε αυτή την σελίδα</value>
   </data>
 </root>

@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.11" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="8.0.2" />
     <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
@@ -17,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BeHealthy.Domain\BeHealthy.Domain.csproj" />
     <ProjectReference Include="..\BeHealthy.Infrastructure\BeHealthy.Infrastructure.csproj" />
+    <ProjectReference Include="..\BeHealthy.Shared\BeHealthy.Shared.csproj" />
   </ItemGroup>
 
 </Project>

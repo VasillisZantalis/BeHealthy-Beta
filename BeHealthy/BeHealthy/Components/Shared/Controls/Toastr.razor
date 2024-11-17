@@ -31,10 +31,10 @@
         StateHasChanged();
     }
 
-    public Task ShowFailed(string message = "Something went wrong", int? duration = null) =>
+    public Task ShowFailed(string message, int? duration = null) =>
         ShowToast(message, Severity.Danger, "fa-regular fa-circle-xmark", duration);
 
-    public Task ShowSuccess(string message = "Successful", int? duration = null) =>
+    public Task ShowSuccess(string message, int? duration = null) =>
         ShowToast(message, Severity.Success, "fa-regular fa-circle-check", duration);
 
     public Task ShowInfo(string message, int? duration = null) =>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BeHealthy.Locales {
+namespace BeHealthy.Shared.Locales {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace BeHealthy.Locales {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BeHealthy.Locales.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BeHealthy.Shared.Locales.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,6 +66,24 @@ namespace BeHealthy.Locales {
         public static string AccessDenied {
             get {
                 return ResourceManager.GetString("AccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An appointment already exists for doctor {0} from {1} to {2}. Please choose a different time.
+        /// </summary>
+        public static string AppointmentExistsForDoctor {
+            get {
+                return ResourceManager.GetString("AppointmentExistsForDoctor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An appointment already exists for patient {0} from {1} to {2}.
+        /// </summary>
+        public static string AppointmentExistsForPatient {
+            get {
+                return ResourceManager.GetString("AppointmentExistsForPatient", resourceCulture);
             }
         }
         
@@ -367,6 +385,15 @@ namespace BeHealthy.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email is already used.
+        /// </summary>
+        public static string EmailAlreadyUsed {
+            get {
+                return ResourceManager.GetString("EmailAlreadyUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         public static string English {
@@ -444,6 +471,24 @@ namespace BeHealthy.Locales {
         public static string Hour {
             get {
                 return ResourceManager.GetString("Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Email.
+        /// </summary>
+        public static string InvalidEmail {
+            get {
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Login Credentials.
+        /// </summary>
+        public static string InvalidLoginCredentials {
+            get {
+                return ResourceManager.GetString("InvalidLoginCredentials", resourceCulture);
             }
         }
         
@@ -606,6 +651,51 @@ namespace BeHealthy.Locales {
         public static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must have at least one digit.
+        /// </summary>
+        public static string PasswordNeedsDigit {
+            get {
+                return ResourceManager.GetString("PasswordNeedsDigit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must have at least one lowercase.
+        /// </summary>
+        public static string PasswordNeedsLowercase {
+            get {
+                return ResourceManager.GetString("PasswordNeedsLowercase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must have at least one non alphanumeric character.
+        /// </summary>
+        public static string PasswordNeedsNonAlphanumericCharacter {
+            get {
+                return ResourceManager.GetString("PasswordNeedsNonAlphanumericCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password must have at least one uppercase.
+        /// </summary>
+        public static string PasswordNeedsUppercase {
+            get {
+                return ResourceManager.GetString("PasswordNeedsUppercase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Password must be at least {0} characters.
+        /// </summary>
+        public static string PasswordTooShort {
+            get {
+                return ResourceManager.GetString("PasswordTooShort", resourceCulture);
             }
         }
         

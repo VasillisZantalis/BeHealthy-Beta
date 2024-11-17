@@ -120,6 +120,12 @@
   <data name="AccessDenied" xml:space="preserve">
     <value>Access Denied</value>
   </data>
+  <data name="AppointmentExistsForDoctor" xml:space="preserve">
+    <value>An appointment already exists for doctor {0} from {1} to {2}. Please choose a different time</value>
+  </data>
+  <data name="AppointmentExistsForPatient" xml:space="preserve">
+    <value>An appointment already exists for patient {0} from {1} to {2}</value>
+  </data>
   <data name="AppointmentReason_FollowUp" xml:space="preserve">
     <value>Follow Up</value>
   </data>
@@ -219,6 +225,9 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="EmailAlreadyUsed" xml:space="preserve">
+    <value>Email is already used</value>
+  </data>
   <data name="English" xml:space="preserve">
     <value>English</value>
   </data>
@@ -245,6 +254,12 @@
   </data>
   <data name="Hour" xml:space="preserve">
     <value>Hour</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Invalid Email</value>
+  </data>
+  <data name="InvalidLoginCredentials" xml:space="preserve">
+    <value>Invalid Login Credentials</value>
   </data>
   <data name="Joined" xml:space="preserve">
     <value>Joined</value>
@@ -299,6 +314,21 @@
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
+  </data>
+  <data name="PasswordNeedsDigit" xml:space="preserve">
+    <value>Password must have at least one digit</value>
+  </data>
+  <data name="PasswordNeedsLowercase" xml:space="preserve">
+    <value>Password must have at least one lowercase</value>
+  </data>
+  <data name="PasswordNeedsNonAlphanumericCharacter" xml:space="preserve">
+    <value>Password must have at least one non alphanumeric character</value>
+  </data>
+  <data name="PasswordNeedsUppercase" xml:space="preserve">
+    <value>Password must have at least one uppercase</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value> Password must be at least {0} characters</value>
   </data>
   <data name="Patient" xml:space="preserve">
     <value>Patient</value>

@@ -7,6 +7,7 @@ using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
+using BeHealthy.Shared.Locales;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -135,7 +136,7 @@ public partial class Index
         }
         else
         {
-            await _toastr.ShowSuccess();
+            await _toastr.ShowSuccess(Resource.Success);
             _navigationManager.Refresh(forceReload: true);
         }
     }

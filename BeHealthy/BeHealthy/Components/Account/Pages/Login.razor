@@ -13,7 +13,6 @@
 
     <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-4 rounded p-5 shadow">
         <section>
-            @* <h3 class="alert-danger">@errorMessage</h3> *@
             <Alert @ref="_alert" />
             <EditForm id="LoginForm" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" Enhance>
                 <DataAnnotationsValidator />
@@ -44,8 +43,6 @@
 </div>
 
 @code {
-    private string? errorMessage;
-
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
@@ -92,8 +89,7 @@
         }
         else
         {
-            errorMessage = "Invalid login attempt";
-            _alert.ShowFailed(errorMessage);
+            _alert.ShowFailed(Resource.InvalidLoginCredentials);
         }
     }
 

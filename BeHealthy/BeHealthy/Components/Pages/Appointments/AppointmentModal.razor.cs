@@ -3,8 +3,7 @@ using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Domain;
-using BeHealthy.Extensions;
-using BeHealthy.Locales;
+using BeHealthy.Shared.Locales;
 using BeHealthy.Models;
 using Microsoft.AspNetCore.Components;
 

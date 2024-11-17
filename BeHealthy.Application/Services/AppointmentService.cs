@@ -4,6 +4,7 @@ using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -133,13 +134,23 @@ public class AppointmentService : IAppointmentService
 
         if (doctorConflict != null)
         {
-            var errorMessage = $"An appointment already exists for doctor {doctorConflict?.Doctor?.FullName} from {doctorConflict?.AppointmentDate:HH:mm} to {doctorConflict?.AppointmentDate.AddMinutes(doctorConflict.Duration):HH:mm}. Please choose a different time.";
+            var errorMessage = string.Format(
+                Resource.AppointmentExistsForDoctor,
+                doctorConflict?.Doctor?.FullName,
+                doctorConflict?.AppointmentDate.ToString("HH:mm"),
+                doctorConflict?.AppointmentDate.AddMinutes(doctorConflict.Duration).ToString("HH:mm")
+            );
             return ServiceResponse.Failed(errorMessage);
         }
 
         if (patientConflict != null)
         {
-            var errorMessage = $"An appointment already exists for patient {patientConflict?.Patient?.FullName} from {patientConflict?.AppointmentDate:HH:mm} to {patientConflict?.AppointmentDate.AddMinutes(patientConflict.Duration):HH:mm}. Please choose a different time.";
+            var errorMessage = string.Format(
+                Resource.AppointmentExistsForPatient,
+                patientConflict?.Patient?.FullName,
+                patientConflict?.AppointmentDate.ToString("HH:mm"),
+                patientConflict?.AppointmentDate.AddMinutes(patientConflict.Duration).ToString("HH:mm")
+            );
             return ServiceResponse.Failed(errorMessage);
         }
 
