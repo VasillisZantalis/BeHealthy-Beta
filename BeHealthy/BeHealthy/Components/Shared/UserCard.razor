@@ -25,12 +25,12 @@
         <hr/>
         <div class="d-flex flex-column gap-2">
             <div class="form-group d-flex align-items-center gap-2">
-                <span class="fa-regular fa-envelope"></span>
+                <Icon IconClass="@FAIcon.Envelope" />
                 <span class="fw-normal text-truncate" id="email" title="@Email">@(!string.IsNullOrEmpty(Email) ? Email : @Resource.NotAvailable)</span>
             </div>
 
             <div class="form-group d-flex align-items-center gap-2">
-                <span class="fa-solid fa-mobile-screen-button"></span>
+                <Icon IconClass="@FAIcon.MobileScreenButton" />
                 <span class="fw-normal m-0" id="phone">@(!string.IsNullOrEmpty(Phone) ? Phone : @Resource.NotAvailable)</span>
             </div>
         </div>

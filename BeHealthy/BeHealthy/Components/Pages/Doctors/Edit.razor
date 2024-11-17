@@ -1,5 +1,6 @@
 ﻿@page "/doctors/edit/{DoctorId:int}"
 @attribute [Authorize(Roles = "Admin, Doctor")]
+@attribute [StreamRendering]
 @rendermode InteractiveServer
 
 @inject IDoctorService DoctorService

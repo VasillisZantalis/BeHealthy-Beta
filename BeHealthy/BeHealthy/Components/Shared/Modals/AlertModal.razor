@@ -8,7 +8,9 @@
                 </div>
                 <div class="modal-body text-center">
                     <div class="d-flex flex-column justify-content-center">
-                        <span class="fa-regular fa-circle-@(Success ? "check" : "xmark") fs-1 text-@(Success ? "success" : "danger")"></span>
+                        <Icon IconClass="@(Success ? FAIcon.CircleCheck : FAIcon.CircleXmark)" 
+                              TextClass="@(Success ? "text-success" : "text-danger")"
+                              SizeClass="fs-1" />
                         <label class="h5 fw-normal">@Message</label>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 ﻿@page "/nurses/edit/{NurseId:int}"
 @attribute [Authorize(Roles = "Admin")]
+@attribute [StreamRendering]
 @rendermode InteractiveServer
 
 @inject INurseService NurseService

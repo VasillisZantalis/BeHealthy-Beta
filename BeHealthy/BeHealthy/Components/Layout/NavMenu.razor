@@ -17,19 +17,19 @@
             </div>
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="fa-solid fa-house fs-5"></span>&nbsp; @Resource.Dashboard
+                    <Icon IconClass="@FAIcon.House" SizeClass="fs-5" />&nbsp; @Resource.Dashboard
                 </NavLink>
             </div>
 
             <AuthorizeView Roles="Admin, Doctor">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="doctors">
-                        <span class="fa-solid fa-user-doctor fs-5"></span>&nbsp; @Resource.Doctors
+                        <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-5" />&nbsp; @Resource.Doctors
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="nurses">
-                        <span class="fa-solid fa-user-nurse fs-5"></span>&nbsp; @Resource.Nurses
+                        <Icon IconClass="@FAIcon.UserNurse" SizeClass="fs-5" />&nbsp; @Resource.Nurses
                     </NavLink>
                 </div>
             </AuthorizeView>
@@ -37,7 +37,7 @@
             <AuthorizeView Roles="Admin, Doctor, Nurse">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="patients">
-                        <span class="fa-solid fa-viruses fs-5"></span>&nbsp; @Resource.Patients
+                        <Icon IconClass="@FAIcon.Viruses" SizeClass="fs-5" />&nbsp; @Resource.Patients
                     </NavLink>
                 </div>
             </AuthorizeView>
@@ -45,20 +45,20 @@
             <AuthorizeView Roles="Admin, Doctor, Patient">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="appointment">
-                        <span class="fa-solid fa-calendar-days fs-5"></span>&nbsp; @Resource.Appointments
+                        <Icon IconClass="@FAIcon.CalendarDays" SizeClass="fs-5" />&nbsp; @Resource.Appointments
                     </NavLink>
                 </div>
             </AuthorizeView>
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="rooms">
-                    <span class="fa-solid fa-bed-pulse fs-5"></span>&nbsp; @Resource.Rooms
+                    <Icon IconClass="@FAIcon.BedPulse" SizeClass="fs-5" />&nbsp; @Resource.Rooms
                 </NavLink>
             </div>
 
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="auth">
-                    <span class="fa-solid fa-user-lock fs-5"></span>&nbsp; @Resource.Authorization
+                    <Icon IconClass="@FAIcon.UserLock" SizeClass="fs-5" />&nbsp; @Resource.Authorization
                 </NavLink>
             </div>
 
@@ -67,13 +67,13 @@
                     <h5 class="ms-2 text-white-50">@Resource.Configuration</h5>
                     <div class="nav-item px-3 pt-0">
                         <NavLink class="nav-link" href="settings">
-                            <span class="fa-solid fa-gear fs-5"></span>&nbsp; @Resource.Settings
+                            <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />&nbsp; @Resource.Settings
                         </NavLink>
                     </div>
                     
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="departments">
-                            <span class="fa-regular fa-hospital fs-5"></span>&nbsp; @Resource.Departments
+                            <Icon IconClass="@FAIcon.Hospital" SizeClass="fs-5" />&nbsp; @Resource.Departments
                         </NavLink>
                     </div>
                 </div>

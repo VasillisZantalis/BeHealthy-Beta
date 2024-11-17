@@ -24,10 +24,10 @@
                                 <div class="align-self-start">
                                     <ActionsDropdown>
                                         <button class="btn w-100 text-start">
-                                            <span class="fa-solid fa-circle-info text-primary"></span>&nbsp; Details
+                                            <Icon IconClass="@FAIcon.CircleInfo" TextClass="text-primary"/>&nbsp; Details
                                         </button>
                                         <button class="btn w-100 text-start" @onclick="async () => await DeleteAppointment(appointment.Id)">
-                                            <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; Cancel
+                                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; Cancel
                                         </button>
                                     </ActionsDropdown>
                                 </div>

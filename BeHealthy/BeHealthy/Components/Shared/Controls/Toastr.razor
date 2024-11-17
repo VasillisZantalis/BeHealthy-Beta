@@ -32,15 +32,15 @@
     }
 
     public Task ShowFailed(string message, int? duration = null) =>
-        ShowToast(message, Severity.Danger, "fa-regular fa-circle-xmark", duration);
+        ShowToast(message, Severity.Danger, FAIcon.CircleXmark, duration);
 
     public Task ShowSuccess(string message, int? duration = null) =>
-        ShowToast(message, Severity.Success, "fa-regular fa-circle-check", duration);
+        ShowToast(message, Severity.Success, FAIcon.CircleCheck, duration);
 
     public Task ShowInfo(string message, int? duration = null) =>
-        ShowToast(message, Severity.Info, "fa-solid fa-circle-info", duration);
+        ShowToast(message, Severity.Info, FAIcon.CircleInfo, duration);
 
     public Task ShowWarning(string message, int? duration = null) =>
-        ShowToast(message, Severity.Warning, "fa-solid fa-triangle-exclamation", duration);
+        ShowToast(message, Severity.Warning, FAIcon.TriangleExclamation, duration);
 
 }

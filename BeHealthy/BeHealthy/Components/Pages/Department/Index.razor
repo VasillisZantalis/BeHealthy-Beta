@@ -1,6 +1,7 @@
 ﻿@page "/departments"
 @rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
+@attribute [StreamRendering]
 
 <PageTitle>@Resource.Departments</PageTitle>
 
@@ -8,7 +9,7 @@
 
 <div class="">
     <button class="btn btn-outline-secondary rounded-pill px-4 mb-3" @onclick="Create">
-        <span class="fa-solid fa-plus" aria-hidden="true"></span> @Resource.Create
+        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
     </button>
 </div>
 
@@ -51,10 +52,10 @@ else
                             <TemplateColumn>
                                 <ActionsDropdown>
                                     <button class="btn w-100 text-start" @onclick="@(() => EditDepartment(context.Id))">
-                                        <span class="fa-solid fa-pencil text-warning"></span>&nbsp; @Resource.Edit
+                                        <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
                                     </button>
                                     <button class="btn w-100 text-start" @onclick="async () => DeleteDepartment(context.Id)">
-                                        <span class="fa-solid fa-trash-can text-danger"></span>&nbsp; @Resource.Delete
+                                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
                                     </button>
                                 </ActionsDropdown>
                             </TemplateColumn>

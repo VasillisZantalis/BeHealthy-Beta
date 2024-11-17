@@ -1,6 +1,7 @@
 ﻿@page "/settings"
 @using BeHealthy.Components.Layout
 @attribute [Authorize(Roles = "Admin")]
+@attribute [StreamRendering]
 @rendermode InteractiveServer
 
 <PageTitle>@Resource.Settings</PageTitle>

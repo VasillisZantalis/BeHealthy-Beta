@@ -1,6 +1,7 @@
 ﻿@page "/patients/edit/{PatientId:int}"
 @using BeHealthy.Components.Pages.Patients.Components
 @attribute [Authorize(Roles = "Admin")]
+@attribute [StreamRendering]
 @rendermode InteractiveServer
 
 @inject IPatientService PatientService

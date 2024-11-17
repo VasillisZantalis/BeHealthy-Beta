@@ -25,7 +25,7 @@
     {
         _showAlert = true;
         _severity = Severity.Danger;
-        _icon = "fa-regular fa-circle-xmark";
+        _icon = FAIcon.CircleXmark;
         Message = message ?? Resource.SomethingWentWrong;
         StateHasChanged();
     }
@@ -34,7 +34,7 @@
     {
         _showAlert = true;
         _severity = Severity.Success;
-        _icon = "fa-regular fa-circle-check";
+        _icon = FAIcon.CircleCheck;
         Message = message ?? Resource.Success;
         StateHasChanged();
     }
@@ -43,7 +43,7 @@
     {
         _showAlert = true;
         _severity = Severity.Info;
-        _icon = "fa-solid fa-circle-info";
+        _icon = FAIcon.CircleInfo;
         Message = message;
         StateHasChanged();
     }
@@ -52,7 +52,7 @@
     {
         _showAlert = true;
         _severity = Severity.Warning;
-        _icon = "fa-solid fa-triangle-exclamation";
+        _icon = FAIcon.TriangleExclamation;
         Message = message;
         StateHasChanged();
     }

@@ -10,7 +10,7 @@
 
 <div class="container-fluid d-flex flex-column align-items-center gap-4 mt-5 pt-5" style="min-height: 100vh;">
     <h2 class="text-danger fw-bold">@Resource.AccessDenied</h2>
-    <span class="fa-solid fa-ban text-danger" style="font-size: 100px;"></span>
+    <Icon IconClass="@FAIcon.Ban" TextClass="text-danger" Style="font-size: 100px;" />
     <span class="text-muted fw-bold">@Resource.YouAreNotAuthorizedToAccessPage</span>
     <button class="btn btn-light mt-3" @onclick="GoToHome">@Resource.BackToDashboard</button>
 </div>
