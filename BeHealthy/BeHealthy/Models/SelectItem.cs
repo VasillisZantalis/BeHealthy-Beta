@@ -2,7 +2,7 @@
 
 public class SelectItem
 {
-    public int? Value { get; set; }
-    public string? Text { get; set; }
+    public required int Value { get; set; }
+    public required string Text { get; set; }
     public bool Selected { get; set; }
 }
