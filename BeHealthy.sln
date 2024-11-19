@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Shared", "BeHealthy.Shared\BeHealthy.Shared.csproj", "{6735CEE5-FEE5-4161-A7D7-B5FCF4BAF65C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Tests", "BeHealthy.Tests\BeHealthy.Tests.csproj", "{5F4B9824-929E-4E62-91D9-21F035EA1C15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6735CEE5-FEE5-4161-A7D7-B5FCF4BAF65C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6735CEE5-FEE5-4161-A7D7-B5FCF4BAF65C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6735CEE5-FEE5-4161-A7D7-B5FCF4BAF65C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F4B9824-929E-4E62-91D9-21F035EA1C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F4B9824-929E-4E62-91D9-21F035EA1C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F4B9824-929E-4E62-91D9-21F035EA1C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F4B9824-929E-4E62-91D9-21F035EA1C15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
