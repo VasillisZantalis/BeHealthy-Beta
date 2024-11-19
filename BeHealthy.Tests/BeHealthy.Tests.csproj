@@ -35,10 +35,6 @@
 	  <ProjectReference Include="..\BeHealthy\BeHealthy\BeHealthy.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Components\Patient\" />
-	</ItemGroup>
-
 
 
 </Project>
