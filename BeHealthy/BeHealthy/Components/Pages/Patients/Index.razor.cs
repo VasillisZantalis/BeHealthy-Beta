@@ -3,11 +3,13 @@ using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
+using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BeHealthy.Components.Pages.Patients;
 
@@ -28,16 +30,17 @@ public partial class Index
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
-
     private int deleteItemId;
 
     private PaginationState _paginationState = new();
+    private FilterParams _filters = new();
 
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
 
-        _patients = (await _patientService.GetAllPatientsAsync()).ToList();
+        await LoadPatients(_filters);
+
         _paginationState.ItemsPerPage = 10;
 
         hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
@@ -53,6 +56,22 @@ public partial class Index
         {
             _paginationState.ItemsPerPage = int.Parse((string)e.Value);
         }
+    }
+
+    private async Task HandleFilterApplied(FilterParams filters)
+    {
+        _filters = filters;
+
+        await LoadPatients(_filters);
+    }
+
+    public async Task LoadPatients(FilterParams filters)
+    {
+        _isLoading = true;
+
+        _patients = (await _patientService.GetAllPatientsAsync(filters.FirstName, filters.LastName)).ToList();
+        
+        _isLoading = false;
     }
 
     private void EditPatient(int id)

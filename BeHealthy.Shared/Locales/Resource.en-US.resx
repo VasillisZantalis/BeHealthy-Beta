@@ -216,6 +216,9 @@
   <data name="Doctors" xml:space="preserve">
     <value>Doctors</value>
   </data>
+  <data name="Dosage" xml:space="preserve">
+    <value>Dosage</value>
+  </data>
   <data name="Duration" xml:space="preserve">
     <value>Duration</value>
   </data>
@@ -230,6 +233,9 @@
   </data>
   <data name="English" xml:space="preserve">
     <value>English</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Filters</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
@@ -362,6 +368,9 @@
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>

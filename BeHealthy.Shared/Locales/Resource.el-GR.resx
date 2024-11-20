@@ -216,6 +216,9 @@
   <data name="Doctors" xml:space="preserve">
     <value>Γιατροί</value>
   </data>
+  <data name="Dosage" xml:space="preserve">
+    <value>Δοσολογία</value>
+  </data>
   <data name="Duration" xml:space="preserve">
     <value>Διάρκεια</value>
   </data>
@@ -230,6 +233,9 @@
   </data>
   <data name="English" xml:space="preserve">
     <value>Αγγλικά</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Φίλτρα</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>Όνομα</value>
@@ -362,6 +368,9 @@
   </data>
   <data name="Save" xml:space="preserve">
     <value>Αποθήκευση</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Αναζήτηση</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Ρυθμίσεις</value>

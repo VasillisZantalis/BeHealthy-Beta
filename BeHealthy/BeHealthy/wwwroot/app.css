@@ -73,3 +73,7 @@ h1:focus {
 .hoverable:hover {
     box-shadow: var(--bs-shadow-lg) !important;
 }
+
+.fs-7 {
+    font-size: 0.9rem !important
+}

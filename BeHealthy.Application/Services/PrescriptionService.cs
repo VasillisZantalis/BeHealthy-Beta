@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Dtos.Prescription;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
@@ -29,16 +30,20 @@ public class PrescriptionService : IPrescriptionService
         return _mapper.Map<PrescriptionDto>(prescription);
     }
 
-    public async Task AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)
+    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)
     {
         var prescription = _mapper.Map<Prescription>(prescriptionDto);
         await _unitOfWork.PrescriptionRepository.AddAsync(prescription);
+
+        return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
     }
 
-    public async Task UpdatePrescriptionAsync(PrescriptionForUpdateDto prescriptionDto)
+    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionForUpdateDto prescriptionDto)
     {
         var prescription = _mapper.Map<Prescription>(prescriptionDto);
         await _unitOfWork.PrescriptionRepository.UpdateAsync(prescription);
+
+        return ServiceResponse.Successful();
     }
 
     public async Task DeletePrescriptionAsync(int id)

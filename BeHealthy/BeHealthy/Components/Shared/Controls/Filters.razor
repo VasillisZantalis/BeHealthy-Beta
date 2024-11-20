@@ -1,0 +1,35 @@
+﻿<div id="filters-container" class="mb-3">
+    <form>
+        <fieldset class="border rounded px-3 py-1">
+            <legend>@Resource.Filters</legend>
+            <div class="row">
+                <div class="col-12 col-sm-6">
+                    <label for="firstNameFilter" class="form-label fs-7">@Resource.FirstName</label>
+                    <input id="firstNameFilter" class="form-control" @bind="Filter.FirstName" />
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="lastNameFilter" class="form-label fs-7">@Resource.LastName</label>
+                    <input id="lastNameFilter" class="form-control" @bind="Filter.LastName" />
+                </div>
+                <div class="col-12 text-end mt-3">
+                    <button class="btn btn-light" @onclick="OnSearchClicked">
+                        <Icon IconClass="@FAIcon.Search" />
+                        @Resource.Search
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+@code {
+    [Parameter] 
+    public EventCallback<FilterParams> OnSearch { get; set; }
+
+    public FilterParams Filter { get; set; } = new();
+
+    private async Task OnSearchClicked()
+    {
+        await OnSearch.InvokeAsync(Filter);
+    }
+}

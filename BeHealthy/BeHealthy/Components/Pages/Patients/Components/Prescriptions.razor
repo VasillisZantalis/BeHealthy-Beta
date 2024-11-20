@@ -2,7 +2,20 @@
 @inject IPrivilegeService PrivilegeService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+
 <div class="py-3">
+
+    <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreatePrescription">
+        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
+    </button>
+
+    <Toastr @ref="_toastr" />
+
+    <PrescriptionModal @ref="_prescriptionModal" 
+    LockDoctorsDropdown="false"
+    Successful="HandleResponse"
+    PrescriptionId="_prescriptionId" />
+
     @if (_isLoading)
     {
         <Loader />
@@ -10,17 +23,19 @@
     else if (_prescriptions is not null && _prescriptions.Any())
     {
         <QuickGrid Class="table table-responsive"
-            Items="@_prescriptions.AsQueryable()"
-            ItemKey="@(x => x.Id)">
+        Items="@_prescriptions.AsQueryable()"
+        ItemKey="@(x => x.Id)">
             <PropertyColumn Title="@Resource.Medication"
-                Property="@(x => x.Medication)" />
-            <PropertyColumn Title="Last Name"
-                Property="@(x => x.Dosage)" />
+            Property="@(x => x.Medication)" />
+            <PropertyColumn Title="@Resource.Dosage"
+            Property="@(x => x.Dosage)" />
+            <PropertyColumn Title="@Resource.Doctor"
+            Property="@(x => x.Doctor.FullName)" />
             <PropertyColumn Title="@Resource.DatePrescribed"
-                Property="@(x => x.DatePrescribed)"
-                Format="dd MMM yyyy HH:mm"
-                IsDefaultSortColumn="true"
-                InitialSortDirection="SortDirection.Descending" />
+            Property="@(x => x.DatePrescribed)"
+            Format="dd MMM yyyy"
+            IsDefaultSortColumn="true"
+            InitialSortDirection="SortDirection.Descending" />
             @if (hasActionRights)
             {
                 <TemplateColumn>
@@ -60,6 +75,11 @@
     private bool hasEditRight;
     private bool hasDeleteRight;
 
+    private int? _prescriptionId;
+
+    private PrescriptionModal _prescriptionModal { get; set; } = new();
+    private Toastr _toastr = new();
+
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
@@ -76,13 +96,31 @@
         _isLoading = false;
     }
 
+    private void CreatePrescription()
+    {
+        _prescriptionModal.OpenModal();
+    }
+
     private void EditPrescription(int prescriptionId)
     {
-
+        _prescriptionId = prescriptionId;
+        _prescriptionModal.OpenModal();
     }
 
     private async Task DeletePrescription(int prescriptionId)
     {
         await PrescriptionService.DeletePrescriptionAsync(prescriptionId);
+    }
+
+    private async Task HandleResponse(bool successful)
+    {
+        if (successful)
+        {
+            await _toastr.ShowSuccess(Resource.Success);
+        }
+        else
+        {
+            await _toastr.ShowFailed(Resource.SomethingWentWrong);
+        }
     }
 }

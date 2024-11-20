@@ -25,4 +25,5 @@ public static class FAIcon
     public static string ChevronLeft => "fa-solid fa-chevron-left";
     public static string Envelope => "fa-regular fa-envelope";
     public static string MobileScreenButton => "fa-solid fa-mobile-screen-button";
+    public static string Search => "fa-solid fa-magnifying-glass";
 }

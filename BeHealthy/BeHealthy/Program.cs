@@ -37,6 +37,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/accessdenied";
     options.Cookie.Name = "auth_cookie";
     options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     options.LoginPath = "/login";
 });

@@ -11,12 +11,23 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
     {
     }
 
-    public async Task<IEnumerable<Patient>> GetAllPatientsAsync()
+    public async Task<IEnumerable<Patient>> GetAllPatientsAsync(string? firstName = null, string? lastName = null)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Patients
-                    .Include(d => d.User)
-                    .ToListAsync();
+
+        var query = context.Patients.Include(d => d.User).AsQueryable();
+
+        if (!string.IsNullOrEmpty(firstName))
+        {
+            query = query.Where(x => x.FirstName.Contains(firstName));
+        }
+
+        if (!string.IsNullOrEmpty(lastName))
+        {
+            query = query.Where(x => x.LastName.Contains(lastName));
+        }
+
+        return await query.ToListAsync();
     }
 
     public async Task<IEnumerable<Appointment>> GetPatientAppointmentsByUserIdAsync(string userId)

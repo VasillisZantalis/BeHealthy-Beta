@@ -5,7 +5,7 @@ namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IPatientService
 {
-    Task<IEnumerable<PatientDto>> GetAllPatientsAsync();
+    Task<IEnumerable<PatientDto>> GetAllPatientsAsync(string? firstName = null, string? lastName = null);
     Task<PatientDto> GetPatientByIdAsync(int id);
     Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsByUserIdAsync(string userId);
     Task AddPatientAsync(PatientForCreationDto patient);

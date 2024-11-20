@@ -18,9 +18,9 @@ public class PatientService : IPatientService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync()
+    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync(string? firstName = null, string? lastName = null)
     {
-        var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync();
+        var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync(firstName, lastName);
         return _mapper.Map<IEnumerable<PatientDto>>(patients);
     }
 
