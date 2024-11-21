@@ -33,7 +33,7 @@
                 var uriEscaped = Uri.EscapeDataString(uri);
 
                 var fullUri = $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}";
-                Navigation.NavigateTo(fullUri, forceLoad: false);
+                Navigation.NavigateTo(fullUri, forceLoad: true);
             }
         }
     }
