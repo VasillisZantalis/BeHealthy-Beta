@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using BeHealthy.Application.Dtos.Common;
+﻿using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Dtos.Prescription;
+using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Shared.Locales;
 
@@ -11,29 +10,27 @@ namespace BeHealthy.Application.Services;
 public class PrescriptionService : IPrescriptionService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public PrescriptionService(IUnitOfWork unitOfWork, IMapper mapper)
+    public PrescriptionService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<IEnumerable<PrescriptionDto>> GetAllPrescriptionsAsync()
     {
         var prescriptions = await _unitOfWork.PrescriptionRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<PrescriptionDto>>(prescriptions);
+        return prescriptions.MapToDto();
     }
 
     public async Task<PrescriptionDto> GetPrescriptionByIdAsync(int id)
     {
         var prescription = await _unitOfWork.PrescriptionRepository.GetByIdAsync(id);
-        return _mapper.Map<PrescriptionDto>(prescription);
+        return prescription.MapToDto();
     }
 
     public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)
     {
-        var prescription = _mapper.Map<Prescription>(prescriptionDto);
+        var prescription = prescriptionDto.MapToDomain();
         await _unitOfWork.PrescriptionRepository.AddAsync(prescription);
 
         return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
@@ -49,7 +46,7 @@ public class PrescriptionService : IPrescriptionService
             return ServiceResponse.Failed(errorMessage);
         }
 
-        var updatedPrescription = _mapper.Map<Prescription>(prescriptionDto);
+        var updatedPrescription = prescriptionDto.MapToDomain();
 
         updatedPrescription.Id = existingPrescr.Id;
         updatedPrescription.DoctorId = existingPrescr.DoctorId;
@@ -72,6 +69,6 @@ public class PrescriptionService : IPrescriptionService
     {
         var prescriptions = await _unitOfWork.PrescriptionRepository.GetPrescriptionsByPatientIdAsync(id);
 
-        return _mapper.Map<IEnumerable<PrescriptionDto>>(prescriptions);
+        return prescriptions.MapToDto();
     }
 }

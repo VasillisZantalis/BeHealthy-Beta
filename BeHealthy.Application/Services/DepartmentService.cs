@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
@@ -9,35 +9,33 @@ namespace BeHealthy.Application.Services;
 public class DepartmentService : IDepartmentService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public DepartmentService(IUnitOfWork unitOfWork, IMapper mapper)
+    public DepartmentService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync()
     {
         var departments = await _unitOfWork.DepartmentRepository.GetDepartmentsAsync();
-        return _mapper.Map<IEnumerable<DepartmentDto>>(departments);
+        return departments.MapToDto();
     }
 
     public async Task<DepartmentDto> GetDepartmentByIdAsync(int id)
     {
         var department = await _unitOfWork.DepartmentRepository.GetDepartmentByIdAsync(id);
-        return _mapper.Map<DepartmentDto>(department);
+        return department.MapToDto();
     }
 
     public async Task AddDepartmentAsync(DepartmentForCreationDto departmentDto)
     {
-        var department = _mapper.Map<Department>(departmentDto);
+        var department = departmentDto.MapToDomain();
         await _unitOfWork.DepartmentRepository.AddAsync(department);
     }
 
     public async Task UpdateDepartmentAsync(DepartmentForUpdateDto departmentDto)
     {
-        var department = _mapper.Map<Department>(departmentDto);
+        var department = departmentDto.MapToDomain();
         await _unitOfWork.DepartmentRepository.UpdateAsync(department);
     }
 

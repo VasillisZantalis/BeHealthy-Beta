@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using BeHealthy.Application.Dtos.Appointment;
+﻿using BeHealthy.Application.Dtos.Appointment;
 using BeHealthy.Application.Dtos.Common;
+using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Shared.Locales;
 
@@ -11,55 +10,47 @@ namespace BeHealthy.Application.Services;
 public class AppointmentService : IAppointmentService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IValidationService _validationService;
 
-    public AppointmentService(IUnitOfWork unitOfWork, IMapper mapper, IValidationService validationService)
+    public AppointmentService(IUnitOfWork unitOfWork, IValidationService validationService)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _validationService = validationService;
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync()
     {
-        var appointment = await _unitOfWork.AppointmentRepository.GetAllAppointmentsAsync();
-        return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
+        var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsAsync();
+        return appointments.MapToDto();
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
     {
-        var appointment = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
-        return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
+        var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
+        return appointments.MapToDto();
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
-        var appointment = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
-        return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
+        var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
+        return appointments.MapToDto();
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByUserIdAsync(string userId)
     {
-        var appointment = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByUserIdAsync(userId);
-        return _mapper.Map<IEnumerable<AppointmentDto>>(appointment);
+        var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByUserIdAsync(userId);
+        return appointments.MapToDto();
     }
 
     public async Task<AppointmentDto> GetAppointmentByIdAsync(int id)
     {
         var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id);
-        return _mapper.Map<AppointmentDto>(appointment);
+        return appointment.MapToDto();
     }
 
     public async Task<ServiceResponse> AddAppointmentAsync(AppointmentForCreationDto appointmentDto)
     {
-        //var validationResponse = await _validationService.ValidateAsync(appointmentDto);
-
-        //if (!validationResponse.Success)
-        //{
-        //    return validationResponse;
-        //}
-        var appointment = _mapper.Map<Appointment>(appointmentDto);
+        var appointment = appointmentDto.MapToDomain();
 
         var conflictCheck = await CheckForConflictingAppointmentsAsync(
             appointmentDto.DoctorId,
@@ -73,12 +64,15 @@ public class AppointmentService : IAppointmentService
         }
 
         await _unitOfWork.AppointmentRepository.AddAsync(appointment);
-        return ServiceResponse.Successful();
+
+        return appointment.Id > 0
+            ? ServiceResponse.Successful()
+            : ServiceResponse.Failed(Resource.SomethingWentWrong);
     }
 
     public async Task<ServiceResponse> UpdateAppointmentAsync(int id, AppointmentForUpdateDto appointmentDto)
     {
-        var appointment = _mapper.Map<Appointment>(appointmentDto);
+        var appointment = appointmentDto.MapToDomain();
 
         var conflictCheck = await CheckForConflictingAppointmentsAsync(
             appointmentDto.DoctorId,

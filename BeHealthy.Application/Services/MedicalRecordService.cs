@@ -1,44 +1,41 @@
-﻿using AutoMapper;
-using BeHealthy.Application.Dtos.MedicalRecord;
+﻿using BeHealthy.Application.Dtos.MedicalRecord;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces.Repositories;
+using BeHealthy.Application.Mappings;
 
 namespace BeHealthy.Application.Services;
 
 public class MedicalRecordService : IMedicalRecordService
 {
     private readonly IMedicalRecordRepository _medicalRecordRepository;
-    private readonly IMapper _mapper;
 
-    public MedicalRecordService(IMedicalRecordRepository medicalRecordRepository, IMapper mapper)
+    public MedicalRecordService(IMedicalRecordRepository medicalRecordRepository)
     {
         _medicalRecordRepository = medicalRecordRepository;
-        _mapper = mapper;
     }
 
     public async Task<IEnumerable<MedicalRecordDto>> GetAllMedicalRecordsAsync()
     {
         var medicalRecords = await _medicalRecordRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<MedicalRecordDto>>(medicalRecords);
+        return medicalRecords.MapToDto();
     }
 
     public async Task<MedicalRecordDto> GetMedicalRecordByIdAsync(int id)
     {
         var medicalRecord = await _medicalRecordRepository.GetByIdAsync(id);
-        return _mapper.Map<MedicalRecordDto>(medicalRecord);
+        return medicalRecord.MapToDto();
     }
 
     public async Task AddMedicalRecordAsync(MedicalRecordForCreationDto medicalRecordDto)
     {
-        var medicalRecord = _mapper.Map<MedicalRecord>(medicalRecordDto);
+        var medicalRecord = medicalRecordDto.MapToDomain();
         await _medicalRecordRepository.AddAsync(medicalRecord);
     }
 
     public async Task UpdateMedicalRecordAsync(MedicalRecordForUpdateDto medicalRecordDto)
     {
-        var medicalRecord = _mapper.Map<MedicalRecord>(medicalRecordDto);
+        var medicalRecord = medicalRecordDto.MapToDomain();
         await _medicalRecordRepository.UpdateAsync(medicalRecord);
     }
 

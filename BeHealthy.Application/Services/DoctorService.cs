@@ -1,44 +1,41 @@
-﻿using AutoMapper;
-using BeHealthy.Application.Dtos.Appointment;
+﻿using BeHealthy.Application.Dtos.Appointment;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Interfaces;
-using BeHealthy.Domain.Entities;
+using BeHealthy.Application.Mappings;
 
 namespace BeHealthy.Application.Services;
 
 public class DoctorService : IDoctorService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public DoctorService(IUnitOfWork unitOfWork, IMapper mapper)
+    public DoctorService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync()
     {
         var doctors = await _unitOfWork.DoctorRepository.GetAllDoctorsAsync();
-        return _mapper.Map<IEnumerable<DoctorDto>>(doctors);
+        return doctors.MapToDto();
     }
 
     public async Task<DoctorDto> GetDoctorByIdAsync(int id)
     {
         var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(id);
-        return _mapper.Map<DoctorDto>(doctor);
+        return doctor.MapToDto();
     }
 
     public async Task AddDoctorAsync(DoctorForCreationDto doctorDto)
     {
-        var doctor = _mapper.Map<Doctor>(doctorDto);
+        var doctor = doctorDto.MapToDomain();
         await _unitOfWork.DoctorRepository.AddAsync(doctor);
     }
 
     public async Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctorDto)
     {
-        var doctor = _mapper.Map<Doctor>(doctorDto);
+        var doctor = doctorDto.MapToDomain();
         await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
     }
 
@@ -50,8 +47,7 @@ public class DoctorService : IDoctorService
     public async Task<IEnumerable<AppointmentDto>> GetDoctorAppointmentsByUserIdAsync(string userId)
     {
         var doctorAppointments = await _unitOfWork.DoctorRepository.GetDoctorAppointmentsByUserIdAsync(userId);
-
-        return _mapper.Map<IEnumerable<AppointmentDto>>(doctorAppointments);
+        return doctorAppointments.MapToDto();
     }
 }
 

@@ -1,7 +1,6 @@
 ﻿using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace BeHealthy.Application;
 
@@ -9,8 +8,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IDoctorService, DoctorService>();
         services.AddScoped<INurseService, NurseService>();

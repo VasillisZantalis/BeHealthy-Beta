@@ -7,7 +7,6 @@
 @inject IDepartmentService DepartmentService
 @inject IUserStore<ApplicationUser> UserStore
 @inject UserManager<ApplicationUser> UserManager
-@inject IMapper Mapper
 
 <PageTitle>@Resource.Edit</PageTitle>
 
@@ -101,7 +100,7 @@
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
-        Mapper.Map(doctor, _doctorForUpdateDto);
+        _doctorForUpdateDto = doctor.MapToUpdateDto();
     }
 
     async Task OnFileChange(InputFileChangeEventArgs e)
