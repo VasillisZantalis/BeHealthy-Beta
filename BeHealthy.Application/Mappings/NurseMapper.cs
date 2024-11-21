@@ -79,6 +79,11 @@ namespace BeHealthy.Application.Mappings
             return nurses.Select(n => n.MapToDto());
         }
 
+        public static ICollection<NurseDto> MapToDto(this ICollection<Nurse> nurses)
+        {
+            return nurses.Select(d => d.MapToDto()).ToList();
+        }
+
         public static IEnumerable<Nurse> MapToDomain(this IEnumerable<NurseDto> dtos)
         {
             return dtos.Select(dto => dto.MapToDomain());

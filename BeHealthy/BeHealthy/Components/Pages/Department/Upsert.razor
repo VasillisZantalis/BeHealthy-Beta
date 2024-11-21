@@ -17,18 +17,21 @@
         <li class="nav-item">
             <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Doctors</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Patients</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.Nurses</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">@Resource.Rooms</a>
-        </li>
+        @if (IsEditMode)
+        {
+            <li class="nav-item">
+                <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Doctors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.Nurses</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">@Resource.Rooms</a>
+            </li>
+        }
     </ul>
 
     <div class="tab-content mt-3">

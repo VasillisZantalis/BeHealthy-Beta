@@ -15,9 +15,9 @@ public static class DepartmentMapper
             CreatedAt = department.CreatedAt,
             HeadOfDepartmentId = department.HeadOfDepartmentId,
             HeadOfDepartment = department.HeadOfDepartment?.MapToDto(),
-            //Doctors = department.Doctors.MapToDto(),
-            //Nurses = department.Nurses.MapToDtoList(),
-            //Patients = department.Patients.MapToDtoList(),
+            Doctors = department.Doctors.MapToDto(),
+            Nurses = department.Nurses.MapToDto(),
+            Patients = department.Patients.MapToDto()
             //Rooms = department.Rooms.MapToDtoList()
         };
     }

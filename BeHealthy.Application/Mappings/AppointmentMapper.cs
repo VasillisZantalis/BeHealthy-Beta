@@ -31,9 +31,9 @@ namespace BeHealthy.Application.Mappings
                 Reason = entity.Reason,
                 Duration = entity.Duration,
                 PatientId = entity.PatientId,
-                //Patient = entity.Patient?.MapToDto(),
+                Patient = entity.Patient?.MapToDto(),
                 DoctorId = entity.DoctorId,
-                //Doctor = entity.Doctor?.MapToDto()
+                Doctor = entity.Doctor?.MapToDto()
             };
         }
 

@@ -132,6 +132,11 @@ public static class PatientMapper
         return patients.Select(p => p.MapToDto());
     }
 
+    public static ICollection<PatientDto> MapToDto(this ICollection<Patient> patients)
+    {
+        return patients.Select(d => d.MapToDto()).ToList();
+    }
+
     public static IEnumerable<Patient> MapToDomain(this IEnumerable<PatientDto> dtos)
     {
         return dtos.Select(dto => dto.MapToDomain());
