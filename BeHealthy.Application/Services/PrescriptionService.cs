@@ -4,6 +4,7 @@ using BeHealthy.Application.Dtos.Prescription;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -40,15 +41,31 @@ public class PrescriptionService : IPrescriptionService
 
     public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionForUpdateDto prescriptionDto)
     {
-        var prescription = _mapper.Map<Prescription>(prescriptionDto);
-        await _unitOfWork.PrescriptionRepository.UpdateAsync(prescription);
+        var existingPrescr = await _unitOfWork.PrescriptionRepository.GetByIdAsync(prescriptionDto.Id);
+
+        if (existingPrescr is null)
+        {
+            var errorMessage = string.Join(" ", Resource.NotFound, Resource.Prescription);
+            return ServiceResponse.Failed(errorMessage);
+        }
+
+        var updatedPrescription = _mapper.Map<Prescription>(prescriptionDto);
+
+        updatedPrescription.Id = existingPrescr.Id;
+        updatedPrescription.DoctorId = existingPrescr.DoctorId;
+        updatedPrescription.PatientId = existingPrescr.PatientId;
+        updatedPrescription.DatePrescribed = existingPrescr.DatePrescribed;
+
+        await _unitOfWork.PrescriptionRepository.UpdateAsync(updatedPrescription);
 
         return ServiceResponse.Successful();
     }
 
-    public async Task DeletePrescriptionAsync(int id)
+    public async Task<ServiceResponse> DeletePrescriptionAsync(int id)
     {
         await _unitOfWork.PrescriptionRepository.DeleteAsync(id);
+
+        return ServiceResponse.Successful();
     }
 
     public async Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByPatientIdAsync(int id)

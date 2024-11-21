@@ -10,5 +10,5 @@ public interface IPrescriptionService
     Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByPatientIdAsync(int id);
     Task<ServiceResponse> AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto);
     Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionForUpdateDto prescriptionDto);
-    Task DeletePrescriptionAsync(int id);
+    Task<ServiceResponse> DeletePrescriptionAsync(int id);
 }

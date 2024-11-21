@@ -309,6 +309,9 @@
   <data name="Notes" xml:space="preserve">
     <value>Σημειώσεις</value>
   </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Δεν Βρέθηκε</value>
+  </data>
   <data name="NoUsersJoinedLately" xml:space="preserve">
     <value>Δεν υπάρχουν {0} που προσχώρησαν πρόσφατα</value>
   </data>
@@ -347,6 +350,9 @@
   </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Παρακαλώ Επιλέξτε</value>
+  </data>
+  <data name="Prescription" xml:space="preserve">
+    <value>Συνταγή</value>
   </data>
   <data name="Prescriptions" xml:space="preserve">
     <value>Συνταγές</value>

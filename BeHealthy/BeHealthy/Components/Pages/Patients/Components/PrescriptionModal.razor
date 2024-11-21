@@ -28,12 +28,12 @@
                             </div>
                             <div class="form">
                                 <label class="fw-bold" for="datePrescribed">@Resource.DatePrescribed</label>
-                                <InputDate id="datePrescribed" class="form-control" @bind-Value="_prescriptionDto.DatePrescribed" />
+                                <InputDate id="datePrescribed" class="form-control" @bind-Value="_prescriptionDto.DatePrescribed" disabled="@_lockNonModifiable" />
                                 <ValidationMessage For="@(() => _prescriptionDto.DatePrescribed)" />
                             </div>
                             <div class="">
                                 <label class="fw-bold" for="doctorIdSelect">@Resource.Doctor</label>
-                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_prescriptionDto.DoctorId" disabled="@LockDoctorsDropdown">
+                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_prescriptionDto.DoctorId" disabled="@_lockNonModifiable">
                                     @foreach (var doctor in _doctorsSelect)
                                     {
                                         <option value="@doctor.Value">@doctor.Text</option>
@@ -60,8 +60,7 @@
     [Parameter, EditorRequired]
     public EventCallback<bool> Successful { get; set; }
 
-    [Parameter]
-    public bool LockDoctorsDropdown{ get; set; }
+    private bool _lockNonModifiable = default;
 
     [SupplyParameterFromForm]
     private PrescriptionDto _prescriptionDto { get; set; } = new();
@@ -92,12 +91,15 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        _prescriptionDto = new();
+        _lockNonModifiable = false;
+
         _prescriptionDto.DatePrescribed = !_isEditMode ? DateTime.Now : DateTime.Now;
 
         if (PrescriptionId.HasValue)
         {
             var prescription = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value);
-            LockDoctorsDropdown = true;
+            _lockNonModifiable = true;
 
             _prescriptionDto.Medication = prescription.Medication;
             _prescriptionDto.Dosage = prescription.Dosage;
@@ -109,7 +111,6 @@
     public void OpenModal()
     {
         _showModal = true;
-        StateHasChanged();
     }
 
     public void CloseModal()
@@ -123,15 +124,13 @@
 
         _prescriptionDto.PatientId = Convert.ToInt32(patientId);
 
-        if (_isEditMode)
+        if (_isEditMode && PrescriptionId.HasValue)
         {
             var prescriptionForUpdate = new PrescriptionForUpdateDto
             {
+                Id = PrescriptionId.Value,
                 Medication = _prescriptionDto.Medication,
-                Dosage = _prescriptionDto.Dosage,
-                DatePrescribed = _prescriptionDto.DatePrescribed,
-                DoctorId = _prescriptionDto.DoctorId,
-                PatientId = _prescriptionDto.PatientId
+                Dosage = _prescriptionDto.Dosage
             };
             await PrescriptionService.UpdatePrescriptionAsync(prescriptionForUpdate);
             await Successful.InvokeAsync(true);

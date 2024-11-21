@@ -309,6 +309,9 @@
   <data name="Notes" xml:space="preserve">
     <value>Notes</value>
   </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
   <data name="NoUsersJoinedLately" xml:space="preserve">
     <value>No {0} Joined Lately</value>
   </data>
@@ -347,6 +350,9 @@
   </data>
   <data name="PleaseSelect" xml:space="preserve">
     <value>Please Select</value>
+  </data>
+  <data name="Prescription" xml:space="preserve">
+    <value>Prescription</value>
   </data>
   <data name="Prescriptions" xml:space="preserve">
     <value>Prescriptions</value>
