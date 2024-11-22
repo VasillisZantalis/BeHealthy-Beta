@@ -23,7 +23,10 @@ public static class FAIcon
     public static string CircleXmark => "fa-regular fa-circle-xmark";
     public static string TriangleExclamation => "fa-solid fa-triangle-exclamation";
     public static string ChevronLeft => "fa-solid fa-chevron-left";
+    public static string ChevronRight => "fa-solid fa-chevron-right";
+    public static string ChevronDown => "fa-solid fa-chevron-down";
     public static string Envelope => "fa-regular fa-envelope";
     public static string MobileScreenButton => "fa-solid fa-mobile-screen-button";
     public static string Search => "fa-solid fa-magnifying-glass";
+    public static string RolePrivilege => "fa-solid fa-address-card";
 }

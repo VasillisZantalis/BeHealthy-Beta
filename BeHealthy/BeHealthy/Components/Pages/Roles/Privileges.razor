@@ -1,0 +1,67 @@
+﻿@page "/roles/privileges"
+@using BeHealthy.Application.Dtos.Privilege
+@attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+
+@inject IPrivilegeService PrivilegeService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@Resource.Privileges</PageTitle>
+
+<SectionContent SectionName="page-title">@Resource.Privileges</SectionContent>
+
+@if (_groupedPrivileges == null)
+{
+    <p>Loading privileges...</p>
+}
+else
+{
+    <div class="container-fluid">
+        <button class="btn btn-success px-4" @onclick="SavePrivileges">@Resource.Save</button>
+        @foreach (var roleGroup in _groupedPrivileges)
+        {
+            <div class="card shadow border-0 rounded px-3 py-2 mt-3" style="max-width: 700px">
+                <h4>@roleGroup.Key.ToLocalizedString()</h4>
+                <div class="card-body">
+                    @foreach (var privilege in roleGroup.Value)
+                    {
+                        <div class="form-control mb-3">
+                            <InputCheckbox @bind-Value="privilege.Value" class="form-check-input" />
+                            <label class="form-check-label">@privilege.DisplayName</label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private Dictionary<UserRole, List<PrivilegeDto>>? _groupedPrivileges;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var privileges = await PrivilegeService.GetPrivilegesAsync();
+
+        _groupedPrivileges = privileges
+            .Where(p => p.RoleName != null)
+            .GroupBy(p => p.RoleName!.Value)
+            .ToDictionary(
+                group => group.Key,
+                group => group.ToList()
+            );
+    }
+
+    private async Task SavePrivileges()
+    {
+        if (_groupedPrivileges == null)
+            return;
+
+        var privilegesToSave = _groupedPrivileges
+            .SelectMany(group => group.Value)
+            .ToList();
+
+        await PrivilegeService.SavePrivilegesAsync(privilegesToSave);
+        NavigationManager.Refresh(forceReload: true);
+    }
+}

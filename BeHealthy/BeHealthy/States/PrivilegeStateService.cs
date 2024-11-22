@@ -22,7 +22,7 @@ namespace BeHealthy.States
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
 
-            _privileges = await _privilegeService.GetPrivilegesForRoleAsync(userRole);
+            //_privileges = await _privilegeService.GetPrivilegesForRoleAsync(userRole);
         }
 
         public async Task<bool> HasPrivilegeAsync(string privilegeName)

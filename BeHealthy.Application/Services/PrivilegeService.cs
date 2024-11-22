@@ -1,7 +1,9 @@
-﻿using BeHealthy.Application.Services.Interfaces;
+﻿using BeHealthy.Application.Dtos.Privilege;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
+using System.Data;
 
 namespace BeHealthy.Application.Services;
 
@@ -14,15 +16,53 @@ public class PrivilegeService : IPrivilegeService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Dictionary<string, bool>> GetPrivilegesForRoleAsync(UserRole role)
+    public async Task<List<PrivilegeDto>> GetPrivilegesAsync()
+    {
+        var privileges = await _unitOfWork.PrivilegeRepository.GetPrivilegesAsync();
+
+        var privilegesDto = privileges.Select(p => new PrivilegeDto
+        {
+            Id = p.Id,
+            Name = p.Name,
+            DisplayName = p.DisplayName,
+            Value = p.Value,
+            RoleName = p.RolePrivileges.Select(s => s.Role).FirstOrDefault()
+        }).ToList();
+
+        return privilegesDto;
+    }
+
+    public async Task<List<PrivilegeDto>> GetPrivilegesForRoleAsync(UserRole role)
     {
         var privileges = await _unitOfWork.PrivilegeRepository.GetUserPrivilegesAsync(role);
 
-        return privileges;
+        var privilegesDto = privileges.Select(p => new PrivilegeDto
+        {
+            Id = p.Id,
+            Name = p.Name,
+            DisplayName = p.DisplayName,
+            Value = p.Value,
+            RoleName = p.RolePrivileges.Select(s => s.Role).FirstOrDefault()
+        }).ToList();
+
+        return privilegesDto;
     }
 
     public async Task<bool> HasPrivilege(UserRole role, string privilegeName)
     {
         return role == UserRole.Admin ? true : await _unitOfWork.PrivilegeRepository.HasPrivilegeAsync(role, privilegeName);
+    }
+
+    public async Task SavePrivilegesAsync(List<PrivilegeDto> privileges)
+    {
+        var entities = privileges.Select(dto => new Privilege
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            DisplayName = dto.DisplayName,
+            Value = dto.Value
+        }).ToList();
+
+        await _unitOfWork.PrivilegeRepository.UpdatePrivilegesAsync(entities);
     }
 }

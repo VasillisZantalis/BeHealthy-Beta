@@ -357,6 +357,12 @@
   <data name="Prescriptions" xml:space="preserve">
     <value>Συνταγές</value>
   </data>
+  <data name="Privilege" xml:space="preserve">
+    <value>Δικαίωμα</value>
+  </data>
+  <data name="Privileges" xml:space="preserve">
+    <value>Δικαιώματα</value>
+  </data>
   <data name="Reason" xml:space="preserve">
     <value>Αιτία</value>
   </data>
@@ -404,6 +410,18 @@
   </data>
   <data name="UpcomingAppointments" xml:space="preserve">
     <value>Επερχόμενα ραντεβού</value>
+  </data>
+  <data name="UserRole_Admin" xml:space="preserve">
+    <value>Διαχειριστής</value>
+  </data>
+  <data name="UserRole_Doctor" xml:space="preserve">
+    <value>Γιατρός</value>
+  </data>
+  <data name="UserRole_Nurse" xml:space="preserve">
+    <value>Νοσοκόμος</value>
+  </data>
+  <data name="UserRole_Patient" xml:space="preserve">
+    <value>Ασθενής</value>
   </data>
   <data name="YouAreNotAuthorizedToAccessPage" xml:space="preserve">
     <value>Δεν έχεις πρόσβαση σε αυτή την σελίδα</value>

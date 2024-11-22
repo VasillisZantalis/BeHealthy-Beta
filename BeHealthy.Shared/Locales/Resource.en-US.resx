@@ -357,6 +357,12 @@
   <data name="Prescriptions" xml:space="preserve">
     <value>Prescriptions</value>
   </data>
+  <data name="Privilege" xml:space="preserve">
+    <value>Privilege</value>
+  </data>
+  <data name="Privileges" xml:space="preserve">
+    <value>Privileges</value>
+  </data>
   <data name="Reason" xml:space="preserve">
     <value>Reason</value>
   </data>
@@ -404,6 +410,18 @@
   </data>
   <data name="UpcomingAppointments" xml:space="preserve">
     <value>Upcoming Appointments</value>
+  </data>
+  <data name="UserRole_Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="UserRole_Doctor" xml:space="preserve">
+    <value>Doctor</value>
+  </data>
+  <data name="UserRole_Nurse" xml:space="preserve">
+    <value>Nurse</value>
+  </data>
+  <data name="UserRole_Patient" xml:space="preserve">
+    <value>Patient</value>
   </data>
   <data name="YouAreNotAuthorizedToAccessPage" xml:space="preserve">
     <value>You are not authorized to access this page</value>

@@ -781,6 +781,24 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Privilege.
+        /// </summary>
+        public static string Privilege {
+            get {
+                return ResourceManager.GetString("Privilege", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privileges.
+        /// </summary>
+        public static string Privileges {
+            get {
+                return ResourceManager.GetString("Privileges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reason.
         /// </summary>
         public static string Reason {
@@ -921,6 +939,42 @@ namespace BeHealthy.Shared.Locales {
         public static string UpcomingAppointments {
             get {
                 return ResourceManager.GetString("UpcomingAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Admin.
+        /// </summary>
+        public static string UserRole_Admin {
+            get {
+                return ResourceManager.GetString("UserRole_Admin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doctor.
+        /// </summary>
+        public static string UserRole_Doctor {
+            get {
+                return ResourceManager.GetString("UserRole_Doctor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nurse.
+        /// </summary>
+        public static string UserRole_Nurse {
+            get {
+                return ResourceManager.GetString("UserRole_Nurse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Patient.
+        /// </summary>
+        public static string UserRole_Patient {
+            get {
+                return ResourceManager.GetString("UserRole_Patient", resourceCulture);
             }
         }
         

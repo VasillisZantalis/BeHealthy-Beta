@@ -1,4 +1,6 @@
-﻿@inject IStringLocalizer<Resource> localizer
+﻿@rendermode InteractiveServer
+
+@inject IStringLocalizer<Resource> localizer
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -70,6 +72,20 @@
                             <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />&nbsp; @Resource.Settings
                         </NavLink>
                     </div>
+
+                    <div class="nav-item px-3 pt-0">
+                        <NavLink class="nav-link d-flex flex-row" @onclick="ToggleRoles">
+                            <Icon IconClass="@FAIcon.UserLock" SizeClass="fs-5" />&nbsp; @Resource.Role
+                            <Icon IconClass="@(!isRolesExpanded ? FAIcon.ChevronRight : FAIcon.ChevronDown)" TextClass="ms-auto" />
+                        </NavLink>
+                        <ul class="flex-column list-unstyled" style="@SubMenuStyle">
+                            <li class="">
+                                <NavLink class="nav-link ms-2 ps-5" href="roles/privileges">
+                                    @Resource.Privileges 
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
                     
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="departments">
@@ -91,6 +107,15 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private bool isRolesExpanded = false;
+
+    private string SubMenuStyle => isRolesExpanded ? "display: block;" : "display: none;";
+
+    private void ToggleRoles()
+    {
+        isRolesExpanded = !isRolesExpanded;
     }
 }
 
