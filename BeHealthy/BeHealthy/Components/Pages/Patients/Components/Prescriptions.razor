@@ -124,6 +124,10 @@
 
             await _toastr.ShowSuccess(Resource.Success);
         }
+        else
+        {
+            await _toastr.ShowFailed(Resource.SomethingWentWrong);
+        }
     }
 
     private async Task HandleResponse(bool successful)
@@ -131,8 +135,7 @@
         if (successful)
         {
             await _toastr.ShowSuccess(Resource.Success);
-            await quickGrid.RefreshDataAsync();
-            StateHasChanged();
+            NavigationManager.Refresh(true);
         }
         else
         {

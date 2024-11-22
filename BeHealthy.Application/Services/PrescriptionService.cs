@@ -30,32 +30,48 @@ public class PrescriptionService : IPrescriptionService
 
     public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)
     {
-        var prescription = prescriptionDto.MapToDomain();
-        await _unitOfWork.PrescriptionRepository.AddAsync(prescription);
+        try
+        {
+            var prescription = prescriptionDto.MapToDomain();
+            await _unitOfWork.PrescriptionRepository.AddAsync(prescription);
 
-        return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
+            return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
+        }
+        catch (Exception ex)
+        {
+            return ServiceResponse.Failed();
+        }
+        
     }
 
     public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionForUpdateDto prescriptionDto)
     {
-        var existingPrescr = await _unitOfWork.PrescriptionRepository.GetByIdAsync(prescriptionDto.Id);
-
-        if (existingPrescr is null)
+        try
         {
-            var errorMessage = string.Join(" ", Resource.NotFound, Resource.Prescription);
-            return ServiceResponse.Failed(errorMessage);
+            var existingPrescr = await _unitOfWork.PrescriptionRepository.GetByIdAsync(prescriptionDto.Id);
+
+            if (existingPrescr is null)
+            {
+                var errorMessage = string.Join(" ", Resource.NotFound, Resource.Prescription);
+                return ServiceResponse.Failed(errorMessage);
+            }
+
+            var updatedPrescription = prescriptionDto.MapToDomain();
+
+            updatedPrescription.Id = existingPrescr.Id;
+            updatedPrescription.DoctorId = existingPrescr.DoctorId;
+            updatedPrescription.PatientId = existingPrescr.PatientId;
+            updatedPrescription.DatePrescribed = existingPrescr.DatePrescribed;
+
+            await _unitOfWork.PrescriptionRepository.UpdateAsync(updatedPrescription);
+
+            return ServiceResponse.Successful();
         }
-
-        var updatedPrescription = prescriptionDto.MapToDomain();
-
-        updatedPrescription.Id = existingPrescr.Id;
-        updatedPrescription.DoctorId = existingPrescr.DoctorId;
-        updatedPrescription.PatientId = existingPrescr.PatientId;
-        updatedPrescription.DatePrescribed = existingPrescr.DatePrescribed;
-
-        await _unitOfWork.PrescriptionRepository.UpdateAsync(updatedPrescription);
-
-        return ServiceResponse.Successful();
+        catch (Exception ex)
+        {
+            return ServiceResponse.Failed();
+        }
+        
     }
 
     public async Task<ServiceResponse> DeletePrescriptionAsync(int id)

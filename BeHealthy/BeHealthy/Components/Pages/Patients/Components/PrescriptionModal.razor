@@ -132,8 +132,9 @@
                 Medication = _prescriptionDto.Medication,
                 Dosage = _prescriptionDto.Dosage
             };
-            await PrescriptionService.UpdatePrescriptionAsync(prescriptionForUpdate);
-            await Successful.InvokeAsync(true);
+            var response = await PrescriptionService.UpdatePrescriptionAsync(prescriptionForUpdate);
+            CloseModal();
+            await Successful.InvokeAsync(response.Success);
         }
         else
         {
@@ -147,8 +148,8 @@
             };
 
             var response = await PrescriptionService.AddPrescriptionAsync(prescriptionForCreation);
+            CloseModal();
             await Successful.InvokeAsync(response.Success);
         }
-        CloseModal();
     }
 }
