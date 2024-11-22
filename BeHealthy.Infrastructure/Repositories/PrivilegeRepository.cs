@@ -25,7 +25,7 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
         return privileges;
     }
 
-    public async Task<List<Privilege>> GetUserPrivilegesAsync(UserRole userRole)
+    public async Task<Dictionary<string, bool>> GetUserPrivilegesAsync(UserRole userRole)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
@@ -33,7 +33,12 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
             .AsQueryable()
             .Include(p => p.RolePrivileges)
             .Where(p => p.RolePrivileges.Any(rp => rp.Role == userRole))
-            .ToListAsync();
+            .Select(p => new
+            {
+                Name = p.Name!,
+                p.Value
+            })
+            .ToDictionaryAsync(k => k.Name, v => v.Value);
 
         return privileges;
     }

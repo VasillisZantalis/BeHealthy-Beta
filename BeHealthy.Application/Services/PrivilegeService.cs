@@ -32,20 +32,11 @@ public class PrivilegeService : IPrivilegeService
         return privilegesDto;
     }
 
-    public async Task<List<PrivilegeDto>> GetPrivilegesForRoleAsync(UserRole role)
+    public async Task<Dictionary<string, bool>> GetPrivilegesForRoleAsync(UserRole role)
     {
         var privileges = await _unitOfWork.PrivilegeRepository.GetUserPrivilegesAsync(role);
 
-        var privilegesDto = privileges.Select(p => new PrivilegeDto
-        {
-            Id = p.Id,
-            Name = p.Name,
-            DisplayName = p.DisplayName,
-            Value = p.Value,
-            RoleName = p.RolePrivileges.Select(s => s.Role).FirstOrDefault()
-        }).ToList();
-
-        return privilegesDto;
+        return privileges;
     }
 
     public async Task<bool> HasPrivilege(UserRole role, string privilegeName)
