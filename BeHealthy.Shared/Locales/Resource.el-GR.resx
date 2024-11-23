@@ -315,6 +315,9 @@
   <data name="NoUsersJoinedLately" xml:space="preserve">
     <value>Δεν υπάρχουν {0} που προσχώρησαν πρόσφατα</value>
   </data>
+  <data name="Number" xml:space="preserve">
+    <value>Αριθμός</value>
+  </data>
   <data name="Nurses" xml:space="preserve">
     <value>Νοσοκόμες</value>
   </data>

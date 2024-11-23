@@ -16,13 +16,13 @@ public class RoomService : IRoomService
 
     public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync()
     {
-        var rooms = await _unitOfWork.RoomRepository.GetAllAsync();
+        var rooms = await _unitOfWork.RoomRepository.GetAllRoomsAsync();
         return rooms.MapToDto();
     }
 
     public async Task<RoomDto> GetRoomByIdAsync(int id)
     {
-        var room = await _unitOfWork.RoomRepository.GetByIdAsync(id);
+        var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(id);
         return room.MapToDto();
     }
 

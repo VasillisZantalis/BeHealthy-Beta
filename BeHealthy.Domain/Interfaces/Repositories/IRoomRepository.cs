@@ -4,4 +4,6 @@ namespace BeHealthy.Domain.Interfaces.Repositories;
 
 public interface IRoomRepository : IGenericRepository<Room>
 {
+    Task<IEnumerable<Room>> GetAllRoomsAsync();
+    Task<Room?> GetRoomByIdAsync(int roomId);
 }

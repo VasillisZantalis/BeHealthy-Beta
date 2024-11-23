@@ -315,6 +315,9 @@
   <data name="NoUsersJoinedLately" xml:space="preserve">
     <value>No {0} Joined Lately</value>
   </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
   <data name="Nurses" xml:space="preserve">
     <value>Nurses</value>
   </data>

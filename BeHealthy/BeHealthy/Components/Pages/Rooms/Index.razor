@@ -1,0 +1,108 @@
+﻿@page "/rooms"
+@attribute [Authorize(Roles = "Admin")]
+@rendermode InteractiveServer
+
+@inject IRoomService RoomService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@Resource.Rooms</PageTitle>
+
+<SectionContent SectionName="page-title">@Resource.Rooms</SectionContent>
+
+<button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreateRoom">
+    <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
+</button>
+
+<UpsertModal @ref="_roomUpsertModal"
+             RoomId="_roomId" />
+
+@if (_isLoading)
+{
+    <Loader />
+}
+else if (_rooms is null || !_rooms.Any())
+{
+    <p>@string.Format(Resource.NoAvailable, Resource.Rooms)</p>
+}
+else
+{
+    <div class="departments-container mt-3">
+        <div class="card">
+            <div class="card-header d-flex flex-row justify-content-end">
+                <div class="px-1">
+                    <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <div class="card-body pb-2 px-0 m-0">
+                    <QuickGrid Class="table rounded"
+                    Items="@_rooms.AsQueryable()"
+                    ItemKey="@(x => x.Id)"
+                    Pagination="_paginationState">
+                        <PropertyColumn Title="@Resource.Name"
+                        Property="@(x => x.Name)" />
+                        <PropertyColumn Title="@Resource.Number"
+                        Property="@(x => x.Number)" />
+                        <PropertyColumn Title="@Resource.Department"
+                        Property="@(x => x.Department)" />
+                        <TemplateColumn>
+                            <ActionsDropdown>
+                                <button class="btn w-100 text-start" @onclick="() => EditRoom(context.Id)">
+                                    <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
+                                </button>
+                                <button class="btn w-100 text-start" @onclick="async () => await DeleteRoom(context.Id)">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
+                                </button>
+                            </ActionsDropdown>
+                        </TemplateColumn>
+                    </QuickGrid>
+
+                </div>
+
+            </div>
+            <div id="paginatorDiv" class="px-3">
+                <Paginator State="_paginationState" />
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private IEnumerable<RoomDto> _rooms = default!;
+
+    private bool _isLoading = false;
+    private PaginationState _paginationState = new();
+    private int? _roomId;
+    private UpsertModal _roomUpsertModal = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        _rooms = await RoomService.GetAllRoomsAsync();
+        _paginationState.ItemsPerPage = 10;
+        _isLoading = false;
+    }
+
+    private void CreateRoom()
+    {
+        _roomId = null;
+        _roomUpsertModal.OpenModal();
+    }
+
+    private void EditRoom(int roomId)
+    {
+        _roomId = roomId;
+        _roomUpsertModal.OpenModal();
+    }
+
+    public async Task DeleteRoom(int roomId)
+    {
+        await RoomService.DeleteRoomAsync(roomId);
+        NavigationManager.Refresh(true);
+    }
+}

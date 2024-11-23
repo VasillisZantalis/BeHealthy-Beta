@@ -41,7 +41,7 @@ public partial class Index
         _navigationManager.NavigateTo($"/departments/edit/{departmentId}");
     }
 
-    public async void DeleteDepartment(int departmentId)
+    public async Task DeleteDepartment(int departmentId)
     {
         await _departmentService.DeleteDepartmentAsync(departmentId);
         _navigationManager.Refresh(forceReload: true);

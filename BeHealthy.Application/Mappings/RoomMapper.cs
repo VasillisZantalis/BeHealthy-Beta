@@ -12,7 +12,8 @@ public static class RoomMapper
             Id = room.Id,
             Name = room.Name,
             Number = room.Number,
-            Department = room.Department?.Name ?? string.Empty
+            Department = room.Department?.Name ?? string.Empty,
+            DepartmentId = room.DepartmentId
         };
     }
 
@@ -32,6 +33,7 @@ public static class RoomMapper
         {
             Name = dto.Name,
             Number = dto.Number,
+            DepartmentId = dto.DepartmentId
         };
     }
 
@@ -41,7 +43,8 @@ public static class RoomMapper
         {
             Id = dto.Id,
             Name = dto.Name,
-            Number = dto.Number
+            Number = dto.Number,
+            DepartmentId = dto.DepartmentId
         };
     }
 
@@ -52,7 +55,39 @@ public static class RoomMapper
             Id = room.Id,
             Name = room.Name,
             Number = room.Number,
-            Department = room.Department?.Name ?? string.Empty
+            DepartmentId = room.DepartmentId
+        };
+    }
+
+    public static RoomDto MapToSelf(this RoomDto room)
+    {
+        return new RoomDto
+        {
+            Id = room.Id,
+            Name = room.Name,
+            Number = room.Number,
+            Department = room.Department
+        };
+    }
+
+    public static RoomForUpdateDto MapDtoToUpdateDto(this RoomDto room)
+    {
+        return new RoomForUpdateDto
+        {
+            Id = room.Id,
+            Name = room.Name,
+            Number = room.Number,
+            DepartmentId = room.DepartmentId
+        };
+    }
+
+    public static RoomForCreationDto MapDtoToCreateDto(this RoomDto room)
+    {
+        return new RoomForCreationDto
+        {
+            Name = room.Name,
+            Number = room.Number,
+            DepartmentId = room.DepartmentId
         };
     }
 

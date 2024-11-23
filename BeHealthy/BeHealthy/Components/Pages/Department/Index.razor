@@ -23,7 +23,7 @@ else if (_departments is null || !_departments.Any())
 }
 else
 {
-    <div class="appointmentsTableDiv mt-3">
+    <div class="departments-container mt-3">
         <div class="card">
             <div class="card-header d-flex flex-row justify-content-end">
                 <div class="px-1">
@@ -46,7 +46,7 @@ else
                         <PropertyColumn Title="@Resource.Location"
                                         Property="@(x => x.Location)" />
                         <PropertyColumn Title="@Resource.HeadΟfDepartment"
-                                        Property="@(x => x.HeadOfDepartment != null ? x.HeadOfDepartment.FullName : "None")" />
+                                        Property="@(x => x.HeadOfDepartment != null ? x.HeadOfDepartment.FullName : Resource.NotAvailable)" />
                         @if (_hasActionRights)
                         {
                             <TemplateColumn>
@@ -54,7 +54,7 @@ else
                                     <button class="btn w-100 text-start" @onclick="@(() => EditDepartment(context.Id))">
                                         <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
                                     </button>
-                                    <button class="btn w-100 text-start" @onclick="async () => DeleteDepartment(context.Id)">
+                                    <button class="btn w-100 text-start" @onclick="async () => await DeleteDepartment(context.Id)">
                                         <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
                                     </button>
                                 </ActionsDropdown>
