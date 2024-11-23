@@ -98,13 +98,8 @@
 
         if (PrescriptionId.HasValue)
         {
-            var prescription = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value);
+            _prescriptionDto = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value);
             _lockNonModifiable = true;
-
-            _prescriptionDto.Medication = prescription.Medication;
-            _prescriptionDto.Dosage = prescription.Dosage;
-            _prescriptionDto.DatePrescribed = prescription.DatePrescribed;
-            _prescriptionDto.DoctorId = prescription.DoctorId;
         }
     }
 
@@ -126,28 +121,19 @@
 
         if (_isEditMode && PrescriptionId.HasValue)
         {
-            var prescriptionForUpdate = new PrescriptionForUpdateDto
-            {
-                Id = PrescriptionId.Value,
-                Medication = _prescriptionDto.Medication,
-                Dosage = _prescriptionDto.Dosage
-            };
+            var prescriptionForUpdate = _prescriptionDto.MapDtoToUpdateDto();
+
             var response = await PrescriptionService.UpdatePrescriptionAsync(prescriptionForUpdate);
+
             CloseModal();
             await Successful.InvokeAsync(response.Success);
         }
         else
         {
-             var prescriptionForCreation = new PrescriptionForCreationDto
-            {
-                Medication = _prescriptionDto.Medication,
-                Dosage = _prescriptionDto.Dosage,
-                DatePrescribed = _prescriptionDto.DatePrescribed,
-                DoctorId = _prescriptionDto.DoctorId,
-                PatientId = _prescriptionDto.PatientId
-            };
+            var prescriptionForCreation = _prescriptionDto.MapDtoToCreateDto();
 
             var response = await PrescriptionService.AddPrescriptionAsync(prescriptionForCreation);
+
             CloseModal();
             await Successful.InvokeAsync(response.Success);
         }

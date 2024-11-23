@@ -67,6 +67,29 @@ public static class PrescriptionMapper
         };
     }
 
+    public static PrescriptionForCreationDto MapDtoToCreateDto(this PrescriptionDto prescription)
+    {
+        return new PrescriptionForCreationDto
+        {
+            Medication = prescription.Medication,
+            Dosage = prescription.Dosage,
+            DatePrescribed = prescription.DatePrescribed,
+            DoctorId = prescription.DoctorId,
+            PatientId = prescription.PatientId
+        };
+    }
+
+    public static PrescriptionForUpdateDto MapDtoToUpdateDto(this PrescriptionDto prescription)
+    {
+        return new PrescriptionForUpdateDto
+        {
+            Id = prescription.Id,
+            Medication = prescription.Medication,
+            Dosage = prescription.Dosage
+        };
+    }
+
+
     public static IEnumerable<PrescriptionDto> MapToDto(this IEnumerable<Prescription> prescriptions)
     {
         return prescriptions.Select(p => p.MapToDto());
