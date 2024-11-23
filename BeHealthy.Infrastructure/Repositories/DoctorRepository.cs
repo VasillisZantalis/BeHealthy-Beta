@@ -54,6 +54,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 
         return await context.Doctors
             .Include(i => i.User)
+            .Where(w => w.UserId == userId)
             .Select(s => new Doctor
             {
                 Id = s.Id,
@@ -64,6 +65,6 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
                 Image = s.Image,
                 User = s.User
             })
-            .FirstOrDefaultAsync(w => w.UserId == userId);
+            .FirstOrDefaultAsync();
     }
 }
