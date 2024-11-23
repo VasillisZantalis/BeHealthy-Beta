@@ -1,0 +1,15 @@
+﻿@using BeHealthy.States
+@rendermode InteractiveServer
+
+@inject NavMenuState NavMenuState
+
+<button class="btn btn-lg btn-toolbar m-0 p-0 fs-4" @onclick="ToggleNavMenu" style="outline: none!important; border: none!important; box-shadow: none !important;">
+    <Icon IconClass="@FAIcon.Bars"/>
+</button>
+
+@code {
+    private void ToggleNavMenu()
+    {
+        NavMenuState.Toggle();
+    }
+}

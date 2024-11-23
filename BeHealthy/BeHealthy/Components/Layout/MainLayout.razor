@@ -4,16 +4,15 @@
     <ChildContent>
         <div class="page">
         <AuthorizeView>
-            <div class="sidebar h-auto">
-                <NavMenu />
-            </div>
+            <NavMenu />
         </AuthorizeView>
 
         <main>
             <div class="top-row px-4">
+                <NavToggleComponent />
                 <AuthorizeView>
                     <Authorized>
-                        <div class="d-flex flex-row align-items-center gap-3">
+                        <div class="d-flex flex-row align-items-center ms-auto gap-3">
                             <CultureSelector />
                             <p class="m-0 p-0">@Resource.Hello, @context.User.Identity?.Name</p>
                             <div class="nav-item clickable">

@@ -1,112 +1,112 @@
-﻿@rendermode InteractiveServer
+﻿@using BeHealthy.States
 
 @inject IStringLocalizer<Resource> localizer
+@inject NavMenuState NavMenuState
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">BeHealthy</a>
-        <button title="Toggle" class="navbar-toggler btn-primary" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+@rendermode InteractiveServer
 
-<div class="nav-scrollable">
-    <div class="@NavMenuCssClass">
-        <nav class="flex-column">
-            <div class="m-3 ms-2">
-                <h5 class="text-white-50">@Resource.Management</h5>
+<div style="@(NavMenuState.IsVisible ? "display: block;" : "display: none;")">
+    <div class="sidebar h-auto main-color" style="min-width: 250px;">
+
+        <div class="top-row ps-3 navbar navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="">BeHealthy</a>
             </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <Icon IconClass="@FAIcon.House" SizeClass="fs-5" />&nbsp; @Resource.Dashboard
-                </NavLink>
-            </div>
+        </div>
 
-            <AuthorizeView Roles="Admin, Doctor">
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="doctors">
-                        <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-5" />&nbsp; @Resource.Doctors
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="nurses">
-                        <Icon IconClass="@FAIcon.UserNurse" SizeClass="fs-5" />&nbsp; @Resource.Nurses
-                    </NavLink>
-                </div>
-            </AuthorizeView>
-
-            <AuthorizeView Roles="Admin, Doctor, Nurse">
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="patients">
-                        <Icon IconClass="@FAIcon.Viruses" SizeClass="fs-5" />&nbsp; @Resource.Patients
-                    </NavLink>
-                </div>
-            </AuthorizeView>
-
-            <AuthorizeView Roles="Admin, Doctor, Patient">
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="appointment">
-                        <Icon IconClass="@FAIcon.CalendarDays" SizeClass="fs-5" />&nbsp; @Resource.Appointments
-                    </NavLink>
-                </div>
-            </AuthorizeView>
-
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="rooms">
-                    <Icon IconClass="@FAIcon.BedPulse" SizeClass="fs-5" />&nbsp; @Resource.Rooms
-                </NavLink>
-            </div>
-
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="auth">
-                    <Icon IconClass="@FAIcon.UserLock" SizeClass="fs-5" />&nbsp; @Resource.Authorization
-                </NavLink>
-            </div>
-
-            <AuthorizeView Roles="Admin">
-                <div class="mt-3">
-                    <h5 class="ms-2 text-white-50">@Resource.Configuration</h5>
-                    <div class="nav-item px-3 pt-0">
-                        <NavLink class="nav-link" href="settings">
-                            <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />&nbsp; @Resource.Settings
-                        </NavLink>
+        <div class="nav-scrollable">
+            <div>
+                <nav class="flex-column">
+                    <div class="m-3 ms-2">
+                        <h5 class="text-white-50">@Resource.Management</h5>
                     </div>
-
-                    <div class="nav-item px-3 pt-0">
-                        <NavLink class="nav-link d-flex flex-row" @onclick="ToggleRoles">
-                            <Icon IconClass="@FAIcon.UserLock" SizeClass="fs-5" />&nbsp; @Resource.Role
-                            <Icon IconClass="@(!isRolesExpanded ? FAIcon.ChevronRight : FAIcon.ChevronDown)" TextClass="ms-auto" />
-                        </NavLink>
-                        <ul class="flex-column list-unstyled" style="@SubMenuStyle">
-                            <li class="">
-                                <NavLink class="nav-link ms-2 ps-5" href="roles/privileges">
-                                    @Resource.Privileges 
-                                </NavLink>
-                            </li>
-                        </ul>
-                    </div>
-                    
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="departments">
-                            <Icon IconClass="@FAIcon.Hospital" SizeClass="fs-5" />&nbsp; @Resource.Departments
+                        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                            <Icon IconClass="@FAIcon.House" SizeClass="fs-5" />&nbsp; @Resource.Dashboard
                         </NavLink>
                     </div>
-                </div>
-            </AuthorizeView>
+
+                    <AuthorizeView Roles="Admin, Doctor">
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="doctors">
+                                <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-5" />&nbsp; @Resource.Doctors
+                            </NavLink>
+                        </div>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="nurses">
+                                <Icon IconClass="@FAIcon.UserNurse" SizeClass="fs-5" />&nbsp; @Resource.Nurses
+                            </NavLink>
+                        </div>
+                    </AuthorizeView>
+
+                    <AuthorizeView Roles="Admin, Doctor, Nurse">
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="patients">
+                                <Icon IconClass="@FAIcon.Viruses" SizeClass="fs-5" />&nbsp; @Resource.Patients
+                            </NavLink>
+                        </div>
+                    </AuthorizeView>
+
+                    <AuthorizeView Roles="Admin, Doctor, Patient">
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="appointment">
+                                <Icon IconClass="@FAIcon.CalendarDays" SizeClass="fs-5" />&nbsp; @Resource.Appointments
+                            </NavLink>
+                        </div>
+                    </AuthorizeView>
+
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="rooms">
+                            <Icon IconClass="@FAIcon.BedPulse" SizeClass="fs-5" />&nbsp; @Resource.Rooms
+                        </NavLink>
+                    </div>
+
+                    <AuthorizeView Roles="Admin">
+                        <div class="mt-3">
+                            <h5 class="ms-2 text-white-50">@Resource.Configuration</h5>
+                            <div class="nav-item px-3 pt-0">
+                                <NavLink class="nav-link" href="settings">
+                                    <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />&nbsp; @Resource.Settings
+                                </NavLink>
+                            </div>
+
+                            <div class="nav-item px-3 pt-0">
+                                <NavLink class="nav-link d-flex flex-row" @onclick="ToggleRoles">
+                                    <Icon IconClass="@FAIcon.UserLock" SizeClass="fs-5" />&nbsp; @Resource.Role
+                                    <Icon IconClass="@(!isRolesExpanded ? FAIcon.ChevronRight : FAIcon.ChevronDown)" TextClass="ms-auto" />
+                                </NavLink>
+                                <ul class="flex-column list-unstyled" style="@SubMenuStyle">
+                                    <li class="">
+                                        <NavLink class="nav-link ms-2 ps-5" href="roles/privileges">
+                                            @Resource.Privileges 
+                                        </NavLink>
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="nav-item px-3">
+                                <NavLink class="nav-link" href="departments">
+                                    <Icon IconClass="@FAIcon.Hospital" SizeClass="fs-5" />&nbsp; @Resource.Departments
+                                </NavLink>
+                            </div>
+                        </div>
+                    </AuthorizeView>
        
-        </nav>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 
 @code {
-    private bool collapseNavMenu = false;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
+    protected override void OnInitialized()
     {
-        collapseNavMenu = !collapseNavMenu;
+        NavMenuState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        NavMenuState.OnChange -= StateHasChanged;
     }
 
     private bool isRolesExpanded = false;

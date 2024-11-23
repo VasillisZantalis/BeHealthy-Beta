@@ -122,7 +122,7 @@
                 _prescriptions.Remove(deletedPrescription);
             }
 
-            await _toastr.ShowSuccess(Resource.Success);
+            await _toastr.ShowSuccess(Resource.Success, 1000);
         }
         else
         {
@@ -134,7 +134,7 @@
     {
         if (successful)
         {
-            await _toastr.ShowSuccess(Resource.Success);
+            await _toastr.ShowSuccess(Resource.Success, 1000);
             NavigationManager.Refresh(true);
         }
         else

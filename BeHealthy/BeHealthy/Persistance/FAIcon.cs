@@ -29,4 +29,5 @@ public static class FAIcon
     public static string MobileScreenButton => "fa-solid fa-mobile-screen-button";
     public static string Search => "fa-solid fa-magnifying-glass";
     public static string RolePrivilege => "fa-solid fa-address-card";
+    public static string Bars => "fa-solid fa-bars";
 }
