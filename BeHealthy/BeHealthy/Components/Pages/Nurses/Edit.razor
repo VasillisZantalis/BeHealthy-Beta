@@ -5,7 +5,6 @@
 
 @inject INurseService NurseService
 @inject IDepartmentService DepartmentService
-@inject IUserStore<ApplicationUser> UserStore
 @inject UserManager<ApplicationUser> UserManager
 
 <PageTitle>@Resource.Edit</PageTitle>
@@ -122,14 +121,15 @@
             if (!result.Succeeded)
             {
                 _inProgress = false;
-                _alert.ShowSuccess("Something Went Wrong");
+                _alert.ShowSuccess(Resource.SomethingWentWrong);
+            }
+            else
+            {
+                await NurseService.UpdateNurseAsync(_nurseForUpdateDto.Id, _nurseForUpdateDto);
+                _alert.ShowSuccess(Resource.Success);
             }
         }
 
-        await NurseService.UpdateNurseAsync(_nurseForUpdateDto.Id, _nurseForUpdateDto);
-
         _inProgress = false;
-        string successMessage = "Successful";
-        _alert.ShowSuccess(successMessage);
     }
 }

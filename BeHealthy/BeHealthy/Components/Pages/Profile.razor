@@ -1,0 +1,123 @@
+﻿@page "/profile"
+@using BeHealthy.Application.Dtos.User
+@rendermode InteractiveServer
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IDoctorService DoctorService
+@inject INurseService NurseService
+@inject IPatientService PatientServic
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>@Resource.Profile</PageTitle>
+
+<SectionContent SectionName="page-title">
+    <BackButton BackPath="@(RoutingEndpoints.HOME_PAGE)" />
+    <span>@Resource.Profile</span>
+</SectionContent>
+
+<div id="profile-container" class="container-fluid p-5 border rounded shadow">
+    <EditForm id="profileForm" Model="_profileDto" OnValidSubmit="UpdateProfile">
+        <div class="row">
+            <div class="text-center mb-3">
+                <img src="@(_profileDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+            </div>
+            <div class="form-control mb-3">
+                <InputFile class="form-control" OnChange="OnFileChange" />
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="_profileDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <label for="firstName">@Resource.FirstName</label>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="_profileDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <label for="lastName">@Resource.LastName</label>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-success px-5">@Resource.Save</button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private ProfileDto _profileDto { get; set; } = new();
+    private UserRole? _userRole;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.GetUserId();
+
+        var user = await UserManager.FindByIdAsync(userId);
+
+        if (user is null)
+            NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
+
+        _userRole = authState.User.GetUserRoleEnum();
+
+        switch (_userRole)
+        {
+            case UserRole.Doctor when userId is not null:
+                _profileDto = await GetDoctorProfileByUserId(userId);
+                break;
+            case UserRole.Nurse when userId is not null:
+                break;
+            case UserRole.Patient when userId is not null:
+                break;
+            default:
+                break;
+        }
+    }
+
+    async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        var format = e.File.ContentType;
+        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
+        var buffer = new byte[resizeImage.Size];
+        await resizeImage.OpenReadStream().ReadAsync(buffer);
+        _profileDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+    }
+
+    private async Task<ProfileDto> GetDoctorProfileByUserId(string userId) => await DoctorService.GetDoctorProfileByUserIdAsync(userId) ?? new();
+
+    private async Task UpdateProfile()
+    {
+        var user = await UserManager.FindByIdAsync(_profileDto.UserId);
+
+        if (user != null)
+        {
+            user.FirstName = _profileDto.FirstName;
+            user.LastName = _profileDto.LastName;
+            user.PhoneNumber = _profileDto.PhoneNumber;
+
+            var result = await UserManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                //_inProgress = false;
+                //_alert.ShowSuccess(Resource.SomethingWentWrong);
+            }
+            else
+            {
+                switch (_userRole)
+                {
+                    case UserRole.Doctor:
+                        var doctorForUpdate = _profileDto.MapToDoctorForUpdateDto();
+                        await DoctorService.UpdateDoctorAsync(doctorForUpdate.Id, doctorForUpdate);
+                        break;
+                    case UserRole.Nurse:
+                        break;
+                    case UserRole.Patient:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+}

@@ -366,6 +366,9 @@
   <data name="Privileges" xml:space="preserve">
     <value>Δικαιώματα</value>
   </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Προφίλ</value>
+  </data>
   <data name="Reason" xml:space="preserve">
     <value>Αιτία</value>
   </data>

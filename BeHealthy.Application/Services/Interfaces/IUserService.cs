@@ -1,6 +1,7 @@
-﻿namespace BeHealthy.Application.Services.Interfaces;
+﻿using BeHealthy.Application.Dtos.User;
+
+namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IUserService
 {
-    Task DeleteUserAsync(string id);
 }

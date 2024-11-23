@@ -10,4 +10,5 @@ public static class RoutingEndpoints
     public const string NURSES_PAGE = "/nurses";
     public const string ROOMS_PAGE = "/rooms";
     public const string SETTINGS_PAGE = "/settings";
+    public const string ACCESSDENIED_PAGE = "/accessdenied";
 }

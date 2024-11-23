@@ -3,6 +3,7 @@ using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Application.Mappings;
+using BeHealthy.Application.Dtos.User;
 
 namespace BeHealthy.Application.Services;
 
@@ -48,6 +49,27 @@ public class DoctorService : IDoctorService
     {
         var doctorAppointments = await _unitOfWork.DoctorRepository.GetDoctorAppointmentsByUserIdAsync(userId);
         return doctorAppointments.MapToDto();
+    }
+
+    public async Task<ProfileDto?> GetDoctorProfileByUserIdAsync(string userId)
+    {
+        var doctor = await _unitOfWork.DoctorRepository.GetDoctorByUserIdAsync(userId);
+
+        if (doctor is null) return null; 
+
+        var profile = new ProfileDto
+        {
+            Id = doctor.Id,
+            UserId = doctor.UserId,
+            FirstName = doctor.FirstName,
+            LastName = doctor.LastName,
+            Speciality = doctor.Specialty,
+            Image = doctor.Image,
+            Email = doctor.User?.Email,
+            PhoneNumber = doctor.User?.PhoneNumber,
+        };
+
+        return profile;
     }
 }
 

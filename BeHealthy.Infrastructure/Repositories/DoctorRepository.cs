@@ -47,4 +47,23 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
                 .Where(a => a.Doctor!.UserId == userId)
                 .ToListAsync();
     }
+
+    public async Task<Doctor?> GetDoctorByUserIdAsync(string userId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        return await context.Doctors
+            .Include(i => i.User)
+            .Select(s => new Doctor
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                Specialty = s.Specialty,
+                UserId = userId,
+                Image = s.Image,
+                User = s.User
+            })
+            .FirstOrDefaultAsync(w => w.UserId == userId);
+    }
 }

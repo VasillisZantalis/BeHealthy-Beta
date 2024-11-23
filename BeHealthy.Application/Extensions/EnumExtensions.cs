@@ -1,6 +1,7 @@
 ﻿using BeHealthy.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace BeHealthy.Application.Extensions;
 

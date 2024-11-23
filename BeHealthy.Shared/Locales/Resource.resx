@@ -366,6 +366,9 @@
   <data name="Privileges" xml:space="preserve">
     <value>Privileges</value>
   </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
   <data name="Reason" xml:space="preserve">
     <value>Reason</value>
   </data>

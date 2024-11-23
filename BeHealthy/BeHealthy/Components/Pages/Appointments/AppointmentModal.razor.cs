@@ -23,7 +23,7 @@ public partial class AppointmentModal
     public List<PatientDto> Patients { get; set; } = default!;
 
     [Parameter]
-    public string? Role { get; set; }
+    public UserRole? Role { get; set; }
 
     private List<SelectItem> _doctorsSelect = new();
     private List<SelectItem> _patientsSelect = new();
@@ -31,7 +31,7 @@ public partial class AppointmentModal
     //private List<SelectItem> _statusDropdownItems = new();
     //private List<SelectItem> _reasonDropdownItems = new();
 
-    private bool LockDoctorsDropdown => Role == UserRole.Doctor.GetDisplayName();
+    private bool LockDoctorsDropdown => Role == UserRole.Doctor;
 
     private bool _show;
     private bool _isEdit;

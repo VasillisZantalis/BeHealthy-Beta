@@ -1,5 +1,5 @@
 ﻿@page "/doctors/create"
-@attribute [Authorize(Roles = "Admin, Doctor")]
+@attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
 
 @inject UserManager<ApplicationUser> UserManager

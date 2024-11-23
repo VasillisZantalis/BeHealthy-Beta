@@ -142,14 +142,15 @@
             if (!result.Succeeded)
             {
                 _inProgress = false;
-                _alert.ShowSuccess("Something Went Wrong");
+                _alert.ShowSuccess(Resource.SomethingWentWrong);
+            }
+            else
+            {
+                await PatientService.UpdatePatientAsync(_patientForUpdateDto.Id, _patientForUpdateDto);
+                _alert.ShowSuccess(Resource.Success);
             }
         }
 
-        await PatientService.UpdatePatientAsync(_patientForUpdateDto.Id, _patientForUpdateDto);
-
         _inProgress = false;
-        string successMessage = "Successful";
-        _alert.ShowSuccess(successMessage);
     }
 }

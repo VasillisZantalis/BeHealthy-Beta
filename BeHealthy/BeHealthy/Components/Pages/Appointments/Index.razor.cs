@@ -45,7 +45,7 @@ public partial class Index
     private int deleteItemId;
 
     private bool _isLoading = default;
-    private string? roleClaim;
+    private UserRole? userRole;
 
     private PaginationState _paginationState = new();
 
@@ -57,27 +57,24 @@ public partial class Index
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _currentUserId = authState.User.GetUserId();
 
-        roleClaim = authState.User.GetUserRole();
+        userRole = authState.User.GetUserRoleEnum();
 
-        if (Enum.TryParse(typeof(UserRole), roleClaim, out var roleEnum) && roleEnum is UserRole userRole)
+        switch (userRole)
         {
-            switch (userRole)
-            {
-                case UserRole.Doctor when _currentUserId is not null:
-                    await LoadDoctorAppointments(_currentUserId);
-                    break;
-                case UserRole.Patient when _currentUserId is not null:
-                    await LoadPatientAppointments(_currentUserId);
-                    break;
-                default:
-                    await LoadAppointments();
-                    break;
-            }
-
-            hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
-            hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
-            hasActionRights = hasEditRight || hasDeleteRight;
+            case UserRole.Doctor when _currentUserId is not null:
+                await LoadDoctorAppointments(_currentUserId);
+                break;
+            case UserRole.Patient when _currentUserId is not null:
+                await LoadPatientAppointments(_currentUserId);
+                break;
+            default:
+                await LoadAppointments();
+                break;
         }
+
+        hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
+        hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
+        hasActionRights = hasEditRight || hasDeleteRight;
 
         await LoadDoctors();
         await LoadPatients();
@@ -160,7 +157,7 @@ public partial class Index
     {
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
 
-        if (roleClaim == UserRole.Doctor.GetDisplayName())
+        if (userRole == UserRole.Doctor)
         {
             _doctors = _doctors.Where(d => d.UserId.ToString() == _currentUserId).ToList();
         }

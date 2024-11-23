@@ -1,5 +1,5 @@
 ﻿@page "/doctors/edit/{DoctorId:int}"
-@attribute [Authorize(Roles = "Admin, Doctor")]
+@attribute [Authorize(Roles = "Admin")]
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
@@ -88,18 +88,18 @@
     private bool _inProgress = false;
     private Alert _alert = new();
 
-    private List<SelectItem> _departmentsSelect = new List<SelectItem>();
+    private List<SelectItem>? _departmentsSelect = new List<SelectItem>();
 
     protected override async Task OnParametersSetAsync()
     {
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
-        _departmentsSelect = _departments.Select(s => new SelectItem
+        _departmentsSelect = _departments?.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        _departmentsSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
         _doctorForUpdateDto = doctor.MapToUpdateDto();
     }
 
@@ -127,14 +127,14 @@
             if (!result.Succeeded)
             {
                 _inProgress = false;
-                _alert.ShowSuccess("Something Went Wrong");
+                _alert.ShowSuccess(Resource.SomethingWentWrong);
+            }
+            else 
+            {
+                await DoctorService.UpdateDoctorAsync(_doctorForUpdateDto.Id, _doctorForUpdateDto);
+                _alert.ShowSuccess(Resource.Success);
             }
         }
-        
-        await DoctorService.UpdateDoctorAsync(_doctorForUpdateDto.Id, _doctorForUpdateDto);
-
         _inProgress = false;
-        string successMessage = "Successful";
-        _alert.ShowSuccess(successMessage);
     }
 }

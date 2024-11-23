@@ -20,15 +20,15 @@ namespace BeHealthy.States
         public async Task LoadUserPrivileges()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
+            var userRole = authState.User.GetUserRoleEnum();
 
-            _privileges = await _privilegeService.GetPrivilegesForRoleAsync(userRole);
+            _privileges = await _privilegeService.GetPrivilegesForRoleAsync(userRole!.Value);
         }
 
         public async Task<bool> HasPrivilegeAsync(string privilegeName)
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
+            var userRole = authState.User.GetUserRoleEnum();
 
             if (userRole == UserRole.Admin)
                 return true;

@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
 using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Dtos.User;
 
 namespace BeHealthy.Application.Services.Interfaces;
 
@@ -7,6 +8,7 @@ public interface IDoctorService
 {
     Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync();
     Task<DoctorDto> GetDoctorByIdAsync(int id);
+    Task<ProfileDto?> GetDoctorProfileByUserIdAsync(string userId);
     Task<IEnumerable<AppointmentDto>> GetDoctorAppointmentsByUserIdAsync(string userId);
     Task AddDoctorAsync(DoctorForCreationDto doctor);
     Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctor);
