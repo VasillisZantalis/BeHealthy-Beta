@@ -1,28 +1,23 @@
 ﻿using BeHealthy.Application.Dtos.Nurse;
-using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Modals;
-using BeHealthy.Domain;
 using BeHealthy.Persistance;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Components.Pages.Nurses;
 
-public partial class Index
+public partial class Index : BasePage
 {
     private string _createUserHref { get; set; } = default!;
-    [Inject] IUserService _userService { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
-    [Inject] PrivilegeStateService _privilegeStateService { get; set; } = default!;
+    
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
 
     private List<NurseDto> _nurses { get; set; } = default!;
     private ConfirmDeleteModal _confirmDeleteModal = new();
 
-    private bool _isLoading = default;
     private string _selectedView = "Card";
     private bool hasActionRights;
     private bool hasEditRight;
@@ -34,13 +29,13 @@ public partial class Index
 
     protected override async Task OnInitializedAsync()
     {
-        _isLoading = true;
+        LoaderService.SetLoader(true);
         _nurses = (await _nurseService.GetAllNursesAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
-        hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
-        hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
+        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
+        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
         hasActionRights = hasEditRight || hasDeleteRight;
-        _isLoading = false;
+        LoaderService.SetLoader(false);
     }
 
     private void OnPageSizeChanged(ChangeEventArgs e)

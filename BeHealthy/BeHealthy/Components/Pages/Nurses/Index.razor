@@ -1,7 +1,7 @@
 ﻿@page "/nurses"
 @attribute [Authorize]
-@attribute [StreamRendering]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 <PageTitle>@Resource.Nurses</PageTitle>
 
@@ -21,11 +21,7 @@
     </div>
 </div>
 
-@if (_isLoading)
-{
-    <Loader />
-}
-else if (_nurses is null)
+@if (_nurses is null)
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Nurses)</p>
 }

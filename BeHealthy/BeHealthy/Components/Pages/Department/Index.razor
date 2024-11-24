@@ -1,7 +1,7 @@
 ﻿@page "/departments"
-@rendermode InteractiveServer
 @attribute [Authorize(Roles = "Admin")]
-@attribute [StreamRendering]
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 <PageTitle>@Resource.Departments</PageTitle>
 
@@ -13,11 +13,7 @@
     </button>
 </div>
 
-@if (_isLoading)
-{
-    <Loader/>
-}
-else if (_departments is null || !_departments.Any())
+@if (_departments is null || !_departments.Any())
 {
     <p>@string.Format(@Resource.NoAvailable, @Resource.Departments)</p>
 }

@@ -13,11 +13,9 @@ namespace BeHealthy.Components.Pages.Patients;
 public partial class Index : BasePage
 {
     private string _createUserHref { get; set; } = default!;
-    [Inject] IUserService _userService { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
-    [Inject] PrivilegeStateService _privilegeStateService { get; set; } = default!;
 
     private List<PatientDto> _patients { get; set; } = default!;
     private ConfirmDeleteModal _confirmDeleteModal = new();
@@ -38,8 +36,8 @@ public partial class Index : BasePage
 
         _paginationState.ItemsPerPage = 10;
 
-        hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
-        hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
+        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
+        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
         hasActionRights = hasEditRight || hasDeleteRight;
         LoaderService.SetLoader(false);
     }
