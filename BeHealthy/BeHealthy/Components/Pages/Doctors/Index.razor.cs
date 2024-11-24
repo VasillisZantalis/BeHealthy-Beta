@@ -19,7 +19,6 @@ public partial class Index
     [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] PrivilegeStateService _privilegeStateService { get; set; } = default!;
-    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<DoctorDto> _doctors { get; set; } = default!;
     private ConfirmDeleteModal _confirmDeleteModal = new();
