@@ -1,19 +1,16 @@
 ﻿using BeHealthy.Application.Dtos.Patient;
-using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Modals;
-using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BeHealthy.Components.Pages.Patients;
 
-public partial class Index
+public partial class Index : BasePage
 {
     private string _createUserHref { get; set; } = default!;
     [Inject] IUserService _userService { get; set; } = default!;
@@ -25,7 +22,6 @@ public partial class Index
     private List<PatientDto> _patients { get; set; } = default!;
     private ConfirmDeleteModal _confirmDeleteModal = new();
 
-    private bool _isLoading = default;
     private string _selectedView = "Card";
     private bool hasActionRights;
     private bool hasEditRight;
@@ -37,8 +33,7 @@ public partial class Index
 
     protected override async Task OnInitializedAsync()
     {
-        _isLoading = true;
-
+        LoaderService.SetLoader(true);
         await LoadPatients(_filters);
 
         _paginationState.ItemsPerPage = 10;
@@ -46,8 +41,7 @@ public partial class Index
         hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
         hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
         hasActionRights = hasEditRight || hasDeleteRight;
-
-        _isLoading = false;
+        LoaderService.SetLoader(false);
     }
 
     private void OnPageSizeChanged(ChangeEventArgs e)
@@ -67,11 +61,9 @@ public partial class Index
 
     public async Task LoadPatients(FilterParams filters)
     {
-        _isLoading = true;
-
+        LoaderService.SetLoader(true);
         _patients = (await _patientService.GetAllPatientsAsync(filters.FirstName, filters.LastName)).ToList();
-        
-        _isLoading = false;
+        LoaderService.SetLoader(false);
     }
 
     private void EditPatient(int id)

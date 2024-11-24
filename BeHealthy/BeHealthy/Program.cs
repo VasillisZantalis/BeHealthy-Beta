@@ -65,6 +65,7 @@ builder.Services.Configure<JsonOptions>(options =>
 builder.Services.AddScoped<ModalStateService>();
 builder.Services.AddScoped<NavMenuState>();
 builder.Services.AddScoped<PrivilegeStateService>();
+builder.Services.AddScoped<LoaderServiceState>();
 
 var app = builder.Build();
 
