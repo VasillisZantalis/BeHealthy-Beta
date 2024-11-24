@@ -66,6 +66,7 @@ builder.Services.AddScoped<ModalStateService>();
 builder.Services.AddScoped<NavMenuState>();
 builder.Services.AddScoped<PrivilegeStateService>();
 builder.Services.AddScoped<LoaderServiceState>();
+builder.Services.AddScoped<BreadcrumbServiceState>();
 
 var app = builder.Build();
 

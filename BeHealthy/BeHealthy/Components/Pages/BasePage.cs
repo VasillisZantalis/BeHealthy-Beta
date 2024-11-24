@@ -12,4 +12,14 @@ public class BasePage : ComponentBase
 
     [Inject] 
     protected PrivilegeStateService PrivilegeStateService { get; set; } = default!;
+
+    [Inject]
+    protected BreadcrumbServiceState Breadcrumbs { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Breadcrumbs.ResetBreadcrumb();
+
+        await base.OnInitializedAsync();
+    }
 }

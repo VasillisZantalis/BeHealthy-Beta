@@ -1,11 +1,9 @@
 ﻿@page "/appointment"
 @attribute [Authorize]
-@attribute [StreamRendering]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 <PageTitle>@Resource.Appointments</PageTitle>
-
-<SectionContent SectionName="page-title">@Resource.Appointments</SectionContent>
 
 <div class="">
     <button class="btn btn-outline-secondary rounded-pill px-4 mb-3" @onclick="() => _appointmentModal.Open()">
@@ -15,11 +13,7 @@
 
 <Alert @ref="_alert"/>
 
-@if (_isLoading)
-{
-    <Loader/>
-}
-else if (_appointments is null)
+@if (_appointments is null)
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Appointments)</p>
 }

@@ -1,8 +1,7 @@
 ﻿using BeHealthy.Application.Dtos.Nurse;
+using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Interfaces;
-using BeHealthy.Domain.Entities;
-using BeHealthy.Application.Mappings;
 
 namespace BeHealthy.Application.Services;
 

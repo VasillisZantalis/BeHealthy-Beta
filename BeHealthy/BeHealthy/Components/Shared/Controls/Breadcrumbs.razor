@@ -1,0 +1,45 @@
+﻿@implements IDisposable
+@rendermode @(new InteractiveServerRenderMode(false))
+
+@inject BreadcrumbServiceState BreadcrumbServiceState
+
+<div class="container-fluid">
+    <div class="bg-light rounded-pill p-3 mt-2 mb-4 fw-bold fs-5 d-flex align-items-center">
+        <div class="me-3">
+            <BackButton OnClick="BackButtonClick" />
+        </div>
+
+        <ul class="breadcrumb mb-0 @(!BreadcrumbServiceState.IsBreadcrumbVisible ? "invisible" : "")">
+            @foreach (var item in BreadcrumbServiceState.Breadcrumbs)
+            {
+                if (item.Active)
+                {
+                    <li class="breadcrumb-item active" aria-current="page">@item.Text</li>
+                }
+                else
+                {
+                    <li class="breadcrumb-item">
+                        <a class="" href="@item.Link">@item.Text</a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+@code {
+    private async Task BackButtonClick()
+    {
+        BreadcrumbServiceState.BackButtonClickHandler();
+    }
+
+    protected override void OnInitialized()
+    {
+        BreadcrumbServiceState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        BreadcrumbServiceState.OnChange -= StateHasChanged;
+    }
+}

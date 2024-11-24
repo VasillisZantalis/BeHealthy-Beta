@@ -10,11 +10,6 @@
 
 <PageTitle>@Resource.Create</PageTitle>
 
-<SectionContent SectionName="page-title">
-    <BackButton BackPath="@(RoutingEndpoints.DOCTORS_PAGE)" />
-    <span>@Resource.Doctors/@Resource.Create</span>
-</SectionContent>
-
 <div class="container-fluid p-5 border rounded shadow">
     <EditForm Model="Input" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
         <DataAnnotationsValidator />

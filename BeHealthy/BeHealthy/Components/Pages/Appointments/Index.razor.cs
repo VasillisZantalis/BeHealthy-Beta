@@ -16,16 +16,14 @@ using System.Data;
 
 namespace BeHealthy.Components.Pages.Appointments;
 
-public partial class Index
+public partial class Index : BasePage
 {
     private IEnumerable<AppointmentDto> _appointments = default!;
 
     [Inject] IAppointmentService _appointmentService { get; set; } = default!;
-    [Inject] IUserService _userService { get; set; } = default!;
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
-    [Inject] PrivilegeStateService _privilegeStateService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -41,17 +39,16 @@ public partial class Index
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
-
     private int deleteItemId;
 
-    private bool _isLoading = default;
     private UserRole? userRole;
 
     private PaginationState _paginationState = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _isLoading = true;
+        LoaderService.SetLoader(true);
+
         _paginationState.ItemsPerPage = 10;
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
@@ -72,13 +69,14 @@ public partial class Index
                 break;
         }
 
-        hasEditRight = await _privilegeStateService.HasPrivilegeAsync("CanEditAppointment");
-        hasDeleteRight = await _privilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
+        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
+        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
         hasActionRights = hasEditRight || hasDeleteRight;
 
         await LoadDoctors();
         await LoadPatients();
-        _isLoading = false;
+
+        LoaderService.SetLoader(false);
     }
 
     private void OnPageSizeChanged(ChangeEventArgs e)

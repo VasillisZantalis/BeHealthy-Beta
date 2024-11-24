@@ -1,11 +1,9 @@
 ﻿@page "/"
-
-@rendermode InteractiveServer
 @attribute [Authorize]
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 <PageTitle>@Resource.Dashboard</PageTitle>
-
-<SectionContent SectionName="page-title">@Resource.Dashboard</SectionContent>
 
 <div class="container-fluid">
     <div class="row mb-4">

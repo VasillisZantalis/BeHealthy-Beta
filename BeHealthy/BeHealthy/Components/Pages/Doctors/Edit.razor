@@ -10,11 +10,6 @@
 
 <PageTitle>@Resource.Edit</PageTitle>
 
-<SectionContent SectionName="page-title">
-    <BackButton BackPath="@(RoutingEndpoints.DOCTORS_PAGE)" />
-    <span>@Resource.Doctors/@Resource.Edit/@DoctorId</span>
-</SectionContent>
-
 <div class="container-fluid p-5 border rounded shadow">
     <EditForm Model="_doctorForUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
         <DataAnnotationsValidator />

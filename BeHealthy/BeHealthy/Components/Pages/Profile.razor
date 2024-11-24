@@ -11,11 +11,6 @@
 
 <PageTitle>@Resource.Profile</PageTitle>
 
-<SectionContent SectionName="page-title">
-    <BackButton BackPath="@(RoutingEndpoints.HOME_PAGE)" />
-    <span>@Resource.Profile</span>
-</SectionContent>
-
 <div id="profile-container" class="container-fluid p-5 border rounded shadow">
     <EditForm id="profileForm" Model="_profileDto" OnValidSubmit="UpdateProfile">
         <div class="row">
