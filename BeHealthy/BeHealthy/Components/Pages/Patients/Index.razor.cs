@@ -14,7 +14,6 @@ namespace BeHealthy.Components.Pages.Patients;
 
 public partial class Index : BasePage
 {
-    private string _createUserHref { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;

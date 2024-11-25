@@ -1,8 +1,8 @@
 ﻿@page "/patients/edit/{PatientId:int}"
 @using BeHealthy.Components.Pages.Patients.Components
 @attribute [Authorize(Roles = "Admin")]
-@attribute [StreamRendering]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
@@ -101,6 +101,13 @@
     private int activeTab = 0;
     private void SelectTab(int tabName) => activeTab = tabName;
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnParametersSetAsync()
     {
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
@@ -121,6 +128,17 @@
         var buffer = new byte[resizeImage.Size];
         await resizeImage.OpenReadStream().ReadAsync(buffer);
         _patientForUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.ResetBreadcrumb();
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        { 
+            new Breadcrumb(){Text = Resource.Patients, Link = RoutingEndpoints.PATIENTS_PAGE, Active = false},
+            new Breadcrumb(){Text = Resource.Edit, Link = RoutingEndpoints.PATIENTS_PAGE, Active = true},
+            new Breadcrumb(){Text = PatientId.ToString(), Link = string.Empty, Active = true},
+        });
     }
 
     private async Task UpdatePatient()

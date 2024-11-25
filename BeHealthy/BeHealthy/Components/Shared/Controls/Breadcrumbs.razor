@@ -3,11 +3,9 @@
 
 @inject BreadcrumbServiceState BreadcrumbServiceState
 
-<div class="container-fluid">
-    <div class="bg-light rounded-pill p-3 mt-2 mb-4 fw-bold fs-5 d-flex align-items-center">
-        <div class="me-3">
-            <BackButton OnClick="BackButtonClick" />
-        </div>
+<div class="container-fluid d-flex flex-row align-items-start mb-3">
+    <BackButton OnClick="BackButtonClick" />
+    <div class="bg-light rounded-pill px-4 py-2 mb-4 d-flex align-items-center">
 
         <ul class="breadcrumb mb-0 @(!BreadcrumbServiceState.IsBreadcrumbVisible ? "invisible" : "")">
             @foreach (var item in BreadcrumbServiceState.Breadcrumbs)
@@ -19,7 +17,7 @@
                 else
                 {
                     <li class="breadcrumb-item">
-                        <a class="" href="@item.Link">@item.Text</a>
+                        <a class="text-decoration-underline text-black" href="@item.Link">@item.Text</a>
                     </li>
                 }
             }
