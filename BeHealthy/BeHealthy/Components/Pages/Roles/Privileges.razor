@@ -1,7 +1,8 @@
 ﻿@page "/roles/privileges"
 @using BeHealthy.Application.Dtos.Privilege
 @attribute [Authorize(Roles = "Admin")]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 @inject IPrivilegeService PrivilegeService
 @inject NavigationManager NavigationManager
@@ -39,6 +40,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        LoaderService.SetLoader(true);
+
+        SetBreadcrumbs();
+
         var privileges = await PrivilegeService.GetPrivilegesAsync();
 
         _groupedPrivileges = privileges
@@ -48,10 +53,23 @@ else
                 group => group.Key,
                 group => group.ToList()
             );
+
+        LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Privileges, Link = string.Empty, Active = true },
+        });
     }
 
     private async Task SavePrivileges()
     {
+        LoaderService.SetLoader(true);
+
         if (_groupedPrivileges == null)
             return;
 
@@ -60,6 +78,7 @@ else
             .ToList();
 
         await PrivilegeService.SavePrivilegesAsync(privilegesToSave);
+        LoaderService.SetLoader(false);
         NavigationManager.Refresh(forceReload: true);
     }
 }

@@ -2,6 +2,7 @@
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -47,12 +48,10 @@ public partial class Index : BasePage
 
     private void SetBreadcrumbs() 
     {
-        Breadcrumbs.ResetBreadcrumb();
-        Breadcrumbs.AddBreadcrumb(new Breadcrumb 
-        { 
-            Text = Resource.Dashboard,
-            Link = RoutingEndpoints.HOME_PAGE,
-            Active = true 
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Patients, Link = string.Empty, Active = true },
         });
     }
 

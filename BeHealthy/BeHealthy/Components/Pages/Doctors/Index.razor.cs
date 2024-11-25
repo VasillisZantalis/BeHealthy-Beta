@@ -1,7 +1,9 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Models;
 using BeHealthy.Persistance;
+using BeHealthy.Shared.Locales;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
@@ -29,6 +31,8 @@ public partial class Index : BasePage
     {
         LoaderService.SetLoader(true);
 
+        SetBreadcrumbs();
+
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
         hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
@@ -36,6 +40,15 @@ public partial class Index : BasePage
         hasActionRights = hasEditRight || hasDeleteRight;
 
         LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Doctors, Link = string.Empty, Active = true },
+        });
     }
 
     private void OnPageSizeChanged(ChangeEventArgs e)

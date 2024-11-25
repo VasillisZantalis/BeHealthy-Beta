@@ -1,6 +1,7 @@
 ﻿@page "/doctors/create"
 @attribute [Authorize(Roles = "Admin")]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -103,6 +104,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetBreadcrumbs();
+
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         _departmentsSelect = _departments.Select(s => new SelectItem
         {
@@ -110,6 +113,17 @@
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.ResetBreadcrumb();
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){Text = Resource.Doctors, Link = RoutingEndpoints.DOCTORS_PAGE, Active = false},
+            new Breadcrumb(){Text = Resource.Create, Link = RoutingEndpoints.DOCTORS_PAGE, Active = true}
+        });
     }
 
     public async Task RegisterDoctor(EditContext editContext)

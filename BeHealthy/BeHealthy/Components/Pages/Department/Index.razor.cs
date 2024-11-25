@@ -1,5 +1,8 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Models;
+using BeHealthy.Persistance;
+using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
 
@@ -22,11 +25,22 @@ public partial class Index : BasePage
     {
         LoaderService.SetLoader(true);
 
+        SetBreadcrumbs();
+
         _hasActionRights = true;
         _paginationState.ItemsPerPage = 10;
         _departments = (await _departmentService.GetAllDepartmentsAsync()).ToList();
 
         LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Departments, Link = string.Empty, Active = true },
+        });
     }
 
     private void OnPageSizeChanged(ChangeEventArgs e)

@@ -101,15 +101,15 @@
     private int activeTab = 0;
     private void SelectTab(int tabName) => activeTab = tabName;
 
-    protected override void OnInitialized()
+    protected override void OnAfterRender(bool firstRender)
     {
-        base.OnInitialized();
-
-        SetBreadcrumbs();
+        if (firstRender)
+            SetBreadcrumbs();
     }
 
     protected override async Task OnParametersSetAsync()
     {
+
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         var patient = await PatientService.GetPatientByIdAsync(PatientId);
         _departmentsSelect = _departments.Select(s => new SelectItem
@@ -132,12 +132,12 @@
 
     private void SetBreadcrumbs()
     {
-        Breadcrumbs.ResetBreadcrumb();
         Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
         { 
-            new Breadcrumb(){Text = Resource.Patients, Link = RoutingEndpoints.PATIENTS_PAGE, Active = false},
-            new Breadcrumb(){Text = Resource.Edit, Link = RoutingEndpoints.PATIENTS_PAGE, Active = true},
-            new Breadcrumb(){Text = PatientId.ToString(), Link = string.Empty, Active = true},
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Patients, Link = RoutingEndpoints.PATIENTS_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Edit, Link = RoutingEndpoints.PATIENTS_PAGE, Active = true },
+            new Breadcrumb(){ Text = PatientId.ToString(), Link = string.Empty, Active = true },
         });
     }
 

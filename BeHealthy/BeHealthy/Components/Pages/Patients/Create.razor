@@ -111,11 +111,11 @@
 
     private void SetBreadcrumbs()
     {
-        Breadcrumbs.ResetBreadcrumb();
         Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
         {
-            new Breadcrumb(){Text = Resource.Patients, Link = RoutingEndpoints.PATIENTS_PAGE, Active = false},
-            new Breadcrumb(){Text = Resource.Create, Link = RoutingEndpoints.PATIENTS_PAGE, Active = true}
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Patients, Link = RoutingEndpoints.PATIENTS_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Create, Link = RoutingEndpoints.PATIENTS_PAGE, Active = true }
         });
     }
 

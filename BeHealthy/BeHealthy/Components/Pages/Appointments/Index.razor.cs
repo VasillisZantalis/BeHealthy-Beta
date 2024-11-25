@@ -7,6 +7,8 @@ using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
+using BeHealthy.Models;
+using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
@@ -49,6 +51,7 @@ public partial class Index : BasePage
     {
         LoaderService.SetLoader(true);
 
+        SetBreadcrumbs();
         _paginationState.ItemsPerPage = 10;
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
@@ -77,6 +80,15 @@ public partial class Index : BasePage
         await LoadPatients();
 
         LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Appointments, Link = string.Empty, Active = true },
+        });
     }
 
     private void OnPageSizeChanged(ChangeEventArgs e)

@@ -77,11 +77,21 @@ else
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
+        SetBreadcrumbs();
 
         _rooms = await RoomService.GetAllRoomsAsync();
         _paginationState.ItemsPerPage = 10;
 
         LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Rooms, Link = string.Empty, Active = true },
+        });
     }
 
     private void CreateRoom()

@@ -1,7 +1,7 @@
 ﻿@page "/nurses/edit/{NurseId:int}"
 @attribute [Authorize(Roles = "Admin")]
-@attribute [StreamRendering]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 @inject INurseService NurseService
 @inject IDepartmentService DepartmentService
@@ -79,6 +79,12 @@
 
     private List<SelectItem> _departmentsSelect = new List<SelectItem>();
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            SetBreadcrumbs();
+    }
+
     protected override async Task OnParametersSetAsync()
     {
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
@@ -90,6 +96,17 @@
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
         _nurseForUpdateDto = nurse.MapToUpdateDto();
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Nurses, Link = RoutingEndpoints.NURSES_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Edit, Link = RoutingEndpoints.NURSES_PAGE, Active = true },
+            new Breadcrumb(){ Text = NurseId.ToString(), Link = string.Empty, Active = true },
+        });
     }
 
     async Task OnFileChange(InputFileChangeEventArgs e)

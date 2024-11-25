@@ -1,11 +1,14 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Models;
+using BeHealthy.Persistance;
+using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Components.Pages.Department;
 
-public partial class Upsert
+public partial class Upsert : BasePage
 {
     [Parameter]
     public int? id { get; set; }
@@ -24,6 +27,9 @@ public partial class Upsert
 
     protected override async Task OnInitializedAsync()
     {
+        LoaderService.SetLoader(true);
+
+        SetBreadcrumbs();
         Doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
 
         if (IsEditMode && id.HasValue)
@@ -31,5 +37,23 @@ public partial class Upsert
             var department = await _departmentService.GetDepartmentByIdAsync(id.Value);
             DepartmentDto = department;
         }
+
+        LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Departments, Link = RoutingEndpoints.DEPARTMENTS_PAGE, Active = false },
+            new Breadcrumb(){ Text = !IsEditMode ? Resource.Create : Resource.Edit, Link = string.Empty, Active = true },
+        });
+
+        if (IsEditMode && id.HasValue)
+        {
+            Breadcrumbs.AddBreadcrumb(new Breadcrumb() { Text = id.Value.ToString(), Link = string.Empty, Active = true });
+        }
+            
     }
 }

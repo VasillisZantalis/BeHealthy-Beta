@@ -1,8 +1,8 @@
 ﻿@page "/settings"
 @using BeHealthy.Components.Layout
 @attribute [Authorize(Roles = "Admin")]
-@attribute [StreamRendering]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
 <PageTitle>@Resource.Settings</PageTitle>
 
