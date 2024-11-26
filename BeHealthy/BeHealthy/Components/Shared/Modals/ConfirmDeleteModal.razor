@@ -1,15 +1,19 @@
-﻿@if (IsVisible)
+﻿@implements IDisposable
+@rendermode @(new InteractiveServerRenderMode(false))
+
+@inject ConfirmDeleteStateService ConfirmDeleteService
+
+@if (IsVisible)
 {
     <div class="modal" tabindex="-1" role="dialog" style="display:block;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header border-0">
                     <h5 class="modal-title">@Resource.ConfirmDeletion</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="HandleCancel">
-                    </button>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="HandleCancel"></button>
                 </div>
                 <div class="modal-body text-center row">
-                    <Icon IconClass="@FAIcon.TriangleExclamation" TextClass="text-danger" SizeClass="fs-1"/>
+                    <Icon IconClass="@FAIcon.TriangleExclamation" TextClass="text-danger" SizeClass="fs-1" />
                     <span class="fw-bold">@Resource.ThisActionCannotBeUndone</span>
                     <span class="text-muted">@Resource.AreYouSureYouWantToContinue</span>
                 </div>
@@ -24,22 +28,46 @@
 }
 
 @code {
-    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
     private bool IsVisible { get; set; }
+    private Func<Task>? OnConfirmCallback { get; set; }
 
-    public void HandleOpen()
+    protected override void OnInitialized()
     {
+        ConfirmDeleteService.OnRequestDelete += ShowModal;
+        ConfirmDeleteService.OnCancel += HideModal;
+    }
+
+    private void ShowModal(Func<Task> onConfirm)
+    {
+        OnConfirmCallback = onConfirm;
         IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void HideModal()
+    {
+        IsVisible = false;
+        StateHasChanged();
     }
 
     private async Task HandleConfirm()
     {
-        await OnConfirm.InvokeAsync(true);
-        IsVisible = false;
+        if (OnConfirmCallback is not null)
+        {
+            await OnConfirmCallback.Invoke();
+        }
+
+        HideModal();
     }
 
     private void HandleCancel()
     {
-        IsVisible = false;
+        ConfirmDeleteService.Cancel();
+    }
+
+    public void Dispose()
+    {
+        ConfirmDeleteService.OnRequestDelete -= ShowModal;
+        ConfirmDeleteService.OnCancel -= HideModal;
     }
 }

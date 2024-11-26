@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -56,10 +57,12 @@ public partial class Index : BasePage
         _navigationManager.NavigateTo($"/departments/edit/{departmentId}");
     }
 
-    public async Task DeleteDepartment(int departmentId)
+    private void ConfirmDelete(int departmentId)
     {
-        await _departmentService.DeleteDepartmentAsync(departmentId);
-        _navigationManager.Refresh(forceReload: true);
+        ConfirmDeleteService.RequestDelete(async () => {
+            await _departmentService.DeleteDepartmentAsync(departmentId);
+            _navigationManager.Refresh(forceReload: true);
+        });
     }
 
     private void Create()

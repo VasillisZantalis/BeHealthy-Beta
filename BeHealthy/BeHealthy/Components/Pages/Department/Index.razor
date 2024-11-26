@@ -48,7 +48,7 @@ else
                                     <button class="btn w-100 text-start" @onclick="@(() => EditDepartment(context.Id))">
                                         <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
                                     </button>
-                                    <button class="btn w-100 text-start" @onclick="async () => await DeleteDepartment(context.Id)">
+                                    <button class="btn w-100 text-start" @onclick="() => ConfirmDelete(context.Id)">
                                         <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
                                     </button>
                                 </ActionsDropdown>

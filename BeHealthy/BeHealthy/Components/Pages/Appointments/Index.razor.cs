@@ -5,8 +5,8 @@ using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
-using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -31,7 +31,6 @@ public partial class Index : BasePage
 
     private List<DoctorDto>? _doctors { get; set; }
     private List<PatientDto>? _patients { get; set; }
-    private ConfirmDeleteModal _confirmDeleteModal = new();
 
     private AppointmentModal _appointmentModal { get; set; } = new();
     private Alert _alert = new();
@@ -41,7 +40,6 @@ public partial class Index : BasePage
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
-    private int deleteItemId;
 
     private UserRole? userRole;
 
@@ -187,18 +185,11 @@ public partial class Index : BasePage
         }
     }
 
-    private void ConfirmDelete(int id)
+    private void ConfirmDelete(int appointmentId)
     {
-        deleteItemId = id;
-        _confirmDeleteModal.HandleOpen();
-    }
-
-    private async Task OnDeleteConfirmed(bool confirmed)
-    {
-        if (confirmed)
-        {
-            await _appointmentService.DeleteAppointmentAsync(deleteItemId);
+        ConfirmDeleteService.RequestDelete(async () => {
+            await _appointmentService.DeleteAppointmentAsync(appointmentId);
             _navigationManager.Refresh(forceReload: true);
-        }
+        });
     }
 }

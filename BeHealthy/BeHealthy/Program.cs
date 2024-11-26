@@ -67,6 +67,7 @@ builder.Services.AddScoped<NavMenuState>();
 builder.Services.AddScoped<PrivilegeStateService>();
 builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
+builder.Services.AddScoped<ConfirmDeleteStateService>();
 
 var app = builder.Build();
 

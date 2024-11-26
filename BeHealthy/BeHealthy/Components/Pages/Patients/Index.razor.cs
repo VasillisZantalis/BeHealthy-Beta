@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Components.Shared.Modals;
@@ -20,7 +21,6 @@ public partial class Index : BasePage
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<PatientDto> _patients { get; set; } = default!;
-    private ConfirmDeleteModal _confirmDeleteModal = new();
 
     private string _selectedView = "Card";
     private bool hasActionRights;
@@ -87,18 +87,11 @@ public partial class Index : BasePage
         _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
     }
 
-    private void ConfirmDelete(int id)
+    private void ConfirmDelete(int patientId)
     {
-        deleteItemId = id;
-        _confirmDeleteModal.HandleOpen();
-    }
-
-    private async Task OnDeleteConfirmed(bool confirmed)
-    {
-        if (confirmed)
-        {
-            await _patientService.DeletePatientAsync(deleteItemId);
+        ConfirmDeleteService.RequestDelete(async () => {
+            await _patientService.DeletePatientAsync(patientId);
             _navigationManager.Refresh(forceReload: true);
-        }
+        });
     }
 }
