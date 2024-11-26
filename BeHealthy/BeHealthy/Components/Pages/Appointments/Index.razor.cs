@@ -140,7 +140,8 @@ public partial class Index : BasePage
         }
         else
         {
-            await ToastrStateService.ShowSuccess(Resource.Success);
+            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+            _navigationManager.Refresh(true);
         }
     }
 
