@@ -68,6 +68,7 @@ builder.Services.AddScoped<PrivilegeStateService>();
 builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<ConfirmDeleteStateService>();
+builder.Services.AddScoped<ToastrStateService>();
 
 var app = builder.Build();
 

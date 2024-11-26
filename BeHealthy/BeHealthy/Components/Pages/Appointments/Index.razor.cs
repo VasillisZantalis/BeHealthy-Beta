@@ -20,7 +20,7 @@ namespace BeHealthy.Components.Pages.Appointments;
 
 public partial class Index : BasePage
 {
-    private IEnumerable<AppointmentDto> _appointments = default!;
+    private List<AppointmentDto> _appointments = default!;
 
     [Inject] IAppointmentService _appointmentService { get; set; } = default!;
     [Inject] IDoctorService _doctorService { get; set; } = default!;
@@ -34,7 +34,6 @@ public partial class Index : BasePage
 
     private AppointmentModal _appointmentModal { get; set; } = new();
     private Alert _alert = new();
-    private Toastr _toastr = new();
 
     private string? _currentUserId;
     private bool hasActionRights;
@@ -141,24 +140,23 @@ public partial class Index : BasePage
         }
         else
         {
-            await _toastr.ShowSuccess(Resource.Success);
-            _navigationManager.Refresh(forceReload: true);
+            await ToastrStateService.ShowSuccess(Resource.Success);
         }
     }
 
     private async Task LoadAppointments()
     {
-        _appointments = await _appointmentService.GetAllAppointmentsAsync();
+        _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
     }
 
     private async Task LoadPatientAppointments(string userId)
     {
-        _appointments = await _patientService.GetPatientAppointmentsByUserIdAsync(userId);
+        _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(userId)).ToList();
     }
 
     private async Task LoadDoctorAppointments(string userId)
     {
-        _appointments = await _doctorService.GetDoctorAppointmentsByUserIdAsync(userId);
+        _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(userId)).ToList();
     }
 
     private async Task LoadDoctors()

@@ -19,6 +19,9 @@ public class BasePage : ComponentBase
     [Inject]
     protected ConfirmDeleteStateService ConfirmDeleteService { get; set; } = default!;
 
+    [Inject]
+    protected ToastrStateService ToastrStateService { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
         Breadcrumbs.ResetBreadcrumb();

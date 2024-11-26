@@ -1,6 +1,7 @@
-﻿@inject IPrescriptionService PrescriptionService
-@inject IPrivilegeService PrivilegeService
-@inject AuthenticationStateProvider AuthenticationStateProvider
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
+
+@inject IPrescriptionService PrescriptionService
 @inject NavigationManager NavigationManager
 
 
@@ -10,17 +11,11 @@
         <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
     </button>
 
-    <Toastr @ref="_toastr" />
-
     <PrescriptionModal @ref="_prescriptionModal" 
-    Successful="HandleResponse"
-    PrescriptionId="_prescriptionId" />
+                    Successful="HandleResponse"
+                    PrescriptionId="_prescriptionId" />
 
-    @if (_isLoading)
-    {
-        <Loader />
-    }
-    else if (_prescriptions is not null && _prescriptions.Any())
+    @if (_prescriptions is not null && _prescriptions.Any())
     {
         <QuickGrid @ref="quickGrid"
         Class="table table-responsive"
@@ -70,7 +65,6 @@
 
     private List<PrescriptionDto> _prescriptions { get; set; } = default!;
 
-    private bool _isLoading = default;
 
     private bool hasActionRights;
     private bool hasEditRight;
@@ -79,23 +73,19 @@
     private int? _prescriptionId;
 
     private PrescriptionModal _prescriptionModal { get; set; } = new();
-    private Toastr _toastr = new();
     private QuickGrid<PrescriptionDto> quickGrid = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _isLoading = true;
+        LoaderService.SetLoader(true);
 
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var userRole = Enum.Parse<UserRole>(authState.User.GetUserRole());
-
-        hasEditRight = await PrivilegeService.HasPrivilege(userRole, "CanEditAppointment");
-        hasDeleteRight = await PrivilegeService.HasPrivilege(userRole, "CanDeleteAppointment");
+        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
+        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
         hasActionRights = hasEditRight || hasDeleteRight;
 
         _prescriptions = (await PrescriptionService.GetPrescriptionsByPatientIdAsync(PatientId)).ToList();
 
-        _isLoading = false;
+        LoaderService.SetLoader(false);
     }
 
     private void CreatePrescription()
@@ -122,11 +112,11 @@
                 _prescriptions.Remove(deletedPrescription);
             }
 
-            await _toastr.ShowSuccess(Resource.Success, 1000);
+            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
         }
         else
         {
-            await _toastr.ShowFailed(Resource.SomethingWentWrong);
+            await ToastrStateService.ShowFailed(Resource.SomethingWentWrong);
         }
     }
 
@@ -134,12 +124,12 @@
     {
         if (successful)
         {
-            await _toastr.ShowSuccess(Resource.Success, 1000);
+            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
             NavigationManager.Refresh(true);
         }
         else
         {
-            await _toastr.ShowFailed(Resource.SomethingWentWrong);
+            await ToastrStateService.ShowFailed(Resource.SomethingWentWrong);
         }
     }
 }

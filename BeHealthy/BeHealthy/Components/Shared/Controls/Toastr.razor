@@ -1,4 +1,7 @@
-﻿<div class="toaster-container" style="position: fixed; top: 60px; right: 20px; z-index: 9999; min-width: 300px">
+﻿@implements IDisposable
+@rendermode @(new InteractiveServerRenderMode(false))
+
+<div class="toaster-container" style="position: fixed; top: 60px; right: 20px; z-index: 9999; min-width: 300px">
     @if (_showToastr)
     {
         <div class="alert alert-@_severity.ToString().ToLower() alert-dismissible fade show">
@@ -10,37 +13,34 @@
 </div>
 
 @code {
-    [Parameter] public string? Message { get; set; }
-    [Parameter] public int Duration { get; set; } = 3000;
+    [Inject] private ToastrStateService ToastrStateService { get; set; } = default!;
     private bool _showToastr { get; set; } = false;
+    private string? Message { get; set; }
     private Severity _severity { get; set; }
     private string? _icon;
 
-    private void CloseToastr() => _showToastr = false;
-
-    private async Task ShowToast(string message, Severity severity, string icon, int? duration = null)
+    protected override void OnInitialized()
     {
-        Message = message;
-        _severity = severity;
-        _icon = icon;
+        ToastrStateService.OnShow += ShowToastAsync;
+    }
+
+    public void Dispose()
+    {
+        ToastrStateService.OnShow -= ShowToastAsync;
+    }
+
+    private async Task ShowToastAsync(ToastrNotification notification)
+    {
+        Message = notification.Message;
+        _severity = notification.Severity;
+        _icon = notification.Icon;
         _showToastr = true;
         StateHasChanged();
 
-        await Task.Delay(duration ?? Duration);
+        await Task.Delay(notification.Duration ?? 3000);
         _showToastr = false;
         StateHasChanged();
     }
 
-    public Task ShowFailed(string message, int? duration = null) =>
-        ShowToast(message, Severity.Danger, FAIcon.CircleXmark, duration);
-
-    public Task ShowSuccess(string message, int? duration = null) =>
-        ShowToast(message, Severity.Success, FAIcon.CircleCheck, duration);
-
-    public Task ShowInfo(string message, int? duration = null) =>
-        ShowToast(message, Severity.Info, FAIcon.CircleInfo, duration);
-
-    public Task ShowWarning(string message, int? duration = null) =>
-        ShowToast(message, Severity.Warning, FAIcon.TriangleExclamation, duration);
-
+    private void CloseToastr() => _showToastr = false;
 }
