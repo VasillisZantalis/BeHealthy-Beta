@@ -2,14 +2,17 @@
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain;
-using BeHealthy.Shared.Locales;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
+using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BeHealthy.Components.Pages.Appointments;
 
-public partial class AppointmentModal
+public partial class AppointmentModal : BasePage
 {
     [Parameter]
     public EventCallback<(AppointmentDto, bool, int)> OnFormSubmit { get; set; }
@@ -27,9 +30,13 @@ public partial class AppointmentModal
 
     private List<SelectItem> _doctorsSelect = new();
     private List<SelectItem> _patientsSelect = new();
+    private List<SelectItem> _roomsSelect = new();
 
     //private List<SelectItem> _statusDropdownItems = new();
     //private List<SelectItem> _reasonDropdownItems = new();
+
+    [Inject]
+    private IRoomService _roomService { get; set; } = default!;
 
     private bool LockDoctorsDropdown => Role == UserRole.Doctor;
 
@@ -39,6 +46,23 @@ public partial class AppointmentModal
 
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
+
+        var rooms = (await _roomService.GetAllRoomsAsync()).ToList();
+
+        _roomsSelect = rooms.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name,
+        }).ToList();
+
+        _roomsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        LoaderService.SetLoader(false);
+    }
 
     protected override void OnParametersSet()
     {
@@ -94,6 +118,7 @@ public partial class AppointmentModal
         _isEdit = true;
         _appointmentDto.DoctorId = appointment.DoctorId;
         _appointmentDto.PatientId = appointment.PatientId;
+        _appointmentDto.RoomId = appointment.RoomId;
         _appointmentDto.Notes = appointment.Notes;
         _appointmentDto.AppointmentDate = appointment.AppointmentDate;
         _appointmentDto.Duration = appointment.Duration;

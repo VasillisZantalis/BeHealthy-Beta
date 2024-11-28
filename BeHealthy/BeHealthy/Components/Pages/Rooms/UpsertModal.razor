@@ -1,7 +1,9 @@
-﻿@inject IRoomService RoomService
-@inject IDepartmentService DepartmentService
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
 
-@rendermode InteractiveServer
+@inject IRoomService RoomService
+@inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
 
 @if (_showModal)
 {
@@ -65,6 +67,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        LoaderService.SetLoader(true);
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
 
         _departmentSelect = _departments.Select(s => new SelectItem
@@ -72,7 +75,8 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        //_departmentSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        LoaderService.SetLoader(false);
     }
 
     protected override async Task OnParametersSetAsync()
@@ -94,6 +98,7 @@
     public void CloseModal()
     {
         _showModal = false;
+        NavigationManager.Refresh(true);
         StateHasChanged();
     }
 
@@ -110,6 +115,6 @@
             await RoomService.AddRoomAsync(roomForCreation);
         }
 
-        CloseModal();
+        await ToastrStateService.ShowSuccess(Resource.Success);
     }
 }

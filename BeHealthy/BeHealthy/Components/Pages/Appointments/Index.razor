@@ -44,10 +44,13 @@ else
                         <PropertyColumn Title="@Resource.Notes"
                                         Property="@(x => string.IsNullOrEmpty(x.Notes) ? "-" : x.Notes)" />
                         <PropertyColumn Title="@Resource.Patient"
-                                        Property="@(x => x.Patient != null ? x.Patient.FullName : "N/A")"
+                                        Property="@(x => x.Patient != null ? x.Patient.FullName : string.Empty)"
                                         Sortable="true" />
                         <PropertyColumn Title="@Resource.Doctor"
-                                        Property="@(x => x.Doctor != null ? x.Doctor.FullName : "N/A")"
+                                        Property="@(x => x.Doctor != null ? x.Doctor.FullName : string.Empty)"
+                                        Sortable="true" />
+                        <PropertyColumn Title="@Resource.Room"
+                                        Property="@(x => x.Room != null ? x.Room.Name : string.Empty)"
                                         Sortable="true" />
                         <PropertyColumn Title="@Resource.Duration"
                                         Property="@(x => x.Duration)"

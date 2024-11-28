@@ -1,4 +1,6 @@
-﻿<div class="modal" tabindex="-1" style="@(_show ? "display:block" : "display:none")">
+﻿@inherits BasePage
+
+<div class="modal" tabindex="-1" style="@(_show ? "display:block" : "display:none")">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -72,6 +74,26 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <label class="fw-bold" for="duration">@Resource.Duration (min)</label>
+                                <InputNumber id="duration"
+                                             @bind-Value="_appointmentDto.Duration"
+                                             TValue="int"
+                                             class="form-control" />
+                                <ValidationMessage For="@(() => _appointmentDto.Duration)" />
+                            </div>
+
+                            <div class="form-group col">
+                                <label class="fw-bold" for="roomIdSelect">@Resource.Room</label>
+                                <InputSelect id="roomIdSelect" class="form-select" @bind-Value="_appointmentDto.RoomId">
+                                    @foreach (var room in _roomsSelect)
+                                    {
+                                        <option value="@room.Value">@room.Text</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => _appointmentDto.RoomId)" />
+                            </div>
+
                             @if (_isEdit)
                             {
                                 <div class="form-group">
@@ -87,14 +109,6 @@
                                     </InputSelect>
                                 </div>
                             }
-                            <div class="form-group">
-                                <label class="fw-bold" for="duration">@Resource.Duration (min)</label>
-                                <InputNumber id="duration"
-                                             @bind-Value="_appointmentDto.Duration"
-                                             TValue="int"
-                                             class="form-control"/>
-                                <ValidationMessage For="@(() => _appointmentDto.Duration)" />
-                            </div>
 
                             <div class="form-group">
                                 <label class="fw-bold" for="reason">@Resource.Reason</label>

@@ -16,7 +16,8 @@ namespace BeHealthy.Application.Mappings
                 Reason = dto.Reason,
                 Duration = dto.Duration,
                 PatientId = dto.PatientId,
-                DoctorId = dto.DoctorId
+                DoctorId = dto.DoctorId,
+                RoomId = dto.RoomId
             };
         }
 
@@ -33,11 +34,12 @@ namespace BeHealthy.Application.Mappings
                 PatientId = entity.PatientId,
                 Patient = entity.Patient?.MapToDto(),
                 DoctorId = entity.DoctorId,
-                Doctor = entity.Doctor?.MapToDto()
+                Doctor = entity.Doctor?.MapToDto(),
+                RoomId = entity.RoomId,
+                Room = entity.Room?.MapToDto()
             };
         }
 
-        // Map from AppointmentForCreationDto to Appointment (MapToDomain)
         public static Appointment MapToDomain(this AppointmentForCreationDto dto)
         {
             return new Appointment
@@ -48,7 +50,8 @@ namespace BeHealthy.Application.Mappings
                 Notes = dto.Notes,
                 Status = dto.Status,
                 Reason = dto.Reason,
-                Duration = dto.Duration
+                Duration = dto.Duration,
+                RoomId = dto.RoomId
             };
         }
 
@@ -63,7 +66,39 @@ namespace BeHealthy.Application.Mappings
                 Notes = dto.Notes,
                 Status = dto.Status,
                 Reason = dto.Reason,
-                Duration = dto.Duration
+                Duration = dto.Duration,
+                RoomId = dto.RoomId
+            };
+        }
+
+        public static AppointmentForCreationDto MapToCreationDto(this AppointmentDto dto)
+        {
+            return new AppointmentForCreationDto
+            {
+                DoctorId = dto.DoctorId,
+                PatientId = dto.PatientId,
+                Notes = dto.Notes,
+                AppointmentDate = dto.AppointmentDate,
+                Reason = dto.Reason,
+                Status = dto.Status,
+                Duration = dto.Duration,
+                RoomId = dto.RoomId
+            };
+        }
+
+        public static AppointmentForUpdateDto MapToUpdateDto(this AppointmentDto dto)
+        {
+            return new AppointmentForUpdateDto
+            {
+                Id = dto.Id,
+                DoctorId = dto.DoctorId,
+                PatientId = dto.PatientId,
+                Notes = dto.Notes,
+                AppointmentDate = dto.AppointmentDate,
+                Reason = dto.Reason,
+                Status = dto.Status,
+                Duration = dto.Duration,
+                RoomId = dto.RoomId
             };
         }
 

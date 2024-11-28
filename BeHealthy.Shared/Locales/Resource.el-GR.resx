@@ -381,6 +381,9 @@
   <data name="Role" xml:space="preserve">
     <value>Ρόλος</value>
   </data>
+  <data name="Room" xml:space="preserve">
+    <value>Δωμάτιο</value>
+  </data>
   <data name="Rooms" xml:space="preserve">
     <value>Δωμάτια</value>
   </data>

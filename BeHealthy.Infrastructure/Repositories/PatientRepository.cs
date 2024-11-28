@@ -36,6 +36,7 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
         return await context.Appointments
                 .Include(a => a.Doctor)
                 .Include(a => a.Patient)
+                .Include(i => i.Room)
                 .Where(a => a.Patient!.UserId == userId)
                 .ToListAsync();
     }

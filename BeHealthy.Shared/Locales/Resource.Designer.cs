@@ -853,6 +853,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Room.
+        /// </summary>
+        public static string Room {
+            get {
+                return ResourceManager.GetString("Room", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rooms.
         /// </summary>
         public static string Rooms {

@@ -381,6 +381,9 @@
   <data name="Role" xml:space="preserve">
     <value>Role</value>
   </data>
+  <data name="Room" xml:space="preserve">
+    <value>Room</value>
+  </data>
   <data name="Rooms" xml:space="preserve">
     <value>Rooms</value>
   </data>

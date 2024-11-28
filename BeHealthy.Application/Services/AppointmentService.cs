@@ -63,6 +63,17 @@ public class AppointmentService : IAppointmentService
             return conflictCheck;
         }
 
+        if (appointment.RoomId > 0)
+        {
+            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(appointment.RoomId);
+
+            if (room is null) 
+                return ServiceResponse.Failed(string.Join(" ", Resource.NotFound, Resource.Room)); 
+                
+            room.AppointmentId = appointment.Id;
+            await _unitOfWork.RoomRepository.UpdateAsync(room);
+        }
+
         await _unitOfWork.AppointmentRepository.AddAsync(appointment);
 
         return appointment.Id > 0
@@ -84,6 +95,17 @@ public class AppointmentService : IAppointmentService
         if (!conflictCheck.Success)
         {
             return conflictCheck;
+        }
+
+        if (appointment.RoomId > 0)
+        {
+            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(appointment.RoomId);
+
+            if (room is null) 
+                return ServiceResponse.Failed(string.Join(" ", Resource.NotFound, Resource.Room));
+
+            room.AppointmentId = appointment.Id;
+            await _unitOfWork.RoomRepository.UpdateAsync(room);
         }
 
         await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);

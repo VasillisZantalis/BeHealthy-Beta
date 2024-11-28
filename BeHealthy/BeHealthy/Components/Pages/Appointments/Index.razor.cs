@@ -3,10 +3,10 @@ using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
+using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Domain;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -104,32 +104,15 @@ public partial class Index : BasePage
 
         if (isEdit)
         {
-            var appointmentForUpdate = new AppointmentForUpdateDto
-            {
-                Id = appointmentId,
-                DoctorId = appointmentDto.DoctorId,
-                PatientId = appointmentDto.PatientId,
-                Notes = appointmentDto.Notes,
-                AppointmentDate = appointmentDto.AppointmentDate,
-                Status = appointmentDto.Status,
-                Reason = appointmentDto.Reason,
-                Duration = appointmentDto.Duration
-            };
+            appointmentDto.Id = appointmentId;
+
+            var appointmentForUpdate = appointmentDto.MapToUpdateDto();
 
             result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
         }
         else
         {
-            var appointmentForCreation = new AppointmentForCreationDto
-            {
-                DoctorId = appointmentDto.DoctorId,
-                PatientId = appointmentDto.PatientId,
-                Notes = appointmentDto.Notes,
-                AppointmentDate = appointmentDto.AppointmentDate,
-                Reason = appointmentDto.Reason,
-                Status = AppointmentStatus.Scheduled,
-                Duration = appointmentDto.Duration
-            };
+            var appointmentForCreation = appointmentDto.MapToCreationDto();
 
             result = await _appointmentService.AddAppointmentAsync(appointmentForCreation);
         }
@@ -186,7 +169,8 @@ public partial class Index : BasePage
 
     private void ConfirmDelete(int appointmentId)
     {
-        ConfirmDeleteService.RequestDelete(async () => {
+        ConfirmDeleteService.RequestDelete(async () =>
+        {
             await _appointmentService.DeleteAppointmentAsync(appointmentId);
             _navigationManager.Refresh(forceReload: true);
         });
