@@ -60,6 +60,7 @@ public partial class AppointmentModal : BasePage
         // GET MASS SETTINGS
         //var keys = new[] { "RequiredRoomsInAppointments", "DefaultNotesMessage", "AnotherSettingKey" }.ToList();
         //var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
+        //var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "RequiredRoomsInAppointments");
 
         if (requireRoomSetting != null)
         {
