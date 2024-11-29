@@ -12,21 +12,27 @@ public class AppSettingConfiguration : IEntityTypeConfiguration<AppSetting>
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(p => p.Name)
-            .IsRequired();
+        builder.Property(p => p.Key)
+            .IsRequired()
+            .HasMaxLength(50);
 
         builder.Property(p => p.Area)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Property(p => p.Type)
             .IsRequired();
 
-        builder.Property(p => p.StringValue)
-            .IsRequired(false);
-
-        builder.Property(p => p.IntValue)
-            .IsRequired(false);
-
-        builder.Property(p => p.BoolValue)
+        builder.Property(p => p.Name)
             .IsRequired()
-            .HasDefaultValue(false);
+            .HasMaxLength(50);
+
+        builder.Property(p => p.Value)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Property(p => p.Description)
+            .IsRequired();
 
         builder.Property(p => p.InsDate)
             .IsRequired()

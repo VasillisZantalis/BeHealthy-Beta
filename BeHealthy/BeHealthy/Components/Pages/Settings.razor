@@ -10,7 +10,41 @@
 {
     foreach (var areaGroup in _settingsGroupedByArea)
     {
-        <div class="mb-3">
+        <h4>@areaGroup.Key</h4>
+        <div class="settings-area card p-5 border rounded-4 shadow-sm">
+            @foreach (var setting in areaGroup)
+            {
+                <div class="form-group w-100 p-3 border rounded-3 mb-2">
+                    <div class="d-flex flex-row justify-content-between">
+                        <div>
+                            <span title="@setting.Description">
+                                <Icon IconClass="@FAIcon.CircleInfo"
+                                      TextClass="text-info"/>
+                            </span>
+                            <span>@setting.Name</span>
+                        </div>
+                        @switch (setting.Type)
+                        {
+                            case SettingType.TextField:
+                                <input type="text" value="@setting.Value" />
+                                break;
+                            case SettingType.Checkbox:
+                                <input type="checkbox" checked="@Convert.ToBoolean(setting.Value)" class="form-check-input" />
+                                break;
+                            @* case SettingType.SingleSelect:
+                                <select @onchange="e => UpdateSettingValue(setting, e.Value.ToString())">
+                                    @foreach (var option in GetOptionsForSetting(setting))
+                                    {
+                                        <option value="@option" selected="@option == setting.Value">@option</option>
+                                    }
+                                </select>
+                                break; *@
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        @* <div class="mb-3">
             <h4>@areaGroup.Key</h4>
             @foreach (var setting in areaGroup)
             {
@@ -53,7 +87,7 @@
                 </div>
             }
 
-        </div>
+        </div> *@
     }
 }
 
