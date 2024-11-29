@@ -11,6 +11,16 @@ public class AppSettingsRepository : GenericRepository<AppSetting>, IAppSettings
     {
     }
 
+    public async Task<List<AppSetting>> GetMassAppSettingsAsync(List<string> keys)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+    
+        return await context.AppSettings
+            .AsNoTracking()
+            .Where(w => keys.Contains(w.Key))
+            .ToListAsync();
+    }
+
     public async Task<AppSetting?> GetSettingByKeyAsync(string key)
     {
         using var context = await _contextFactory.CreateDbContextAsync();

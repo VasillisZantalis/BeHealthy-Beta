@@ -18,6 +18,11 @@ public class AppSettingsService : IAppSettingsService
         return await _unitOfWork.AppSettingsRepository.GetAllAsync();
     }
 
+    public async Task<List<AppSetting>> GetMassAppSettingsAsync(List<string> keys)
+    {
+        return await _unitOfWork.AppSettingsRepository.GetMassAppSettingsAsync(keys);
+    }
+
     public async Task<AppSetting?> GetSettingByKeyAsync(string key)
     {
         return await _unitOfWork.AppSettingsRepository.GetSettingByKeyAsync(key);
