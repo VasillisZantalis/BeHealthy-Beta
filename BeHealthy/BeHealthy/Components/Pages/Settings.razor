@@ -29,7 +29,7 @@
                                 <input type="text" value="@setting.Value" />
                                 break;
                             case SettingType.Checkbox:
-                                <input type="checkbox" checked="@Convert.ToBoolean(setting.Value)" class="form-check-input" />
+                                <input type="checkbox" checked="@Convert.ToBoolean(setting.Value)" class="form-check-input" @onchange="e => UpdateSettingValue(setting, e.Value.ToString())"/>
                                 break;
                             @* case SettingType.SingleSelect:
                                 <select @onchange="e => UpdateSettingValue(setting, e.Value.ToString())">

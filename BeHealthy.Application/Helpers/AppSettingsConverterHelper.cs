@@ -1,5 +1,4 @@
 ﻿using BeHealthy.Domain.Entities;
-using Google.Protobuf.WellKnownTypes;
 
 namespace BeHealthy.Application.Helpers;
 

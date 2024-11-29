@@ -13,7 +13,10 @@ public partial class Settings : BasePage
 
     private IEnumerable<IGrouping<string, AppSetting>>? _settingsGroupedByArea;
 
-    [Inject] IAppSettingsService AppSettingsService { get; set; } = default!;
+    [Inject] 
+    IAppSettingsService AppSettingsService { get; set; } = default!;
+    [Inject]
+    private NavigationManager _navigationManager { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -35,14 +38,11 @@ public partial class Settings : BasePage
         });
     }
 
+    private async Task UpdateSettingValue(AppSetting setting, string newValue)
+    {
+        setting.Value = newValue;
 
-    //private bool GetCheckboxValue(AppSetting setting)
-    //{
-    //    return bool.TryParse(setting.Value, out var result) && result;
-    //}
-
-    //private void SetCheckboxValue(AppSetting setting, bool value)
-    //{
-    //    setting.Value = value.ToString();
-    //}
+        await AppSettingsService.UpdateSettingAsync(setting);
+        await ToastrStateService.ShowSuccess(Resource.Success, 500);
+    }
 }

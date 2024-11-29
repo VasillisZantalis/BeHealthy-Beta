@@ -1,14 +1,12 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
-using BeHealthy.Application.Extensions;
+using BeHealthy.Application.Helpers;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BeHealthy.Components.Pages.Appointments;
 
@@ -38,11 +36,15 @@ public partial class AppointmentModal : BasePage
     [Inject]
     private IRoomService _roomService { get; set; } = default!;
 
+    [Inject]
+    private IAppSettingsService _appSettingsService { get; set; } = default!;
+
     private bool LockDoctorsDropdown => Role == UserRole.Doctor;
 
     private bool _show;
     private bool _isEdit;
     private int _appointmentId;
+    private bool _showRooms;
 
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;
@@ -52,6 +54,13 @@ public partial class AppointmentModal : BasePage
         LoaderService.SetLoader(true);
 
         var rooms = (await _roomService.GetAllRoomsAsync()).ToList();
+
+        var requireRoomSetting = await _appSettingsService.GetSettingByKeyAsync("RequiredRoomsInAppointments");
+
+        if (requireRoomSetting != null)
+        {
+            _showRooms = AppSettingsConverterHelper.GetBooleanValue(requireRoomSetting);
+        }
 
         _roomsSelect = rooms.Select(s => new SelectItem
         {

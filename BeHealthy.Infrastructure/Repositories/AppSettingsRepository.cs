@@ -10,4 +10,11 @@ public class AppSettingsRepository : GenericRepository<AppSetting>, IAppSettings
     public AppSettingsRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
     {
     }
+
+    public async Task<AppSetting?> GetSettingByKeyAsync(string key)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        return await context.AppSettings.FirstOrDefaultAsync(w => w.Key == key);
+    }
 }

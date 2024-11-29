@@ -17,4 +17,14 @@ public class AppSettingsService : IAppSettingsService
     {
         return await _unitOfWork.AppSettingsRepository.GetAllAsync();
     }
+
+    public async Task<AppSetting?> GetSettingByKeyAsync(string key)
+    {
+        return await _unitOfWork.AppSettingsRepository.GetSettingByKeyAsync(key);
+    }
+
+    public async Task UpdateSettingAsync(AppSetting setting)
+    {
+        await _unitOfWork.AppSettingsRepository.UpdateAsync(setting);
+    }
 }
