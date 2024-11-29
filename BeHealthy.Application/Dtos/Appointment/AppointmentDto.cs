@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Dtos.Nurse;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Dtos.Room;
 using BeHealthy.Domain;
@@ -24,5 +25,7 @@ public class AppointmentDto
     public int DoctorId { get; set; }
     public DoctorDto? Doctor { get; set; }
     public int RoomId { get; set; }
-    public RoomDto? Room { get; set; } 
+    public RoomDto? Room { get; set; }
+    public int? NurseId { get; set; }
+    public NurseDto? Nurse { get; set; }
 }

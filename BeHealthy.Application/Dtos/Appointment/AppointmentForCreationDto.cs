@@ -7,6 +7,7 @@ public class AppointmentForCreationDto
     public int PatientId { get; set; }
     public int DoctorId { get; set; }
     public int RoomId { get; set; }
+    public int? NurseId { get; set; }
     public DateTime AppointmentDate { get; set; }
     public AppointmentReason Reason { get; set; }
     public AppointmentStatus Status { get; set; }

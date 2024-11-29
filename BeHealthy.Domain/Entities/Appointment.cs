@@ -17,4 +17,7 @@ public class Appointment
 
     public int RoomId { get; set; }
     public Room? Room { get; set; }
+
+    public int? NurseId { get; set; }
+    public Nurse? Nurse { get; set; }
 }

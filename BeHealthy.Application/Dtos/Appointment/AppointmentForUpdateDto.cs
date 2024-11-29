@@ -8,6 +8,7 @@ public class AppointmentForUpdateDto
     public int PatientId { get; set; }
     public int DoctorId { get; set; }
     public int RoomId { get; set; }
+    public int? NurseId { get; set; }
     public DateTime AppointmentDate { get; set; }
     public string Notes { get; set; } = string.Empty;
     public AppointmentStatus Status { get; set; }

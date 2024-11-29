@@ -83,6 +83,20 @@
                                 <ValidationMessage For="@(() => _appointmentDto.Duration)" />
                             </div>
 
+                            @if (_showNurses)
+                            {
+                                <div class="form-group col">
+                                    <label class="fw-bold" for="nursesIdSelect">@Resource.Nurse</label>
+                                    <InputSelect id="nursesIdSelect" class="form-select" @bind-Value="_appointmentDto.NurseId">
+                                        @foreach (var nurse in _nursesSelect)
+                                        {
+                                            <option value="@nurse.Value">@nurse.Text</option>
+                                        }
+                                    </InputSelect>
+                                    <ValidationMessage For="@(() => _appointmentDto.NurseId)" />
+                                </div>
+                            }
+
                             @if (_showRooms)
                             {
                                 <div class="form-group col">

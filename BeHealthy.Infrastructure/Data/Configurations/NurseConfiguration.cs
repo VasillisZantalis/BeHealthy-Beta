@@ -28,5 +28,9 @@ public class NurseConfiguration : IEntityTypeConfiguration<Nurse>
             .WithMany(d => d.Nurses)
             .HasForeignKey(d => d.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(p => p.Appointments)
+            .WithOne(a => a.Nurse)
+            .HasForeignKey(a => a.NurseId);
     }
 }

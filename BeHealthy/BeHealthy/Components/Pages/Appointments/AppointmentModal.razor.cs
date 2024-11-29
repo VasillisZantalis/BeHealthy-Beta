@@ -29,6 +29,7 @@ public partial class AppointmentModal : BasePage
     private List<SelectItem> _doctorsSelect = new();
     private List<SelectItem> _patientsSelect = new();
     private List<SelectItem> _roomsSelect = new();
+    private List<SelectItem> _nursesSelect = new();
 
     //private List<SelectItem> _statusDropdownItems = new();
     //private List<SelectItem> _reasonDropdownItems = new();
@@ -39,12 +40,16 @@ public partial class AppointmentModal : BasePage
     [Inject]
     private IAppSettingsService _appSettingsService { get; set; } = default!;
 
+    [Inject]
+    private INurseService _nurseService { get; set; } = default!;
+
     private bool LockDoctorsDropdown => Role == UserRole.Doctor;
 
     private bool _show;
     private bool _isEdit;
     private int _appointmentId;
     private bool _showRooms;
+    private bool _showNurses;
 
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;
@@ -54,26 +59,23 @@ public partial class AppointmentModal : BasePage
         LoaderService.SetLoader(true);
 
         var rooms = (await _roomService.GetAllRoomsAsync()).ToList();
+        var nurses = (await _nurseService.GetAllNursesAsync()).ToList();
 
-        var requireRoomSetting = await _appSettingsService.GetSettingByKeyAsync("RequiredRoomsInAppointments");
-
-        // GET MASS SETTINGS
-        //var keys = new[] { "RequiredRoomsInAppointments", "DefaultNotesMessage", "AnotherSettingKey" }.ToList();
-        //var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
-        //var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "RequiredRoomsInAppointments");
-
-        if (requireRoomSetting != null)
-        {
-            _showRooms = AppSettingsConverterHelper.GetBooleanValue(requireRoomSetting);
-        }
-
+        await GetAppSettings();
+       
         _roomsSelect = rooms.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name,
         }).ToList();
-
         _roomsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        _nursesSelect = nurses.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.FullName,
+        }).ToList();
+        _nursesSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
         LoaderService.SetLoader(false);
     }
@@ -113,6 +115,26 @@ public partial class AppointmentModal : BasePage
         //        Text = status.ToLocalizedString()
         //    })
         //    .ToList();
+    }
+
+    protected async Task GetAppSettings()
+    {
+        var keys = new[] { "RequiredRoomsInAppointments", "NurseIsRequiredForAppointment" }.ToList();
+        var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
+
+        var nurseSetting = settings.FirstOrDefault(s => s.Key == "NurseIsRequiredForAppointment");
+        var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "RequiredRoomsInAppointments");
+
+        if (requireRoomSetting != null)
+        {
+            _showRooms = AppSettingsConverterHelper.GetBooleanValue(requireRoomSetting);
+        }
+
+        if (nurseSetting != null)
+        {
+            _showNurses = AppSettingsConverterHelper.GetBooleanValue(nurseSetting);
+        }
+
     }
 
     public void Open()

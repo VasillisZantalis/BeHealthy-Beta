@@ -17,7 +17,8 @@ namespace BeHealthy.Application.Mappings
                 Duration = dto.Duration,
                 PatientId = dto.PatientId,
                 DoctorId = dto.DoctorId,
-                RoomId = dto.RoomId
+                RoomId = dto.RoomId,
+                NurseId = dto.NurseId
             };
         }
 
@@ -36,7 +37,9 @@ namespace BeHealthy.Application.Mappings
                 DoctorId = entity.DoctorId,
                 Doctor = entity.Doctor?.MapToDto(),
                 RoomId = entity.RoomId,
-                Room = entity.Room?.MapToDto()
+                Room = entity.Room?.MapToDto(),
+                NurseId = entity.NurseId,
+                Nurse = entity.Nurse?.MapToDto(),
             };
         }
 
@@ -51,7 +54,8 @@ namespace BeHealthy.Application.Mappings
                 Status = dto.Status,
                 Reason = dto.Reason,
                 Duration = dto.Duration,
-                RoomId = dto.RoomId
+                RoomId = dto.RoomId,
+                NurseId = dto.NurseId
             };
         }
 
@@ -67,7 +71,8 @@ namespace BeHealthy.Application.Mappings
                 Status = dto.Status,
                 Reason = dto.Reason,
                 Duration = dto.Duration,
-                RoomId = dto.RoomId
+                RoomId = dto.RoomId,
+                NurseId = dto.NurseId
             };
         }
 
@@ -82,7 +87,8 @@ namespace BeHealthy.Application.Mappings
                 Reason = dto.Reason,
                 Status = dto.Status,
                 Duration = dto.Duration,
-                RoomId = dto.RoomId
+                RoomId = dto.RoomId,
+                NurseId = dto.NurseId
             };
         }
 
@@ -98,7 +104,8 @@ namespace BeHealthy.Application.Mappings
                 Reason = dto.Reason,
                 Status = dto.Status,
                 Duration = dto.Duration,
-                RoomId = dto.RoomId
+                RoomId = dto.RoomId,
+                NurseId = dto.NurseId
             };
         }
 

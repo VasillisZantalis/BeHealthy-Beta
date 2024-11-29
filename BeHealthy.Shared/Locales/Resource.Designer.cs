@@ -664,6 +664,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nurse.
+        /// </summary>
+        public static string Nurse {
+            get {
+                return ResourceManager.GetString("Nurse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nurses.
         /// </summary>
         public static string Nurses {

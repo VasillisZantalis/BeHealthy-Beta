@@ -318,6 +318,9 @@
   <data name="Number" xml:space="preserve">
     <value>Αριθμός</value>
   </data>
+  <data name="Nurse" xml:space="preserve">
+    <value>Νοσοκόμα</value>
+  </data>
   <data name="Nurses" xml:space="preserve">
     <value>Νοσοκόμες</value>
   </data>
