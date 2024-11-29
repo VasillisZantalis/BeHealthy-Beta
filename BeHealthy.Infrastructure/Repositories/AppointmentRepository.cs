@@ -47,6 +47,18 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .ToListAsync();
     }
 
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByNurseIdAsync(int nurseId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await context.Appointments
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor)
+                .Include(i => i.Room)
+                .Include(i => i.Nurse)
+                .Where(a => a.NurseId == nurseId)
+                .ToListAsync();
+    }
+
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId)
     {
         using var context = await _contextFactory.CreateDbContextAsync();

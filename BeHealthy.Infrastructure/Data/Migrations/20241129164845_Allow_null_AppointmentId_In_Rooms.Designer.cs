@@ -3,6 +3,7 @@ using System;
 using BeHealthy.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeHealthy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241129164845_Allow_null_AppointmentId_In_Rooms")]
+    partial class Allow_null_AppointmentId_In_Rooms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace BeHealthy.Migrations
                     b.Property<DateTime>("InsDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2024, 11, 29, 17, 13, 25, 340, DateTimeKind.Utc).AddTicks(1689));
+                        .HasDefaultValue(new DateTime(2024, 11, 29, 16, 48, 44, 757, DateTimeKind.Utc).AddTicks(5674));
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -175,7 +178,7 @@ namespace BeHealthy.Migrations
                     b.Property<int>("Reason")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RoomId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -577,7 +580,7 @@ namespace BeHealthy.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.Nurse", "Nurse")
                         .WithMany("Appointments")
                         .HasForeignKey("NurseId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")
                         .WithMany("Appointments")
@@ -691,7 +694,7 @@ namespace BeHealthy.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.Appointment", "Appointment")
                         .WithOne("Room")
                         .HasForeignKey("BeHealthy.Domain.Entities.Room", "AppointmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BeHealthy.Domain.Entities.Department", "Department")
                         .WithMany("Rooms")

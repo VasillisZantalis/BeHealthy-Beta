@@ -123,6 +123,9 @@
   <data name="AppointmentExistsForDoctor" xml:space="preserve">
     <value>An appointment already exists for doctor {0} from {1} to {2}. Please choose a different time</value>
   </data>
+  <data name="AppointmentExistsForNurse" xml:space="preserve">
+    <value>An appointment already exists for nurse {0} from {1} to {2}</value>
+  </data>
   <data name="AppointmentExistsForPatient" xml:space="preserve">
     <value>An appointment already exists for patient {0} from {1} to {2}</value>
   </data>

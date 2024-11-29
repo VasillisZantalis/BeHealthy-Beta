@@ -26,7 +26,8 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
 
         builder.HasOne(r => r.Appointment)
             .WithOne(a => a.Room)
-            .HasForeignKey<Room>(r => r.AppointmentId);
+            .HasForeignKey<Room>(r => r.AppointmentId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(r => r.Department)
             .WithMany(dept => dept.Rooms)

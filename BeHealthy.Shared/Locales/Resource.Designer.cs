@@ -79,6 +79,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An appointment already exists for nurse {0} from {1} to {2}.
+        /// </summary>
+        public static string AppointmentExistsForNurse {
+            get {
+                return ResourceManager.GetString("AppointmentExistsForNurse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An appointment already exists for patient {0} from {1} to {2}.
         /// </summary>
         public static string AppointmentExistsForPatient {

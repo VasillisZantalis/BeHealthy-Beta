@@ -123,6 +123,9 @@
   <data name="AppointmentExistsForDoctor" xml:space="preserve">
     <value>Υπάρχει ήδη ραντεβού για τον γιατρό {0} από {1} έως {2}</value>
   </data>
+  <data name="AppointmentExistsForNurse" xml:space="preserve">
+    <value>Υπάρχει ήδη ραντεβού για την νοσοκόμα {0} από {1} έως {2}</value>
+  </data>
   <data name="AppointmentExistsForPatient" xml:space="preserve">
     <value>Υπάρχει ήδη ραντεβού για τον ασθενή {0} από {1} έως {2}</value>
   </data>

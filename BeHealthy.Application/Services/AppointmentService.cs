@@ -2,6 +2,7 @@
 using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Shared.Locales;
 
@@ -55,6 +56,7 @@ public class AppointmentService : IAppointmentService
         var conflictCheck = await CheckForConflictingAppointmentsAsync(
             appointmentDto.DoctorId,
             appointmentDto.PatientId,
+            appointmentDto.NurseId,
             appointmentDto.AppointmentDate,
             appointmentDto.Duration);
 
@@ -63,9 +65,9 @@ public class AppointmentService : IAppointmentService
             return conflictCheck;
         }
 
-        if (appointment.RoomId > 0)
+        if (appointment.RoomId.HasValue)
         {
-            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(appointment.RoomId);
+            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(appointment.RoomId.Value);
 
             if (room is null) 
                 return ServiceResponse.Failed(string.Join(" ", Resource.NotFound, Resource.Room)); 
@@ -88,6 +90,7 @@ public class AppointmentService : IAppointmentService
         var conflictCheck = await CheckForConflictingAppointmentsAsync(
             appointmentDto.DoctorId,
             appointmentDto.PatientId,
+            appointmentDto.NurseId,
             appointmentDto.AppointmentDate,
             appointmentDto.Duration,
             appointmentDto.Id);
@@ -97,9 +100,9 @@ public class AppointmentService : IAppointmentService
             return conflictCheck;
         }
 
-        if (appointment.RoomId > 0)
+        if (appointment.RoomId.HasValue)
         {
-            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(appointment.RoomId);
+            var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(appointment.RoomId.Value);
 
             if (room is null) 
                 return ServiceResponse.Failed(string.Join(" ", Resource.NotFound, Resource.Room));
@@ -118,26 +121,20 @@ public class AppointmentService : IAppointmentService
         await _unitOfWork.AppointmentRepository.DeleteAsync(id);
     }
 
-    private async Task<ServiceResponse> CheckForConflictingAppointmentsAsync(int doctorId, int patientId, DateTime appointmentDate, int duration, int? appointmentId = null)
+    private async Task<ServiceResponse> CheckForConflictingAppointmentsAsync(
+        int doctorId,
+        int patientId, 
+        int? nurseId,
+        DateTime appointmentDate, 
+        int duration, 
+        int? appointmentId = null)
     {
         var doctorsAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
-        var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
 
         var newAppointmentStart = appointmentDate;
         var newAppointmentEnd = newAppointmentStart.AddMinutes(duration);
 
         var doctorConflict = doctorsAppointments.FirstOrDefault(existingAppointment =>
-        {
-            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
-                return false;
-
-            var existingStart = existingAppointment.AppointmentDate;
-            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
-
-            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
-        });
-
-        var patientConflict = patientAppointments.FirstOrDefault(existingAppointment =>
         {
             if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
                 return false;
@@ -159,6 +156,19 @@ public class AppointmentService : IAppointmentService
             return ServiceResponse.Failed(errorMessage);
         }
 
+        var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
+
+        var patientConflict = patientAppointments.FirstOrDefault(existingAppointment =>
+        {
+            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
+                return false;
+
+            var existingStart = existingAppointment.AppointmentDate;
+            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
+
+            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
+        });
+
         if (patientConflict != null)
         {
             var errorMessage = string.Format(
@@ -166,6 +176,32 @@ public class AppointmentService : IAppointmentService
                 patientConflict?.Patient?.FullName,
                 patientConflict?.AppointmentDate.ToString("HH:mm"),
                 patientConflict?.AppointmentDate.AddMinutes(patientConflict.Duration).ToString("HH:mm")
+            );
+            return ServiceResponse.Failed(errorMessage);
+        }
+
+        var nurseAppointments = nurseId.HasValue
+            ? await _unitOfWork.AppointmentRepository.GetAllAppointmentsByNurseIdAsync(nurseId.Value)
+            : Enumerable.Empty<Appointment>();
+
+        var nurseConflict = nurseAppointments.FirstOrDefault(existingAppointment =>
+        {
+            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
+                return false;
+
+            var existingStart = existingAppointment.AppointmentDate;
+            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
+
+            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
+        });
+
+        if (nurseConflict != null)
+        {
+            var errorMessage = string.Format(
+                Resource.AppointmentExistsForPatient,
+                nurseConflict?.Nurse?.FullName,
+                nurseConflict?.AppointmentDate.ToString("HH:mm"),
+                nurseConflict?.AppointmentDate.AddMinutes(nurseConflict.Duration).ToString("HH:mm")
             );
             return ServiceResponse.Failed(errorMessage);
         }

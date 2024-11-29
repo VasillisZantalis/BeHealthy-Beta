@@ -15,7 +15,7 @@ public class Appointment
     public int DoctorId { get; set; }
     public Doctor? Doctor { get; set; }
 
-    public int RoomId { get; set; }
+    public int? RoomId { get; set; }
     public Room? Room { get; set; }
 
     public int? NurseId { get; set; }

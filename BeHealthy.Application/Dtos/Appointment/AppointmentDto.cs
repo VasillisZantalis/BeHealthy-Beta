@@ -24,7 +24,7 @@ public class AppointmentDto
     [Required(ErrorMessage = "Doctor is required")]
     public int DoctorId { get; set; }
     public DoctorDto? Doctor { get; set; }
-    public int RoomId { get; set; }
+    public int? RoomId { get; set; }
     public RoomDto? Room { get; set; }
     public int? NurseId { get; set; }
     public NurseDto? Nurse { get; set; }
