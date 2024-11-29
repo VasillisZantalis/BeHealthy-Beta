@@ -45,6 +45,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
+                .Include(i => i.Nurse)
                 .Where(a => a.Doctor!.UserId == userId)
                 .ToListAsync();
     }

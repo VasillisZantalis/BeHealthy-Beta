@@ -155,6 +155,7 @@ public partial class AppointmentModal : BasePage
         _appointmentDto.DoctorId = appointment.DoctorId;
         _appointmentDto.PatientId = appointment.PatientId;
         _appointmentDto.RoomId = appointment.RoomId;
+        _appointmentDto.NurseId = appointment.NurseId;
         _appointmentDto.Notes = appointment.Notes;
         _appointmentDto.AppointmentDate = appointment.AppointmentDate;
         _appointmentDto.Duration = appointment.Duration;

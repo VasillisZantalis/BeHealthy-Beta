@@ -19,6 +19,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
+                .Include(i => i.Nurse)
                 .ToListAsync();
     }
 
@@ -29,6 +30,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
+                .Include(i => i.Nurse)
                 .Where(a => a.DoctorId == doctorId)
                 .ToListAsync();
     }
@@ -40,6 +42,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
+                .Include(i => i.Nurse)
                 .Where(a => a.PatientId == patientId)
                 .ToListAsync();
     }
@@ -51,6 +54,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)
                     .Include(i => i.Room)
+                    .Include(i => i.Nurse)
                     .Where(a => a.Doctor!.UserId == userId || a.Doctor!.UserId == userId)
                     .ToListAsync();
     }
@@ -62,6 +66,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)
                     .Include(i => i.Room)
+                    .Include(i => i.Nurse)
                     .Where(a => a.Doctor!.UserId == userId || a.Patient!.UserId == userId)
                     .ToListAsync();
     }
