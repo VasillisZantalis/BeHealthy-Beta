@@ -33,10 +33,5 @@ public class AppSettingConfiguration : IEntityTypeConfiguration<AppSetting>
 
         builder.Property(p => p.Description)
             .IsRequired();
-
-        builder.Property(p => p.InsDate)
-            .IsRequired()
-            .HasDefaultValue(DateTime.UtcNow);
-
     }
 }

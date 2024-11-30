@@ -8,7 +8,5 @@ public class Room
 
     public int DepartmentId { get; set; }
     public Department? Department { get; set; }
-
-    public int? AppointmentId { get; set; }
-    public Appointment? Appointment { get; set; }
+    public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }

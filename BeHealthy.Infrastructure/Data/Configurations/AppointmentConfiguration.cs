@@ -35,8 +35,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(a => a.Room)
-            .WithOne(r => r.Appointment)
-            .HasForeignKey<Appointment>(a => a.RoomId)
+            .WithMany(r => r.Appointments)
+            .HasForeignKey(a => a.RoomId)
             .OnDelete(DeleteBehavior.SetNull);
 
     }

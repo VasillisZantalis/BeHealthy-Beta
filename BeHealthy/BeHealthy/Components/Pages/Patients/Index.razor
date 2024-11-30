@@ -21,7 +21,7 @@
     </div>
 </div>
 
-@if (_patients is null)
+@if (_patients is null || !_patients.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Patients)</p>
 }

@@ -14,9 +14,10 @@ public class RoomRepository : GenericRepository<Room>, IRoomRepository
     public async Task<IEnumerable<Room>> GetAllRoomsAsync()
     {
         using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Rooms
-            .Include(i => i.Department)
-            .ToListAsync();
+        return Enumerable.Empty<Room>();
+        //return await context.Rooms
+        //    .Include(i => i.Department)
+        //    .ToListAsync();
     }
 
     public async Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId)
@@ -31,8 +32,9 @@ public class RoomRepository : GenericRepository<Room>, IRoomRepository
     public async Task<Room?> GetRoomByIdAsync(int roomId)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Rooms
-            .Include(i => i.Department)
-            .FirstOrDefaultAsync(w => w.Id == roomId);
+        return null;
+        //return await context.Rooms
+        //    .Include(i => i.Department)
+        //    .FirstOrDefaultAsync(w => w.Id == roomId);
     }
 }

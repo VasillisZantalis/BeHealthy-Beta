@@ -68,17 +68,6 @@ public class AppointmentService : IAppointmentService
 
         await _unitOfWork.AppointmentRepository.AddAsync(appointment);
 
-        if (appointment.RoomId.HasValue)
-        {
-            var room = await _unitOfWork.RoomRepository.GetByIdAsync(appointment.RoomId.Value);
-
-            if (room is null)
-                return ServiceResponse.Failed(string.Join(" ", Resource.NotFound, Resource.Room));
-
-            room.AppointmentId = appointment.Id;
-            await _unitOfWork.RoomRepository.UpdateAsync(room);
-        }
-
         return appointment.Id > 0
             ? ServiceResponse.Successful()
             : ServiceResponse.Failed(Resource.SomethingWentWrong);
@@ -100,17 +89,6 @@ public class AppointmentService : IAppointmentService
         if (!conflictCheck.Success)
         {
             return conflictCheck;
-        }
-
-        if (appointment.RoomId.HasValue)
-        {
-            var room = await _unitOfWork.RoomRepository.GetByIdAsync(appointment.RoomId.Value);
-
-            if (room is null)
-                return ServiceResponse.Failed(string.Join(" ", Resource.NotFound, Resource.Room));
-
-            room.AppointmentId = appointment.Id;
-            await _unitOfWork.RoomRepository.UpdateAsync(room);
         }
 
         return ServiceResponse.Successful();

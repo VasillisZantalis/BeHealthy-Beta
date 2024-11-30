@@ -3,26 +3,23 @@ using System;
 using BeHealthy.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BeHealthy.Migrations
+namespace BeHealthy.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241026054245_Images_Convertion")]
-    partial class Images_Convertion
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.AppSetting", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.AppSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,37 +27,40 @@ namespace BeHealthy.Migrations
 
                     b.Property<string>("Area")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<bool>("BoolValue")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime>("InsDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2024, 10, 26, 5, 42, 45, 518, DateTimeKind.Utc).AddTicks(5485));
-
-                    b.Property<int?>("IntValue")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("StringValue")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("InsDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("AppSettings", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -145,7 +145,7 @@ namespace BeHealthy.Migrations
                     b.ToTable("ApplicationUsers", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Appointment", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -164,13 +164,16 @@ namespace BeHealthy.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
+                    b.Property<int?>("NurseId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
                     b.Property<int>("Reason")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int?>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -180,12 +183,16 @@ namespace BeHealthy.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.HasIndex("NurseId");
+
                     b.HasIndex("PatientId");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Appointments", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Department", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Department", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,7 +221,7 @@ namespace BeHealthy.Migrations
                     b.ToTable("Departments", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Doctor", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Doctor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -255,7 +262,7 @@ namespace BeHealthy.Migrations
                     b.ToTable("Doctors", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Nurse", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Nurse", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -292,7 +299,7 @@ namespace BeHealthy.Migrations
                     b.ToTable("Nurses", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Patient", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Patient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -329,7 +336,7 @@ namespace BeHealthy.Migrations
                     b.ToTable("Patients", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Prescription", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Prescription", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -363,13 +370,48 @@ namespace BeHealthy.Migrations
                     b.ToTable("Prescriptions", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Room", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Privilege", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AppointmentId")
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<bool>("Value")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Privileges");
+                });
+
+            modelBuilder.Entity("BeHealthy.Domain.Entities.RolePrivilege", b =>
+                {
+                    b.Property<short>("Role")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("PrivilegeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Role", "PrivilegeId");
+
+                    b.HasIndex("PrivilegeId");
+
+                    b.ToTable("RolePrivileges");
+                });
+
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<int>("DepartmentId")
@@ -384,9 +426,6 @@ namespace BeHealthy.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppointmentId")
-                        .IsUnique();
 
                     b.HasIndex("DepartmentId");
 
@@ -521,28 +560,42 @@ namespace BeHealthy.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Appointment", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Appointment", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Doctor", "Doctor")
+                    b.HasOne("BeHealthy.Domain.Entities.Doctor", "Doctor")
                         .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Patient", "Patient")
+                    b.HasOne("BeHealthy.Domain.Entities.Nurse", "Nurse")
+                        .WithMany("Appointments")
+                        .HasForeignKey("NurseId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BeHealthy.Domain.Entities.Room", "Room")
+                        .WithMany("Appointments")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Doctor");
 
+                    b.Navigation("Nurse");
+
                     b.Navigation("Patient");
+
+                    b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Department", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Department", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Doctor", "HeadOfDepartment")
+                    b.HasOne("BeHealthy.Domain.Entities.Doctor", "HeadOfDepartment")
                         .WithMany()
                         .HasForeignKey("HeadOfDepartmentId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -550,16 +603,16 @@ namespace BeHealthy.Migrations
                     b.Navigation("HeadOfDepartment");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Doctor", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Doctor", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Department", "Department")
+                    b.HasOne("BeHealthy.Domain.Entities.Department", "Department")
                         .WithMany("Doctors")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BeHealthy.Shared.Models.Entities.ApplicationUser", "User")
+                    b.HasOne("BeHealthy.Domain.Entities.ApplicationUser", "User")
                         .WithOne("Doctor")
-                        .HasForeignKey("BeHealthy.Shared.Models.Entities.Doctor", "UserId")
+                        .HasForeignKey("BeHealthy.Domain.Entities.Doctor", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -568,16 +621,16 @@ namespace BeHealthy.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Nurse", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Nurse", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Department", "Department")
+                    b.HasOne("BeHealthy.Domain.Entities.Department", "Department")
                         .WithMany("Nurses")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BeHealthy.Shared.Models.Entities.ApplicationUser", "User")
+                    b.HasOne("BeHealthy.Domain.Entities.ApplicationUser", "User")
                         .WithOne("Nurse")
-                        .HasForeignKey("BeHealthy.Shared.Models.Entities.Nurse", "UserId")
+                        .HasForeignKey("BeHealthy.Domain.Entities.Nurse", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -586,16 +639,16 @@ namespace BeHealthy.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Patient", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Patient", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Department", "Department")
+                    b.HasOne("BeHealthy.Domain.Entities.Department", "Department")
                         .WithMany("Patients")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BeHealthy.Shared.Models.Entities.ApplicationUser", "User")
+                    b.HasOne("BeHealthy.Domain.Entities.ApplicationUser", "User")
                         .WithOne("Patient")
-                        .HasForeignKey("BeHealthy.Shared.Models.Entities.Patient", "UserId")
+                        .HasForeignKey("BeHealthy.Domain.Entities.Patient", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -604,15 +657,15 @@ namespace BeHealthy.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Prescription", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Prescription", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Doctor", "Doctor")
+                    b.HasOne("BeHealthy.Domain.Entities.Doctor", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Patient", "Patient")
+                    b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -623,21 +676,24 @@ namespace BeHealthy.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Room", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.RolePrivilege", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Appointment", "Appointment")
-                        .WithOne("Room")
-                        .HasForeignKey("BeHealthy.Shared.Models.Entities.Room", "AppointmentId")
+                    b.HasOne("BeHealthy.Domain.Entities.Privilege", "Privilege")
+                        .WithMany("RolePrivileges")
+                        .HasForeignKey("PrivilegeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeHealthy.Shared.Models.Entities.Department", "Department")
+                    b.Navigation("Privilege");
+                });
+
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>
+                {
+                    b.HasOne("BeHealthy.Domain.Entities.Department", "Department")
                         .WithMany("Rooms")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Appointment");
 
                     b.Navigation("Department");
                 });
@@ -653,7 +709,7 @@ namespace BeHealthy.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.ApplicationUser", null)
+                    b.HasOne("BeHealthy.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -662,7 +718,7 @@ namespace BeHealthy.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.ApplicationUser", null)
+                    b.HasOne("BeHealthy.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -677,7 +733,7 @@ namespace BeHealthy.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeHealthy.Shared.Models.Entities.ApplicationUser", null)
+                    b.HasOne("BeHealthy.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -686,14 +742,14 @@ namespace BeHealthy.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("BeHealthy.Shared.Models.Entities.ApplicationUser", null)
+                    b.HasOne("BeHealthy.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Doctor");
 
@@ -702,12 +758,7 @@ namespace BeHealthy.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Appointment", b =>
-                {
-                    b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Department", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Department", b =>
                 {
                     b.Navigation("Doctors");
 
@@ -718,12 +769,27 @@ namespace BeHealthy.Migrations
                     b.Navigation("Rooms");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Doctor", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Doctor", b =>
                 {
                     b.Navigation("Appointments");
                 });
 
-            modelBuilder.Entity("BeHealthy.Shared.Models.Entities.Patient", b =>
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Nurse", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Patient", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Privilege", b =>
+                {
+                    b.Navigation("RolePrivileges");
+                });
+
+            modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>
                 {
                     b.Navigation("Appointments");
                 });

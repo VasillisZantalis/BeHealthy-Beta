@@ -11,7 +11,7 @@
 
 <Alert @ref="_alert"/>
 
-@if (_appointments is null)
+@if (_appointments is null || !_appointments.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Appointments)</p>
 }
