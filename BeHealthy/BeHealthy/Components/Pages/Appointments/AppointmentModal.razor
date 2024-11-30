@@ -15,7 +15,8 @@
                 else
                 {
                     <EditForm FormName="AppointmentForm" OnValidSubmit="HandleSaveClick" Model="_appointmentDto">
-                        <DataAnnotationsValidator />
+                        <ValidationComponent @ref="_validationComponent"/>
+
                         <div class="d-flex flex-column gap-3">
 
                             <div class="row">

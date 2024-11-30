@@ -54,6 +54,8 @@ public partial class AppointmentModal : BasePage
     private int AppointmentHour { get; set; } = 0;
     private int AppointmentMinute { get; set; } = 0;
 
+    private ValidationComponent? _validationComponent;
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
@@ -172,16 +174,38 @@ public partial class AppointmentModal : BasePage
 
     public async Task HandleSaveClick()
     {
-        var appointmentTime = new TimeSpan(AppointmentHour, AppointmentMinute, 0);
-        _appointmentDto.AppointmentDate =
-            new DateTime(
-                _appointmentDto.AppointmentDate.Year,
-                _appointmentDto.AppointmentDate.Month,
-                _appointmentDto.AppointmentDate.Day,
-                appointmentTime.Hours,
-                appointmentTime.Minutes,
-                0);
+        _validationComponent?.ClearErrors();
+        var errors = new Dictionary<string, List<string>>();
 
-        await OnFormSubmit.InvokeAsync((_appointmentDto, _isEdit, _appointmentId));
+        if (_showNurses && _appointmentDto.NurseId is null)
+        {
+            errors.Add(nameof(_appointmentDto.NurseId), 
+                new() { Resource.Required });
+        }
+
+        if (_showRooms && _appointmentDto.RoomId is null)
+        {
+            errors.Add(nameof(_appointmentDto.RoomId), 
+                new() { Resource.Required });
+        }
+
+        if (errors.Any())
+        {
+            _validationComponent?.DisplayErrors(errors);
+        }
+        else
+        {
+            var appointmentTime = new TimeSpan(AppointmentHour, AppointmentMinute, 0);
+            _appointmentDto.AppointmentDate =
+                new DateTime(
+                    _appointmentDto.AppointmentDate.Year,
+                    _appointmentDto.AppointmentDate.Month,
+                    _appointmentDto.AppointmentDate.Day,
+                    appointmentTime.Hours,
+                    appointmentTime.Minutes,
+                    0);
+
+            await OnFormSubmit.InvokeAsync((_appointmentDto, _isEdit, _appointmentId));
+        }
     }
 }

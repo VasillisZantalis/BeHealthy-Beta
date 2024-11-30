@@ -384,6 +384,9 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Remember me</value>
   </data>
+  <data name="Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
   <data name="Role" xml:space="preserve">
     <value>Role</value>
   </data>
