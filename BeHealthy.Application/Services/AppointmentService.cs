@@ -57,6 +57,7 @@ public class AppointmentService : IAppointmentService
             appointmentDto.DoctorId,
             appointmentDto.PatientId,
             appointmentDto.NurseId,
+            appointmentDto.RoomId,
             appointmentDto.AppointmentDate,
             appointmentDto.Duration);
 
@@ -91,6 +92,7 @@ public class AppointmentService : IAppointmentService
             appointmentDto.DoctorId,
             appointmentDto.PatientId,
             appointmentDto.NurseId,
+            appointmentDto.RoomId,
             appointmentDto.AppointmentDate,
             appointmentDto.Duration,
             appointmentDto.Id);
@@ -123,6 +125,7 @@ public class AppointmentService : IAppointmentService
         int doctorId,
         int patientId, 
         int? nurseId,
+        int? roomId,
         DateTime appointmentDate, 
         int duration, 
         int? appointmentId = null)
@@ -202,6 +205,26 @@ public class AppointmentService : IAppointmentService
                 nurseConflict?.AppointmentDate.AddMinutes(nurseConflict.Duration).ToString("HH:mm")
             );
             return ServiceResponse.Failed(errorMessage);
+        }
+
+        var roomsAppointments = roomId.HasValue
+            ? await _unitOfWork.RoomRepository.GetRoomAppointmentsAsync(roomId.Value)
+            : Enumerable.Empty<Appointment>();
+
+        var roomsConflict = roomsAppointments.FirstOrDefault(existingAppointment =>
+        {
+            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
+                return false;
+
+            var existingStart = existingAppointment.AppointmentDate;
+            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
+
+            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
+        });
+
+        if (roomsConflict != null)
+        {
+            return ServiceResponse.Failed(Resource.RoomIsBookedAtThatTime);
         }
 
         return ServiceResponse.Successful();

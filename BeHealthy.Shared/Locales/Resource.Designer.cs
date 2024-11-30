@@ -889,6 +889,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Room is booked at that time.
+        /// </summary>
+        public static string RoomIsBookedAtThatTime {
+            get {
+                return ResourceManager.GetString("RoomIsBookedAtThatTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rooms.
         /// </summary>
         public static string Rooms {

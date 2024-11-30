@@ -6,4 +6,5 @@ public interface IRoomRepository : IGenericRepository<Room>
 {
     Task<IEnumerable<Room>> GetAllRoomsAsync();
     Task<Room?> GetRoomByIdAsync(int roomId);
+    Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId);
 }

@@ -393,6 +393,9 @@
   <data name="Room" xml:space="preserve">
     <value>Room</value>
   </data>
+  <data name="RoomIsBookedAtThatTime" xml:space="preserve">
+    <value>Room is booked at that time</value>
+  </data>
   <data name="Rooms" xml:space="preserve">
     <value>Rooms</value>
   </data>

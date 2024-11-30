@@ -19,6 +19,15 @@ public class RoomRepository : GenericRepository<Room>, IRoomRepository
             .ToListAsync();
     }
 
+    public async Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        return await context.Appointments
+            .Where(w => w.RoomId == roomId)
+            .ToListAsync();
+    }
+
     public async Task<Room?> GetRoomByIdAsync(int roomId)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
