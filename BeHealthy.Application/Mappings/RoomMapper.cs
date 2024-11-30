@@ -100,4 +100,14 @@ public static class RoomMapper
     {
         return dtos.Select(dto => dto.MapToDomain());
     }
+
+    public static ICollection<RoomDto> MapToDto(this ICollection<Room> rooms)
+    {
+        return rooms.Select(room => room.MapToDto()).ToList();
+    }
+
+    public static ICollection<Room> MapToDomain(this ICollection<RoomDto> dtos)
+    {
+        return dtos.Select(dto => dto.MapToDomain()).ToList();
+    }
 }

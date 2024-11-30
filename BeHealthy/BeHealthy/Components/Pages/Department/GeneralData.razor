@@ -1,4 +1,6 @@
-﻿<div class="container-fluid my-3 p-3 border rounded">
+﻿@inherits BasePage
+
+<div class="container-fluid my-3 p-3 border rounded">
     <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
         <Alert @ref="_alert" />
         <DataAnnotationsValidator />
@@ -64,7 +66,7 @@
         _inProgress = true;
         if (IsEditMode)
         {
-            var updateDto = new DepartmentForUpdateDto
+            var roomForUpdateDto = new DepartmentForUpdateDto
                 {
                     Id = DepartmentDto.Id,
                     Name = DepartmentDto.Name,
@@ -75,11 +77,11 @@
                     Patients = DepartmentDto.Patients,
                     Rooms = DepartmentDto.Rooms
                 };
-            await _departmentService.UpdateDepartmentAsync(updateDto);
+            await _departmentService.UpdateDepartmentAsync(roomForUpdateDto);
         }
         else
         {
-            var createDto = new DepartmentForCreationDto
+            var roomForCreateDto = new DepartmentForCreationDto
                 {
                     Name = DepartmentDto.Name,
                     Location = DepartmentDto.Location,
@@ -89,10 +91,9 @@
                     Patients = DepartmentDto.Patients,
                     Rooms = DepartmentDto.Rooms
                 };
-            await _departmentService.AddDepartmentAsync(createDto);
+            await _departmentService.AddDepartmentAsync(roomForCreateDto);
         }
         _inProgress = false;
-        string successMessage = "Successful";
-        _alert.ShowSuccess(successMessage);
+        _alert.ShowSuccess(Resource.Success);
     }
 }
