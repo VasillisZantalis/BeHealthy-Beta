@@ -36,15 +36,17 @@ else
             <div class="table-responsive">
                 <div class="card-body pb-2 px-0 m-0">
                     <QuickGrid Class="table rounded"
-                    Items="@_rooms.AsQueryable()"
-                    ItemKey="@(x => x.Id)"
+                                Items="@_rooms.AsQueryable()"
+                                ItemKey="@(x => x.Id)"
                     Pagination="_paginationState">
                         <PropertyColumn Title="@Resource.Name"
-                        Property="@(x => x.Name)" />
+                                        Property="@(x => x.Name)" 
+                                        Sortable="true"/>
                         <PropertyColumn Title="@Resource.Number"
-                        Property="@(x => x.Number)" />
+                                        Property="@(x => x.Number)" />
                         <PropertyColumn Title="@Resource.Department"
-                        Property="@(x => x.Department)" />
+                                        Property="@(x => x.Department)"
+                                        Sortable="true" />
                         <TemplateColumn>
                             <ActionsDropdown>
                                 <button class="btn w-100 text-start" @onclick="() => EditRoom(context.Id)">
