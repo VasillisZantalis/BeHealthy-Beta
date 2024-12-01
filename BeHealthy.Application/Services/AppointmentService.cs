@@ -91,6 +91,8 @@ public class AppointmentService : IAppointmentService
             return conflictCheck;
         }
 
+        await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
+
         return ServiceResponse.Successful();
     }
 
