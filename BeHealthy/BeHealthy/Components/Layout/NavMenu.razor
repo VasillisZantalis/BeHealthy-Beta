@@ -1,12 +1,11 @@
 ﻿@using BeHealthy.States
 
-@inject IStringLocalizer<Resource> localizer
 @inject NavMenuState NavMenuState
 
 @rendermode InteractiveServer
 
-<div style="@(NavMenuState.IsVisible ? "display: block;" : "display: none;")">
-    <div class="sidebar h-auto main-color" style="min-width: 250px;">
+<div class="sidebar-container" style="@(NavMenuState.IsVisible ? "display: block;" : "display: none;")">
+    <div class="sidebar h-auto main-color">
 
         <div class="top-row ps-3 navbar navbar-dark">
             <div class="container-fluid">
@@ -78,12 +77,12 @@
                                 <ul class="flex-column list-unstyled" style="@SubMenuStyle">
                                     <li class="">
                                         <NavLink class="nav-link ms-2 ps-5" href="roles/privileges">
-                                            @Resource.Privileges 
+                                            @Resource.Privileges
                                         </NavLink>
                                     </li>
                                 </ul>
                             </div>
-                    
+
                             <div class="nav-item px-3">
                                 <NavLink class="nav-link" href="departments">
                                     <Icon IconClass="@FAIcon.Hospital" SizeClass="fs-5" />&nbsp; @Resource.Departments
@@ -91,7 +90,6 @@
                             </div>
                         </div>
                     </AuthorizeView>
-       
                 </nav>
             </div>
         </div>
@@ -118,4 +116,3 @@
         isRolesExpanded = !isRolesExpanded;
     }
 }
-
