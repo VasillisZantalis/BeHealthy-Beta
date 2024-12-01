@@ -300,6 +300,9 @@
   <data name="Minutes" xml:space="preserve">
     <value>Minutes</value>
   </data>
+  <data name="MustBeBetween" xml:space="preserve">
+    <value>{0} must be between {1} - {2}</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -419,6 +422,9 @@
   </data>
   <data name="Success" xml:space="preserve">
     <value>Success</value>
+  </data>
+  <data name="TheFieldIsRequired" xml:space="preserve">
+    <value>The field {0} is required</value>
   </data>
   <data name="ThereAreNo" xml:space="preserve">
     <value>There are no {0}</value>

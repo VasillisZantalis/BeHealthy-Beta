@@ -610,6 +610,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} must be between {1} - {2}.
+        /// </summary>
+        public static string MustBeBetween {
+            get {
+                return ResourceManager.GetString("MustBeBetween", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -966,6 +975,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field {0} is required.
+        /// </summary>
+        public static string TheFieldIsRequired {
+            get {
+                return ResourceManager.GetString("TheFieldIsRequired", resourceCulture);
             }
         }
         

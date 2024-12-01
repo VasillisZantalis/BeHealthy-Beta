@@ -1,9 +1,10 @@
 ﻿@inherits BasePage
+@using BeHealthy.Application.Helpers;
 
 <div class="container-fluid my-3 p-3 border rounded">
     <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
         <Alert @ref="_alert" />
-        <DataAnnotationsValidator />
+        <ValidationComponent @ref="_validationComponent" />
         <div class="d-flex flex-column gap-3">
             <div class="form-group">
                 <label class="fw-bold" for="name">@Resource.Name</label>
@@ -13,14 +14,15 @@
                 <label class="fw-bold" for="location">@Resource.Location</label>
                 <InputText id="location" class="form-control" @bind-Value="DepartmentDto.Location" />
             </div>
-             <div class="form-group">
-                <label class="fw-bold" for="headOfDepartment">@Resource.HeadΟfDepartment</label>
+            <div class="form-group">
+                <label class="fw-bold @(_isRequiredHeadOfDepartment ? "required" : "")" for="headOfDepartment">@Resource.HeadΟfDepartment</label>
                 <InputSelect id="headOfDepartment" class="form-control" @bind-Value="DepartmentDto.HeadOfDepartmentId">
                     @foreach (var doctor in _doctorsSelect)
                     {
                         <option value="@doctor.Value">@doctor.Text</option>
                     }
                 </InputSelect>
+                <ValidationMessage For="@(() => DepartmentDto.HeadOfDepartmentId)" />
             </div>
         </div>
         <button type="submit" class="btn btn-success mt-3 px-4 text-end">
@@ -46,10 +48,21 @@
     [Inject]
     private IDepartmentService _departmentService { get; set; } = default!;
 
+    [Inject]
+    private IAppSettingsService _appSettingsService { get; set; } = default!;
+
     private bool _inProgress = false;
     private Alert _alert = new();
+    private bool _isRequiredHeadOfDepartment;
 
     private List<SelectItem> _doctorsSelect = new List<SelectItem>();
+
+    private ValidationComponent? _validationComponent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSettings();
+    }
 
     protected override void OnParametersSet()
     {
@@ -61,39 +74,64 @@
         _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
+    private async Task GetSettings()
+    {
+        var keys = new[] { "HeadOfDepartmentIsRequired" }.ToList();
+        var setting = await _appSettingsService.GetSettingByKeyAsync("HeadOfDepartmentIsRequired");
+
+        _isRequiredHeadOfDepartment = setting?.GetBooleanValue() ?? false;
+    }
+
     private async Task HandleSubmit()
     {
         _inProgress = true;
-        if (IsEditMode)
+
+        _validationComponent?.ClearErrors();
+        var errors = new Dictionary<string, List<string>>();
+
+        if (_isRequiredHeadOfDepartment && DepartmentDto.HeadOfDepartmentId is null)
         {
-            var roomForUpdateDto = new DepartmentForUpdateDto
-                {
-                    Id = DepartmentDto.Id,
-                    Name = DepartmentDto.Name,
-                    Location = DepartmentDto.Location,
-                    HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
-                    Doctors = DepartmentDto.Doctors,
-                    Nurses = DepartmentDto.Nurses,
-                    Patients = DepartmentDto.Patients,
-                    Rooms = DepartmentDto.Rooms
-                };
-            await _departmentService.UpdateDepartmentAsync(roomForUpdateDto);
+            errors.Add(nameof(DepartmentDto.HeadOfDepartmentId),
+                new() { string.Format(Resource.TheFieldIsRequired, Resource.HeadΟfDepartment) });
         }
-        else
+
+        if (errors.Any())
         {
-            var roomForCreateDto = new DepartmentForCreationDto
-                {
-                    Name = DepartmentDto.Name,
-                    Location = DepartmentDto.Location,
-                    HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
-                    Doctors = DepartmentDto.Doctors,
-                    Nurses = DepartmentDto.Nurses,
-                    Patients = DepartmentDto.Patients,
-                    Rooms = DepartmentDto.Rooms
-                };
-            await _departmentService.AddDepartmentAsync(roomForCreateDto);
+            _validationComponent?.DisplayErrors(errors);
+        }
+        else 
+        {
+            if (IsEditMode)
+            {
+                var roomForUpdateDto = new DepartmentForUpdateDto
+                    {
+                        Id = DepartmentDto.Id,
+                        Name = DepartmentDto.Name,
+                        Location = DepartmentDto.Location,
+                        HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
+                        Doctors = DepartmentDto.Doctors,
+                        Nurses = DepartmentDto.Nurses,
+                        Patients = DepartmentDto.Patients,
+                        Rooms = DepartmentDto.Rooms
+                    };
+                await _departmentService.UpdateDepartmentAsync(roomForUpdateDto);
+            }
+            else
+            {
+                var roomForCreateDto = new DepartmentForCreationDto
+                    {
+                        Name = DepartmentDto.Name,
+                        Location = DepartmentDto.Location,
+                        HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
+                        Doctors = DepartmentDto.Doctors,
+                        Nurses = DepartmentDto.Nurses,
+                        Patients = DepartmentDto.Patients,
+                        Rooms = DepartmentDto.Rooms
+                    };
+                await _departmentService.AddDepartmentAsync(roomForCreateDto);
+            }
+            _alert.ShowSuccess(Resource.Success);
         }
         _inProgress = false;
-        _alert.ShowSuccess(Resource.Success);
     }
 }

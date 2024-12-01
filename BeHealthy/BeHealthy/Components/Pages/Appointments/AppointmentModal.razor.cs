@@ -127,16 +127,8 @@ public partial class AppointmentModal : BasePage
         var nurseSetting = settings.FirstOrDefault(s => s.Key == "NurseIsRequiredForAppointment");
         var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "RequiredRoomsInAppointments");
 
-        if (requireRoomSetting != null)
-        {
-            _showRooms = AppSettingsConverterHelper.GetBooleanValue(requireRoomSetting);
-        }
-
-        if (nurseSetting != null)
-        {
-            _showNurses = AppSettingsConverterHelper.GetBooleanValue(nurseSetting);
-        }
-
+        _showNurses = nurseSetting?.GetBooleanValue() ?? false;
+        _showRooms = requireRoomSetting?.GetBooleanValue() ?? false;
     }
 
     public void Open()
@@ -145,8 +137,6 @@ public partial class AppointmentModal : BasePage
         _isEdit = false;
         _appointmentDto = new();
         _appointmentId = 0;
-        _appointmentDto.PatientId = Patients.First().Id;
-        _appointmentDto.DoctorId = Doctors.First().Id;
         _appointmentDto.AppointmentDate = DateTime.Now;
     }
 
@@ -177,16 +167,34 @@ public partial class AppointmentModal : BasePage
         _validationComponent?.ClearErrors();
         var errors = new Dictionary<string, List<string>>();
 
+        if (_appointmentDto.DoctorId <= 0)
+        {
+            errors.Add(nameof(_appointmentDto.DoctorId),
+                new() { string.Format(Resource.TheFieldIsRequired, Resource.Doctor) });
+        }
+
+        if (_appointmentDto.PatientId <= 0)
+        {
+            errors.Add(nameof(_appointmentDto.PatientId),
+                new() { string.Format(Resource.TheFieldIsRequired, Resource.Patient) });
+        }
+
+        if (_appointmentDto.Duration <= 0 || _appointmentDto.Duration > 1440)
+        {
+            errors.Add(nameof(_appointmentDto.Duration),
+                new() { string.Format(Resource.MustBeBetween, Resource.Duration, 1, 1440) });
+        }
+
         if (_showNurses && _appointmentDto.NurseId is null)
         {
-            errors.Add(nameof(_appointmentDto.NurseId), 
-                new() { Resource.Required });
+            errors.Add(nameof(_appointmentDto.NurseId),
+                new() { string.Format(Resource.TheFieldIsRequired, Resource.Nurse) });
         }
 
         if (_showRooms && _appointmentDto.RoomId is null)
         {
-            errors.Add(nameof(_appointmentDto.RoomId), 
-                new() { Resource.Required });
+            errors.Add(nameof(_appointmentDto.RoomId),
+                new() { string.Format(Resource.TheFieldIsRequired, Resource.Room) });
         }
 
         if (errors.Any())

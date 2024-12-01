@@ -300,6 +300,9 @@
   <data name="Minutes" xml:space="preserve">
     <value>Λεπτά</value>
   </data>
+  <data name="MustBeBetween" xml:space="preserve">
+    <value>{0} πρέπει να είναι μεταξύ {1} - {2}</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Όνομα</value>
   </data>
@@ -419,6 +422,9 @@
   </data>
   <data name="Success" xml:space="preserve">
     <value>Επιτυχία</value>
+  </data>
+  <data name="TheFieldIsRequired" xml:space="preserve">
+    <value>Το πεδίο {0} είναι υποχρεωτικό</value>
   </data>
   <data name="ThereAreNo" xml:space="preserve">
     <value>Δεν υπάρχουν {0}</value>

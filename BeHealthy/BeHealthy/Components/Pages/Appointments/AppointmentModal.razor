@@ -22,7 +22,7 @@
                             <div class="row">
 
                                 <div class="form-group col-12 col-sm-6">
-                                    <label class="fw-bold" for="patientIdSelect">@Resource.Patient</label>
+                                    <label class="fw-bold required" for="patientIdSelect">@Resource.Patient</label>
                                     <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentDto.PatientId">
                                         @foreach (var patient in _patientsSelect)
                                         {
@@ -33,7 +33,7 @@
                                 </div>
 
                                 <div class="form-group col-12 col-sm-6">
-                                    <label class="fw-bold" for="doctorIdSelect">@Resource.Doctor</label>
+                                    <label class="fw-bold required" for="doctorIdSelect">@Resource.Doctor</label>
                                     <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentDto.DoctorId" disabled="@LockDoctorsDropdown">
                                         @foreach (var doctor in _doctorsSelect)
                                         {
@@ -87,7 +87,7 @@
                             @if (_showNurses)
                             {
                                 <div class="form-group col">
-                                    <label class="fw-bold" for="nursesIdSelect">@Resource.Nurse</label>
+                                    <label class="fw-bold required" for="nursesIdSelect">@Resource.Nurse</label>
                                     <InputSelect id="nursesIdSelect" class="form-select" @bind-Value="_appointmentDto.NurseId">
                                         @foreach (var nurse in _nursesSelect)
                                         {
@@ -101,7 +101,7 @@
                             @if (_showRooms)
                             {
                                 <div class="form-group col">
-                                    <label class="fw-bold" for="roomIdSelect">@Resource.Room</label>
+                                    <label class="fw-bold required" for="roomIdSelect">@Resource.Room</label>
                                     <InputSelect id="roomIdSelect" class="form-select" @bind-Value="_appointmentDto.RoomId">
                                         @foreach (var room in _roomsSelect)
                                         {

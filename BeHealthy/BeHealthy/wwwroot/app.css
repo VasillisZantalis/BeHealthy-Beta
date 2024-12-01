@@ -82,3 +82,9 @@ h1:focus {
     outline: none;
     box-shadow: none;
 }
+
+.required::after {
+    content: "*";
+    color: red;
+    font-weight: bold;
+}
