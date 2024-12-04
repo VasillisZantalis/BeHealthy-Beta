@@ -1,6 +1,6 @@
 ﻿@page "/departments/create"
 @page "/departments/edit/{id:int}"
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @using BeHealthy.Components.Pages.Department.Components
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage

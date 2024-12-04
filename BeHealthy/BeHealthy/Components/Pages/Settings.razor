@@ -1,6 +1,6 @@
 ﻿@page "/settings"
 @using BeHealthy.Components.Layout
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 

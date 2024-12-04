@@ -25,7 +25,7 @@
                         </NavLink>
                     </div>
 
-                    <AuthorizeView Roles="Admin, Doctor">
+                    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor }.ToRoleString())">
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="doctors">
                                 <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-5" />&nbsp; @Resource.Doctors
@@ -38,7 +38,7 @@
                         </div>
                     </AuthorizeView>
 
-                    <AuthorizeView Roles="Admin, Doctor, Nurse">
+                    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Nurse }.ToRoleString())">
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="patients">
                                 <Icon IconClass="@FAIcon.Viruses" SizeClass="fs-5" />&nbsp; @Resource.Patients
@@ -46,7 +46,7 @@
                         </div>
                     </AuthorizeView>
 
-                    <AuthorizeView Roles="Admin, Doctor, Patient">
+                    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Patient }.ToRoleString())">
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="appointment">
                                 <Icon IconClass="@FAIcon.CalendarDays" SizeClass="fs-5" />&nbsp; @Resource.Appointments
@@ -60,7 +60,7 @@
                         </NavLink>
                     </div>
 
-                    <AuthorizeView Roles="Admin">
+                    <AuthorizeView Roles="@(new[] { UserRole.Admin }.ToRoleString())">
                         <div class="mt-3">
                             <h5 class="ms-2 text-white-50">@Resource.Configuration</h5>
                             <div class="nav-item px-3 pt-0">

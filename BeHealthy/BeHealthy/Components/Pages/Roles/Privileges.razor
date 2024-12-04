@@ -1,6 +1,6 @@
 ﻿@page "/roles/privileges"
 @using BeHealthy.Application.Dtos.Privilege
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 

@@ -1,6 +1,6 @@
 ﻿@page "/patients/edit/{PatientId:int}"
 @using BeHealthy.Components.Pages.Patients.Components
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
