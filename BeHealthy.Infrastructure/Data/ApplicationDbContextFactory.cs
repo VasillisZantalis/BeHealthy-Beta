@@ -8,13 +8,18 @@ namespace BeHealthy.Infrastructure.Data
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-
             var configuration = new ConfigurationBuilder()
                .AddUserSecrets<ApplicationDbContextFactory>()
                .Build();
 
-            var connectionString = configuration.GetConnectionString("Default");
+            var connectionString = configuration["Default"];
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                throw new InvalidOperationException("Connection string 'Default' not found in User Secrets.");
+            }
+
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseMySQL(connectionString!);
 
             return new ApplicationDbContext(optionsBuilder.Options);

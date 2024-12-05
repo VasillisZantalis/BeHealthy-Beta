@@ -44,14 +44,14 @@ else
                         @if (_hasActionRights)
                         {
                             <TemplateColumn>
-                                <ActionsDropdown>
-                                    <button class="btn w-100 text-start" @onclick="@(() => EditDepartment(context.Id))">
-                                        <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
+                                <div class="d-flex">
+                                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDepartment(context.Id))">
+                                        <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />
                                     </button>
-                                    <button class="btn w-100 text-start" @onclick="() => ConfirmDelete(context.Id)">
-                                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
+                                    <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
+                                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                                     </button>
-                                </ActionsDropdown>
+                                </div>
                             </TemplateColumn>
                         }
                     </QuickGrid>
