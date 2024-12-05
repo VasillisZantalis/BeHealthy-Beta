@@ -10,6 +10,7 @@ using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
+using BeHealthy.Shared.Parameters;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -155,7 +156,7 @@ public partial class Index : BasePage
 
     private async Task LoadPatients()
     {
-        _patients = (await _patientService.GetAllPatientsAsync()).ToList();
+        _patients = (await _patientService.GetAllPatientsAsync(new PatientSearchingParameters())).ToList();
     }
 
     private void EditAppointment(int appointmentId)

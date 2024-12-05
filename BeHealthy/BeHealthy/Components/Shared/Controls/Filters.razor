@@ -5,11 +5,11 @@
             <div class="row">
                 <div class="col-12 col-sm-6">
                     <label for="firstNameFilter" class="form-label fs-7">@Resource.FirstName</label>
-                    <input id="firstNameFilter" class="form-control" @bind="Filter.FirstName" />
+                    <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" />
                 </div>
                 <div class="col-12 col-sm-6">
                     <label for="lastNameFilter" class="form-label fs-7">@Resource.LastName</label>
-                    <input id="lastNameFilter" class="form-control" @bind="Filter.LastName" />
+                    <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" />
                 </div>
                 <div class="col-12 text-end mt-3">
                     <button class="btn btn-light" @onclick="OnSearchClicked">
@@ -24,12 +24,12 @@
 
 @code {
     [Parameter] 
-    public EventCallback<FilterParams> OnSearch { get; set; }
+    public EventCallback<PatientSearchingParameters>OnSearch { get; set; }
 
-    public FilterParams Filter { get; set; } = new();
+    private PatientSearchingParameters _filters = new();
 
     private async Task OnSearchClicked()
     {
-        await OnSearch.InvokeAsync(Filter);
+        await OnSearch.InvokeAsync(_filters);
     }
 }

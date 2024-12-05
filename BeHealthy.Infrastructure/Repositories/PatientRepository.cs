@@ -2,6 +2,7 @@
 using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using BeHealthy.Shared.Parameters;
 
 namespace BeHealthy.Infrastructure.Repositories;
 
@@ -11,20 +12,20 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
     {
     }
 
-    public async Task<IEnumerable<Patient>> GetAllPatientsAsync(string? firstName = null, string? lastName = null)
+    public async Task<IEnumerable<Patient>> GetAllPatientsAsync(PatientSearchingParameters patientSearchingParameters)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
         var query = context.Patients.Include(d => d.User).AsQueryable();
 
-        if (!string.IsNullOrEmpty(firstName))
+        if (!string.IsNullOrEmpty(patientSearchingParameters.FirstName))
         {
-            query = query.Where(x => x.FirstName.Contains(firstName));
+            query = query.Where(x => x.FirstName.Contains(patientSearchingParameters.FirstName));
         }
 
-        if (!string.IsNullOrEmpty(lastName))
+        if (!string.IsNullOrEmpty(patientSearchingParameters.LastName))
         {
-            query = query.Where(x => x.LastName.Contains(lastName));
+            query = query.Where(x => x.LastName.Contains(patientSearchingParameters.LastName));
         }
 
         return await query.ToListAsync();

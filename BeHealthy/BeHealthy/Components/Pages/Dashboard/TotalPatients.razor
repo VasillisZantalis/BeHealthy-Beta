@@ -18,7 +18,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        totalPatientsCount = (await patientService.GetAllPatientsAsync()).Count();
+        totalPatientsCount = (await patientService.GetAllPatientsAsync(new PatientSearchingParameters())).Count();
     }
 
 }

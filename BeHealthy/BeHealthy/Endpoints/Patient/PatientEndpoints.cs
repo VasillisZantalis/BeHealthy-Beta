@@ -2,6 +2,7 @@
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Filters;
+using BeHealthy.Shared.Parameters;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ public static class PatientEndpoints
         group.MapGet("", async Task<Results<NotFound, Ok<IEnumerable<PatientDto>>>>
             ([FromServices] IPatientService patientService) =>
         {
-            var patients = await patientService.GetAllPatientsAsync();
+            var patients = await patientService.GetAllPatientsAsync(new PatientSearchingParameters());
 
             return patients is null
                 ? TypedResults.NotFound()

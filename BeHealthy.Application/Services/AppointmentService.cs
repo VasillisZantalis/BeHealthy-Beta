@@ -130,9 +130,9 @@ public class AppointmentService : IAppointmentService
         {
             var errorMessage = string.Format(
                 Resource.AppointmentExistsForDoctor,
-                doctorConflict?.Doctor?.FullName,
-                doctorConflict?.AppointmentDate.ToString("HH:mm"),
-                doctorConflict?.AppointmentDate.AddMinutes(doctorConflict.Duration).ToString("HH:mm")
+                doctorConflict.Doctor?.FullName,
+                doctorConflict.AppointmentDate.ToString("HH:mm"),
+                doctorConflict.AppointmentDate.AddMinutes(doctorConflict.Duration).ToString("HH:mm")
             );
             return ServiceResponse.Failed(errorMessage);
         }
@@ -154,9 +154,9 @@ public class AppointmentService : IAppointmentService
         {
             var errorMessage = string.Format(
                 Resource.AppointmentExistsForPatient,
-                patientConflict?.Patient?.FullName,
-                patientConflict?.AppointmentDate.ToString("HH:mm"),
-                patientConflict?.AppointmentDate.AddMinutes(patientConflict.Duration).ToString("HH:mm")
+                patientConflict.Patient?.FullName,
+                patientConflict.AppointmentDate.ToString("HH:mm"),
+                patientConflict.AppointmentDate.AddMinutes(patientConflict.Duration).ToString("HH:mm")
             );
             return ServiceResponse.Failed(errorMessage);
         }
@@ -180,9 +180,9 @@ public class AppointmentService : IAppointmentService
         {
             var errorMessage = string.Format(
                 Resource.AppointmentExistsForPatient,
-                nurseConflict?.Nurse?.FullName,
-                nurseConflict?.AppointmentDate.ToString("HH:mm"),
-                nurseConflict?.AppointmentDate.AddMinutes(nurseConflict.Duration).ToString("HH:mm")
+                nurseConflict.Nurse?.FullName,
+                nurseConflict.AppointmentDate.ToString("HH:mm"),
+                nurseConflict.AppointmentDate.AddMinutes(nurseConflict.Duration).ToString("HH:mm")
             );
             return ServiceResponse.Failed(errorMessage);
         }

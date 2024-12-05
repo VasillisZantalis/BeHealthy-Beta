@@ -3,6 +3,7 @@ using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Interfaces;
+using BeHealthy.Shared.Parameters;
 
 namespace BeHealthy.Application.Services;
 
@@ -15,9 +16,9 @@ public class PatientService : IPatientService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync(string? firstName = null, string? lastName = null)
+    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync(PatientSearchingParameters patientSearchingParameters)
     {
-        var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync(firstName, lastName);
+        var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync(patientSearchingParameters);
         return patients.MapToDto();
     }
 

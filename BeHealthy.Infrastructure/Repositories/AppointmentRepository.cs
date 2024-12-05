@@ -16,6 +16,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
+                .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
@@ -27,6 +28,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
+                .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
@@ -39,6 +41,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
+                .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
@@ -51,6 +54,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
+                .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
@@ -63,6 +67,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
+                    .AsNoTracking()
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)
                     .Include(i => i.Room)
@@ -75,6 +80,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Appointments
+                    .AsNoTracking()
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)
                     .Include(i => i.Room)

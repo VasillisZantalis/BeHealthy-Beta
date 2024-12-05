@@ -7,6 +7,7 @@ using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
+using BeHealthy.Shared.Parameters;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,10 +27,9 @@ public partial class Index : BasePage
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
-    private int deleteItemId;
 
     private PaginationState _paginationState = new();
-    private FilterParams _filters = new();
+    private PatientSearchingParameters _filters = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,17 +63,17 @@ public partial class Index : BasePage
         }
     }
 
-    private async Task HandleFilterApplied(FilterParams filters)
+    private async Task HandleFilterApplied(PatientSearchingParameters filters)
     {
         _filters = filters;
 
         await LoadPatients(_filters);
     }
 
-    public async Task LoadPatients(FilterParams filters)
+    public async Task LoadPatients(PatientSearchingParameters filters)
     {
         LoaderService.SetLoader(true);
-        _patients = (await _patientService.GetAllPatientsAsync(filters.FirstName, filters.LastName)).ToList();
+        _patients = (await _patientService.GetAllPatientsAsync(filters)).ToList();
         LoaderService.SetLoader(false);
     }
 

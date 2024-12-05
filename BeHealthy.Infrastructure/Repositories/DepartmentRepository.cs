@@ -15,6 +15,7 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Departments
+                    .AsNoTracking()
                     .Include(d => d.HeadOfDepartment)
                     .ToListAsync();
     }
@@ -23,6 +24,7 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Departments
+                    .AsNoTracking()
                     .Include(d => d.Doctors)
                     .ThenInclude(doc => doc.User)
                     .Include(d => d.Patients)
