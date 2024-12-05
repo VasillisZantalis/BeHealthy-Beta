@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace BeHealthy.Infrastructure.Data
 {
@@ -9,8 +10,12 @@ namespace BeHealthy.Infrastructure.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            var connectionString = "Server=localhost;Port=3306;Database=behealthydb;Uid=root;Pwd=7530;";
-            optionsBuilder.UseMySQL(connectionString);
+            var configuration = new ConfigurationBuilder()
+               .AddUserSecrets<ApplicationDbContextFactory>()
+               .Build();
+
+            var connectionString = configuration.GetConnectionString("Default");
+            optionsBuilder.UseMySQL(connectionString!);
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

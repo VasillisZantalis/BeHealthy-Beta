@@ -43,6 +43,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
 });
 
+builder.Configuration.AddUserSecrets<Program>();
+
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
 builder.Services.AddLocalization();
