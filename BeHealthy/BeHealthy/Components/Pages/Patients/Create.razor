@@ -159,8 +159,7 @@
         await PatientService.AddPatientAsync(patientForCreationDto);
 
         _inProgress = false;
-        string successMessage = "Successful";
-        _alert.ShowSuccess(successMessage);
+        _alert.ShowSuccess(Resource.Success);
     }
 
     private void HandleModalClose(bool success)
