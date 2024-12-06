@@ -217,7 +217,7 @@
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
-            Specialty = Input.Specialty ?? string.Empty,
+            SpecialtyId = Input.SpecialtyId,
             UserId = userId,
             DepartmentId = _departmentId
         };
@@ -276,6 +276,7 @@
         public string Role { get; set; } = "";
 
         public string Specialty { get; set; } = string.Empty;
+        public int SpecialtyId { get; set; }
         public string? PhoneNumber { get; set; }
     }
 }

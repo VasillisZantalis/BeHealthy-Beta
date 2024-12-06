@@ -18,6 +18,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<AppSetting> AppSettings { get; set; } = null!;
     public DbSet<Privilege> Privileges { get; set; } = null!;
     public DbSet<RolePrivilege> RolePrivileges { get; set; } = null!;
+    public DbSet<Specialty> Specialities { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

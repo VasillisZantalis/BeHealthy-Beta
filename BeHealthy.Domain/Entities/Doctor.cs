@@ -7,8 +7,10 @@ public class Doctor
     public string LastName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string FullName => $"{FirstName} {LastName}";
-    public string Specialty { get; set; } = string.Empty;
     public string? Image { get; set; }
+
+    public int? SpecialtyId { get; set; }
+    public Specialty? Specialty { get; set; }
 
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser? User { get; set; }

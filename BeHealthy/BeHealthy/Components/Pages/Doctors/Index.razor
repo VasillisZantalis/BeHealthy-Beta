@@ -34,7 +34,7 @@ else
                                   FullName="@doctor.FullName"
                                   Email="@doctor.Email"
                                   Phone="@doctor.PhoneNumber"
-                                  Specialty="@doctor.Specialty"
+                                  Specialty="@doctor.Specialty?.Name"
                                   CanEdit="hasEditRight"
                                   CanDelete="hasDeleteRight"
                                   Edit="() => EditDoctor(doctor.Id)"

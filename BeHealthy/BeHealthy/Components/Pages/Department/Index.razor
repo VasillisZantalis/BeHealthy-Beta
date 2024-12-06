@@ -46,7 +46,7 @@ else
                             <TemplateColumn>
                                 <div class="d-flex">
                                     <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDepartment(context.Id))">
-                                        <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />
+                                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                                     </button>
                                     <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
                                         <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />

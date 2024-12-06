@@ -10,4 +10,5 @@ public class DoctorForUpdateDto
     public string Specialty { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public int? DepartmentId { get; set; }
+    public int? SpecialtyId { get; set; }
 }

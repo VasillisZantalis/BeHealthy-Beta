@@ -12,7 +12,7 @@ public static class ProfileMapper
             Id = profile.Id,
             FirstName = profile.FirstName,
             LastName = profile.LastName,
-            Specialty = profile.Speciality ?? string.Empty,
+            Specialty = profile.Specialty ?? string.Empty,
             Image = profile.Image,
             UserId = profile.UserId
         };

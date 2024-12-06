@@ -14,7 +14,8 @@ public static class DoctorMapper
             FirstName = doctor.FirstName,
             LastName = doctor.LastName,
             Image = doctor.Image,
-            Specialty = doctor.Specialty,
+            SpecialtyId = doctor.SpecialtyId,
+            Specialty = doctor.Specialty?.MapToDto(),
             PhoneNumber = doctor.User?.PhoneNumber ?? string.Empty,
             Email = doctor.User?.Email ?? string.Empty,
             CreatedAt = doctor.CreatedAt,
@@ -31,7 +32,7 @@ public static class DoctorMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,
-            Specialty = dto.Specialty,
+            SpecialtyId = dto.SpecialtyId,
             CreatedAt = dto.CreatedAt,
             DepartmentId = dto.DepartmentId
         };
@@ -43,7 +44,7 @@ public static class DoctorMapper
         {
             FirstName = dto.FirstName,
             LastName = dto.LastName,
-            Specialty = dto.Specialty,
+            SpecialtyId = dto.SpecialtyId,
             UserId = dto.UserId,
             DepartmentId = dto.DepartmentId,
             Image = dto.Image
@@ -59,7 +60,7 @@ public static class DoctorMapper
             LastName = dto.LastName,
             Image = dto.Image,
             UserId = dto.UserId,
-            Specialty = dto.Specialty,
+            SpecialtyId = dto.SpecialtyId,
             DepartmentId = dto.DepartmentId
         };
     }
@@ -84,7 +85,7 @@ public static class DoctorMapper
             LastName = dto.LastName,
             Image = dto.Image,
             UserId = dto.UserId,
-            Specialty = dto.Specialty,
+            SpecialtyId = dto.SpecialtyId,
             PhoneNumber = dto.PhoneNumber,
             DepartmentId = dto.DepartmentId
         };
@@ -99,7 +100,7 @@ public static class DoctorMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,
-            Specialty = dto.Specialty,
+            SpecialtyId = dto.SpecialtyId,
             PhoneNumber = dto.PhoneNumber,
             CreatedAt = DateTime.UtcNow,
             DepartmentId = dto.DepartmentId
