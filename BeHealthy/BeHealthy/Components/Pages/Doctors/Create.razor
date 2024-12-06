@@ -7,6 +7,7 @@
 @inject IUserStore<ApplicationUser> UserStore
 @inject IDoctorService DoctorService
 @inject IDepartmentService DepartmentService
+@inject ISpecialtyService SpecialtyService
 @inject NavigationManager NavigationManager
 
 <PageTitle>@Resource.Create</PageTitle>
@@ -58,17 +59,29 @@
             <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
         </div>
 
-        @if (_departments is not null && _departments.Any())
+        @if (_departmentsSelect is not null && _departmentsSelect.Any())
         {
             <div class="form-floating mb-3">
                 <InputSelect id="Department" @bind-Value="_departmentId" class="form-control">
-                    <option value="0">Please Select</option>
                     @foreach (var department in _departmentsSelect)
                     {
                         <option value="@department.Value">@department.Text</option>
                     }
                 </InputSelect>
                 <label for="Department">@Resource.Department</label>
+            </div>
+        }
+
+        @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+        {
+            <div class="form-floating mb-3">
+                <InputSelect id="specialty" @bind-Value="Input.SpecialtyId" class="form-control">
+                    @foreach (var specialty in _specialtiesSelect)
+                    {
+                        <option value="@specialty.Value">@specialty.Text</option>
+                    }
+                </InputSelect>
+                <label for="specialty">@Resource.Specialty</label>
             </div>
         }
 
@@ -88,26 +101,35 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
     private bool _inProgress = false;
-    private List<DepartmentDto>? _departments { get; set; }
     private int? _departmentId;
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     private Alert _alert = new();
 
-    private List<SelectItem> _departmentsSelect = new List<SelectItem>();
+    private List<SelectItem>? _departmentsSelect = new();
+    private List<SelectItem>? _specialtiesSelect = new();
 
     protected override async Task OnInitializedAsync()
     {
         SetBreadcrumbs();
 
-        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
-        _departmentsSelect = _departments.Select(s => new SelectItem
+        var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        _departmentsSelect = departments.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        var specialties = await SpecialtyService.GetSpecialtiesAsync();
+
+        _specialtiesSelect = specialties?.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     private void SetBreadcrumbs()

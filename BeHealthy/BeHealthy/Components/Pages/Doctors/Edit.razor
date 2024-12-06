@@ -5,6 +5,7 @@
 
 @inject IDoctorService DoctorService
 @inject IDepartmentService DepartmentService
+@inject ISpecialtyService SpecialtyService
 @inject IUserStore<ApplicationUser> UserStore
 @inject UserManager<ApplicationUser> UserManager
 
@@ -37,26 +38,34 @@
             <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
-            <InputText id="specialty" @bind-Value="_doctorForUpdateDto.Specialty" class="form-control" aria-required="true" placeholder="Specialty" />
-            <label for="specialty">@Resource.Specialty</label>
-            <ValidationMessage For="() => _doctorForUpdateDto.Specialty" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
             <InputText id="phoneNumber" @bind-Value="_doctorForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
             <ValidationMessage For="() => _doctorForUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 
-        @if (_departments is not null && _departments.Any())
+        @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_doctorForUpdateDto.DepartmentId" class="form-control">
-                    @foreach (var department in _departmentsSelect)
+                <InputSelect id="department" @bind-Value="_doctorForUpdateDto.DepartmentId" class="form-control">
+                    @foreach (var department in _departmentsSelect!)
                     {
                         <option value="@department.Value">@department.Text</option>
                     }
                 </InputSelect>
-                <label for="Department">@Resource.Department</label>
+                <label for="department">@Resource.Department</label>
+            </div>
+        }
+
+        @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+        {
+            <div class="form-floating mb-3">
+                <InputSelect id="specialty" @bind-Value="_doctorForUpdateDto.SpecialtyId" class="form-control">
+                    @foreach (var specialty in _specialtiesSelect)
+                    {
+                        <option value="@specialty.Value">@specialty.Text</option>
+                    }
+                </InputSelect>
+                <label for="specialty">@Resource.Specialty</label>
             </div>
         }
 
@@ -78,12 +87,11 @@
     [SupplyParameterFromForm]
     private DoctorForUpdateDto _doctorForUpdateDto { get; set; } = new();
 
-    private List<DepartmentDto>? _departments { get; set; }
-
     private bool _inProgress = false;
     private Alert _alert = new();
 
-    private List<SelectItem>? _departmentsSelect = new List<SelectItem>();
+    private List<SelectItem>? _departmentsSelect = new();
+    private List<SelectItem>? _specialtiesSelect = new();
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -93,14 +101,26 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
-        _departmentsSelect = _departments?.Select(s => new SelectItem
+
+        var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+
+        _departmentsSelect = departments?.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
         _departmentsSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        var specialties = await SpecialtyService.GetSpecialtiesAsync();
+
+        _specialtiesSelect = specialties?.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
         _doctorForUpdateDto = doctor.MapToUpdateDto();
     }
 

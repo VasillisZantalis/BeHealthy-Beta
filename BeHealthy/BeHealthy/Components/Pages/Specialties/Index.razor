@@ -31,7 +31,7 @@ else
                                Items="@_specialties.AsQueryable()"
                                ItemKey="@(x => x.Id)">
                         <PropertyColumn Title="#"
-                                        Property="@(x => x.Id)" />
+                                        Property="@(x => _specialties.IndexOf(x))" />
                         <PropertyColumn Title="@Resource.Name"
                                         Property="@(x => x.Name)" />
                         <TemplateColumn>
