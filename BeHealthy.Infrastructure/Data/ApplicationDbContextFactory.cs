@@ -20,7 +20,7 @@ namespace BeHealthy.Infrastructure.Data
             }
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseMySQL(connectionString!);
+            optionsBuilder.UseNpgsql(connectionString!);
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

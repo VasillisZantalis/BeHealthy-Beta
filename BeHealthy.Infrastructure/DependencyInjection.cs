@@ -15,7 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
     {
         services.AddDbContextFactory<ApplicationDbContext>(options =>
-            options.UseMySQL(connectionString));
+            options.UseNpgsql(connectionString));
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IPatientRepository, PatientRepository>();
