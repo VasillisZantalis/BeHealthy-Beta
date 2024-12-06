@@ -14,5 +14,5 @@ public interface IUnitOfWork
     IRoomRepository RoomRepository { get; }
     IAppSettingsRepository AppSettingsRepository { get; }
     IPrivilegeRepository PrivilegeRepository { get; }
-
+    ISpecialtyRepository SpecialtyRepository { get; }
 }

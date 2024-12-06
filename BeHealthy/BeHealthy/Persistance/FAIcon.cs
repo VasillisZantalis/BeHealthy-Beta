@@ -31,4 +31,5 @@ public static class FAIcon
     public static string RolePrivilege => "fa-solid fa-address-card";
     public static string Bars => "fa-solid fa-bars";
     public static string EditSquare => "fa-solid fa-pen-to-square";
+    public static string Stethoscope => "fa-solid fa-stethoscope";
 }

@@ -952,6 +952,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specialties.
+        /// </summary>
+        public static string Specialties {
+            get {
+                return ResourceManager.GetString("Specialties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specialty.
         /// </summary>
         public static string Specialty {

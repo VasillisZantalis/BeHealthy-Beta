@@ -11,4 +11,6 @@ public static class RoutingEndpoints
     public const string ROOMS_PAGE = "/rooms";
     public const string SETTINGS_PAGE = "/settings";
     public const string ACCESSDENIED_PAGE = "/accessdenied";
+    public const string SPECIALTIES_PAGE = "/specialties";
+    public const string ROLES_PRIVILEGES_PAGE = "/roles/privileges";
 }

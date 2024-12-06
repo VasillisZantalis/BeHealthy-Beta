@@ -13,7 +13,7 @@
 
 @if (_departments is null || !_departments.Any())
 {
-    <p>@string.Format(@Resource.NoAvailable, @Resource.Departments)</p>
+    <p>@string.Format(Resource.NoAvailable, Resource.Departments)</p>
 }
 else
 {
@@ -44,7 +44,7 @@ else
                         @if (_hasActionRights)
                         {
                             <TemplateColumn>
-                                <div class="d-flex">
+                                <div class="d-flex justify-content-end">
                                     <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDepartment(context.Id))">
                                         <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                                     </button>

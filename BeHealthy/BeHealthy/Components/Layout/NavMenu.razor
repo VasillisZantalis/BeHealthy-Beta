@@ -27,12 +27,12 @@
 
                     <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor }.ToRoleString())">
                         <div class="nav-item px-3">
-                            <NavLink class="nav-link" href="doctors">
+                            <NavLink class="nav-link" href="@(RoutingEndpoints.DOCTORS_PAGE)">
                                 <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-5" />&nbsp; @Resource.Doctors
                             </NavLink>
                         </div>
                         <div class="nav-item px-3">
-                            <NavLink class="nav-link" href="nurses">
+                            <NavLink class="nav-link" href="@(RoutingEndpoints.NURSES_PAGE)">
                                 <Icon IconClass="@FAIcon.UserNurse" SizeClass="fs-5" />&nbsp; @Resource.Nurses
                             </NavLink>
                         </div>
@@ -40,7 +40,7 @@
 
                     <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Nurse }.ToRoleString())">
                         <div class="nav-item px-3">
-                            <NavLink class="nav-link" href="patients">
+                            <NavLink class="nav-link" href="@(RoutingEndpoints.PATIENTS_PAGE)">
                                 <Icon IconClass="@FAIcon.Viruses" SizeClass="fs-5" />&nbsp; @Resource.Patients
                             </NavLink>
                         </div>
@@ -48,14 +48,14 @@
 
                     <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Patient }.ToRoleString())">
                         <div class="nav-item px-3">
-                            <NavLink class="nav-link" href="appointment">
+                            <NavLink class="nav-link" href="@(RoutingEndpoints.APPOINTMENTS_PAGE)">
                                 <Icon IconClass="@FAIcon.CalendarDays" SizeClass="fs-5" />&nbsp; @Resource.Appointments
                             </NavLink>
                         </div>
                     </AuthorizeView>
 
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="rooms">
+                        <NavLink class="nav-link" href="@(RoutingEndpoints.ROOMS_PAGE)">
                             <Icon IconClass="@FAIcon.BedPulse" SizeClass="fs-5" />&nbsp; @Resource.Rooms
                         </NavLink>
                     </div>
@@ -64,7 +64,7 @@
                         <div class="mt-3">
                             <h5 class="ms-2 text-white-50">@Resource.Configuration</h5>
                             <div class="nav-item px-3 pt-0">
-                                <NavLink class="nav-link" href="settings">
+                                <NavLink class="nav-link" href="@(RoutingEndpoints.SETTINGS_PAGE)">
                                     <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />&nbsp; @Resource.Settings
                                 </NavLink>
                             </div>
@@ -76,7 +76,7 @@
                                 </NavLink>
                                 <ul class="flex-column list-unstyled" style="@SubMenuStyle">
                                     <li class="">
-                                        <NavLink class="nav-link ms-2 ps-5" href="roles/privileges">
+                                        <NavLink class="nav-link ms-2 ps-5" href="@(RoutingEndpoints.ROLES_PRIVILEGES_PAGE)">
                                             @Resource.Privileges
                                         </NavLink>
                                     </li>
@@ -84,8 +84,14 @@
                             </div>
 
                             <div class="nav-item px-3">
-                                <NavLink class="nav-link" href="departments">
+                                <NavLink class="nav-link" href="@(RoutingEndpoints.DEPARTMENTS_PAGE)">
                                     <Icon IconClass="@FAIcon.Hospital" SizeClass="fs-5" />&nbsp; @Resource.Departments
+                                </NavLink>
+                            </div>
+
+                            <div class="nav-item px-3">
+                                <NavLink class="nav-link" href="@(RoutingEndpoints.SPECIALTIES_PAGE)">
+                                    <Icon IconClass="@FAIcon.Stethoscope" SizeClass="fs-5" />&nbsp; @Resource.Specialties
                                 </NavLink>
                             </div>
                         </div>

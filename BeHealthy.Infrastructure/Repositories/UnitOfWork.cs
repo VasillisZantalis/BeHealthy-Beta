@@ -24,6 +24,7 @@ public class UnitOfWork : IUnitOfWork
     private IRoomRepository? _roomRepository;
     private IAppSettingsRepository? _appSettingsRepository;
     private IPrivilegeRepository? _privilegeRepository;
+    private ISpecialtyRepository? _specialtyRepository;
 
     public IPatientRepository PatientRepository =>
         _patientRepository ??= new PatientRepository(_dbContextFactory);
@@ -54,5 +55,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IPrivilegeRepository PrivilegeRepository =>
         _privilegeRepository ??= new PrivilegeRepository(_dbContextFactory);
+
+    public ISpecialtyRepository SpecialtyRepository =>
+        _specialtyRepository ??= new SpecialtyRepository(_dbContextFactory);
 
 }

@@ -1,0 +1,104 @@
+﻿@page "/specialties"
+@using BeHealthy.Application.Dtos.Specialty
+@rendermode @(new InteractiveServerRenderMode(false))
+@attribute [Authorize(Roles = nameof(UserRole.Admin))]
+@inherits BasePage
+
+@inject NavigationManager NavigationManager
+@inject ISpecialtyService SpecialtyService
+
+<div class="">
+    <button class="btn btn-outline-secondary rounded-pill px-4 mb-3" @onclick="CreateSpecialty">
+        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
+    </button>
+</div>
+
+<UpsertModal @ref="_upsertModal"
+             HandleResponse="HandleResponse"
+             SpecialtyId="_specialtyId" />
+
+@if (_specialties is null || !_specialties.Any())
+{
+    <p>@string.Format(Resource.NotAvailable, Resource.Specialties)</p>
+}
+else
+{
+    <div class="departments-container mt-3">
+        <div class="card px-3">
+            <div class="table-responsive">
+                <div class="card-body pb-2 px-0 m-0">
+                    <QuickGrid Class="table rounded"
+                               Items="@_specialties.AsQueryable()"
+                               ItemKey="@(x => x.Id)">
+                        <PropertyColumn Title="#"
+                                        Property="@(x => x.Id)" />
+                        <PropertyColumn Title="@Resource.Name"
+                                        Property="@(x => x.Name)" />
+                        <TemplateColumn>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditSpecialty(context.Id))">
+                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                                </button>
+                                <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                </button>
+                            </div>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<SpecialtyDto> _specialties { get; set; } = default!;
+    private UpsertModal _upsertModal { get; set; } = new();
+    private int? _specialtyId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
+
+        SetBreadcrumbs();
+        _specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
+
+        LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>
+        {
+            new Breadcrumb() { Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb() { Text = Resource.Specialties, Link = string.Empty, Active = true },
+        });
+    }
+
+    private void CreateSpecialty()
+    {
+        _specialtyId = null;
+        _upsertModal.OpenModal();
+    }
+
+    private void EditSpecialty(int specialtyId)
+    {
+        _specialtyId = specialtyId;
+        _upsertModal.OpenModal();
+    }
+
+    private void ConfirmDelete(int specialtyId)
+    {
+        ConfirmDeleteService.RequestDelete(async () =>
+        {
+            await SpecialtyService.DeleteSpecialtyAsync(specialtyId);
+            NavigationManager.Refresh(forceReload: true);
+        });
+    }
+
+    private async Task HandleResponse()
+    {
+        await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+        NavigationManager.Refresh(true);
+    }
+}

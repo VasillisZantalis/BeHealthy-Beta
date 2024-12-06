@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
         services.AddScoped<IPrivilegeRepository, PrivilegeRepository>();
+        services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddIdentityCore<ApplicationUser>()

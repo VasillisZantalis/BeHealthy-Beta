@@ -16,6 +16,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Doctors
                     .Include(d => d.User)
+                    .Include(d => d.Specialty)
                     .ToListAsync();
     }
 

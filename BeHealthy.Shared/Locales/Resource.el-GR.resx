@@ -414,6 +414,9 @@
   <data name="SomethingWentWrong" xml:space="preserve">
     <value>Κάτι πήγε λάθος</value>
   </data>
+  <data name="Specialties" xml:space="preserve">
+    <value>Ειδικότητες</value>
+  </data>
   <data name="Specialty" xml:space="preserve">
     <value>Ειδικότητα</value>
   </data>

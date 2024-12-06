@@ -4,6 +4,7 @@ using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Dtos.User;
+using BeHealthy.Application.Dtos.Specialty;
 
 namespace BeHealthy.Application.Services;
 
@@ -37,6 +38,10 @@ public class DoctorService : IDoctorService
     public async Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctorDto)
     {
         var doctor = doctorDto.MapToDomain();
+
+        if (await _unitOfWork.SpecialtyRepository.ExistsAsync(id))
+            return;
+
         await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
     }
 
