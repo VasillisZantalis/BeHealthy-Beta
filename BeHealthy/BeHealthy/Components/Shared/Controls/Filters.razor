@@ -1,25 +1,24 @@
-﻿<div id="filters-container" class="mb-3">
-    <form>
-        <fieldset class="border rounded px-3 py-1">
-            <legend>@Resource.Filters</legend>
-            <div class="row">
-                <div class="col-12 col-sm-6">
-                    <label for="firstNameFilter" class="form-label fs-7">@Resource.FirstName</label>
-                    <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" />
-                </div>
-                <div class="col-12 col-sm-6">
-                    <label for="lastNameFilter" class="form-label fs-7">@Resource.LastName</label>
-                    <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" />
-                </div>
-                <div class="col-12 text-end mt-3">
-                    <button class="btn btn-light" @onclick="OnSearchClicked">
-                        <Icon IconClass="@FAIcon.Search" />
-                        @Resource.Search
-                    </button>
-                </div>
+﻿<div id="filters-container" class="mt-3">
+    <div class="row">
+        <div class="col-12 col-sm-4">
+            <div class="form-floating">
+                <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" />
+                <label for="firstNameFilter">@Resource.FirstName</label>
             </div>
-        </fieldset>
-    </form>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="form-floating">
+                <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" />
+                <label for="lastNameFilter">@Resource.LastName</label>
+            </div>
+        </div>
+        <div class="col-12 text-end mt-3">
+            <button class="btn btn-light" @onclick="OnSearchClicked">
+                <Icon IconClass="@FAIcon.Search" />
+                @Resource.Search
+            </button>
+        </div>
+    </div>
 </div>
 
 @code {

@@ -77,8 +77,9 @@ public partial class Index : BasePage
         }
     }
 
-    private async Task HandleFilterApplied()
+    private async Task HandleFilterApplied(PatientSearchingParameters filters)
     {
+        _filters = filters;
 
         await LoadPatients(_filters);
 
