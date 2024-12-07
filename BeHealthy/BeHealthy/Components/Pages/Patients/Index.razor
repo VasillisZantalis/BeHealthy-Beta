@@ -30,7 +30,7 @@ else
     @if (_selectedView == "Card")
     {
         <div class="row">
-            <Virtualize Items="@_patients" Context="patient" ItemSize="100">
+            <Virtualize Items="@_patients.ToList()" Context="patient" ItemSize="100">
                 <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                     <div class="mb-3">
                         <UserCard Id="@patient.Id"
@@ -63,50 +63,56 @@ else
                 </div>
                 <div class="table-responsive">
                     <div class="card-body pb-2 px-0 m-0">
-                    <QuickGrid  Class="table table-responsive"
-                                Items="@_patients.AsQueryable()"
-                                ItemKey="@(x => x.Id)"
-                               Pagination="_paginationState">
-                        <TemplateColumn>
-                            <img class="rounded-circle" src="@(context.Image ?? "images/generic.jpg")" alt="@context.FullName" width="25" height="25" />
-                        </TemplateColumn>
-                        <PropertyColumn Title="@Resource.FirstName"
-                                        Property="@(x => x.FirstName)"
-                                        Sortable="true" />
-                        <PropertyColumn Title="@Resource.LastName"
-                                        Property="@(x => x.LastName)"
-                                        Sortable="true" />
-                        <PropertyColumn Title="@Resource.Created"
-                                        Property="@(x => x.CreatedAt)"
-                                        Format="dd MMM yyyy HH:mm"
-                                        Sortable="true"
-                                        IsDefaultSortColumn="true"
-                                        InitialSortDirection="SortDirection.Descending" />
-                        <PropertyColumn Title="@Resource.Email"
-                                        Property="@(x => x.Email)" />
-                        <PropertyColumn Title="@Resource.PhoneNumber"
-                                        Property="@(x => x.PhoneNumber)" />
-                        @if (hasActionRights)
-                        {
+                        <QuickGrid Class="table table-responsive"
+                                   Items="@_filteredPatients"
+                                   ItemKey="@(x => x.Id)"
+                                   Pagination="_paginationState">
                             <TemplateColumn>
-                                <ActionsDropdown>
-                                    @if (hasEditRight)
-                                    {
-                                        <button class="btn w-100 text-start" @onclick="() => EditPatient(context.Id)">
-                                            <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
-                                        </button>
-                                    }
-                                    @if (hasDeleteRight)
-                                    {
-                                        <button class="btn w-100 text-start" @onclick="() => ConfirmDelete(context.Id)">
-                                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
-                                        </button>
-                                    }
-                                </ActionsDropdown>
+                                <img class="rounded-circle" src="@(context.Image ?? "images/generic.jpg")" alt="@context.FullName" width="25" height="25" />
                             </TemplateColumn>
-                        }
-                    </QuickGrid>
-                </div>
+                            <PropertyColumn Title="@Resource.FirstName"
+                                            Property="@(x => x.FirstName)"
+                                            Sortable="true" >
+                                <ColumnOptions>
+                                    <div>
+                                        <input type="search" autofocus @bind="firstNameFilter" @bind:event="oninput" placeholder="@(Resource.Search)" />
+                                    </div>
+                                </ColumnOptions>
+                            </PropertyColumn>
+                            <PropertyColumn Title="@Resource.LastName"
+                                            Property="@(x => x.LastName)"
+                                            Sortable="true" />
+                            <PropertyColumn Title="@Resource.Created"
+                                            Property="@(x => x.CreatedAt)"
+                                            Format="dd MMM yyyy HH:mm"
+                                            Sortable="true"
+                                            IsDefaultSortColumn="true"
+                                            InitialSortDirection="SortDirection.Descending" />
+                            <PropertyColumn Title="@Resource.Email"
+                                            Property="@(x => x.Email)" />
+                            <PropertyColumn Title="@Resource.PhoneNumber"
+                                            Property="@(x => x.PhoneNumber)" />
+                            @if (hasActionRights)
+                            {
+                                <TemplateColumn>
+                                    <ActionsDropdown>
+                                        @if (hasEditRight)
+                                        {
+                                            <button class="btn w-100 text-start" @onclick="() => EditPatient(context.Id)">
+                                                <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
+                                            </button>
+                                        }
+                                        @if (hasDeleteRight)
+                                        {
+                                            <button class="btn w-100 text-start" @onclick="() => ConfirmDelete(context.Id)">
+                                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
+                                            </button>
+                                        }
+                                    </ActionsDropdown>
+                                </TemplateColumn>
+                            }
+                        </QuickGrid>
+                    </div>
                 </div>
                 <div id="paginatorDiv" class="px-3">
                     <Paginator State="_paginationState" />

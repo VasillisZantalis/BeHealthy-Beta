@@ -21,12 +21,28 @@ public partial class Index : BasePage
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
-    private List<PatientDto> _patients { get; set; } = default!;
+    private IQueryable<PatientDto> _patients { get; set; } = default!;
+    IQueryable<PatientDto> _filteredPatients
+    {
+        get
+        {
+            var result = _patients;
+
+            if (!string.IsNullOrEmpty(firstNameFilter))
+            {
+                result = result.Where(w => w.FirstName.Contains(firstNameFilter));
+            }
+
+            return result;
+        }
+    }
 
     private string _selectedView = "Card";
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
+
+    private string? firstNameFilter;
 
     private PaginationState _paginationState = new();
     private PatientSearchingParameters _filters = new();
@@ -73,7 +89,7 @@ public partial class Index : BasePage
     public async Task LoadPatients(PatientSearchingParameters filters)
     {
         LoaderService.SetLoader(true);
-        _patients = (await _patientService.GetAllPatientsAsync(filters)).ToList();
+        _patients = (await _patientService.GetAllPatientsAsync(filters)).AsQueryable();
         LoaderService.SetLoader(false);
     }
 
