@@ -19,7 +19,11 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             .HasMaxLength(50);
 
         builder.Property(u => u.DateOfBirth)
-            .IsRequired(false);
+            .IsRequired(false)
+            .HasConversion(
+                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null,
+                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Local) : (DateTime?)null
+            );
 
         builder.Property(u => u.Gender)
             .HasMaxLength(10);

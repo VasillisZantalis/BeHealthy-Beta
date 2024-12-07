@@ -21,7 +21,11 @@ public class PrescriptionConfiguration : IEntityTypeConfiguration<Prescription>
             .HasMaxLength(50);
 
         builder.Property(p => p.DatePrescribed)
-            .IsRequired();
+            .IsRequired()
+            .HasConversion(
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Local)
+            ); ;
 
         // Relationships
         builder.HasOne(p => p.Patient)

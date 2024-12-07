@@ -15,8 +15,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(a => a.AppointmentDate)
             .IsRequired()
             .HasConversion(
-                v => DateTime.SpecifyKind(v, DateTimeKind.Utc), // Convert to UTC before saving
-                v => DateTime.SpecifyKind(v, DateTimeKind.Local) // Read as Local Time
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Local)
             ); 
 
         builder.Property(a => a.Notes)
