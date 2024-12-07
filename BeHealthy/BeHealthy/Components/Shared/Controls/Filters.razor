@@ -22,11 +22,6 @@
     [Parameter]
     public EventCallback<TFilter> OnSearch { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        Console.WriteLine($"TYPE: {FilterModel.GetType()}");
-    }
-
     private async Task OnSearchClicked()
     {
         await OnSearch.InvokeAsync(FilterModel);
