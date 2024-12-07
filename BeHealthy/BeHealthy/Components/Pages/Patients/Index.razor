@@ -49,6 +49,10 @@ else
     }
     else if (_selectedView == "Grid")
     {
+        <div>
+            <input type="search" autofocus @bind="firstNameFilter" placeholder="@(Resource.Search)" />
+            <button type="submit" class="btn btn-light" @onclick="HandleFilterApplied">@Resource.Search</button>
+        </div>
         <div class="patientsTableDiv mt-3">
             <div class="card">
                 <div class="card-header d-flex flex-row justify-content-end">
@@ -63,8 +67,9 @@ else
                 </div>
                 <div class="table-responsive">
                     <div class="card-body pb-2 px-0 m-0">
-                        <QuickGrid Class="table table-responsive"
-                                   Items="@_filteredPatients"
+                        <QuickGrid @ref="_quickGrid"
+                                   Class="table table-responsive"
+                                   Items="@_patients"
                                    ItemKey="@(x => x.Id)"
                                    Pagination="_paginationState">
                             <TemplateColumn>
@@ -72,7 +77,7 @@ else
                             </TemplateColumn>
                             <PropertyColumn Title="@Resource.FirstName"
                                             Property="@(x => x.FirstName)"
-                                            Sortable="true" >
+                                            Sortable="true">
                                 <ColumnOptions>
                                     <div>
                                         <input type="search" autofocus @bind="firstNameFilter" @bind:event="oninput" placeholder="@(Resource.Search)" />
