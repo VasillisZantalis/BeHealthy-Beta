@@ -20,12 +20,12 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
 
         if (!string.IsNullOrEmpty(patientSearchingParameters.FirstName))
         {
-            query = query.Where(x => x.FirstName.Contains(patientSearchingParameters.FirstName));
+            query = query.Where(x => x.FirstName.ToLower().Contains(patientSearchingParameters.FirstName.ToLower()));
         }
 
         if (!string.IsNullOrEmpty(patientSearchingParameters.LastName))
         {
-            query = query.Where(x => x.LastName.Contains(patientSearchingParameters.LastName));
+            query = query.Where(x => x.LastName.ToLower().Contains(patientSearchingParameters.LastName.ToLower()));
         }
 
         return await query.ToListAsync();

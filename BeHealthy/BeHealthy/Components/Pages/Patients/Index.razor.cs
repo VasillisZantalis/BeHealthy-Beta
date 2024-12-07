@@ -47,7 +47,7 @@ public partial class Index : BasePage
     private PaginationState _paginationState = new();
     private PatientSearchingParameters _filters = new();
 
-    private QuickGrid<PatientDto> _quickGrid;
+    private QuickGrid<PatientDto>? _quickGrid;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,7 +90,7 @@ public partial class Index : BasePage
 
         await LoadPatients(_filters);
 
-        await _quickGrid.RefreshDataAsync();
+        await _quickGrid!.RefreshDataAsync();
     }
 
     public async Task LoadPatients(PatientSearchingParameters filters)
