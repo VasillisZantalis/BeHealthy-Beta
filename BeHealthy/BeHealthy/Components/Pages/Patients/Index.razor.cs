@@ -1,9 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Patient;
-using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Components.Shared.Controls;
-using BeHealthy.Components.Shared.Modals;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -64,7 +60,7 @@ public partial class Index : BasePage
         LoaderService.SetLoader(false);
     }
 
-    private void SetBreadcrumbs() 
+    private void SetBreadcrumbs()
     {
         Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
         {
@@ -83,10 +79,6 @@ public partial class Index : BasePage
 
     private async Task HandleFilterApplied()
     {
-        _filters = new PatientSearchingParameters
-        {
-            FirstName = firstNameFilter
-        };
 
         await LoadPatients(_filters);
 
@@ -112,7 +104,8 @@ public partial class Index : BasePage
 
     private void ConfirmDelete(int patientId)
     {
-        ConfirmDeleteService.RequestDelete(async () => {
+        ConfirmDeleteService.RequestDelete(async () =>
+        {
             await _patientService.DeletePatientAsync(patientId);
             _navigationManager.Refresh(forceReload: true);
         });

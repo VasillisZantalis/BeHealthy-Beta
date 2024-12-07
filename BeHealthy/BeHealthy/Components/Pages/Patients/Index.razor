@@ -21,6 +21,39 @@
     </div>
 </div>
 
+
+@if (_selectedView == "Grid")
+{
+    <div id="filters-container" class="mt-3">
+        <h5>@Resource.Filters</h5>
+        <div class="row">
+            <div class="col-12 col-sm-4">
+                <div class="form-floating">
+                    <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" />
+                    <label for="firstNameFilter">@Resource.FirstName</label>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4">
+                <div class="form-floating">
+                    <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" />
+                    <label for="lastNameFilter">@Resource.LastName</label>
+                </div>
+            </div>
+            <div class="col-12 text-end mt-3">
+                <button class="btn btn-light" @onclick="HandleFilterApplied">
+                    <Icon IconClass="@FAIcon.Search" />
+                    @Resource.Search
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@* <div>
+    <input type="search" autofocus @bind="firstNameFilter" placeholder="@(Resource.Search)" />
+    <button type="submit" class="btn btn-light" @onclick="HandleFilterApplied">@Resource.Search</button>
+</div> *@
+
 @if (_patients is null || !_patients.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Patients)</p>
@@ -49,10 +82,6 @@ else
     }
     else if (_selectedView == "Grid")
     {
-        <div>
-            <input type="search" autofocus @bind="firstNameFilter" placeholder="@(Resource.Search)" />
-            <button type="submit" class="btn btn-light" @onclick="HandleFilterApplied">@Resource.Search</button>
-        </div>
         <div class="patientsTableDiv mt-3">
             <div class="card">
                 <div class="card-header d-flex flex-row justify-content-end">
