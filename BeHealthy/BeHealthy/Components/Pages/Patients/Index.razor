@@ -47,7 +47,22 @@ else
     }
     else if (_selectedView == "Grid")
     {
-        <Filters OnSearch="HandleFilterApplied" />
+        <Filters TFilter="PatientSearchingParameters"
+                 FilterModel="_filters"
+                 OnSearch="HandleFilterApplied">
+            <div class="col-12 col-sm-6">
+                <div class="form-floating">
+                    <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" />
+                    <label for="firstNameFilter" class="form-label">@Resource.FirstName</label>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6">
+                <div class="form-floating">
+                    <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" />
+                    <label for="lastNameFilter" class="form-label">@Resource.LastName</label>
+                </div>
+            </div>
+        </Filters>
 
         <div class="patientsTableDiv mt-3">
             <div class="card">

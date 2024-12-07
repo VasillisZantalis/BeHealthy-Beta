@@ -69,14 +69,6 @@ public partial class Index : BasePage
         });
     }
 
-    private void OnPageSizeChanged(ChangeEventArgs e)
-    {
-        if (e.Value is not null)
-        {
-            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
-        }
-    }
-
     private async Task HandleFilterApplied(PatientSearchingParameters filters)
     {
         _filters = filters;
