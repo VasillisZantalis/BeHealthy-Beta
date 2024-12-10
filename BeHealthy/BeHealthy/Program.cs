@@ -11,6 +11,7 @@ using BeHealthy.Endpoints.Prescription;
 using BeHealthy.Endpoints.Room;
 using BeHealthy.Endpoints.User;
 using BeHealthy.Infrastructure;
+using BeHealthy.Infrastructure.Data;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -82,6 +83,13 @@ else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    await context.SeedRolesAsync(services);
 }
 
 app.UseHttpsRedirection();
