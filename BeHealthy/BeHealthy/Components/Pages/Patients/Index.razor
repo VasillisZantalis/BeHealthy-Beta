@@ -50,13 +50,13 @@ else
         <Filters TFilter="PatientSearchingParameters"
                  FilterModel="_filters"
                  OnSearch="HandleFilterApplied">
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-4">
                 <div class="form-floating">
                     <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" />
                     <label for="firstNameFilter" class="form-label">@Resource.FirstName</label>
                 </div>
             </div>
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-4">
                 <div class="form-floating">
                     <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" />
                     <label for="lastNameFilter" class="form-label">@Resource.LastName</label>
