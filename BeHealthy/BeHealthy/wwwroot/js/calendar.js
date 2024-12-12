@@ -5,13 +5,9 @@ function populateCalendar(events) {
         calendar.removeAllEvents();
         calendar.addEventSource(events);
     }
-
-    console.log(events);
 }
 
 function initializeCalendar(events) {
-
-    console.log(events);
 
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
@@ -21,7 +17,7 @@ function initializeCalendar(events) {
             center: 'title',
             end: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        events: events, // Pass the events here during initialization
+        events: events,
         eventClick: function (info) {
             alert('Event: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.description);
         }

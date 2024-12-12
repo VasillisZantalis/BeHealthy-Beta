@@ -7,22 +7,19 @@
 
 <div class="container-fluid">
     <div class="row mb-4">
-        <div class="col-6 col-md-6 col-lg-4 col-xl-2">
-            <TotalDoctors />
+        <div class="col-12 col-xl-6">
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+                <TotalDoctors />
+                <TotalNurses />
+                <TotalPatients />
+            </div>
+            <UpcomingAppointments />
+            <RecentlyAddedPatients />
         </div>
-        <div class="col-6 col-md-6 col-lg-4 col-xl-2">
-            <TotalNurses />
-        </div>
-        <div class="col-6 col-md-6 col-lg-4 col-xl-2">
-            <TotalPatients />
+        <div class="col-12 col-xl-6">
+            <Calendar />
         </div>
     </div>
     <div class="row">
-        <div class="col-12 col-md-12 col-lg-8 my-sm-2 my-md-2 my-lg-0">
-            <UpcomingAppointments />
-        </div>
-        <div class="col-12 col-md-12 col-lg-4 my-sm-2 my-md-2 my-lg-0">
-            <RecentlyAddedPatients />
-        </div>
     </div>
 </div>

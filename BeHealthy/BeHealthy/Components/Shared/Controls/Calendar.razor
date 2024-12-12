@@ -1,1 +1,25 @@
-﻿<div id="calendar"></div>
+﻿@inject IJSRuntime JS
+@inject IAppointmentService AppointmentService
+
+<div id="calendar"></div>
+
+@code {
+    private List<CalendarItem> calendarItems = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        calendarItems = (await AppointmentService.GetAllAppointmentsAsync())
+            .ToList()
+            .Select(a => new CalendarItem
+            {
+                Title = $"{a.Reason} - {a.Patient?.FullName ?? "Unknown Patient"}",
+                Start = a.AppointmentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                End = a.AppointmentDate.AddMinutes(a.Duration).ToString("yyyy-MM-ddTHH:mm:ss"),
+                Description = a.Notes,
+                BackgroundColor = a.Status == AppointmentStatus.Scheduled ? "" : "",
+                BorderColor = a.Status == AppointmentStatus.Scheduled ? "" : ""
+            }).ToList();
+
+        await JS.InvokeVoidAsync("initializeCalendar", calendarItems);
+    }
+}
