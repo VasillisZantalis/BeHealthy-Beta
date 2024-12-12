@@ -1,0 +1,16 @@
+﻿@page "/calendar"
+
+@inject IJSRuntime JSRuntime
+
+<h3>FullCalendar Example</h3>
+<div id="calendar"></div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeFullCalendar");
+        }
+    }
+}
