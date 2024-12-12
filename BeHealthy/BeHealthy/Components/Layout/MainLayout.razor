@@ -3,40 +3,40 @@
 <ErrorBoundary>
     <ChildContent>
         <div class="page">
-        <AuthorizeView>
-            <NavMenu />
-        </AuthorizeView>
+            <AuthorizeView>
+                <NavMenu />
+            </AuthorizeView>
 
-        <main>
-            <div class="top-row px-4" style="z-index: 10!important">
-                <NavToggleComponent />
-                <Loader />
-                <ConfirmDeleteModal />
-                <Toastr />
-                <AuthorizeView>
-                    <Authorized>
-                        <div class="d-flex flex-row align-items-center ms-auto gap-3">
-                            <CultureSelector />
-                            <p class="m-0 p-0">@Resource.Hello, @context.User.Identity?.Name</p>
-                            <div class="nav-item clickable">
-                                <form action="/logout" method="post">
-                                    <AntiforgeryToken />
-                                    <button type="submit" class="btn m-0 p-0">
-                                        <Icon IconClass="@FAIcon.RightFromBracket"/>
-                                    </button>
-                                </form>
+            <main>
+                <div class="top-row px-4" style="z-index: 10!important">
+                    <NavToggleComponent />
+                    <Loader />
+                    <ConfirmDeleteModal />
+                    <Toastr />
+                    <AuthorizeView>
+                        <Authorized>
+                            <div class="d-flex flex-row align-items-center ms-auto gap-3">
+                                <CultureSelector />
+                                <p class="m-0 p-0">@Resource.Hello, @context.User.Identity?.Name</p>
+                                <div class="nav-item clickable">
+                                    <form action="/logout" method="post">
+                                        <AntiforgeryToken />
+                                        <button type="submit" class="btn m-0 p-0">
+                                            <Icon IconClass="@FAIcon.RightFromBracket" />
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    </Authorized>
-                </AuthorizeView>
-            </div>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
 
-            <article class="content px-4">
-                <Breadcrumbs />
-                @Body
-            </article>
-        </main>
-    </div>
+                <article class="content px-4">
+                    <Breadcrumbs />
+                    @Body
+                </article>
+            </main>
+        </div>
     </ChildContent>
     <ErrorContent>
         <div class="d-flex justify-content-center align-items-center vh-100">
