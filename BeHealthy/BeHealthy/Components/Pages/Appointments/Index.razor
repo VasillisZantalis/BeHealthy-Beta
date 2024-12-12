@@ -11,6 +11,10 @@
 
 <Alert @ref="_alert"/>
 
+<div class="row">
+    <Calendar />
+</div>
+
 @if (_appointments is null || !_appointments.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Appointments)</p>

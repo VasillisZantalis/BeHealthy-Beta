@@ -1,9 +1,11 @@
 ﻿@rendermode InteractiveServer
 
 @inject IAppointmentService AppointmentService
+@inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 
 <div id="upcomingAppointmentsDiv">
+
     <div class="card shadow border-0 rounded p-3">
         <h5 class="card-title">@Resource.UpcomingAppointments</h5>
 
