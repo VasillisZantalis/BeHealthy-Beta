@@ -1,5 +1,7 @@
 :root {
     --primary-color: #1D3557;
+    --fc-border-color: black;
+    --fc-daygrid-event-dot-width: 5px;
 }
 
 html, body {

@@ -15,7 +15,7 @@ function initializeCalendar(events) {
         headerToolbar: {
             start: 'prev,next today',
             center: 'title',
-            end: 'dayGridMonth,timeGridWeek,timeGridDay'
+            end: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         events: events,
         eventClick: function (info) {
