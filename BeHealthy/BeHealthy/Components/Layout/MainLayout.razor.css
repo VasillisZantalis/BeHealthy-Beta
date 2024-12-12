@@ -14,6 +14,7 @@ main {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    z-index: 2;
 }
 
     .top-row ::deep a, .top-row ::deep .btn-link {
@@ -49,7 +50,7 @@ main {
     .top-row {
         position: sticky;
         top: 0;
-        z-index: 1;
+        z-index: 2;
     }
 
     .top-row.auth ::deep a:first-child {
