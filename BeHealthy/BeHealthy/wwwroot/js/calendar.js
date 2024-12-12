@@ -1,6 +1,5 @@
-﻿function initializeFullCalendar() {
+﻿document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
-
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         headerToolbar: {
@@ -45,4 +44,12 @@
     });
 
     calendar.render();
+});
+
+function initializeFullCalendar() {
+    var calendarEl = document.getElementById('calendar');
+
+    console.log("INITIALIZING CALENDAR");
+
+    
 }

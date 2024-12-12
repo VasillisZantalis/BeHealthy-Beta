@@ -1,6 +1,6 @@
 ﻿@page "/calendar"
 
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JS
 
 <h3>FullCalendar Example</h3>
 <div id="calendar"></div>
@@ -10,7 +10,7 @@
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("initializeFullCalendar");
+            await JS.InvokeVoidAsync("initializeFullCalendar");
         }
     }
 }
