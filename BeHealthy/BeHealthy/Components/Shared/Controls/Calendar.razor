@@ -22,12 +22,13 @@
             .ToList()
             .Select(a => new CalendarItem
                 {
-                    Title = $"{a.Reason} - {a.Patient?.FullName ?? "Unknown Patient"}",
+                    Title = $"{a.Reason.ToLocalizedString()} - {a.Patient?.FullName ?? "Unknown Patient"}",
                     Start = a.AppointmentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
                     End = a.AppointmentDate.AddMinutes(a.Duration).ToString("yyyy-MM-ddTHH:mm:ss"),
                     Description = a.Notes,
-                    BackgroundColor = a.Status == AppointmentStatus.Scheduled ? "" : "",
-                    BorderColor = a.Status == AppointmentStatus.Scheduled ? "" : ""
+                    BackgroundColor = a.Status.GetStatusColor(),
+                    BorderColor = a.Status.GetStatusColor(),
+                    Color = a.Status.GetStatusColor()
                 }).ToList();
 
         await JS.InvokeVoidAsync("initializeCalendar", calendarItems);

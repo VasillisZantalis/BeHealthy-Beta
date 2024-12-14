@@ -32,4 +32,16 @@ public static class EnumExtensions
             _ => "bg-secondary"
         };
     }
+
+    public static string GetStatusColor(this AppointmentStatus status)
+    {
+        return status switch
+        {
+            AppointmentStatus.Scheduled => "#4094f5",
+            AppointmentStatus.Completed => "#1b942f",
+            AppointmentStatus.Cancelled => "#e82113",
+            AppointmentStatus.Rescheduled => "#e8b613",
+            _ => "#4094f5"
+        };
+    }
 }

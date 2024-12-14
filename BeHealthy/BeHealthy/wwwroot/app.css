@@ -98,6 +98,10 @@ h1:focus {
     color: gray;
 }
 
+.fc-event:hover {
+    cursor: pointer;
+}
+
 .fc .fc-daygrid-day.fc-day-today {
     background-color: var(--primary-color);
 }
