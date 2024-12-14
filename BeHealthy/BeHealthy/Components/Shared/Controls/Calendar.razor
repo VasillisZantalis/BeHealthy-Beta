@@ -1,5 +1,8 @@
 ﻿@inject IJSRuntime JS
 @inject IAppointmentService AppointmentService
+@inject IDoctorService DoctorService
+@inject IPatientService PatientService
+@inject AuthenticationStateProvider ASP
 
 <div id="calendar"></div>
 
@@ -12,12 +15,14 @@
             .ToList()
             .Select(a => new CalendarItem
             {
+                Id = a.Id,
                 Title = $"{a.Reason} - {a.Patient?.FullName ?? "Unknown Patient"}",
-                Start = a.AppointmentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
-                End = a.AppointmentDate.AddMinutes(a.Duration).ToString("yyyy-MM-ddTHH:mm:ss"),
+                Start = a.AppointmentDate.ToFullDateTimeString(),
+                End = a.AppointmentDate.AddMinutes(a.Duration).ToFullDateTimeString(),
                 Description = a.Notes,
                 BackgroundColor = a.Status == AppointmentStatus.Scheduled ? "" : "",
-                BorderColor = a.Status == AppointmentStatus.Scheduled ? "" : ""
+                BorderColor = a.Status == AppointmentStatus.Scheduled ? "" : "",
+                Color = "red"
             }).ToList();
 
         await JS.InvokeVoidAsync("initializeCalendar", calendarItems);

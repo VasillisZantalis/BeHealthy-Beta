@@ -8,7 +8,7 @@ function populateCalendar(events) {
 }
 
 function initializeCalendar(events) {
-
+    console.log(events);
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',

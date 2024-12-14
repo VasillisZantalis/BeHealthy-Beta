@@ -31,16 +31,12 @@ public partial class Index : BasePage
     [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
-    [Inject] IJSRuntime jSRuntime { get; set; } = default!;
 
     private List<DoctorDto>? _doctors { get; set; }
     private List<PatientDto>? _patients { get; set; }
 
     private AppointmentModal _appointmentModal { get; set; } = new();
     private Alert _alert = new();
-
-    private List<CalendarItem> calendarItems = new();
-
 
     private string? _currentUserId;
     private bool hasActionRights;
@@ -50,24 +46,6 @@ public partial class Index : BasePage
     private UserRole? userRole;
 
     private PaginationState _paginationState = new();
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            calendarItems = _appointments.Select(a => new CalendarItem
-            {
-                Title = $"{a.Reason} - {a.Patient?.FullName ?? "Unknown Patient"}",
-                Start = a.AppointmentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
-                End = a.AppointmentDate.AddMinutes(a.Duration).ToString("yyyy-MM-ddTHH:mm:ss"),
-                Description = a.Notes,
-                BackgroundColor = a.Status == AppointmentStatus.Scheduled ? "#33ff57" : "#ff5733",
-                BorderColor = a.Status == AppointmentStatus.Scheduled ? "#33ff57" : "#ff5733"
-            }).ToList();
-
-            await jSRuntime.InvokeVoidAsync("initializeCalendar", calendarItems);
-        }
-    }
 
     protected override async Task OnInitializedAsync()
     {
