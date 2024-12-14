@@ -5,10 +5,9 @@ function populateCalendar(events) {
         calendar.removeAllEvents();
         calendar.addEventSource(events);
     }
-}
+} 
 
-function initializeCalendar(events) {
-    console.log(events);
+async function initializeCalendar(events) {
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -20,7 +19,18 @@ function initializeCalendar(events) {
         },
         events: events,
         eventClick: function (info) {
-            alert('Event: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.description);
+
+            const calendarItem = {
+                title: info.event.title,
+                description: info.event.extendedProps.description,
+                start: info.event.start,
+                end: info.event.end,
+                id: parseInt(info.event.id)
+            };
+
+            const calendarItemJson = JSON.stringify(calendarItem);
+
+            DotNet.invokeMethodAsync("BeHealthy", "ConsoleEvent", calendarItemJson);
         },
     });
 

@@ -1,4 +1,6 @@
-﻿@inject IJSRuntime JS
+﻿@using System.Text.Json
+
+@inject IJSRuntime JS
 @inject IAppointmentService AppointmentService
 @inject IDoctorService DoctorService
 @inject IPatientService PatientService
@@ -6,25 +8,37 @@
 
 <div id="calendar"></div>
 
+<CalendarItemModal @ref="calendarItemModal" />
+
 @code {
     private List<CalendarItem> calendarItems = new();
+    private static CalendarItem calendarItem = new();
+
+    private static CalendarItemModal calendarItemModal = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         calendarItems = (await AppointmentService.GetAllAppointmentsAsync())
             .ToList()
             .Select(a => new CalendarItem
-            {
-                Id = a.Id,
-                Title = $"{a.Reason} - {a.Patient?.FullName ?? "Unknown Patient"}",
-                Start = a.AppointmentDate.ToFullDateTimeString(),
-                End = a.AppointmentDate.AddMinutes(a.Duration).ToFullDateTimeString(),
-                Description = a.Notes,
-                BackgroundColor = a.Status == AppointmentStatus.Scheduled ? "" : "",
-                BorderColor = a.Status == AppointmentStatus.Scheduled ? "" : "",
-                Color = "red"
-            }).ToList();
+                {
+                    Title = $"{a.Reason} - {a.Patient?.FullName ?? "Unknown Patient"}",
+                    Start = a.AppointmentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    End = a.AppointmentDate.AddMinutes(a.Duration).ToString("yyyy-MM-ddTHH:mm:ss"),
+                    Description = a.Notes,
+                    BackgroundColor = a.Status == AppointmentStatus.Scheduled ? "" : "",
+                    BorderColor = a.Status == AppointmentStatus.Scheduled ? "" : ""
+                }).ToList();
 
         await JS.InvokeVoidAsync("initializeCalendar", calendarItems);
+    }
+
+    [JSInvokable]
+    public static void ConsoleEvent(string calendarEvent)
+    {
+        var calItem = JsonSerializer.Deserialize<CalendarItem>(calendarEvent);
+        calendarItem = calItem ?? new();
+
+        calendarItemModal.OpenModal(calendarItem);
     }
 }
