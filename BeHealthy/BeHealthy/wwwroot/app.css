@@ -88,3 +88,16 @@ h1:focus {
     color: red;
     font-weight: bold;
 }
+
+.fc a {
+    text-decoration: none;
+    color: gray;
+}
+
+.fc-event {
+    color: gray;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: var(--primary-color);
+}
