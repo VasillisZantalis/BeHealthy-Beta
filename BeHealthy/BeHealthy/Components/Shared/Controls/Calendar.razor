@@ -15,11 +15,30 @@
     private static CalendarItem calendarItem = new();
 
     private static CalendarItemModal calendarItemModal = new();
+    List<AppointmentDto> appointments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await ASP.GetAuthenticationStateAsync();
+        var userId = authState.User.GetUserId();
+
+        switch (authState.User.GetUserRoleEnum())
+        {
+            case UserRole.Doctor when userId is not null:
+                appointments = (await AppointmentService.GetAllAppointmentsByUserIdAsync(userId)).ToList();
+                break;
+            case UserRole.Patient when userId is not null:
+                appointments = (await AppointmentService.GetAllAppointmentsByUserIdAsync(userId)).ToList();
+                break;
+            default:
+                appointments = (await AppointmentService.GetAllAppointmentsAsync()).ToList();
+                break;
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        calendarItems = (await AppointmentService.GetAllAppointmentsAsync())
-            .ToList()
+        calendarItems = appointments
             .Select(a => new CalendarItem
                 {
                     Title = $"{a.Reason.ToLocalizedString()} - {a.Patient?.FullName ?? "Unknown Patient"}",

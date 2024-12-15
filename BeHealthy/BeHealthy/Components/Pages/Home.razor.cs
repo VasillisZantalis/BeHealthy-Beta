@@ -1,5 +1,4 @@
 ﻿using BeHealthy.Models;
-using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
 using BeHealthy.States;
 
@@ -19,7 +18,7 @@ public partial class Home : BasePage
         Breadcrumbs.AddBreadcrumb(new Breadcrumb
         {
             Text = Resource.Dashboard,
-            Link = RoutingEndpoints.HOME_PAGE,
+            Link = string.Empty,
             Active = true
         });
     }

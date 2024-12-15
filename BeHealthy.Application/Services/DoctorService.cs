@@ -68,7 +68,7 @@ public class DoctorService : IDoctorService
             UserId = doctor.UserId,
             FirstName = doctor.FirstName,
             LastName = doctor.LastName,
-            Specialty = doctor.Specialty.Name,
+            Specialty = doctor.Specialty?.Name,
             Image = doctor.Image,
             Email = doctor.User?.Email,
             PhoneNumber = doctor.User?.PhoneNumber,

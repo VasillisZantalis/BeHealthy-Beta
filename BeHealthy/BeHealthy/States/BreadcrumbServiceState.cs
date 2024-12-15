@@ -15,7 +15,7 @@ public class BreadcrumbServiceState
     public List<Breadcrumb> Breadcrumbs { get; set; } = new();
     public bool IsBreadcrumbVisible { get; set; }
     public bool IsBackButtonVisible { get; set; }
-    public event Action OnChange;
+    public event Action? OnChange;
 
     public void ResetBreadcrumb()
     {
