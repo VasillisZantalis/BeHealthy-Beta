@@ -826,6 +826,24 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete Appointments.
+        /// </summary>
+        public static string PrivilegeName_DeleteAppointments {
+            get {
+                return ResourceManager.GetString("PrivilegeName_DeleteAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Appointments.
+        /// </summary>
+        public static string PrivilegeName_EditAppointments {
+            get {
+                return ResourceManager.GetString("PrivilegeName_EditAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Privileges.
         /// </summary>
         public static string Privileges {

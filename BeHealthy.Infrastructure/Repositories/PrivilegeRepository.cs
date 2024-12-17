@@ -25,7 +25,7 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
         return privileges;
     }
 
-    public async Task<Dictionary<string, bool>> GetUserPrivilegesAsync(UserRole userRole)
+    public async Task<Dictionary<PrivilegeName, bool>> GetUserPrivilegesAsync(UserRole userRole)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
@@ -43,7 +43,7 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
         return privileges;
     }
 
-    public async Task<bool> HasPrivilegeAsync(UserRole role, string privilegeName)
+    public async Task<bool> HasPrivilegeAsync(UserRole role, PrivilegeName privilegeName)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 

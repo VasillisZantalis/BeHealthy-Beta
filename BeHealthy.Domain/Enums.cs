@@ -49,3 +49,9 @@ public enum Severity
     Success,
     Danger
 }
+
+public enum PrivilegeName
+{
+    EditAppointments,
+    DeleteAppointments
+}

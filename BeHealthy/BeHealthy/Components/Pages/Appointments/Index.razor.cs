@@ -72,8 +72,8 @@ public partial class Index : BasePage
                 break;
         }
 
-        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
-        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
+        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
+        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
         hasActionRights = hasEditRight || hasDeleteRight;
 
         await LoadDoctors();

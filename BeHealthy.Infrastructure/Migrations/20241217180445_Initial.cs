@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BeHealthy.Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -81,8 +83,7 @@ namespace BeHealthy.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DisplayName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    Name = table.Column<int>(type: "integer", nullable: false),
                     Value = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -411,6 +412,36 @@ namespace BeHealthy.Infrastructure.Migrations
                         principalTable: "Patients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "0", null, "Admin", "ADMIN" },
+                    { "1", null, "Staff", "STAFF" },
+                    { "2", null, "Doctor", "DOCTOR" },
+                    { "3", null, "Nurse", "NURSE" },
+                    { "4", null, "Patient", "PATIENT" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Privileges",
+                columns: new[] { "Id", "Name", "Value" },
+                values: new object[,]
+                {
+                    { 1, 0, false },
+                    { 2, 1, false }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RolePrivileges",
+                columns: new[] { "PrivilegeId", "Role" },
+                values: new object[,]
+                {
+                    { 1, (short)2 },
+                    { 2, (short)2 }
                 });
 
             migrationBuilder.CreateIndex(

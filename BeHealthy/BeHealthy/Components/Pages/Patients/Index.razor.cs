@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -54,8 +55,8 @@ public partial class Index : BasePage
 
         _paginationState.ItemsPerPage = 10;
 
-        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
-        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
+        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
+        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
         hasActionRights = hasEditRight || hasDeleteRight;
         LoaderService.SetLoader(false);
     }

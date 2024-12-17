@@ -9,7 +9,7 @@ namespace BeHealthy.States
     {
         private readonly IPrivilegeService _privilegeService;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
-        private Dictionary<string, bool> _privileges = new Dictionary<string, bool>();
+        private Dictionary<PrivilegeName, bool> _privileges = new();
 
         public PrivilegeStateService(IPrivilegeService privilegeService, AuthenticationStateProvider authenticationStateProvider)
         {
@@ -25,7 +25,7 @@ namespace BeHealthy.States
             _privileges = await _privilegeService.GetPrivilegesForRoleAsync(userRole!.Value);
         }
 
-        public async Task<bool> HasPrivilegeAsync(string privilegeName)
+        public async Task<bool> HasPrivilegeAsync(PrivilegeName privilegeName)
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var userRole = authState.User.GetUserRoleEnum();

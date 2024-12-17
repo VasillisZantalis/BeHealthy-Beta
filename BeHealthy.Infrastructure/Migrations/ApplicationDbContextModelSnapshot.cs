@@ -396,14 +396,8 @@ namespace BeHealthy.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DisplayName")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("Name")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Value")
                         .HasColumnType("boolean");
@@ -411,6 +405,20 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Privileges");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = 0,
+                            Value = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = 1,
+                            Value = false
+                        });
                 });
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.RolePrivilege", b =>
@@ -426,6 +434,18 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasIndex("PrivilegeId");
 
                     b.ToTable("RolePrivileges");
+
+                    b.HasData(
+                        new
+                        {
+                            Role = (short)2,
+                            PrivilegeId = 1
+                        },
+                        new
+                        {
+                            Role = (short)2,
+                            PrivilegeId = 2
+                        });
                 });
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>
@@ -501,6 +521,38 @@ namespace BeHealthy.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "0",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "1",
+                            Name = "Staff",
+                            NormalizedName = "STAFF"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "Doctor",
+                            NormalizedName = "DOCTOR"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            Name = "Nurse",
+                            NormalizedName = "NURSE"
+                        },
+                        new
+                        {
+                            Id = "4",
+                            Name = "Patient",
+                            NormalizedName = "PATIENT"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

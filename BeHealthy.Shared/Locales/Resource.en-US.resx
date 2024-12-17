@@ -372,6 +372,12 @@
   <data name="Privilege" xml:space="preserve">
     <value>Privilege</value>
   </data>
+  <data name="PrivilegeName_DeleteAppointments" xml:space="preserve">
+    <value>Delete Appointments</value>
+  </data>
+  <data name="PrivilegeName_EditAppointments" xml:space="preserve">
+    <value>Edit Appointments</value>
+  </data>
   <data name="Privileges" xml:space="preserve">
     <value>Privileges</value>
   </data>

@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
@@ -34,8 +35,8 @@ public partial class Index : BasePage
 
         _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
-        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync("CanEditAppointment");
-        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync("CanDeleteAppointment");
+        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
+        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
         hasActionRights = hasEditRight || hasDeleteRight;
 
         LoaderService.SetLoader(false);

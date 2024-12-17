@@ -372,6 +372,12 @@
   <data name="Privilege" xml:space="preserve">
     <value>Δικαίωμα</value>
   </data>
+  <data name="PrivilegeName_DeleteAppointments" xml:space="preserve">
+    <value>Διαγραφή Ραντεβού</value>
+  </data>
+  <data name="PrivilegeName_EditAppointments" xml:space="preserve">
+    <value>Επεξεργασία Ραντεβού</value>
+  </data>
   <data name="Privileges" xml:space="preserve">
     <value>Δικαιώματα</value>
   </data>

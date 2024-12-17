@@ -39,6 +39,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .ToArray();
 
         modelBuilder.Entity<IdentityRole>().HasData(roles);
+
+        modelBuilder.Entity<Privilege>().HasData(
+            new Privilege { Id = 1, Name = PrivilegeName.EditAppointments },
+            new Privilege { Id = 2, Name = PrivilegeName.DeleteAppointments }
+        );
+
+        // Seed RolePrivileges
+        modelBuilder.Entity<RolePrivilege>().HasData(
+            new RolePrivilege { Role = UserRole.Doctor, PrivilegeId = 1 },
+            new RolePrivilege { Role = UserRole.Doctor, PrivilegeId = 2 }
+        );
     }
 
     public async Task SeedRolesAsync(IServiceProvider serviceProvider)
