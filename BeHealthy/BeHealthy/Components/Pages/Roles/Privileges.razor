@@ -19,7 +19,7 @@ else
         <button class="btn btn-success px-4" @onclick="SavePrivileges">@Resource.Save</button>
         @foreach (var roleGroup in _groupedPrivileges)
         {
-            <div class="card shadow border-0 rounded px-3 py-2 mt-3" style="max-width: 700px">
+            <div class="card shadow border-0 rounded px-3 py-2 mt-3">
                 <h4>@roleGroup.Key.ToLocalizedString()</h4>
                 <div class="card-body">
                     @foreach (var privilege in roleGroup.Value)

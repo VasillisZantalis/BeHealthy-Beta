@@ -27,6 +27,18 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        var roles = Enum.GetValues(typeof(UserRole))
+            .Cast<UserRole>()
+            .Select(role => new IdentityRole
+            {
+                Id = ((short)role).ToString(),
+                Name = role.ToString(),
+                NormalizedName = role.ToString().ToUpper()
+            })
+            .ToArray();
+
+        modelBuilder.Entity<IdentityRole>().HasData(roles);
     }
 
     public async Task SeedRolesAsync(IServiceProvider serviceProvider)
