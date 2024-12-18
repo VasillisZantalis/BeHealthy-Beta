@@ -48,7 +48,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         // Seed RolePrivileges
         modelBuilder.Entity<RolePrivilege>().HasData(
             new RolePrivilege { Role = UserRole.Doctor, PrivilegeId = 1 },
-            new RolePrivilege { Role = UserRole.Doctor, PrivilegeId = 2 }
+            new RolePrivilege { Role = UserRole.Doctor, PrivilegeId = 2 },
+            new RolePrivilege { Role = UserRole.Patient, PrivilegeId = 1 },
+            new RolePrivilege { Role = UserRole.Patient, PrivilegeId = 2 },
+            new RolePrivilege { Role = UserRole.Nurse, PrivilegeId = 1 },
+            new RolePrivilege { Role = UserRole.Nurse, PrivilegeId = 2 }
         );
     }
 
