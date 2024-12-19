@@ -40,7 +40,7 @@ else
                         <PropertyColumn Title="@Resource.Location"
                                         Property="@(x => x.Location)" />
                         <PropertyColumn Title="@Resource.HeadΟfDepartment"
-                                        Property="@(x => x.HeadOfDepartment != null ? x.HeadOfDepartment.FullName : Resource.NotAvailable)" />
+                                        Property="@(x => x.HeadOfDepartment != null ? x.HeadOfDepartment.FullName : string.Empty)" />
                         @if (_hasActionRights)
                         {
                             <TemplateColumn>
