@@ -8,11 +8,7 @@ namespace BeHealthy.Infrastructure.Data
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-               .AddUserSecrets<ApplicationDbContextFactory>()
-               .Build();
-
-            var connectionString = configuration["Default"];
+            var connectionString = "Host=behealthydb;Port=5432;Database=behealthy;Username=admin;Password=7530";
 
             if (string.IsNullOrEmpty(connectionString))
             {
@@ -20,7 +16,7 @@ namespace BeHealthy.Infrastructure.Data
             }
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseNpgsql(connectionString!);
+            optionsBuilder.UseNpgsql(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }
