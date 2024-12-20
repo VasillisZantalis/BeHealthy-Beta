@@ -120,6 +120,9 @@
   <data name="AccessDenied" xml:space="preserve">
     <value>Απαγόρευση Πρόσβασης</value>
   </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Ενέργειες</value>
+  </data>
   <data name="AppointmentExistsForDoctor" xml:space="preserve">
     <value>Υπάρχει ήδη ραντεβού για τον γιατρό {0} από {1} έως {2}</value>
   </data>
@@ -383,6 +386,9 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Προφίλ</value>
+  </data>
+  <data name="PropertyRequired" xml:space="preserve">
+    <value>{0} είναι υποχρεωτικό</value>
   </data>
   <data name="Reason" xml:space="preserve">
     <value>Αιτία</value>

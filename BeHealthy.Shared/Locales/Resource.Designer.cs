@@ -70,6 +70,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string Actions {
+            get {
+                return ResourceManager.GetString("Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An appointment already exists for doctor {0} from {1} to {2}. Please choose a different time.
         /// </summary>
         public static string AppointmentExistsForDoctor {
@@ -858,6 +867,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is required.
+        /// </summary>
+        public static string PropertyRequired {
+            get {
+                return ResourceManager.GetString("PropertyRequired", resourceCulture);
             }
         }
         

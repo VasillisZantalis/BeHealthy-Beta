@@ -47,15 +47,15 @@ else
                         <PropertyColumn Title="@Resource.Department"
                                         Property="@(x => x.Department)"
                                         Sortable="true" />
-                        <TemplateColumn>
-                            <ActionsDropdown>
-                                <button class="btn w-100 text-start" @onclick="() => EditRoom(context.Id)">
-                                    <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
+                        <TemplateColumn Title="@Resource.Actions" Align="Align.End">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn" @onclick="() => EditRoom(context.Id)">
+                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                                 </button>
-                                <button class="btn w-100 text-start" @onclick="async () => await DeleteRoom(context.Id)">
-                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
+                                <button class="btn" @onclick="async () => await DeleteRoom(context.Id)">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                                 </button>
-                            </ActionsDropdown>
+                            </div>
                         </TemplateColumn>
                     </QuickGrid>
 

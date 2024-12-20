@@ -16,7 +16,7 @@
                 </div>
                 <div class="modal-body">
                     <EditForm Model="_roomDto" FormName="RoomForl" OnValidSubmit="SaveRoom">
-                        <DataAnnotationsValidator />
+                        <FluentValidationValidator @ref="_fluentValidationValidator"/>
 
                         <div class="d-flex flex-column gap-3">
                             <div class="form">
@@ -27,11 +27,10 @@
                             <div class="form">
                                 <label class="fw-bold" for="number">@Resource.Number</label>
                                 <InputNumber id="number" class="form-control" @bind-Value="_roomDto.Number" />
-                                <ValidationMessage For="@(() => _roomDto.Number)" />
                             </div>
                             <div class="">
                                 <label class="fw-bold" for="doctorIdSelect">@Resource.Department</label>
-                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_roomDto.DepartmentId">
+                                <InputSelect id="doctorIdSelect" class="form-select required" @bind-Value="_roomDto.DepartmentId">
                                     @foreach (var department in _departmentSelect)
                                     {
                                         <option value="@department.Value">@department.Text</option>
@@ -59,6 +58,8 @@
     [SupplyParameterFromForm]
     private RoomDto _roomDto { get; set; } = new();
 
+    private FluentValidationValidator _fluentValidationValidator;
+
     private bool _showModal = false;
     private bool _isEditMode => RoomId.HasValue;
     private string ModalTitle => _isEditMode ? Resource.Edit : Resource.Create;
@@ -75,6 +76,7 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
+        _departmentSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         LoaderService.SetLoader(false);
     }
@@ -104,17 +106,19 @@
 
     private async Task SaveRoom()
     {
-        if (_isEditMode && RoomId.HasValue)
+        if (await _fluentValidationValidator.ValidateAsync())
         {
-            var roomForUpdate = _roomDto.MapDtoToUpdateDto();
-            await RoomService.UpdateRoomAsync(roomForUpdate.Id, roomForUpdate);
+            if (_isEditMode && RoomId.HasValue)
+            {
+                var roomForUpdate = _roomDto.MapDtoToUpdateDto();
+                await RoomService.UpdateRoomAsync(roomForUpdate.Id, roomForUpdate);
+            }
+            else 
+            {
+                var roomForCreation = _roomDto.MapDtoToCreateDto();
+                await RoomService.AddRoomAsync(roomForCreation);
+            }
+            CloseModal();
         }
-        else 
-        {
-            var roomForCreation = _roomDto.MapDtoToCreateDto();
-            await RoomService.AddRoomAsync(roomForCreation);
-        }
-
-        await ToastrStateService.ShowSuccess(Resource.Success);
     }
 }

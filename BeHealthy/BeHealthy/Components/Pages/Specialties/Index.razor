@@ -34,7 +34,7 @@ else
                                         Property="@(x => _specialties.IndexOf(x))" />
                         <PropertyColumn Title="@Resource.Name"
                                         Property="@(x => x.Name)" />
-                        <TemplateColumn>
+                        <TemplateColumn Title="@Resource.Actions" Align="Align.End">
                             <div class="d-flex justify-content-end">
                                 <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditSpecialty(context.Id))">
                                     <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
