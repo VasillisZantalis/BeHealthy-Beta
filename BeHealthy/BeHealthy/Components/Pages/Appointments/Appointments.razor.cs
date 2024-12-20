@@ -7,7 +7,6 @@ using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Domain;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -16,12 +15,11 @@ using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
-using Microsoft.JSInterop;
 using System.Data;
 
 namespace BeHealthy.Components.Pages.Appointments;
 
-public partial class Index : BasePage
+public partial class Appointments : BasePage
 {
     private List<AppointmentDto> _appointments = default!;
 

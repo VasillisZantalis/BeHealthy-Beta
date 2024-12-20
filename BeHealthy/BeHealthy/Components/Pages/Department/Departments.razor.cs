@@ -1,6 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
@@ -9,7 +8,7 @@ using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Components.Pages.Department;
 
-public partial class Index : BasePage
+public partial class Departments : BasePage
 {
     [Inject] IDepartmentService _departmentService { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
@@ -59,7 +58,8 @@ public partial class Index : BasePage
 
     private void ConfirmDelete(int departmentId)
     {
-        ConfirmDeleteService.RequestDelete(async () => {
+        ConfirmDeleteService.RequestDelete(async () =>
+        {
             await _departmentService.DeleteDepartmentAsync(departmentId);
             _navigationManager.Refresh(forceReload: true);
         });

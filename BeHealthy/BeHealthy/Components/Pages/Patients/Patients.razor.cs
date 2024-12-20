@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Components.Pages.Patients;
 
-public partial class Index : BasePage
+public partial class Patients : BasePage
 {
     [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
