@@ -12,7 +12,7 @@ namespace BeHealthy.Infrastructure.Data
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new InvalidOperationException("Connection string 'Default' not found in User Secrets.");
+                throw new InvalidOperationException("Connection string 'Default' not found.");
             }
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
