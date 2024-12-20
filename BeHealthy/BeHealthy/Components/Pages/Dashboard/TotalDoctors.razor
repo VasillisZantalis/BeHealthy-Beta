@@ -1,6 +1,7 @@
 ﻿@inject IDoctorService doctorService
+@inject NavigationManager NavigationManager
 
-<div id="totalDoctorsDiv">
+<div id="totalDoctorsDiv" class="clickable" @onclick="() => NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE)">
     <div class="card rounded shadow border-0 border-start border-5 border-primary my-3">
         <div class="card-body">
             <div class="d-flex flex-row flex-wrap gap-2">
@@ -12,7 +13,6 @@
     </div>
 </div>
 
-
 @code {
     private int totalDoctorsCount;
 
@@ -20,5 +20,4 @@
     {
         totalDoctorsCount = (await doctorService.GetAllDoctorsAsync()).Count();
     }
-
 }

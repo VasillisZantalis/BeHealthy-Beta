@@ -1,6 +1,7 @@
 ﻿@inject INurseService nurseService
+@inject NavigationManager NavigationManager
 
-<div id="totalNursesDiv">
+<div id="totalNursesDiv" class="clickable" @onclick="() => NavigationManager.NavigateTo(RoutingEndpoints.NURSES_PAGE)">
     <div class="card rounded shadow border-0 border-start border-5 border-warning my-3">
         <div class="card-body">
             <div class="d-flex flex-row flex-wrap gap-2">
@@ -11,7 +12,6 @@
         </div>
     </div>
 </div>
-
 
 @code {
     private int totalNursesCount;
