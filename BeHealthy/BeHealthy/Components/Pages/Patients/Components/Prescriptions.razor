@@ -11,44 +11,44 @@
         <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
     </button>
 
-    <PrescriptionModal @ref="_prescriptionModal" 
-                    Successful="HandleResponse"
-                    PrescriptionId="_prescriptionId" />
+    <PrescriptionModal @ref="_prescriptionModal"
+                       Successful="HandleResponse"
+                       PrescriptionId="_prescriptionId" />
 
     @if (_prescriptions is not null && _prescriptions.Any())
     {
         <QuickGrid @ref="quickGrid"
-        Class="table table-responsive"
-        Items="@_prescriptions.AsQueryable()"
-        ItemKey="@(x => x.Id)">
+                   Class="table table-responsive"
+                   Items="@_prescriptions.AsQueryable()"
+                   ItemKey="@(x => x.Id)">
             <PropertyColumn Title="@Resource.Medication"
-            Property="@(x => x.Medication)" />
+                            Property="@(x => x.Medication)" />
             <PropertyColumn Title="@Resource.Dosage"
-            Property="@(x => x.Dosage)" />
+                            Property="@(x => x.Dosage)" />
             <PropertyColumn Title="@Resource.Doctor"
-            Property="@(x => x.Doctor.FullName)" />
+                            Property="@(x => x.Doctor.FullName)" />
             <PropertyColumn Title="@Resource.DatePrescribed"
-            Property="@(x => x.DatePrescribed)"
-            Format="dd MMM yyyy"
-            IsDefaultSortColumn="true"
-            InitialSortDirection="SortDirection.Descending" />
+                            Property="@(x => x.DatePrescribed)"
+                            Format="dd MMM yyyy"
+                            IsDefaultSortColumn="true"
+                            InitialSortDirection="SortDirection.Descending" />
             @if (hasActionRights)
             {
                 <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                    <ActionsDropdown>
+                    <div class="d-flex justify-content-end">
                         @if (hasEditRight)
                         {
-                            <button class="btn w-100 text-start" @onclick="() => EditPrescription(context.Id)">
-                                <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
+                            <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditPrescription(context.Id))">
+                                <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                             </button>
                         }
                         @if (hasDeleteRight)
                         {
-                            <button class="btn w-100 text-start" @onclick="async () => await DeletePrescription(context.Id)">
-                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
+                            <button class="btn" title="@(Resource.Delete)" @onclick="() => DeletePrescription(context.Id)">
+                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                             </button>
                         }
-                    </ActionsDropdown>
+                    </div>
                 </TemplateColumn>
             }
         </QuickGrid>

@@ -88,21 +88,21 @@ else
                                         Property="@(x => x.PhoneNumber)" />
                         @if (hasActionRights)
                         {
-                                <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                                <ActionsDropdown>
+                            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
+                                <div class="d-flex justify-content-end">
                                     @if (hasEditRight)
                                     {
-                                        <button class="btn w-100 text-start" @onclick="() => EditDoctor(context.Id)">
-                                            <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />&nbsp; @Resource.Edit
+                                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDoctor(context.Id))">
+                                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                                         </button>
                                     }
                                     @if (hasDeleteRight)
                                     {
-                                        <button class="btn w-100 text-start" @onclick="() => ConfirmDelete(context.Id)">
-                                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
+                                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
+                                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                                         </button>
                                     }
-                                </ActionsDropdown>
+                                </div>
                             </TemplateColumn>
                         }
                     </QuickGrid>
