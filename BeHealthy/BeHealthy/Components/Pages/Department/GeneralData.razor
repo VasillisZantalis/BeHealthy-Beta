@@ -51,6 +51,9 @@
     [Inject]
     private IAppSettingsService _appSettingsService { get; set; } = default!;
 
+    [Inject]
+    private NavigationManager _navigationManager { get; set; } = default!;
+
     private bool _inProgress = false;
     private Alert _alert = new();
     private bool _isRequiredHeadOfDepartment;
@@ -130,7 +133,7 @@
                     };
                 await _departmentService.AddDepartmentAsync(roomForCreateDto);
             }
-            _alert.ShowSuccess(Resource.Success);
+            _navigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
         }
         _inProgress = false;
     }
