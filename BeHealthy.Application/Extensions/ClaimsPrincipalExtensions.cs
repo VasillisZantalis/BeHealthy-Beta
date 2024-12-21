@@ -5,9 +5,14 @@ namespace BeHealthy.Application.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
-    public static string? GetUserId(this ClaimsPrincipal principal) => principal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+    public static string? GetUserId(this ClaimsPrincipal principal)
+        => principal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-    public static string GetUserRole(this ClaimsPrincipal principal) => principal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value ?? string.Empty;
+    public static string GetUserRole(this ClaimsPrincipal principal) 
+        => principal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value ?? string.Empty;
+
+    public static bool IsAdminUser(this ClaimsPrincipal principal) 
+        => principal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value == UserRole.Admin.ToString();
 
     public static UserRole? GetUserRoleEnum(this ClaimsPrincipal principal)
     {

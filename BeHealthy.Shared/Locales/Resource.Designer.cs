@@ -1069,6 +1069,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Distribution.
+        /// </summary>
+        public static string UserDistribution {
+            get {
+                return ResourceManager.GetString("UserDistribution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Admin.
         /// </summary>
         public static string UserRole_Admin {

@@ -13,6 +13,10 @@
                 <TotalNurses />
                 <TotalPatients />
             </div>
+            @if (_isAdminUser)
+            {
+                <Charts />
+            }
             <UpcomingAppointments />
             <RecentlyAddedPatients />
         </div>

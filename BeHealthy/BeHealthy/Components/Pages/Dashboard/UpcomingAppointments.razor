@@ -23,16 +23,9 @@
                                     <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
                                 </div>
                                 <div><span class="badge @EnumExtensions.GetBadgeClass(appointment!.Status)">@appointment.Status</span></div>
-                                <div class="align-self-start">
-                                    <ActionsDropdown>
-                                        <button class="btn w-100 text-start">
-                                            <Icon IconClass="@FAIcon.CircleInfo" TextClass="text-primary"/>&nbsp; Details
-                                        </button>
-                                        <button class="btn w-100 text-start" @onclick="async () => await DeleteAppointment(appointment.Id)">
-                                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />&nbsp; @Resource.Delete
-                                        </button>
-                                    </ActionsDropdown>
-                                </div>
+                                <button class="btn" title="@(Resource.Delete)" @onclick="() => DeleteAppointment(appointment.Id)">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                </button>
                             </li>
                         </ul>
                     </div>

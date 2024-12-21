@@ -14,4 +14,5 @@ public interface IGenericRepository<T> where T : class
     Task DeleteAsync(int id);
     Task DeleteEntityAsync(T entity);
     Task<bool> ExistsAsync(int id);
+    Task<int> GetCountAsync();
 }

@@ -453,6 +453,9 @@
   <data name="UpcomingAppointments" xml:space="preserve">
     <value>Επερχόμενα ραντεβού</value>
   </data>
+  <data name="UserDistribution" xml:space="preserve">
+    <value>Κατανομή χρηστών</value>
+  </data>
   <data name="UserRole_Admin" xml:space="preserve">
     <value>Διαχειριστής</value>
   </data>
