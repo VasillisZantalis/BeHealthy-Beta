@@ -20,8 +20,12 @@ public partial class AppointmentModal : BasePage
 
     [Parameter]
     public List<DoctorDto> Doctors { get; set; } = default!;
+
     [Parameter]
     public List<PatientDto> Patients { get; set; } = default!;
+
+    [Parameter]
+    public string CurrentUserId { get; set; } = default!;
 
     [Parameter]
     public UserRole? Role { get; set; }
@@ -44,6 +48,7 @@ public partial class AppointmentModal : BasePage
     private INurseService _nurseService { get; set; } = default!;
 
     private bool LockDoctorsDropdown => Role == UserRole.Doctor;
+    private bool LockPatientsDropdown => Role == UserRole.Patient;
 
     private bool _show;
     private bool _isEdit;
@@ -138,6 +143,16 @@ public partial class AppointmentModal : BasePage
         _appointmentDto = new();
         _appointmentId = 0;
         _appointmentDto.AppointmentDate = DateTime.Now;
+        
+        if (Role == UserRole.Doctor)
+        {
+            _appointmentDto.DoctorId = Doctors.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
+        }
+
+        if (Role == UserRole.Patient)
+        {
+            _appointmentDto.PatientId = Patients.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
+        }
     }
 
     public void OpenForEdit(AppointmentDto appointment)

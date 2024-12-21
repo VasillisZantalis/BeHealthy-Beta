@@ -23,7 +23,7 @@
 
                                 <div class="form-group col-12 col-sm-6">
                                     <label class="fw-bold required" for="patientIdSelect">@Resource.Patient</label>
-                                    <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentDto.PatientId">
+                                    <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentDto.PatientId" disabled="@LockPatientsDropdown">
                                         @foreach (var patient in _patientsSelect)
                                         {
                                             <option value="@patient.Value">@patient.Text</option>

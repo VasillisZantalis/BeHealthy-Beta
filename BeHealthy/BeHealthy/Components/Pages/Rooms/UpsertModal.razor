@@ -29,8 +29,8 @@
                                 <InputNumber id="number" class="form-control" @bind-Value="_roomDto.Number" />
                             </div>
                             <div class="">
-                                <label class="fw-bold" for="doctorIdSelect">@Resource.Department</label>
-                                <InputSelect id="doctorIdSelect" class="form-select required" @bind-Value="_roomDto.DepartmentId">
+                                <label class="fw-bold required" for="doctorIdSelect">@Resource.Department</label>
+                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_roomDto.DepartmentId">
                                     @foreach (var department in _departmentSelect)
                                     {
                                         <option value="@department.Value">@department.Text</option>
