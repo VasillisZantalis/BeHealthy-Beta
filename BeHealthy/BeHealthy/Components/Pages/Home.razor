@@ -15,13 +15,17 @@
             </div>
             @if (_isAdminUser)
             {
-                <Charts />
+                <UserDistributionChart />
             }
             <UpcomingAppointments />
             <RecentlyAddedPatients />
         </div>
         <div class="col-12 col-xl-6">
             <Calendar />
+            @if (_isAdminUser)
+            {
+                <ReasonOfAppointmentsChart />
+            }
         </div>
     </div>
     <div class="row">

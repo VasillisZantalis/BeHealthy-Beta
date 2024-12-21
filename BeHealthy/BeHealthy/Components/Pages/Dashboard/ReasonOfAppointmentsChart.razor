@@ -1,0 +1,112 @@
+﻿@using ChartJs.Blazor.BarChart
+@using ChartJs.Blazor.BarChart.Axes
+@using ChartJs.Blazor.Common
+@using ChartJs.Blazor.Common.Axes
+@using ChartJs.Blazor.Common.Axes.Ticks
+@using ChartJs.Blazor.Util
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
+
+@inject IAppointmentService AppointmentService
+
+<div class="card border-0 rounded shadow mt-3">
+    <Chart Config="_config"></Chart>
+</div>
+
+@code {
+    private BarConfig _config;
+    private Dictionary<AppointmentReason, int> _appointmentsByReasonCount = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            LoaderService.SetLoader(true);
+
+            // Fetch appointment data from the service
+
+            _config = new BarConfig
+            {
+                Options = new BarOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "Appointments by Reason"
+                    },
+                    Scales = new BarScales
+                    {
+                        XAxes = new List<CartesianAxis>
+                        {
+                            new BarCategoryAxis
+                            {
+                                ScaleLabel = new ScaleLabel
+                                {
+                                    Display = true,
+                                    LabelString = "Reason for Appointment"
+                                },
+                                Ticks = new CategoryTicks
+                                {
+                                    AutoSkip = false
+                                }
+                            }
+                        },
+                        YAxes = new List<CartesianAxis>
+                        {
+                            new BarLinearCartesianAxis
+                            {
+                                ScaleLabel = new ScaleLabel
+                                {
+                                    Display = true,
+                                    LabelString = "Number of Appointments"
+                                },
+                                Ticks = new LinearCartesianTicks
+                                {
+                                    BeginAtZero = true
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            LoaderService.SetLoader(false);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _appointmentsByReasonCount = await AppointmentService.GetAppointmentReasonCounts();
+
+        if (firstRender && _appointmentsByReasonCount.Any())
+        {
+            foreach (var reason in _appointmentsByReasonCount.Keys)
+            {
+                _config.Data.Labels.Add(reason.ToLocalizedString());
+            }
+
+            var dataset = new BarDataset<int>(_appointmentsByReasonCount.Values)
+            {
+                Label = "Total Appointments",
+                BackgroundColor = new[]
+                {
+                    ColorUtil.ColorHexString(54, 162, 235), // Blue
+                    ColorUtil.ColorHexString(75, 192, 192), // Green
+                },
+                BorderWidth = 1
+            };
+
+            _config.Data.Datasets.Add(dataset);
+            StateHasChanged();
+        }
+    }
+}

@@ -2,6 +2,7 @@
 using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Shared.Locales;
@@ -99,6 +100,22 @@ public class AppointmentService : IAppointmentService
     public async Task DeleteAppointmentAsync(int id)
     {
         await _unitOfWork.AppointmentRepository.DeleteAsync(id);
+    }
+
+    public async Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts()
+    {
+        var appointments = await _unitOfWork.AppointmentRepository.GetAllAsync();
+
+        var groupedByReason = appointments
+            .GroupBy(x => x.Reason)
+            .Select(x => new
+            {
+                x.Key,
+                Count = x.Count()
+            })
+            .ToDictionary(k => k.Key, v => v.Count);
+
+        return groupedByReason;
     }
 
     private async Task<ServiceResponse> CheckForConflictingAppointmentsAsync(
