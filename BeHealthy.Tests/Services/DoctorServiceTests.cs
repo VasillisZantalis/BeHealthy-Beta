@@ -15,7 +15,7 @@ public class DoctorServiceTests
 {
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IDoctorRepository> _mockDoctorRepository;
-    private readonly DoctorService _doctorService;
+    private readonly DoctorService _sut;
 
     public DoctorServiceTests()
     {
@@ -24,7 +24,7 @@ public class DoctorServiceTests
 
         _mockUnitOfWork.Setup(uow => uow.DoctorRepository).Returns(_mockDoctorRepository.Object);
 
-        _doctorService = new DoctorService(_mockUnitOfWork.Object);
+        _sut = new DoctorService(_mockUnitOfWork.Object);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class DoctorServiceTests
         _mockDoctorRepository.Setup(repo => repo.GetAllDoctorsAsync()).ReturnsAsync(doctors);
 
         // Act
-        var result = await _doctorService.GetAllDoctorsAsync();
+        var result = await _sut.GetAllDoctorsAsync();
 
         // Assert
         Assert.NotNull(result);
