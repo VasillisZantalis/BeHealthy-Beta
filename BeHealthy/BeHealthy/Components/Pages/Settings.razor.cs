@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Common;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
-using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 

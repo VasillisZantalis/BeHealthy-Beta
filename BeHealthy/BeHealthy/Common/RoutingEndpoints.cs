@@ -1,4 +1,4 @@
-﻿namespace BeHealthy.Persistance;
+﻿namespace BeHealthy.Common;
 
 public static class RoutingEndpoints
 {

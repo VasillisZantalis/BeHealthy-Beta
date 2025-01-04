@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Common;
 using BeHealthy.Models;
-using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;

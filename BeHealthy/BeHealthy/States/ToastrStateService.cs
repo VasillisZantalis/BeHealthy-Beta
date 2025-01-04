@@ -1,6 +1,6 @@
 ﻿using BeHealthy.Domain;
 using BeHealthy.Models;
-using BeHealthy.Persistance;
+using BeHealthy.Common;
 
 namespace BeHealthy.States;
 

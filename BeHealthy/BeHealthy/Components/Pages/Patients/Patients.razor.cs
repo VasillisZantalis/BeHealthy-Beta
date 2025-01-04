@@ -1,8 +1,8 @@
 ﻿using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Common;
 using BeHealthy.Domain;
 using BeHealthy.Models;
-using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
 using BeHealthy.States;

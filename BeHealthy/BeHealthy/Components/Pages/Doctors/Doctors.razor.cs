@@ -1,8 +1,8 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Common;
 using BeHealthy.Domain;
 using BeHealthy.Models;
-using BeHealthy.Persistance;
 using BeHealthy.Shared.Locales;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
