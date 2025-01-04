@@ -150,6 +150,9 @@
   <data name="Appointments" xml:space="preserve">
     <value>Ραντεβού</value>
   </data>
+  <data name="AppointmentsByReason" xml:space="preserve">
+    <value>Ραντεβού ανα Αιτία</value>
+  </data>
   <data name="AppointmentStatus_Cancelled" xml:space="preserve">
     <value>Ακυρώθηκε</value>
   </data>
@@ -327,6 +330,9 @@
   <data name="Number" xml:space="preserve">
     <value>Αριθμός</value>
   </data>
+  <data name="NumberOfAppointments" xml:space="preserve">
+    <value>Αριθμός Ραντεβού</value>
+  </data>
   <data name="Nurse" xml:space="preserve">
     <value>Νοσοκόμα</value>
   </data>
@@ -393,6 +399,9 @@
   <data name="Reason" xml:space="preserve">
     <value>Αιτία</value>
   </data>
+  <data name="ReasonOfAppoinment" xml:space="preserve">
+    <value>Αιτία Ραντεβού</value>
+  </data>
   <data name="RecentlyAddedPatients" xml:space="preserve">
     <value>Πρόσφατα προστιθέμενοι ασθενείς</value>
   </data>
@@ -446,6 +455,9 @@
   </data>
   <data name="ThisActionCannotBeUndone" xml:space="preserve">
     <value>Αυτή η ενέργεια δεν μπορεί να αναιρεθεί</value>
+  </data>
+  <data name="TotalAppointments" xml:space="preserve">
+    <value>Συνολικά Ραντεβού</value>
   </data>
   <data name="Unauthorized" xml:space="preserve">
     <value>Μη εξουσιοδοτημένος</value>

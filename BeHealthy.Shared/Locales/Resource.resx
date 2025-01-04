@@ -150,6 +150,9 @@
   <data name="Appointments" xml:space="preserve">
     <value>Appointments</value>
   </data>
+  <data name="AppointmentsByReason" xml:space="preserve">
+    <value>Appointments by Reason</value>
+  </data>
   <data name="AppointmentStatus_Cancelled" xml:space="preserve">
     <value>Cancelled</value>
   </data>
@@ -327,6 +330,9 @@
   <data name="Number" xml:space="preserve">
     <value>Number</value>
   </data>
+  <data name="NumberOfAppointments" xml:space="preserve">
+    <value>Number of Appointments</value>
+  </data>
   <data name="Nurse" xml:space="preserve">
     <value>Nurse</value>
   </data>
@@ -393,6 +399,9 @@
   <data name="Reason" xml:space="preserve">
     <value>Reason</value>
   </data>
+  <data name="ReasonOfAppoinment" xml:space="preserve">
+    <value>Reason for Appointment</value>
+  </data>
   <data name="RecentlyAddedPatients" xml:space="preserve">
     <value>Recently Added Patients</value>
   </data>
@@ -446,6 +455,9 @@
   </data>
   <data name="ThisActionCannotBeUndone" xml:space="preserve">
     <value>This action cannot be undone</value>
+  </data>
+  <data name="TotalAppointments" xml:space="preserve">
+    <value>Total Appointments</value>
   </data>
   <data name="Unauthorized" xml:space="preserve">
     <value>Unauthorized</value>

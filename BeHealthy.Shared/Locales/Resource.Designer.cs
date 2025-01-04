@@ -160,6 +160,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Appointments by Reason.
+        /// </summary>
+        public static string AppointmentsByReason {
+            get {
+                return ResourceManager.GetString("AppointmentsByReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancelled.
         /// </summary>
         public static string AppointmentStatus_Cancelled {
@@ -691,6 +700,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number of Appointments.
+        /// </summary>
+        public static string NumberOfAppointments {
+            get {
+                return ResourceManager.GetString("NumberOfAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nurse.
         /// </summary>
         public static string Nurse {
@@ -889,6 +907,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reason for Appointment.
+        /// </summary>
+        public static string ReasonOfAppoinment {
+            get {
+                return ResourceManager.GetString("ReasonOfAppoinment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recently Added Patients.
         /// </summary>
         public static string RecentlyAddedPatients {
@@ -1047,6 +1074,15 @@ namespace BeHealthy.Shared.Locales {
         public static string ThisActionCannotBeUndone {
             get {
                 return ResourceManager.GetString("ThisActionCannotBeUndone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Appointments.
+        /// </summary>
+        public static string TotalAppointments {
+            get {
+                return ResourceManager.GetString("TotalAppointments", resourceCulture);
             }
         }
         
