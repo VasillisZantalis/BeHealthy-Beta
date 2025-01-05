@@ -59,7 +59,7 @@ public class DoctorServiceTests
             }
         };
 
-        _mockDoctorRepository.Setup(repo => repo.GetAllDoctorsAsync()).ReturnsAsync(doctors);
+        _mockUnitOfWork.Setup(uow => uow.DoctorRepository.GetAllDoctorsAsync()).ReturnsAsync(doctors);
 
         // Act
         var result = await _sut.GetAllDoctorsAsync();
@@ -68,5 +68,51 @@ public class DoctorServiceTests
         Assert.NotNull(result);
         Assert.IsAssignableFrom<IEnumerable<DoctorDto>>(result);
         Assert.Equal(doctors.Count, result.Count());
+    }
+
+    [Fact]
+    public async Task GetDoctorByIdAsync_ValidId_ReturnsMappedDoctor()
+    {
+        // Arrange
+        var doctorId = 1;
+        var doctor = new Doctor
+        {
+            Id = doctorId,
+            UserId = "1",
+            FirstName = "John",
+            LastName = "Doe",
+            SpecialtyId = 1,
+            DepartmentId = 1,
+            CreatedAt = DateTime.Now,
+            User = new ApplicationUser { PhoneNumber = "1234567890", Email = "john.doe@example.com" },
+            Specialty = new Specialty { Name = "Cardiology" }
+        };
+
+        _mockUnitOfWork.Setup(uow => uow.DoctorRepository.GetByIdAsync(doctorId)).ReturnsAsync(doctor);
+
+        // Act
+        var result = await _sut.GetDoctorByIdAsync(doctorId);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsType<DoctorDto>(result);
+        Assert.Equal(doctor.Id, result.Id);
+        Assert.Equal(doctor.FirstName, result.FirstName);
+        Assert.Equal(doctor.LastName, result.LastName);
+        Assert.Equal(doctor.User.Email, result.Email);
+    }
+
+    [Fact]
+    public async Task GetDoctorByIdAsync_InvalidId_ReturnsNull()
+    {
+        // Arrange
+        _mockUnitOfWork.Setup(uow => uow.DoctorRepository.GetByIdAsync(It.IsAny<int>()))
+                       .ReturnsAsync(() => null);
+
+        // Act
+        var result = await _sut.GetDoctorByIdAsync(9999);
+
+        // Assert
+        Assert.Null(result);
     }
 }

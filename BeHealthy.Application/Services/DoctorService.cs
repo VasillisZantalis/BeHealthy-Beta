@@ -22,9 +22,13 @@ public class DoctorService : IDoctorService
         return doctors.MapToDto();
     }
 
-    public async Task<DoctorDto> GetDoctorByIdAsync(int id)
+    public async Task<DoctorDto?> GetDoctorByIdAsync(int id)
     {
         var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(id);
+
+        if (doctor is null)
+            return null;
+
         return doctor.MapToDto();
     }
 
