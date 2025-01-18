@@ -20,10 +20,10 @@ public class NurseService : INurseService
         return nurses.MapToDto();
     }
 
-    public async Task<NurseDto> GetNurseByIdAsync(int id)
+    public async Task<NurseDto?> GetNurseByIdAsync(int id)
     {
         var nurse = await _unitOfWork.NurseRepository.GetByIdAsync(id);
-        return nurse.MapToDto();
+        return nurse?.MapToDto();
     }
 
     public async Task AddNurseAsync(NurseForCreationDto nurseDto)

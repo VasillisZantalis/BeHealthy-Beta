@@ -5,6 +5,8 @@ using BeHealthy.Domain.Interfaces;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Dtos.User;
 using BeHealthy.Application.Dtos.Specialty;
+using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Domain.Entities;
 
 namespace BeHealthy.Application.Services;
 
@@ -23,10 +25,10 @@ public class DoctorService : IDoctorService
         return doctors.MapToDto();
     }
 
-    public async Task<DoctorDto> GetDoctorByIdAsync(int id)
+    public async Task<DoctorDto?> GetDoctorByIdAsync(int id)
     {
         var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(id);
-        return doctor.MapToDto();
+        return doctor?.MapToDto();
     }
 
     public async Task AddDoctorAsync(DoctorForCreationDto doctorDto)
@@ -75,6 +77,46 @@ public class DoctorService : IDoctorService
         };
 
         return profile;
+    }
+
+    public async Task<IEnumerable<PatientDto>> GetMyPatientsAsync(string userId)
+    {
+        var patients = new List<Patient>();
+
+        var doctor = await _unitOfWork.DoctorRepository.GetDoctorByUserIdAsync(userId);
+
+        if (doctor is null) 
+            return Enumerable.Empty<PatientDto>();
+
+        var doctorAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctor.Id);
+
+        List<int> patientIds = doctorAppointments
+            .Select(x => x.PatientId)
+            .Distinct()
+            .ToList();
+
+        if (patientIds.Any())
+        {
+            var treatedPatients = await _unitOfWork.PatientRepository.FindAsync(w => patientIds.Contains(w.Id));
+            patients.AddRange(treatedPatients);
+        }
+
+        var isSupervisorDoctor = await _unitOfWork.DoctorRepository.IsDoctorHeadOfDepartmentAsync(doctor.Id);
+
+        if (isSupervisorDoctor)
+        {
+            var departmentId = doctor.DepartmentId ?? 0;
+            var departmentPatients = await _unitOfWork.PatientRepository.GetPatientsByDepartmentIdAsync(departmentId);
+
+            patients.AddRange(departmentPatients);
+        }
+
+        var distinctPatients = patients
+            .GroupBy(x => x.Id)
+            .Select(x => x.First())
+            .ToList();
+
+        return distinctPatients.MapToDto();
     }
 }
 

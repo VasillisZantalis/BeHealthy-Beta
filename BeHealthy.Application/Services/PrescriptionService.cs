@@ -22,10 +22,10 @@ public class PrescriptionService : IPrescriptionService
         return prescriptions.MapToDto();
     }
 
-    public async Task<PrescriptionDto> GetPrescriptionByIdAsync(int id)
+    public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id)
     {
         var prescription = await _unitOfWork.PrescriptionRepository.GetByIdAsync(id);
-        return prescription.MapToDto();
+        return prescription?.MapToDto();
     }
 
     public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)

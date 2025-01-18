@@ -20,10 +20,10 @@ public class RoomService : IRoomService
         return rooms.MapToDto();
     }
 
-    public async Task<RoomDto> GetRoomByIdAsync(int id)
+    public async Task<RoomDto?> GetRoomByIdAsync(int id)
     {
         var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(id);
-        return room.MapToDto();
+        return room?.MapToDto();
     }
 
     public async Task AddRoomAsync(RoomForCreationDto roomDto)

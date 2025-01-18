@@ -22,10 +22,10 @@ public class PatientService : IPatientService
         return patients.MapToDto();
     }
 
-    public async Task<PatientDto> GetPatientByIdAsync(int id)
+    public async Task<PatientDto?> GetPatientByIdAsync(int id)
     {
         var patient = await _unitOfWork.PatientRepository.GetByIdAsync(id);
-        return patient.MapToDto();
+        return patient?.MapToDto();
     }
 
     public async Task AddPatientAsync(PatientForCreationDto patientDto)
