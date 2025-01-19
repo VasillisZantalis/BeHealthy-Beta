@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
+using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Dtos.User;
@@ -30,10 +31,19 @@ public class DoctorService : IDoctorService
         return doctor?.MapToDto();
     }
 
-    public async Task AddDoctorAsync(DoctorForCreationDto doctorDto)
+    public async Task<ServiceResponse> AddDoctorAsync(DoctorForCreationDto doctorDto)
     {
-        var doctor = doctorDto.MapToDomain();
-        await _unitOfWork.DoctorRepository.AddAsync(doctor);
+        try
+        {
+            var doctor = doctorDto.MapToDomain();
+            await _unitOfWork.DoctorRepository.AddAsync(doctor);
+
+            return ServiceResponse.Successful();
+        }
+        catch (Exception ex)
+        {
+            return ServiceResponse.Failed();
+        }
     }
 
     public async Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctorDto)

@@ -143,18 +143,16 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, EnumExtensions.GetDisplayName(UserRole.Patient));
-
-        var userId = await UserManager.GetUserIdAsync(user);
+        await UserManager.AddToRoleAsync(user, nameof(UserRole.Patient));
 
         var patientForCreationDto = new PatientForCreationDto
-            {
-                FirstName = Input.FirstName,
-                LastName = Input.LastName,
-                UserId = userId,
-                DepartmentId = _departmentId,
-                Image = Input.Image
-            };
+        {
+            FirstName = Input.FirstName,
+            LastName = Input.LastName,
+            UserId = user.Id,
+            DepartmentId = _departmentId,
+            Image = Input.Image
+        };
 
         await PatientService.AddPatientAsync(patientForCreationDto);
 
