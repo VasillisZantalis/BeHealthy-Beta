@@ -162,7 +162,6 @@
 
         if (!result.Succeeded)
         {
-            // If user creation fails, roll back the transaction
             _inProgress = false;
             identityErrors = result.Errors;
             var errors = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
@@ -186,7 +185,6 @@
 
         var doctorCreationResult = await DoctorService.AddDoctorAsync(doctorForCreationDto);
 
-        // If doctor creation fails, delete the ApplicationUser and rollback the transaction
         if (!doctorCreationResult.Success)
         {
             await UserManager.DeleteAsync(user);
