@@ -4,11 +4,14 @@
 @inherits BasePage
 
 <div class="d-flex flex-row gap-3">
-    <div class="">
-        <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreateDoctor">
-            <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-        </button>
-    </div>
+    @if (_userRole == UserRole.Admin)
+    {
+        <div class="">
+            <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreateDoctor">
+                <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
+            </button>
+        </div>
+    }
     <div class="">
         <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
             <option value="Card">@Resource.Card</option>

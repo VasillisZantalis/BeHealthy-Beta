@@ -86,20 +86,15 @@ public partial class Patients : BasePage
         await _quickGrid!.RefreshDataAsync();
     }
 
-    public async Task LoadPatients(PatientSearchingParameters filters, string? doctorId, UserRole? userRole = UserRole.Admin)
+    private async Task LoadPatients(PatientSearchingParameters filters, string? doctorId, UserRole? userRole = UserRole.Admin)
     {
         LoaderService.SetLoader(true);
 
-        switch (userRole)
+        _patients = userRole switch
         {
-            case UserRole.Doctor when doctorId is not null:
-                _patients = (await _doctorService.GetMyPatientsAsync(doctorId)).AsQueryable();
-                break;
-            default:
-                _patients = (await _patientService.GetAllPatientsAsync(filters)).AsQueryable();
-                break;
-        }
-
+            UserRole.Doctor when doctorId is not null => (await _doctorService.GetMyPatientsAsync(doctorId)).AsQueryable(),
+            _ => (await _patientService.GetAllPatientsAsync(filters)).AsQueryable()
+        };
 
         LoaderService.SetLoader(false);
     }

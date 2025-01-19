@@ -1,12 +1,11 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
 using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Interfaces;
-using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Dtos.User;
-using BeHealthy.Application.Dtos.Specialty;
 using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Application.Dtos.User;
+using BeHealthy.Application.Mappings;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
+using BeHealthy.Domain.Interfaces;
 
 namespace BeHealthy.Application.Services;
 
@@ -62,7 +61,7 @@ public class DoctorService : IDoctorService
     {
         var doctor = await _unitOfWork.DoctorRepository.GetDoctorByUserIdAsync(userId);
 
-        if (doctor is null) return null; 
+        if (doctor is null) return null;
 
         var profile = new ProfileDto
         {
@@ -85,7 +84,7 @@ public class DoctorService : IDoctorService
 
         var doctor = await _unitOfWork.DoctorRepository.GetDoctorByUserIdAsync(userId);
 
-        if (doctor is null) 
+        if (doctor is null)
             return Enumerable.Empty<PatientDto>();
 
         var doctorAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctor.Id);

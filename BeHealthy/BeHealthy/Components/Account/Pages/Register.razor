@@ -217,7 +217,7 @@
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
-            SpecialtyId = Input.SpecialtyId,
+            SpecialtyId = Input.SpecialtyId > 0 ? Input.SpecialtyId : null,
             UserId = userId,
             DepartmentId = _departmentId
         };
