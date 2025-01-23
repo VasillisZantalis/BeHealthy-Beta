@@ -1,4 +1,5 @@
 ﻿@page "/doctors/create"
+@using BeHealthy.Infrastructure.Data
 @attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -9,6 +10,7 @@
 @inject IDepartmentService DepartmentService
 @inject ISpecialtyService SpecialtyService
 @inject NavigationManager NavigationManager
+@inject ApplicationDbContext _dbContext
 
 <PageTitle>@Resource.Create</PageTitle>
 
@@ -167,21 +169,29 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, EnumExtensions.GetDisplayName(UserRole.Doctor));
+        await UserManager.AddToRoleAsync(user, nameof(UserRole.Doctor));
 
-        var userId = await UserManager.GetUserIdAsync(user);
+        await _dbContext.SaveChangesAsync();
 
         var doctorForCreationDto = new DoctorForCreationDto
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
             SpecialtyId = Input.SpecialtyId > 0 ? Input.SpecialtyId : null,
-            UserId = userId,
+            UserId = user.Id,
             DepartmentId = _departmentId > 0 ? _departmentId : null,
             Image = Input.Image
         };
 
-        await DoctorService.AddDoctorAsync(doctorForCreationDto);
+        var doctorCreationResult = await DoctorService.AddDoctorAsync(doctorForCreationDto);
+
+        if (!doctorCreationResult.Success)
+        {
+            await UserManager.DeleteAsync(user);
+            _inProgress = false;
+            _alert.ShowFailed(Resource.SomethingWentWrong);
+            return;
+        }
 
         _inProgress = false;
         _alert.ShowSuccess(Resource.Success);

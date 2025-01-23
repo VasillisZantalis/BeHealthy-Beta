@@ -119,4 +119,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Set<T>().CountAsync();
     }
+
+    public async Task<T?> GetByUserIdAsync(string userId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await context.Set<T>().FirstOrDefaultAsync(e => EF.Property<string>(e, "UserId") == userId);
+    }
 }

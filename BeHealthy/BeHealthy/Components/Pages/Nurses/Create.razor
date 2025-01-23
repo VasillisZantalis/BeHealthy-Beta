@@ -143,15 +143,13 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, EnumExtensions.GetDisplayName(UserRole.Nurse));
-
-        var userId = await UserManager.GetUserIdAsync(user);
+        await UserManager.AddToRoleAsync(user, nameof(UserRole.Nurse));
 
         var nurseForCreationDto = new NurseForCreationDto
             {
                 FirstName = Input.FirstName,
                 LastName = Input.LastName,
-                UserId = userId,
+                UserId = user.Id,
                 DepartmentId = _departmentId
             };
 
