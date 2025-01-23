@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Domain.Interfaces.Repositories;
@@ -15,7 +16,7 @@ public class DoctorServiceTests
 {
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IDoctorRepository> _mockDoctorRepository;
-    private readonly DoctorService _sut;
+    private readonly IDoctorService _sut;
 
     public DoctorServiceTests()
     {
