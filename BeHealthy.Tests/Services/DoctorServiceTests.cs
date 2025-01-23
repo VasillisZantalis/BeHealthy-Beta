@@ -1,6 +1,7 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Components.Pages.Doctors;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Domain.Interfaces.Repositories;
@@ -28,8 +29,10 @@ public class DoctorServiceTests
         _sut = new DoctorService(_mockUnitOfWork.Object);
     }
 
+    #region GetAllDoctorsAsync
+
     [Fact]
-    public async Task GetAllDoctorsAsync_ReturnsMappedDoctors()
+    public async Task GetAllDoctorsAsync_ListFilled_ReturnsListDoctorDto()
     {
         // Arrange
         var doctors = new List<Doctor>
@@ -70,6 +73,40 @@ public class DoctorServiceTests
         Assert.IsAssignableFrom<IEnumerable<DoctorDto>>(result);
         Assert.Equal(doctors.Count, result.Count());
     }
+
+    [Fact]
+    public async Task GetAllDoctorsAsync_EmptyList_ReturnsEmptyListOfDoctorDto()
+    {
+        //Arrange
+        _mockDoctorRepository
+            .Setup(repo => repo.GetAllDoctorsAsync())
+            .ReturnsAsync(new List<Doctor>());
+
+        //Act
+        var result = await _sut.GetAllDoctorsAsync();
+
+        //Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task GetAllDoctorsAsync_RepositoryCalledOnce()
+    {
+        //Arrange
+        _mockDoctorRepository
+            .Setup(repo => repo.GetAllDoctorsAsync())
+            .ReturnsAsync(new List<Doctor>());
+
+        //Act
+        await _sut.GetAllDoctorsAsync();
+
+        //Assert
+        _mockDoctorRepository.Verify(repo => repo.GetAllDoctorsAsync(), Times.Once);
+    }
+
+    #endregion
+
+    #region GetDoctorByIdAsync
 
     [Fact]
     public async Task GetDoctorByIdAsync_ValidId_ReturnsMappedDoctor()
@@ -116,4 +153,6 @@ public class DoctorServiceTests
         // Assert
         Assert.Null(result);
     }
+
+    #endregion
 }
