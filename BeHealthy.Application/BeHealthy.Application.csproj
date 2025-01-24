@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BeHealthy.Domain\BeHealthy.Domain.csproj" />
-    <ProjectReference Include="..\BeHealthy.Infrastructure\BeHealthy.Infrastructure.csproj" />
     <ProjectReference Include="..\BeHealthy.Shared\BeHealthy.Shared.csproj" />
   </ItemGroup>
 

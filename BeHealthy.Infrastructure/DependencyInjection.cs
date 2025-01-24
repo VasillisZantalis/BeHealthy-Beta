@@ -1,9 +1,11 @@
-﻿using BeHealthy.Domain.Entities;
+﻿using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Infrastructure.Data;
 using BeHealthy.Infrastructure.Localization;
 using BeHealthy.Infrastructure.Repositories;
+using BeHealthy.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +32,8 @@ public static class DependencyInjection
         services.AddScoped<IPrivilegeRepository, PrivilegeRepository>();
         services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
 
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<IdentityRole>()
