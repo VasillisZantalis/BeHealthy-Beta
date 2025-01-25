@@ -25,7 +25,7 @@
                         </NavLink>
                     </div>
 
-                    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor }.ToRoleString())">
+                    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Patient }.ToRoleString())">
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="@(RoutingEndpoints.DOCTORS_PAGE)">
                                 <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-5" />&nbsp; @Resource.Doctors

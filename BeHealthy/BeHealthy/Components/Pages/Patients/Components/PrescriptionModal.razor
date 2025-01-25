@@ -1,4 +1,4 @@
-﻿
+﻿@rendermode @(new InteractiveServerRenderMode(false))
 @inject IPrescriptionService PrescriptionService
 @inject NavigationManager NavigationManager
 
@@ -28,12 +28,12 @@
                             </div>
                             <div class="form">
                                 <label class="fw-bold" for="datePrescribed">@Resource.DatePrescribed</label>
-                                <InputDate id="datePrescribed" class="form-control" @bind-Value="_prescriptionDto.DatePrescribed" disabled="@_lockNonModifiable" />
+                                <InputDate id="datePrescribed" class="form-control" @bind-Value="_prescriptionDto.DatePrescribed" disabled="@_lockDatePrescribed" />
                                 <ValidationMessage For="@(() => _prescriptionDto.DatePrescribed)" />
                             </div>
                             <div class="">
                                 <label class="fw-bold" for="doctorIdSelect">@Resource.Doctor</label>
-                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_prescriptionDto.DoctorId" disabled="@_lockNonModifiable">
+                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_prescriptionDto.DoctorId" disabled="@_lockDoctorsDropdown">
                                     @foreach (var doctor in _doctorsSelect)
                                     {
                                         <option value="@doctor.Value">@doctor.Text</option>
@@ -60,13 +60,13 @@
     [Parameter, EditorRequired]
     public EventCallback<bool> Successful { get; set; }
 
-    private bool _lockNonModifiable = default;
-
     [SupplyParameterFromForm]
     private PrescriptionDto _prescriptionDto { get; set; } = new();
 
     [Parameter, EditorRequired]
     public int? PrescriptionId { get; set; }
+
+    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private bool _showModal { get; set; }
     private bool _isEditMode => PrescriptionId.HasValue;
@@ -75,31 +75,46 @@
     private string ModalTitle => _isEditMode ? Resource.Edit : Resource.Create;
     private List<SelectItem> _doctorsSelect = new();
 
+    private UserRole? _userRole;
+    private string? _userId;
+
+    private bool _lockDoctorsDropdown => _userRole == UserRole.Doctor;
+    private bool _lockDatePrescribed => PrescriptionId.HasValue;
+
+
+
     [Inject]
     private IDoctorService _doctorService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
-
-        _doctorsSelect = _doctors.Select(s => new SelectItem
-        {
-            Value = s.Id,
-            Text = s.FullName
-        }).ToList();
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        _userId = authState.User.GetUserId();
+        _userRole = authState.User.GetUserRoleEnum();
     }
 
     protected override async Task OnParametersSetAsync()
     {
         _prescriptionDto = new();
-        _lockNonModifiable = false;
+
+        var doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+
+        _doctorsSelect = doctors.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.FullName
+        }).ToList();
 
         _prescriptionDto.DatePrescribed = !_isEditMode ? DateTime.Now : DateTime.Now;
 
         if (PrescriptionId.HasValue)
         {
-            _prescriptionDto = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value);
-            _lockNonModifiable = true;
+            _prescriptionDto = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value) ?? new();
+        }
+
+        if (_prescriptionDto != null && _userRole == UserRole.Doctor && doctors.Any())
+        {
+            _prescriptionDto.DoctorId = doctors.FirstOrDefault(w => w.UserId == _userId)!.Id;
         }
     }
 

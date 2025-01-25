@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using BeHealthy.Application.Extensions;
 
-namespace BeHealthy.Components.Pages;
+namespace BeHealthy.Components.Pages.Dashboard;
 
 public partial class Home : BasePage
 {

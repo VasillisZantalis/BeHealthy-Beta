@@ -1,10 +1,7 @@
 ﻿using BeHealthy.Application.Dtos.MedicalRecord;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Interfaces.Repositories;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Application.Mappings;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Interfaces;
-using BeHealthy.Infrastructure.Repositories;
 
 namespace BeHealthy.Application.Services;
 
@@ -23,10 +20,10 @@ public class MedicalRecordService : IMedicalRecordService
         return medicalRecords.MapToDto();
     }
 
-    public async Task<MedicalRecordDto> GetMedicalRecordByIdAsync(int id)
+    public async Task<MedicalRecordDto?> GetMedicalRecordByIdAsync(int id)
     {
         var medicalRecord = await _unitOfWork.MedicalRecordRepository.GetByIdAsync(id);
-        return medicalRecord.MapToDto();
+        return medicalRecord?.MapToDto();
     }
 
     public async Task AddMedicalRecordAsync(MedicalRecordForCreationDto medicalRecordDto)

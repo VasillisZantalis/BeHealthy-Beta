@@ -10,6 +10,7 @@ public class PrescriptionDto
     public int PatientId { get; set; }
     public PatientSimpleDto Patient { get; set; } = new();
     [Required]
+    [Range(1, int.MaxValue, ErrorMessage = "Doctor is required")]
     public int DoctorId { get; set; }
     public DoctorSimpleDto Doctor { get; set; } = new();
     [Required]

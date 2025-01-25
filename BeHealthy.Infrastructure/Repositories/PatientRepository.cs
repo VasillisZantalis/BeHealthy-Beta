@@ -61,4 +61,14 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
             await context.SaveChangesAsync();
         }
     }
+
+    public async Task<IEnumerable<Patient>> GetPatientsByDepartmentIdAsync(int departmentId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        return await context.Patients
+            .AsNoTracking()
+            .Where(w => w.DepartmentId == departmentId)
+            .ToListAsync();
+    }
 }

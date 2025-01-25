@@ -22,10 +22,10 @@ public class PrescriptionService : IPrescriptionService
         return prescriptions.MapToDto();
     }
 
-    public async Task<PrescriptionDto> GetPrescriptionByIdAsync(int id)
+    public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id)
     {
         var prescription = await _unitOfWork.PrescriptionRepository.GetByIdAsync(id);
-        return prescription.MapToDto();
+        return prescription?.MapToDto();
     }
 
     public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)
@@ -37,7 +37,7 @@ public class PrescriptionService : IPrescriptionService
 
             return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return ServiceResponse.Failed();
         }
@@ -67,7 +67,7 @@ public class PrescriptionService : IPrescriptionService
 
             return ServiceResponse.Successful();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return ServiceResponse.Failed();
         }

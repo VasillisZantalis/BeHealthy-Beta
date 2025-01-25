@@ -1,9 +1,12 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
+using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Shared.Parameters;
+using System.Collections.Generic;
 
 namespace BeHealthy.Application.Services;
 
@@ -22,10 +25,10 @@ public class PatientService : IPatientService
         return patients.MapToDto();
     }
 
-    public async Task<PatientDto> GetPatientByIdAsync(int id)
+    public async Task<PatientDto?> GetPatientByIdAsync(int id)
     {
         var patient = await _unitOfWork.PatientRepository.GetByIdAsync(id);
-        return patient.MapToDto();
+        return patient?.MapToDto();
     }
 
     public async Task AddPatientAsync(PatientForCreationDto patientDto)
@@ -49,5 +52,30 @@ public class PatientService : IPatientService
     {
         var patientAppointments = await _unitOfWork.PatientRepository.GetPatientAppointmentsByUserIdAsync(userId);
         return patientAppointments.MapToDto();
+    }
+
+    public async Task<IEnumerable<DoctorDto>> GetMyDoctorsAsync(string userId)
+    {
+        var doctors = new List<Doctor>();
+
+        var patient = await _unitOfWork.PatientRepository.GetByUserIdAsync(userId);
+
+        if (patient is null)
+            return Enumerable.Empty<DoctorDto>();
+
+        var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id);
+
+        var doctorIds = patientAppointments
+            .Select(s => s.DoctorId)
+            .Distinct()
+            .ToList();
+
+        if (doctorIds.Any())
+        {
+            var treatingDoctors = await _unitOfWork.DoctorRepository.FindAsync(w => doctorIds.Contains(w.Id));
+            doctors.AddRange(treatingDoctors);
+        }
+
+        return doctors.MapToDto();
     }
 }

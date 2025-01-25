@@ -20,7 +20,6 @@ public static class DependencyInjection
         services.AddScoped<IAppSettingsService, AppSettingsService>();
         services.AddScoped<IPrivilegeService, PrivilegeService>();
         services.AddScoped<ISpecialtyService, SpecialtyService>();
-        services.AddScoped<IValidationService, ValidationService>();
 
         return services;
     }

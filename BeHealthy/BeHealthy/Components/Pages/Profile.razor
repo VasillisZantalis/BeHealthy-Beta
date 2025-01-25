@@ -1,6 +1,6 @@
 ﻿@page "/profile"
 @using BeHealthy.Application.Dtos.User
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IDoctorService DoctorService
@@ -42,13 +42,14 @@
 @code {
     private ProfileDto _profileDto { get; set; } = new();
     private UserRole? _userRole;
+    private string? _userId;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var userId = authState.User.GetUserId();
+        _userId = authState.User.GetUserId() ?? string.Empty;
 
-        var user = await UserManager.FindByIdAsync(userId);
+        var user = await UserManager.FindByIdAsync(_userId);
 
         if (user is null)
             NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
@@ -57,12 +58,12 @@
 
         switch (_userRole)
         {
-            case UserRole.Doctor when userId is not null:
-                _profileDto = await GetDoctorProfileByUserId(userId);
+            case UserRole.Doctor when _userId is not null:
+                _profileDto = await GetDoctorProfileByUserId(_userId);
                 break;
-            case UserRole.Nurse when userId is not null:
+            case UserRole.Nurse when _userId is not null:
                 break;
-            case UserRole.Patient when userId is not null:
+            case UserRole.Patient when _userId is not null:
                 break;
             default:
                 break;
@@ -82,7 +83,7 @@
 
     private async Task UpdateProfile()
     {
-        var user = await UserManager.FindByIdAsync(_profileDto.UserId);
+        var user = await UserManager.FindByIdAsync(_userId ?? string.Empty);
 
         if (user != null)
         {

@@ -47,7 +47,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
                 .Include(i => i.Nurse)
-                .Where(a => a.Doctor!.UserId == userId)
+                .Where(a => a.Doctor != null && a.Doctor.UserId == userId)
                 .ToListAsync();
     }
 
@@ -57,17 +57,13 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 
         return await context.Doctors
             .Include(i => i.User)
-            .Where(w => w.UserId == userId)
-            .Select(s => new Doctor
-            {
-                Id = s.Id,
-                FirstName = s.FirstName,
-                LastName = s.LastName,
-                Specialty = s.Specialty,
-                UserId = userId,
-                Image = s.Image,
-                User = s.User
-            })
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(w => w.UserId == userId);
+    }
+
+    public async Task<bool> IsDoctorHeadOfDepartmentAsync(int doctorId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        return await context.Departments.AnyAsync(w => w.HeadOfDepartmentId == doctorId);
     }
 }

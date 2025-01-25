@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
 using BeHealthy.Domain;
@@ -15,6 +16,7 @@ namespace BeHealthy.Components.Pages.Patients;
 public partial class Patients : BasePage
 {
     [Inject] IPatientService _patientService { get; set; } = default!;
+    [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -49,7 +51,12 @@ public partial class Patients : BasePage
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-        await LoadPatients(_filters);
+
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var userRole = authState.User.GetUserRoleEnum();
+        var doctorId = authState.User.GetUserId();
+
+        await LoadPatients(_filters, doctorId, userRole);
 
         SetBreadcrumbs();
 
@@ -74,15 +81,21 @@ public partial class Patients : BasePage
     {
         _filters = filters;
 
-        await LoadPatients(_filters);
+        await LoadPatients(_filters, null, null);
 
         await _quickGrid!.RefreshDataAsync();
     }
 
-    public async Task LoadPatients(PatientSearchingParameters filters)
+    private async Task LoadPatients(PatientSearchingParameters filters, string? doctorId, UserRole? userRole = UserRole.Admin)
     {
         LoaderService.SetLoader(true);
-        _patients = (await _patientService.GetAllPatientsAsync(filters)).AsQueryable();
+
+        _patients = userRole switch
+        {
+            UserRole.Doctor when doctorId is not null => (await _doctorService.GetMyPatientsAsync(doctorId)).AsQueryable(),
+            _ => (await _patientService.GetAllPatientsAsync(filters)).AsQueryable()
+        };
+
         LoaderService.SetLoader(false);
     }
 

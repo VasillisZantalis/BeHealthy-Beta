@@ -121,7 +121,7 @@
         }).ToList();
         _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
-        _doctorForUpdateDto = doctor.MapToUpdateDto();
+        _doctorForUpdateDto = doctor?.MapToUpdateDto() ?? new();
     }
 
     private void SetBreadcrumbs()

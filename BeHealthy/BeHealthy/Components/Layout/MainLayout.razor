@@ -17,7 +17,7 @@
                         <Authorized>
                             <div class="d-flex flex-row align-items-center ms-auto gap-3">
                                 <CultureSelector />
-                                <p class="m-0 p-0">@Resource.Hello, @context.User.Identity?.Name</p>
+                                <a class="m-0 p-0 nav-link" href="/profile" title="profile">@Resource.Hello, @context.User.Identity?.Name</a>
                                 <div class="nav-item clickable">
                                     <form action="/logout" method="post">
                                         <AntiforgeryToken />

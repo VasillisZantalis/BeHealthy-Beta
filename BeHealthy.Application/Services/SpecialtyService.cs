@@ -20,10 +20,10 @@ public class SpecialtyService : ISpecialtyService
         return specialties.MapToDto();
     }
 
-    public async Task<SpecialtyDto> GetSpecialtyByIdAsync(int id)
+    public async Task<SpecialtyDto?> GetSpecialtyByIdAsync(int id)
     {
         var specialty = await _unitOfWork.SpecialtyRepository.GetByIdAsync(id);
-        return specialty.MapToDto();
+        return specialty?.MapToDto();
     }
 
     public async Task AddSpecialtyAsync(SpecialtyForCreationDto specialtyForCreationDto)

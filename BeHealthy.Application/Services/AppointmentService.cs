@@ -12,12 +12,10 @@ namespace BeHealthy.Application.Services;
 public class AppointmentService : IAppointmentService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IValidationService _validationService;
 
-    public AppointmentService(IUnitOfWork unitOfWork, IValidationService validationService)
+    public AppointmentService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _validationService = validationService;
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync()
@@ -44,10 +42,10 @@ public class AppointmentService : IAppointmentService
         return appointments.MapToDto();
     }
 
-    public async Task<AppointmentDto> GetAppointmentByIdAsync(int id)
+    public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
     {
         var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id);
-        return appointment.MapToDto();
+        return appointment?.MapToDto();
     }
 
     public async Task<ServiceResponse> AddAppointmentAsync(AppointmentForCreationDto appointmentDto)

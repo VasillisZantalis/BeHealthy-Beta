@@ -95,7 +95,7 @@
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
-        _nurseForUpdateDto = nurse.MapToUpdateDto();
+        _nurseForUpdateDto = nurse?.MapToUpdateDto() ?? new();
     }
 
     private void SetBreadcrumbs()

@@ -21,6 +21,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await context.Set<T>().ToListAsync();
     }
 
+    public async Task<IEnumerable<T>> GetAllWithIncludesAsync(params Expression<Func<T, object>>[] includes)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        var query = context.Set<T>().AsQueryable();
+        query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+        return await query.ToListAsync();
+    }
+
     public async Task<IEnumerable<T>> GetAllPagedAsync(int? pageNumber = null, int? pageSize = null)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
@@ -46,6 +56,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         using var context = _contextFactory.CreateDbContext();
         return context.Set<T>().AsQueryable();
+    }
+
+    public async Task<T?> GetByIdWithIncludes(int id, params Expression<Func<T, object>>[] includes)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        var query = context.Set<T>().AsQueryable();
+        query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+        return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
     }
 
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, bool trackChanges = false)
@@ -79,7 +99,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             context.Set<T>().Remove(entity);
             await context.SaveChangesAsync();
         }
-
     }
 
     public async Task DeleteEntityAsync(T entity)
@@ -99,5 +118,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         using var context = await _contextFactory.CreateDbContextAsync();
         return await context.Set<T>().CountAsync();
+    }
+
+    public async Task<T?> GetByUserIdAsync(string userId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await context.Set<T>().FirstOrDefaultAsync(e => EF.Property<string>(e, "UserId") == userId);
     }
 }

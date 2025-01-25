@@ -1,6 +1,6 @@
 ﻿@page "/patients/edit/{PatientId:int}"
 @using BeHealthy.Components.Pages.Patients.Components
-@attribute [Authorize(Roles = nameof(UserRole.Admin))]
+@attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)}")]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
@@ -118,7 +118,7 @@
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
-        _patientForUpdateDto = patient.MapToDtoForUpdate();
+        _patientForUpdateDto = patient?.MapToDtoForUpdate() ?? new();
     }
 
     async Task OnFileChange(InputFileChangeEventArgs e)

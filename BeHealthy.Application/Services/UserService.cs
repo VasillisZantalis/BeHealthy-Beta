@@ -1,7 +1,6 @@
 ﻿using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain;
 using BeHealthy.Domain.Interfaces;
-using BeHealthy.Infrastructure.Repositories;
 
 namespace BeHealthy.Application.Services;
 

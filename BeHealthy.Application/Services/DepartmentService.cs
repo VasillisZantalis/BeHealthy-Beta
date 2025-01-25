@@ -3,6 +3,8 @@ using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
+using BeHealthy.Application.Dtos.Common;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -27,20 +29,44 @@ public class DepartmentService : IDepartmentService
         return department.MapToDto();
     }
 
-    public async Task AddDepartmentAsync(DepartmentForCreationDto departmentDto)
+    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentForCreationDto departmentDto)
     {
-        var department = departmentDto.MapToDomain();
-        await _unitOfWork.DepartmentRepository.AddAsync(department);
+        try
+        {
+            var department = departmentDto.MapToDomain();
+            await _unitOfWork.DepartmentRepository.AddAsync(department);
+            return ServiceResponse.Successful();
+        }
+        catch (Exception)
+        {
+            return ServiceResponse.Failed(Resource.SomethingWentWrong);
+        }
     }
 
-    public async Task UpdateDepartmentAsync(DepartmentForUpdateDto departmentDto)
+    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentForUpdateDto departmentDto)
     {
-        var department = departmentDto.MapToDomain();
-        await _unitOfWork.DepartmentRepository.UpdateAsync(department);
+        try
+        {
+            var department = departmentDto.MapToDomain();
+            await _unitOfWork.DepartmentRepository.UpdateAsync(department);
+            return ServiceResponse.Successful();
+        }
+        catch (Exception)
+        {
+            return ServiceResponse.Failed(Resource.SomethingWentWrong);
+        }
     }
 
-    public async Task DeleteDepartmentAsync(int id)
+    public async Task<ServiceResponse> DeleteDepartmentAsync(int id)
     {
-        await _unitOfWork.DepartmentRepository.DeleteAsync(id);
+        try
+        {
+            await _unitOfWork.DepartmentRepository.DeleteAsync(id);
+            return ServiceResponse.Successful();
+        }
+        catch (Exception)
+        {
+            return ServiceResponse.Failed(Resource.SomethingWentWrong);
+        }
     }
 }

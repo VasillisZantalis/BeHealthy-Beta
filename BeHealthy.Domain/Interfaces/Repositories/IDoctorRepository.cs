@@ -9,4 +9,5 @@ public interface IDoctorRepository : IGenericRepository<Doctor>
     Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId);
     Task<Doctor?> GetDoctorByUserIdAsync(string userId);
     Task DeleteDoctorAsync(int id);
+    Task<bool> IsDoctorHeadOfDepartmentAsync(int doctorId);
 }

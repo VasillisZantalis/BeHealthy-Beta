@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
 using BeHealthy.Domain;
@@ -6,6 +7,7 @@ using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Components.Pages.Doctors;
@@ -13,7 +15,9 @@ namespace BeHealthy.Components.Pages.Doctors;
 public partial class Doctors : BasePage
 {
     [Inject] IDoctorService _doctorService { get; set; } = default!;
+    [Inject] IPatientService _patientsService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<DoctorDto> _doctors { get; set; } = default!;
 
@@ -21,8 +25,7 @@ public partial class Doctors : BasePage
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
-
-    private int deleteItemId;
+    private UserRole? _userRole;
 
     private PaginationState _paginationState = new();
 
@@ -32,7 +35,12 @@ public partial class Doctors : BasePage
 
         SetBreadcrumbs();
 
-        _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        _userRole = authState.User.GetUserRoleEnum();
+        var userId = authState.User.GetUserId();
+
+        await LoadDoctors(userId, _userRole);
+
         _paginationState.ItemsPerPage = 10;
         hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
         hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
@@ -50,12 +58,18 @@ public partial class Doctors : BasePage
         });
     }
 
-    private void OnPageSizeChanged(ChangeEventArgs e)
+    private async Task LoadDoctors(string? userId, UserRole? userRole = UserRole.Admin)
     {
-        if (e.Value is not null)
+        LoaderService.SetLoader(true);
+
+        _doctors = userRole switch
         {
-            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
-        }
+            UserRole.Patient when userId is not null => (await _patientsService.GetMyDoctorsAsync(userId)).ToList(),
+            _ => (await _doctorService.GetAllDoctorsAsync()).ToList()
+        };
+
+
+        LoaderService.SetLoader(false);
     }
 
     private void EditDoctor(int id)

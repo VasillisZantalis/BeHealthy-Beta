@@ -33,7 +33,7 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
                     .ThenInclude(n => n.User)
                     .Include(d => d.Rooms)
                     .Include(d => d.HeadOfDepartment)
-                    .ThenInclude(hd => hd.User)
+                    .ThenInclude(hd => hd != null ? hd.User : null)
                     .FirstAsync(x => x.Id == departmentId);
     }
 }
