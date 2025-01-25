@@ -6,9 +6,11 @@ using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Domain.Interfaces.Repositories;
 using Moq;
+using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BeHealthy.Tests.Services;
@@ -69,9 +71,9 @@ public class DoctorServiceTests
         var result = await _sut.GetAllDoctorsAsync();
 
         // Assert
-        Assert.NotNull(result);
-        Assert.IsAssignableFrom<IEnumerable<DoctorDto>>(result);
-        Assert.Equal(doctors.Count, result.Count());
+        result.ShouldNotBeNull();
+        result.ShouldBeAssignableTo<IEnumerable<DoctorDto>>();
+        result.Count().ShouldBe(doctors.Count);
     }
 
     [Fact]
@@ -86,7 +88,7 @@ public class DoctorServiceTests
         var result = await _sut.GetAllDoctorsAsync();
 
         //Assert
-        Assert.Empty(result);
+        result.ShouldBeEmpty();
     }
 
     [Fact]
@@ -132,12 +134,12 @@ public class DoctorServiceTests
         var result = await _sut.GetDoctorByIdAsync(doctorId);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.IsType<DoctorDto>(result);
-        Assert.Equal(doctor.Id, result.Id);
-        Assert.Equal(doctor.FirstName, result.FirstName);
-        Assert.Equal(doctor.LastName, result.LastName);
-        Assert.Equal(doctor.User.Email, result.Email);
+        result.ShouldNotBeNull();
+        result.ShouldBeOfType<DoctorDto>();
+        result.Id.ShouldBe(doctor.Id);
+        result.FirstName.ShouldBe(doctor.FirstName);
+        result.LastName.ShouldBe(doctor.LastName);
+        result.Email.ShouldBe(doctor.User.Email);
     }
 
     [Fact]
@@ -151,7 +153,7 @@ public class DoctorServiceTests
         var result = await _sut.GetDoctorByIdAsync(9999);
 
         // Assert
-        Assert.Null(result);
+        result.ShouldBeNull();
     }
 
     #endregion
