@@ -3,6 +3,7 @@ using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Helpers;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Application.Validations.Appointments;
 using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
@@ -180,40 +181,19 @@ public partial class AppointmentModal : BasePage
     public async Task HandleSaveClick()
     {
         _validationComponent?.ClearErrors();
-        var errors = new Dictionary<string, List<string>>();
 
-        if (_appointmentDto.DoctorId <= 0)
-        {
-            errors.Add(nameof(_appointmentDto.DoctorId),
-                new() { string.Format(Resource.TheFieldIsRequired, Resource.Doctor) });
-        }
+        var validator = new AppointmentDtoValidator(_showNurses, _showRooms);
+        var validationResult = await validator.ValidateAsync(_appointmentDto);
 
-        if (_appointmentDto.PatientId <= 0)
+        if (!validationResult.IsValid)
         {
-            errors.Add(nameof(_appointmentDto.PatientId),
-                new() { string.Format(Resource.TheFieldIsRequired, Resource.Patient) });
-        }
+            var errors = validationResult.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToList()
+                );
 
-        if (_appointmentDto.Duration <= 0 || _appointmentDto.Duration > 1440)
-        {
-            errors.Add(nameof(_appointmentDto.Duration),
-                new() { string.Format(Resource.MustBeBetween, Resource.Duration, 1, 1440) });
-        }
-
-        if (_showNurses && _appointmentDto.NurseId is null)
-        {
-            errors.Add(nameof(_appointmentDto.NurseId),
-                new() { string.Format(Resource.TheFieldIsRequired, Resource.Nurse) });
-        }
-
-        if (_showRooms && _appointmentDto.RoomId is null)
-        {
-            errors.Add(nameof(_appointmentDto.RoomId),
-                new() { string.Format(Resource.TheFieldIsRequired, Resource.Room) });
-        }
-
-        if (errors.Any())
-        {
             _validationComponent?.DisplayErrors(errors);
         }
         else

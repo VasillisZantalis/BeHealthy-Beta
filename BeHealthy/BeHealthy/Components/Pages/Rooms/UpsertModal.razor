@@ -15,7 +15,7 @@
                     <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
-                    <EditForm Model="_roomDto" FormName="RoomForl" OnValidSubmit="SaveRoom">
+                    <EditForm Model="_roomDto" FormName="RoomForm" OnValidSubmit="SaveRoom">
                         <FluentValidationValidator @ref="_fluentValidationValidator"/>
 
                         <div class="d-flex flex-column gap-3">
