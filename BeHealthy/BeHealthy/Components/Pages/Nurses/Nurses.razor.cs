@@ -24,8 +24,6 @@ public partial class Nurses : BasePage
     private bool hasEditRight;
     private bool hasDeleteRight;
 
-    private int deleteItemId;
-
     private PaginationState _paginationState = new();
 
     protected override async Task OnInitializedAsync()

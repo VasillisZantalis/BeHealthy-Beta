@@ -42,7 +42,7 @@
 @code {
     private ProfileDto _profileDto { get; set; } = new();
     private UserRole? _userRole;
-    private string _userId;
+    private string? _userId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,7 +83,7 @@
 
     private async Task UpdateProfile()
     {
-        var user = await UserManager.FindByIdAsync(_userId);
+        var user = await UserManager.FindByIdAsync(_userId ?? string.Empty);
 
         if (user != null)
         {

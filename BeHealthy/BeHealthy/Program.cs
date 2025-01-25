@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +46,15 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
 });
 
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("log/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateBootstrapLogger();
+
+builder.Host.UseSerilog();
+Log.Logger.Information("Application is building....");
+
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
 builder.Services.AddLocalization();
@@ -72,53 +82,68 @@ builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<ConfirmDeleteStateService>();
 builder.Services.AddScoped<ToastrStateService>();
 
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseWebAssemblyDebugging();
+    var app = builder.Build();
+
+    app.UseSerilogRequestLogging();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseWebAssemblyDebugging();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Error", createScopeForErrors: true);
+        app.UseHsts();
+    }
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<ApplicationDbContext>();
+
+        context.Database.EnsureCreated();
+        context.Database.Migrate();
+    }
+
+    //using (var scope = app.Services.CreateScope())
+    //{
+    //    var services = scope.ServiceProvider;
+    //    var context = services.GetRequiredService<ApplicationDbContext>();
+    //    await context.SeedRolesAsync(services);
+    //}
+
+    app.UseHttpsRedirection();
+
+    app.UseStaticFiles();
+    app.UseAntiforgery();
+
+    app.UseRequestLocalization(localizationOptions);
+
+    app.MapRazorComponents<App>()
+        .AddInteractiveServerRenderMode();
+
+    app.MapAdditionalIdentityEndpoints();
+    app.MapCultureEndpoints();
+    app.MapAppointmentsEndpoints();
+    app.MapDepartmentEndpoints();
+    app.MapDoctorsEndpoints();
+    app.MapNursesEndpoints();
+    app.MapPatientEndpoints();
+    app.MapPrescriptionsEndpoints();
+    app.MapRoomsEndpoints();
+    app.MapUsersEndpoints();
+
+    Log.Logger.Information("Application is running....");
+    app.Run();
 }
-else
+catch (Exception ex)
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    app.UseHsts();
+    Log.Logger.Error(ex, "Application failed to start....");
 }
-
-using (var scope = app.Services.CreateScope())
+finally
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-
-    context.Database.EnsureCreated();
-    context.Database.Migrate();
+    Log.CloseAndFlush();
 }
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    var context = services.GetRequiredService<ApplicationDbContext>();
-//    await context.SeedRolesAsync(services);
-//}
-
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-app.UseAntiforgery();
-
-app.UseRequestLocalization(localizationOptions);
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.MapAdditionalIdentityEndpoints();
-app.MapCultureEndpoints();
-app.MapAppointmentsEndpoints();
-app.MapDepartmentEndpoints();
-app.MapDoctorsEndpoints();
-app.MapNursesEndpoints();
-app.MapPatientEndpoints();
-app.MapPrescriptionsEndpoints();
-app.MapRoomsEndpoints();
-app.MapUsersEndpoints();
-
-app.Run();

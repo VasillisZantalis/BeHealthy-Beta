@@ -58,7 +58,7 @@
     [SupplyParameterFromForm]
     private RoomDto _roomDto { get; set; } = new();
 
-    private FluentValidationValidator _fluentValidationValidator;
+    private FluentValidationValidator _fluentValidationValidator = new();
 
     private bool _showModal = false;
     private bool _isEditMode => RoomId.HasValue;
@@ -87,7 +87,7 @@
 
         if (_isEditMode && RoomId.HasValue)
         {
-            _roomDto = await RoomService.GetRoomByIdAsync(RoomId.Value);
+            _roomDto = await RoomService.GetRoomByIdAsync(RoomId.Value) ?? new();
         }
     }
 

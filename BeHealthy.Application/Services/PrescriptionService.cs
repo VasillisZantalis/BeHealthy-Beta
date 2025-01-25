@@ -37,7 +37,7 @@ public class PrescriptionService : IPrescriptionService
 
             return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return ServiceResponse.Failed();
         }
@@ -67,7 +67,7 @@ public class PrescriptionService : IPrescriptionService
 
             return ServiceResponse.Successful();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return ServiceResponse.Failed();
         }

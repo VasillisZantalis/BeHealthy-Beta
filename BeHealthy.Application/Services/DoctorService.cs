@@ -40,7 +40,7 @@ public class DoctorService : IDoctorService
 
             return ServiceResponse.Successful();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return ServiceResponse.Failed();
         }

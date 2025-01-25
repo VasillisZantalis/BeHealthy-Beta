@@ -20,10 +20,10 @@ public class MedicalRecordService : IMedicalRecordService
         return medicalRecords.MapToDto();
     }
 
-    public async Task<MedicalRecordDto> GetMedicalRecordByIdAsync(int id)
+    public async Task<MedicalRecordDto?> GetMedicalRecordByIdAsync(int id)
     {
         var medicalRecord = await _unitOfWork.MedicalRecordRepository.GetByIdAsync(id);
-        return medicalRecord.MapToDto();
+        return medicalRecord?.MapToDto();
     }
 
     public async Task AddMedicalRecordAsync(MedicalRecordForCreationDto medicalRecordDto)

@@ -27,8 +27,6 @@ public partial class Doctors : BasePage
     private bool hasDeleteRight;
     private UserRole? _userRole;
 
-    private int deleteItemId;
-
     private PaginationState _paginationState = new();
 
     protected override async Task OnInitializedAsync()
