@@ -151,6 +151,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Appointment Requires Room.
+        /// </summary>
+        public static string AppointmentRequiresRoom {
+            get {
+                return ResourceManager.GetString("AppointmentRequiresRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Appointments.
         /// </summary>
         public static string Appointments {

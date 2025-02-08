@@ -16,20 +16,18 @@ public class AppSettingConfiguration : IEntityTypeConfiguration<AppSetting>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(p => p.Area)
+        builder.Property(p => p.Caption)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(150);
 
         builder.Property(p => p.Type)
             .IsRequired();
 
-        builder.Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(50);
+        builder.Property(p => p.Group)
+            .IsRequired();
 
         builder.Property(p => p.Value)
-            .IsRequired()
-            .HasMaxLength(50);
+            .IsRequired();
 
         builder.Property(p => p.Description)
             .IsRequired();

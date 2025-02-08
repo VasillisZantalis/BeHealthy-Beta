@@ -25,7 +25,7 @@ public class PrivilegeService : IPrivilegeService
             Id = p.Id,
             Name = p.Name,
             Value = p.Value,
-            RoleName = p.RolePrivileges.Select(s => s.Role).FirstOrDefault()
+            RoleNames = p.RolePrivileges.Select(s => s.Role).ToList()
         }).ToList();
 
         return privilegesDto;

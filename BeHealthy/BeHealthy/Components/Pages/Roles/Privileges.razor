@@ -47,11 +47,12 @@ else
         var privileges = await PrivilegeService.GetPrivilegesAsync();
 
         _groupedPrivileges = privileges
-            .Where(p => p.RoleName != null)
-            .GroupBy(p => p.RoleName!.Value)
+            .Where(p => p.RoleNames != null)
+            .SelectMany(p => p.RoleNames, (p, roleName) => new { Privilege = p, RoleName = roleName })
+            .GroupBy(pr => pr.RoleName)
             .ToDictionary(
                 group => group.Key,
-                group => group.ToList()
+                group => group.Select(pr => pr.Privilege).ToList()
             );
 
         LoaderService.SetLoader(false);

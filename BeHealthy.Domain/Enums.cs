@@ -19,6 +19,13 @@ public enum SettingType
     TextField
 }
 
+public enum SettingGroup
+{
+    Appointment,
+    Department,
+    Doctor
+}
+
 public enum LanguageOptions
 {
     English,

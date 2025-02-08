@@ -147,6 +147,9 @@
   <data name="AppointmentReason_Prescription" xml:space="preserve">
     <value>Prescription</value>
   </data>
+  <data name="AppointmentRequiresRoom" xml:space="preserve">
+    <value>Appointment Requires Room</value>
+  </data>
   <data name="Appointments" xml:space="preserve">
     <value>Appointments</value>
   </data>

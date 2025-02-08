@@ -184,6 +184,51 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         };
 
         modelBuilder.Entity<Appointment>().HasData(appointments);
+
+        // Seed AppSettings
+
+        modelBuilder.Entity<AppSetting>().HasData(
+           new AppSetting
+           {
+               Id = 1,
+               Key = "AppointmentRequiresRoom",
+               Type = SettingType.Checkbox,
+               Group = SettingGroup.Appointment,
+               Value = "false",
+               Caption = "Requires Room for Appointment",
+               Description = "Indicates if a room is required for an appointment."
+           },
+           new AppSetting
+           {
+               Id = 2,
+               Key = "DoNotAllowDoctorWithoutSpecialty",
+               Type = SettingType.Checkbox,
+               Group = SettingGroup.Doctor,
+               Value = "false",
+               Caption = "Do not allow doctors without a specialty",
+               Description = "Indicates if doctors without a specialty should be allowed."
+           },
+           new AppSetting
+           {
+               Id = 3,
+               Key = "DepartmentRequiresSupervisor",
+               Type = SettingType.Checkbox,
+               Group = SettingGroup.Department,
+               Value = "false",
+               Caption = "Department requires supervisor",
+               Description = "Indicates if a department requires a supervisor."
+           },
+           new AppSetting
+           {
+               Id = 4,
+               Key = "DefaultDepartmentSupervison",
+               Type = SettingType.SingleSelect,
+               Group = SettingGroup.Department,
+               Value = "0",
+               Caption = "Default Department Supervision",
+               Description = "The default supervisor selection for departments."
+           }
+       );
     }
 
 }

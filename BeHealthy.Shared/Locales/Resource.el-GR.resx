@@ -147,6 +147,9 @@
   <data name="AppointmentReason_Prescription" xml:space="preserve">
     <value>Συνταγή</value>
   </data>
+  <data name="AppointmentRequiresRoom" xml:space="preserve">
+    <value>Το ραντεβού απαιτεί δωμάτιο</value>
+  </data>
   <data name="Appointments" xml:space="preserve">
     <value>Ραντεβού</value>
   </data>
