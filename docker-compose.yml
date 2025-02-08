@@ -14,10 +14,10 @@ services:
     image: postgres:latest
     container_name: behealthydb
     environment:
+      - POSTGRES_DB=behealthy
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=7530
-      - POSTGRES_DB=behealthy
-    volumes:
-      - ./.containers/behealthy-db:/var/lib/postgresql/data
+    #volumes:
+    # - ./.containers/behealthy-db:/var/lib/postgresql/data
     ports:
       - "5432:5432"

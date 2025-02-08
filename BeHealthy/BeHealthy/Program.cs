@@ -91,29 +91,23 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.UseWebAssemblyDebugging();
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
+        }
     }
     else
     {
         app.UseExceptionHandler("/Error", createScopeForErrors: true);
         app.UseHsts();
     }
-
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<ApplicationDbContext>();
-
-        context.Database.EnsureCreated();
-        context.Database.Migrate();
-    }
-
-    //using (var scope = app.Services.CreateScope())
-    //{
-    //    var services = scope.ServiceProvider;
-    //    var context = services.GetRequiredService<ApplicationDbContext>();
-    //    await context.SeedRolesAsync(services);
-    //}
-
+   
     app.UseHttpsRedirection();
 
     app.UseStaticFiles();
