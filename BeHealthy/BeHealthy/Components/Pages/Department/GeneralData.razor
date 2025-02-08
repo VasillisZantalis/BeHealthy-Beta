@@ -79,8 +79,8 @@
 
     private async Task GetSettings()
     {
-        var keys = new[] { "HeadOfDepartmentIsRequired" }.ToList();
-        var setting = await _appSettingsService.GetSettingByKeyAsync("HeadOfDepartmentIsRequired");
+        var keys = new[] { "DepartmentRequiresSupervisor" }.ToList();
+        var setting = await _appSettingsService.GetSettingByKeyAsync("DepartmentRequiresSupervisor");
 
         _isRequiredHeadOfDepartment = setting?.GetBooleanValue() ?? false;
     }
