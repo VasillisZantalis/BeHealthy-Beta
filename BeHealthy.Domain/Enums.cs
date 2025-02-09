@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BeHealthy.Shared.Common;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace BeHealthy.Domain;
 
+[TypeConverter(typeof(EnumResourceConverter))]
 public enum UserRole : short
 {
     Admin,
@@ -19,6 +22,7 @@ public enum SettingType
     TextField
 }
 
+[TypeConverter(typeof(EnumResourceConverter))]
 public enum SettingGroup
 {
     Appointment,
@@ -26,12 +30,14 @@ public enum SettingGroup
     Doctor
 }
 
+[TypeConverter(typeof(EnumResourceConverter))]
 public enum LanguageOptions
 {
     English,
     Greek
 }
 
+[TypeConverter(typeof(EnumResourceConverter))]
 public enum AppointmentStatus
 {
     Scheduled,
@@ -40,6 +46,7 @@ public enum AppointmentStatus
     Rescheduled
 }
 
+[TypeConverter(typeof(EnumResourceConverter))]
 public enum AppointmentReason
 {
     GeneralCheckup,
@@ -57,6 +64,7 @@ public enum Severity
     Danger
 }
 
+[TypeConverter(typeof(EnumResourceConverter))]
 public enum PrivilegeName
 {
     DoctorEditAppointments,

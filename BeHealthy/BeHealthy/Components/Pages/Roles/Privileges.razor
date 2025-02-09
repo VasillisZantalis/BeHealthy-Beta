@@ -1,5 +1,6 @@
 ﻿@page "/roles/privileges"
 @using BeHealthy.Application.Dtos.Privilege
+@using BeHealthy.Shared.Common
 @attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -20,13 +21,13 @@ else
         @foreach (var roleGroup in _groupedPrivileges)
         {
             <div class="card shadow border-0 rounded px-3 py-2 mt-3">
-                <h4 class="text-primary">@roleGroup.Key.ToLocalizedString()</h4>
+                <h4 class="text-primary">@EnumResourceConverter.ConvertToLocalizedString(roleGroup.Key)</h4>
                 <div class="card-body">
                     @foreach (var privilege in roleGroup.Value)
                     {
                         <div class="form-check mb-2">
                             <InputCheckbox @bind-Value="privilege.Value" class="form-check-input" />
-                            <label class="form-check-label ms-2">@privilege.Name.ToLocalizedString()</label>
+                            <label class="form-check-label ms-2">@EnumResourceConverter.ConvertToLocalizedString(privilege.Name)</label>
                         </div>
                     }
                 </div>

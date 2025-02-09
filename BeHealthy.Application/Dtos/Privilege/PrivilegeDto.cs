@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Domain;
+using System.ComponentModel;
 
 namespace BeHealthy.Application.Dtos.Privilege;
 
