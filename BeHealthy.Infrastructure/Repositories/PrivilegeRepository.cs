@@ -71,8 +71,9 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
             {
                 existingPrivilege.Value = privilege.Value;
                 context.Privileges.Update(existingPrivilege);
-                context.SaveChanges();
             }
         }
+
+        await context.SaveChangesAsync();
     }
 }
