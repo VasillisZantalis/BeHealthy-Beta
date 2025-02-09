@@ -6,6 +6,6 @@ public class PrivilegeDto
 {
     public int Id { get; set; }
     public PrivilegeName Name { get; set; }
-    public List<UserRole> RoleNames { get; set; }
+    public UserRole Role { get; set; }
     public bool Value { get; set; }
 }

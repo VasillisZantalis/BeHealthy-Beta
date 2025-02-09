@@ -25,7 +25,7 @@ public class PrivilegeService : IPrivilegeService
             Id = p.Id,
             Name = p.Name,
             Value = p.Value,
-            RoleNames = p.RolePrivileges.Select(s => s.Role).ToList()
+            Role = p.Role
         }).ToList();
 
         return privilegesDto;
@@ -49,7 +49,8 @@ public class PrivilegeService : IPrivilegeService
         {
             Id = dto.Id,
             Name = dto.Name,
-            Value = dto.Value
+            Value = dto.Value,
+            Role = dto.Role
         }).ToList();
 
         await _unitOfWork.PrivilegeRepository.UpdatePrivilegesAsync(entities);

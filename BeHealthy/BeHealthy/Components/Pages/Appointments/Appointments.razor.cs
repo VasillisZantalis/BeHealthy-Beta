@@ -70,8 +70,8 @@ public partial class Appointments : BasePage
                 break;
         }
 
-        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
-        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
+        //hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
+        //hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
         hasActionRights = hasEditRight || hasDeleteRight;
 
         await LoadDoctors();

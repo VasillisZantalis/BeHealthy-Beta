@@ -864,18 +864,99 @@ namespace BeHealthy.Shared.Locales {
         /// <summary>
         ///   Looks up a localized string similar to Delete Appointments.
         /// </summary>
-        public static string PrivilegeName_DeleteAppointments {
+        public static string PrivilegeName_DoctorDeleteAppointments {
             get {
-                return ResourceManager.GetString("PrivilegeName_DeleteAppointments", resourceCulture);
+                return ResourceManager.GetString("PrivilegeName_DoctorDeleteAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Patient.
+        /// </summary>
+        public static string PrivilegeName_DoctorDeletePatient {
+            get {
+                return ResourceManager.GetString("PrivilegeName_DoctorDeletePatient", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Edit Appointments.
         /// </summary>
-        public static string PrivilegeName_EditAppointments {
+        public static string PrivilegeName_DoctorEditAppointments {
             get {
-                return ResourceManager.GetString("PrivilegeName_EditAppointments", resourceCulture);
+                return ResourceManager.GetString("PrivilegeName_DoctorEditAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Patient.
+        /// </summary>
+        public static string PrivilegeName_DoctorEditPatient {
+            get {
+                return ResourceManager.GetString("PrivilegeName_DoctorEditPatient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate Medical Reports.
+        /// </summary>
+        public static string PrivilegeName_DoctorGenerateMedicalReports {
+            get {
+                return ResourceManager.GetString("PrivilegeName_DoctorGenerateMedicalReports", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prescribe medications.
+        /// </summary>
+        public static string PrivilegeName_DoctorPrescribeMedications {
+            get {
+                return ResourceManager.GetString("PrivilegeName_DoctorPrescribeMedications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Appointments.
+        /// </summary>
+        public static string PrivilegeName_NurseDeleteAppointments {
+            get {
+                return ResourceManager.GetString("PrivilegeName_NurseDeleteAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Appointments.
+        /// </summary>
+        public static string PrivilegeName_NurseEditAppointments {
+            get {
+                return ResourceManager.GetString("PrivilegeName_NurseEditAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See Patient Prescriptions.
+        /// </summary>
+        public static string PrivilegeName_NurseSeePatientPrescriptions {
+            get {
+                return ResourceManager.GetString("PrivilegeName_NurseSeePatientPrescriptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Appointments.
+        /// </summary>
+        public static string PrivilegeName_PatientDeleteAppointments {
+            get {
+                return ResourceManager.GetString("PrivilegeName_PatientDeleteAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Appointments.
+        /// </summary>
+        public static string PrivilegeName_PatientEditAppointments {
+            get {
+                return ResourceManager.GetString("PrivilegeName_PatientEditAppointments", resourceCulture);
             }
         }
         

@@ -20,7 +20,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Room> Rooms { get; set; } = null!;
     public DbSet<AppSetting> AppSettings { get; set; } = null!;
     public DbSet<Privilege> Privileges { get; set; } = null!;
-    public DbSet<RolePrivilege> RolePrivileges { get; set; } = null!;
     public DbSet<Specialty> Specialities { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,17 +42,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // Seed Privileges
         modelBuilder.Entity<Privilege>().HasData(
-            new Privilege { Id = 1, Name = PrivilegeName.EditAppointments },
-            new Privilege { Id = 2, Name = PrivilegeName.DeleteAppointments }
-        );
-
-        modelBuilder.Entity<RolePrivilege>().HasData(
-            new RolePrivilege { Role = UserRole.Doctor, PrivilegeId = 1 },
-            new RolePrivilege { Role = UserRole.Doctor, PrivilegeId = 2 },
-            new RolePrivilege { Role = UserRole.Patient, PrivilegeId = 1 },
-            new RolePrivilege { Role = UserRole.Patient, PrivilegeId = 2 },
-            new RolePrivilege { Role = UserRole.Nurse, PrivilegeId = 1 },
-            new RolePrivilege { Role = UserRole.Nurse, PrivilegeId = 2 }
+            new Privilege { Id = 1, Name = PrivilegeName.DoctorEditAppointments, Role = UserRole.Doctor, Value = true },
+            new Privilege { Id = 2, Name = PrivilegeName.DoctorDeleteAppointments, Role = UserRole.Doctor, Value = true },
+            new Privilege { Id = 3, Name = PrivilegeName.DoctorPrescribeMedications, Role = UserRole.Doctor, Value = true },
+            new Privilege { Id = 4, Name = PrivilegeName.DoctorGenerateMedicalReports, Role = UserRole.Doctor, Value = false },
+            new Privilege { Id = 5, Name = PrivilegeName.DoctorDeletePatient, Role = UserRole.Doctor, Value = false },
+            new Privilege { Id = 6, Name = PrivilegeName.DoctorEditPatient, Role = UserRole.Doctor, Value = false },
+            new Privilege { Id = 7, Name = PrivilegeName.PatientEditAppointments, Role = UserRole.Patient, Value = false },
+            new Privilege { Id = 8, Name = PrivilegeName.PatientDeleteAppointments, Role = UserRole.Patient, Value = false },
+            new Privilege { Id = 9, Name = PrivilegeName.NurseSeePatientPrescriptions, Role = UserRole.Nurse, Value = false },
+            new Privilege { Id = 10, Name = PrivilegeName.NurseEditAppointments, Role = UserRole.Nurse, Value = false },
+            new Privilege { Id = 11, Name = PrivilegeName.NurseDeleteAppointments, Role = UserRole.Nurse, Value = false }
         );
 
         var passwordHasher = new PasswordHasher<ApplicationUser>();

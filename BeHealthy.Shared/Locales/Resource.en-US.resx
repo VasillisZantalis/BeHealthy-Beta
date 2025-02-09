@@ -384,10 +384,37 @@
   <data name="Privilege" xml:space="preserve">
     <value>Privilege</value>
   </data>
-  <data name="PrivilegeName_DeleteAppointments" xml:space="preserve">
+  <data name="PrivilegeName_DoctorDeleteAppointments" xml:space="preserve">
     <value>Delete Appointments</value>
   </data>
-  <data name="PrivilegeName_EditAppointments" xml:space="preserve">
+  <data name="PrivilegeName_DoctorDeletePatient" xml:space="preserve">
+    <value>Delete Patient</value>
+  </data>
+  <data name="PrivilegeName_DoctorEditAppointments" xml:space="preserve">
+    <value>Edit Appointments</value>
+  </data>
+  <data name="PrivilegeName_DoctorEditPatient" xml:space="preserve">
+    <value>Edit Patient</value>
+  </data>
+  <data name="PrivilegeName_DoctorGenerateMedicalReports" xml:space="preserve">
+    <value>Generate Medical Reports</value>
+  </data>
+  <data name="PrivilegeName_DoctorPrescribeMedications" xml:space="preserve">
+    <value>Prescribe medications</value>
+  </data>
+  <data name="PrivilegeName_NurseDeleteAppointments" xml:space="preserve">
+    <value>Delete Appointments</value>
+  </data>
+  <data name="PrivilegeName_NurseEditAppointments" xml:space="preserve">
+    <value>Edit Appointments</value>
+  </data>
+  <data name="PrivilegeName_NurseSeePatientPrescriptions" xml:space="preserve">
+    <value>See Patient Prescriptions</value>
+  </data>
+  <data name="PrivilegeName_PatientDeleteAppointments" xml:space="preserve">
+    <value>Delete Appointments</value>
+  </data>
+  <data name="PrivilegeName_PatientEditAppointments" xml:space="preserve">
     <value>Edit Appointments</value>
   </data>
   <data name="Privileges" xml:space="preserve">

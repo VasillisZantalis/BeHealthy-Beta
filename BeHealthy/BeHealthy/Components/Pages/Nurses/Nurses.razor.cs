@@ -34,8 +34,8 @@ public partial class Nurses : BasePage
 
         _nurses = (await _nurseService.GetAllNursesAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
-        hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
-        hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
+        //hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
+        //hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
         hasActionRights = hasEditRight || hasDeleteRight;
 
         LoaderService.SetLoader(false);
