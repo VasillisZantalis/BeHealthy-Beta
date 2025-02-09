@@ -429,22 +429,22 @@ namespace BeHealthy.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "Gender", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "04692c47-f89c-4fa8-ba2f-987f8519ee66", 0, null, "05fcc75a-1c93-41f4-8727-f276ba8e1cd0", null, "nurse1@hospital.com", false, "NurseFirstName1", null, "NurseLastName1", false, null, "NURSE1@HOSPITAL.COM", "NURSE1@HOSPITAL.COM", "AQAAAAIAAYagAAAAELSFLW5TWNDFdOSCg0s2bzs6d6qRfcSuzvqCrvpJax8mf4AdrsorLJ52hGuDqhubiA==", null, false, "592915b9-ae49-47e0-886a-58f1853ad0d1", false, "nurse1@hospital.com" },
-                    { "152ea6fa-7cd6-4e1a-8dca-04b45b89d6fc", 0, null, "81976ba3-da53-4992-b0b6-3050297e28d5", null, "doctor4@hospital.com", false, "DoctorFirstName4", null, "DoctorLastName4", false, null, "DOCTOR4@HOSPITAL.COM", "DOCTOR4@HOSPITAL.COM", "AQAAAAIAAYagAAAAEAgp2O8TBNfcaEeLnbuU9svfV15FMVAhVAZzEZoEA4KsIrIEt9jkYGJbyAPtGW6M1A==", null, false, "c0b95ef1-acac-4fab-939a-f983d150dae5", false, "doctor4@hospital.com" },
-                    { "40ae5911-5f60-4ebe-8816-d7b0e9a70385", 0, null, "f5e7c957-a668-451e-80c6-f1d19ebb7bf3", null, "patient2@hospital.com", false, "PatientFirstName2", null, "PatientLastName2", false, null, "PATIENT2@HOSPITAL.COM", "PATIENT2@HOSPITAL.COM", "AQAAAAIAAYagAAAAEKQQOUE029WkwlfPScWXqQZcpdcJvKJ0MBp1AwulfDoBCMFBnpW9kQraFK1uOn8Beg==", null, false, "a7dbc6fe-e8e4-4e88-b080-765904564568", false, "patient2@hospital.com" },
-                    { "4407b12e-ec59-49ed-b75f-380f05269380", 0, null, "e4e91203-e70b-405e-8b81-fe498987de5f", null, "nurse5@hospital.com", false, "NurseFirstName5", null, "NurseLastName5", false, null, "NURSE5@HOSPITAL.COM", "NURSE5@HOSPITAL.COM", "AQAAAAIAAYagAAAAEB8CCbKNImO0zKIbnmdBo+JdJ9p7SpFDH2zp5tiJRCdwVTMbfANa82cguI+lcwYxmQ==", null, false, "865b4be8-ee52-45a2-9211-0d7e45884786", false, "nurse5@hospital.com" },
-                    { "5086f0bf-ba04-4e17-8f72-d8f7cd02d0b5", 0, null, "ca138fb5-43ba-418d-adc8-65f09a01d8bd", null, "patient3@hospital.com", false, "PatientFirstName3", null, "PatientLastName3", false, null, "PATIENT3@HOSPITAL.COM", "PATIENT3@HOSPITAL.COM", "AQAAAAIAAYagAAAAEBc6bIqMsMX7fGZ48qTSu9pvFuVd8P3n65tU1MG5cseDjDw3nN29fkpAG9/nbkqnxQ==", null, false, "984c83c0-c818-4735-88aa-4ebd8ef53af4", false, "patient3@hospital.com" },
-                    { "5ac63158-274e-4acc-acf1-b0c2ec142181", 0, null, "a06a03db-38de-4326-b94a-09ca7ac74666", null, "doctor5@hospital.com", false, "DoctorFirstName5", null, "DoctorLastName5", false, null, "DOCTOR5@HOSPITAL.COM", "DOCTOR5@HOSPITAL.COM", "AQAAAAIAAYagAAAAEO+SSEO4eaggYVGnPq+z00VXE5Vo5kh3RQAv55FegbFlo9RnUJZawbLS0zgq9gpKLA==", null, false, "387410d4-118c-4477-b761-18807d41a3e2", false, "doctor5@hospital.com" },
-                    { "5fb0af0a-86f1-4059-9076-2eb2314e2099", 0, null, "0f53ccd1-9230-4c67-aa37-29afae762867", null, "doctor2@hospital.com", false, "DoctorFirstName2", null, "DoctorLastName2", false, null, "DOCTOR2@HOSPITAL.COM", "DOCTOR2@HOSPITAL.COM", "AQAAAAIAAYagAAAAEPkF2SvxHzMoQIq3UBTnVOdpO+GEgStEDdsMygWS9znyM5xD/OdAfQ40Q+fkgPRsZw==", null, false, "97d59b0a-05a9-4a63-9987-5468b21b9aa3", false, "doctor2@hospital.com" },
-                    { "66601ee2-e093-4b49-81d1-b9897d7e9d38", 0, null, "cbf0c847-e6e8-4069-9c58-ed5dbb9cc0b4", null, "nurse3@hospital.com", false, "NurseFirstName3", null, "NurseLastName3", false, null, "NURSE3@HOSPITAL.COM", "NURSE3@HOSPITAL.COM", "AQAAAAIAAYagAAAAEEsPzjuQkr+qwU6wz2FOPVkzKG+gg8DmcaZubfrhcGDVUpbYGbJK2PHZ9kQoQe5fUw==", null, false, "ad886431-fa0b-4567-bb84-132d10d4ee35", false, "nurse3@hospital.com" },
-                    { "67f78a80-d3d1-4c1d-b3ee-28cf910e87ca", 0, null, "98146d5c-dc2b-4a0a-a5d1-cea6812b4587", null, "patient4@hospital.com", false, "PatientFirstName4", null, "PatientLastName4", false, null, "PATIENT4@HOSPITAL.COM", "PATIENT4@HOSPITAL.COM", "AQAAAAIAAYagAAAAELo9Edt32oHMVgZtBLgtvNKrasZ9BDv4GQeRUDFzrfWoJSAPnrepc9vNnu2KklgXjg==", null, false, "54339a33-d346-4fa4-8fe4-5ccbae08f1ad", false, "patient4@hospital.com" },
-                    { "686aa49c-ea4d-4c64-a51e-31fd4a94db5b", 0, null, "52ec8a4e-347d-41d5-869d-4d4bc0ccea97", null, "patient1@hospital.com", false, "PatientFirstName1", null, "PatientLastName1", false, null, "PATIENT1@HOSPITAL.COM", "PATIENT1@HOSPITAL.COM", "AQAAAAIAAYagAAAAEF8dlhHvlfkZ+XX+LvbPlYitb6274jZDargRdLn0GhDToN7FEBovakpMjBPmB352eA==", null, false, "06b96988-adcb-4a8b-b919-78edfaea9fbd", false, "patient1@hospital.com" },
-                    { "92a77429-9744-4e29-9d0b-e6d43937f343", 0, null, "fa9d87d2-df55-4930-bcbe-57ca775dca1e", null, "doctor3@hospital.com", false, "DoctorFirstName3", null, "DoctorLastName3", false, null, "DOCTOR3@HOSPITAL.COM", "DOCTOR3@HOSPITAL.COM", "AQAAAAIAAYagAAAAEIShkjzj2OJIOq+DVH/fhmGOKAScCoP3sN3smAOT+agmaq9XHMJSapKeNOYIXaFIzw==", null, false, "6691c912-b8e0-4169-aa5c-9e4ff0f1c469", false, "doctor3@hospital.com" },
-                    { "a1212140-332d-4fc5-807d-8fefc129311b", 0, null, "dfee0416-d270-4974-8ef3-abf0bfcd1876", null, "nurse2@hospital.com", false, "NurseFirstName2", null, "NurseLastName2", false, null, "NURSE2@HOSPITAL.COM", "NURSE2@HOSPITAL.COM", "AQAAAAIAAYagAAAAEDCxOTXL1skuk8209iUTIcIz4oAke/s9cpGJF8mm6dubcWHHb6Jn09mXtlfKjsTjkA==", null, false, "42e0882b-1140-4dee-8d0e-94dedc65204b", false, "nurse2@hospital.com" },
-                    { "admin", 0, null, "ad69c158-a638-455c-962a-813504e4f511", null, "admin@gmail.com", false, "Admin", null, "User", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEPg95iyyIDjVYj8wRnjqPoBIiSHoqjCe+IloUIvqY6LmdJq9lSiLpketsg2+5xe9bA==", null, false, "7494756f-89c4-4dfe-838e-1bf3b9237e34", false, "admin@gmail.com" },
-                    { "ca875d5f-bddf-41cc-beb8-528f4bc0ac3d", 0, null, "e8e346f1-a817-4317-8681-055643b95e08", null, "patient5@hospital.com", false, "PatientFirstName5", null, "PatientLastName5", false, null, "PATIENT5@HOSPITAL.COM", "PATIENT5@HOSPITAL.COM", "AQAAAAIAAYagAAAAEGgjtF9CUc1OAiQZ8UKCR6qCx2JR/WLD6O/8a9QSPul/4Qx/crhgGMhyutmOBmmdTg==", null, false, "b77fb6fd-1a38-4bd8-92a9-a9a356ebd03f", false, "patient5@hospital.com" },
-                    { "da1d5df6-a9d8-4221-af41-bd0e227b876f", 0, null, "7dde9358-9656-4906-b7fa-f407c50db297", null, "nurse4@hospital.com", false, "NurseFirstName4", null, "NurseLastName4", false, null, "NURSE4@HOSPITAL.COM", "NURSE4@HOSPITAL.COM", "AQAAAAIAAYagAAAAEGwk8Jr8wvxrTCek4C5fyUvGSnm6G4J/pP+bt+V1XJqWmdUuHHlCnIMe/gnYj3y4mA==", null, false, "479dec41-57d6-489f-9ac5-14453490105e", false, "nurse4@hospital.com" },
-                    { "de86fec1-42f2-4088-b643-1f708519ec41", 0, null, "aa283ea4-3544-4433-9cc6-6d6b3953c464", null, "doctor1@hospital.com", false, "DoctorFirstName1", null, "DoctorLastName1", false, null, "DOCTOR1@HOSPITAL.COM", "DOCTOR1@HOSPITAL.COM", "AQAAAAIAAYagAAAAEMTFZrhgmeSLN00ijXYi8JLbtn/00jJced5IZcg8azANRG52tpgqg3c6WBHz+i/Bog==", null, false, "12e12df2-abb1-484e-899c-78399d9f1963", false, "doctor1@hospital.com" }
+                    { "007db76f-2b01-4538-b901-68c74fc81346", 0, null, "7c7ea8b4-462d-4e1f-89fe-c5d6289d3a45", null, "nurse2@hospital.com", false, "NurseFirstName2", null, "NurseLastName2", false, null, "NURSE2@HOSPITAL.COM", "NURSE2@HOSPITAL.COM", "AQAAAAIAAYagAAAAEJw46XHLHY/uYIv4Ns4RbbdTBqnnpJ5GvXLGJuRo2EMbd8O3l8nvfXlgf51GRfm3QA==", null, false, "0cf33421-37a8-444b-9e19-2065d8216430", false, "nurse2@hospital.com" },
+                    { "0841d3b7-b31a-4b90-a94b-263235a54766", 0, null, "a5fc8af0-082d-4749-a582-2441fd2dc7de", null, "doctor3@hospital.com", false, "DoctorFirstName3", null, "DoctorLastName3", false, null, "DOCTOR3@HOSPITAL.COM", "DOCTOR3@HOSPITAL.COM", "AQAAAAIAAYagAAAAEHS1MOngsRTHTiXrD0WNtQ652DEyKdw2dEV3jdlALdbephjjNoR2JsARrEYVn3QmEA==", null, false, "cbf4fb64-3179-47c0-8985-9a8bb86dfd52", false, "doctor3@hospital.com" },
+                    { "16448dfc-91ea-49d5-887a-f2b8eb2c439f", 0, null, "e9b9f368-a6f5-4bde-9283-ec477f30ee25", null, "nurse1@hospital.com", false, "NurseFirstName1", null, "NurseLastName1", false, null, "NURSE1@HOSPITAL.COM", "NURSE1@HOSPITAL.COM", "AQAAAAIAAYagAAAAEJLMAS6W0DMEMfaqDRZ70rkXLEmF58WWr93o4WEvUZfK0Rk2/rIgLjFsHXKzgTNw3w==", null, false, "32b2e103-8e49-4582-982d-c5e4e3e7f406", false, "nurse1@hospital.com" },
+                    { "1f216f95-87f6-4303-9888-1a29d1ccfa3d", 0, null, "78c1679f-4018-4fef-9d25-b07c4ff7ef61", null, "doctor1@hospital.com", false, "DoctorFirstName1", null, "DoctorLastName1", false, null, "DOCTOR1@HOSPITAL.COM", "DOCTOR1@HOSPITAL.COM", "AQAAAAIAAYagAAAAEL3eQVUEcBeoU70Ahw9niZFLVeJdllLFOEkp0JgNo2lDvPi9WkXqshGP7v9l1slAQQ==", null, false, "57c23246-4841-42d7-95d1-150eaa4f14ba", false, "doctor1@hospital.com" },
+                    { "24e3af45-92b4-4e72-803d-de91fc240340", 0, null, "f51fd366-a0d7-4564-9bae-45127c557c05", null, "doctor4@hospital.com", false, "DoctorFirstName4", null, "DoctorLastName4", false, null, "DOCTOR4@HOSPITAL.COM", "DOCTOR4@HOSPITAL.COM", "AQAAAAIAAYagAAAAEE62cgsaCuK2OVu+rmHgxmRz/NClajHaFBOgOincWfMX9j54Jq83wKPiN1MFBJX4WA==", null, false, "45d43f81-185f-4b00-830f-4c05799d1a2a", false, "doctor4@hospital.com" },
+                    { "2a4d9452-9913-46c9-ae49-f7d01771d782", 0, null, "f09fd650-f38d-4d42-98a5-fac3cb3b1860", null, "patient1@hospital.com", false, "PatientFirstName1", null, "PatientLastName1", false, null, "PATIENT1@HOSPITAL.COM", "PATIENT1@HOSPITAL.COM", "AQAAAAIAAYagAAAAENBNHeqZ/JkIv+91YNGCwVyu8NPk7Dd9CI548cSWUKM9XDXpXbPVt/qgaKQ4B4cPxg==", null, false, "08131fe8-a80d-4bac-9c8c-66ae112369b9", false, "patient1@hospital.com" },
+                    { "33de060f-5ced-412e-bc2c-6d57ac6a0c39", 0, null, "ba594907-415a-4865-aec7-d8cd40a89f54", null, "patient4@hospital.com", false, "PatientFirstName4", null, "PatientLastName4", false, null, "PATIENT4@HOSPITAL.COM", "PATIENT4@HOSPITAL.COM", "AQAAAAIAAYagAAAAEM0eNxV+nqrUq1TnsT8BSoHv77bnRKRgiizDoi8xm8bdAyap+/gZzkHXy0zPGDQzkg==", null, false, "01a93f3f-b2e8-44a7-aa82-739ef7d8d148", false, "patient4@hospital.com" },
+                    { "75a6b557-8dd2-4d67-b0a3-2692d458609c", 0, null, "604c9739-7130-4419-99c3-20c3777445f7", null, "patient5@hospital.com", false, "PatientFirstName5", null, "PatientLastName5", false, null, "PATIENT5@HOSPITAL.COM", "PATIENT5@HOSPITAL.COM", "AQAAAAIAAYagAAAAEIV0QHX1t4EKIy8G4ZNX8jzTyta7/GQsHFpOO1+Ar+InTtyy1xRLhfqgMY4HToHVDQ==", null, false, "1e2cc34f-a690-4987-903f-0a9695188390", false, "patient5@hospital.com" },
+                    { "90f35c8d-b97f-41d4-9cf6-acf9eaf50a54", 0, null, "a4ff712b-f956-42cb-b8e7-8cad9d5dfe90", null, "nurse5@hospital.com", false, "NurseFirstName5", null, "NurseLastName5", false, null, "NURSE5@HOSPITAL.COM", "NURSE5@HOSPITAL.COM", "AQAAAAIAAYagAAAAEIJ2CKQFNIKtLt9iGAav5ZvjmRJ6hGvbdkmQr+ozjIKpFUk6whguVFj4STvWYsAlPg==", null, false, "a07ab8b3-0378-4a66-a60e-1b9b5316e271", false, "nurse5@hospital.com" },
+                    { "99f2b23d-6103-4bae-8b4c-d561edf2d2c2", 0, null, "d718037c-159d-40be-ab29-52b0eef6b25b", null, "nurse3@hospital.com", false, "NurseFirstName3", null, "NurseLastName3", false, null, "NURSE3@HOSPITAL.COM", "NURSE3@HOSPITAL.COM", "AQAAAAIAAYagAAAAEJ4CxCKrYvCZTfjmXmDnuopTv4loVQ3Ip3ORQLS7WTXZhYLaxdII7QkGsD5A6dQ7/Q==", null, false, "895bd43d-bce3-4b7f-8fd0-27d49496f161", false, "nurse3@hospital.com" },
+                    { "9aa95f69-2b47-4ec3-aec3-ac023b0d26c9", 0, null, "7523fc52-9936-4478-bed9-2744e7523155", null, "doctor2@hospital.com", false, "DoctorFirstName2", null, "DoctorLastName2", false, null, "DOCTOR2@HOSPITAL.COM", "DOCTOR2@HOSPITAL.COM", "AQAAAAIAAYagAAAAELZi3798+zoHiIo1QDfMNQabJFZ88sJmVaCoao2Bl+dipJd3nuz3zrxGgGO375xEqQ==", null, false, "108553b1-3ca4-4dd3-bb03-7ce21969247c", false, "doctor2@hospital.com" },
+                    { "a8efe163-211c-422f-b11e-789ad05b6621", 0, null, "e858992e-1491-44b7-818f-155ae2c38295", null, "patient2@hospital.com", false, "PatientFirstName2", null, "PatientLastName2", false, null, "PATIENT2@HOSPITAL.COM", "PATIENT2@HOSPITAL.COM", "AQAAAAIAAYagAAAAEJieuadtJdhDqsJ7LJGb20g2QkS9UHTVJUJLGEmk7Y0mrwOVqmrEE2TVxHQhZ60i8g==", null, false, "b6672154-5e59-4a83-b63e-b58a07832c33", false, "patient2@hospital.com" },
+                    { "admin", 0, null, "3cf7d0af-61b6-4ea4-a485-de041fbaa240", null, "admin@gmail.com", false, "Admin", null, "User", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEJPLfytSVE2KZsC0YvMivMMp7l62ciH9UvVz9o4LG33WUDCLpAZlk3x0RrqsKK2fsA==", null, false, "4acd0f1b-faea-4b3d-9ca0-76675d5e361b", false, "admin@gmail.com" },
+                    { "b3eaac7f-00e4-48d4-a5c1-159c6a4158d6", 0, null, "181b77b7-6702-4dc8-9fcf-fc956bb3c94e", null, "doctor5@hospital.com", false, "DoctorFirstName5", null, "DoctorLastName5", false, null, "DOCTOR5@HOSPITAL.COM", "DOCTOR5@HOSPITAL.COM", "AQAAAAIAAYagAAAAEOqTH244e3uESImws8S40+H3Fvh4Kg8ObSB1N6MXXu0mL7JdQ3t2v9Oy8hjW1aaS0w==", null, false, "573bdaec-daa7-486d-9a29-0daa3eb5eff5", false, "doctor5@hospital.com" },
+                    { "d9c24d72-8c57-4225-846a-9a7fc19afb0a", 0, null, "68555299-6680-4c33-b26a-f49dc5d468c5", null, "patient3@hospital.com", false, "PatientFirstName3", null, "PatientLastName3", false, null, "PATIENT3@HOSPITAL.COM", "PATIENT3@HOSPITAL.COM", "AQAAAAIAAYagAAAAEN6mqIDXkTlJJfHfFflyx64O3kef5EQ8hRJIudjiGoXyK5uh9jy/FmvTWU8h4DldUA==", null, false, "3de711f2-6dad-44ae-9a09-17392f15682c", false, "patient3@hospital.com" },
+                    { "e9fac186-5f4c-4de6-8ce5-fd17c6be365e", 0, null, "5376c650-c1fb-48a3-9985-c84ad1f949bc", null, "nurse4@hospital.com", false, "NurseFirstName4", null, "NurseLastName4", false, null, "NURSE4@HOSPITAL.COM", "NURSE4@HOSPITAL.COM", "AQAAAAIAAYagAAAAEA4C3Wbur6TDGgzb3kG2mGYmDr0XYY44k1o49Lbd7AW/6SXzUoFHuURzPqNeAbRrWA==", null, false, "81de3a17-569c-43b5-bab6-d167d778eed5", false, "nurse4@hospital.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -473,22 +473,22 @@ namespace BeHealthy.Infrastructure.Migrations
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { "3", "04692c47-f89c-4fa8-ba2f-987f8519ee66" },
-                    { "2", "152ea6fa-7cd6-4e1a-8dca-04b45b89d6fc" },
-                    { "3", "40ae5911-5f60-4ebe-8816-d7b0e9a70385" },
-                    { "3", "4407b12e-ec59-49ed-b75f-380f05269380" },
-                    { "3", "5086f0bf-ba04-4e17-8f72-d8f7cd02d0b5" },
-                    { "2", "5ac63158-274e-4acc-acf1-b0c2ec142181" },
-                    { "2", "5fb0af0a-86f1-4059-9076-2eb2314e2099" },
-                    { "3", "66601ee2-e093-4b49-81d1-b9897d7e9d38" },
-                    { "3", "67f78a80-d3d1-4c1d-b3ee-28cf910e87ca" },
-                    { "3", "686aa49c-ea4d-4c64-a51e-31fd4a94db5b" },
-                    { "2", "92a77429-9744-4e29-9d0b-e6d43937f343" },
-                    { "3", "a1212140-332d-4fc5-807d-8fefc129311b" },
+                    { "3", "007db76f-2b01-4538-b901-68c74fc81346" },
+                    { "2", "0841d3b7-b31a-4b90-a94b-263235a54766" },
+                    { "3", "16448dfc-91ea-49d5-887a-f2b8eb2c439f" },
+                    { "2", "1f216f95-87f6-4303-9888-1a29d1ccfa3d" },
+                    { "2", "24e3af45-92b4-4e72-803d-de91fc240340" },
+                    { "3", "2a4d9452-9913-46c9-ae49-f7d01771d782" },
+                    { "3", "33de060f-5ced-412e-bc2c-6d57ac6a0c39" },
+                    { "3", "75a6b557-8dd2-4d67-b0a3-2692d458609c" },
+                    { "3", "90f35c8d-b97f-41d4-9cf6-acf9eaf50a54" },
+                    { "3", "99f2b23d-6103-4bae-8b4c-d561edf2d2c2" },
+                    { "2", "9aa95f69-2b47-4ec3-aec3-ac023b0d26c9" },
+                    { "3", "a8efe163-211c-422f-b11e-789ad05b6621" },
                     { "0", "admin" },
-                    { "3", "ca875d5f-bddf-41cc-beb8-528f4bc0ac3d" },
-                    { "3", "da1d5df6-a9d8-4221-af41-bd0e227b876f" },
-                    { "2", "de86fec1-42f2-4088-b643-1f708519ec41" }
+                    { "2", "b3eaac7f-00e4-48d4-a5c1-159c6a4158d6" },
+                    { "3", "d9c24d72-8c57-4225-846a-9a7fc19afb0a" },
+                    { "3", "e9fac186-5f4c-4de6-8ce5-fd17c6be365e" }
                 });
 
             migrationBuilder.InsertData(
@@ -496,11 +496,11 @@ namespace BeHealthy.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "DepartmentId", "FirstName", "Image", "LastName", "SpecialtyId", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 9, 5, 35, 18, 44, DateTimeKind.Utc).AddTicks(1499), null, "DoctorFirstName1", null, "DoctorLastName1", null, "de86fec1-42f2-4088-b643-1f708519ec41" },
-                    { 2, new DateTime(2025, 2, 9, 5, 35, 18, 272, DateTimeKind.Utc).AddTicks(5582), null, "DoctorFirstName2", null, "DoctorLastName2", null, "5fb0af0a-86f1-4059-9076-2eb2314e2099" },
-                    { 3, new DateTime(2025, 2, 9, 5, 35, 18, 482, DateTimeKind.Utc).AddTicks(3152), null, "DoctorFirstName3", null, "DoctorLastName3", null, "92a77429-9744-4e29-9d0b-e6d43937f343" },
-                    { 4, new DateTime(2025, 2, 9, 5, 35, 18, 670, DateTimeKind.Utc).AddTicks(4948), null, "DoctorFirstName4", null, "DoctorLastName4", null, "152ea6fa-7cd6-4e1a-8dca-04b45b89d6fc" },
-                    { 5, new DateTime(2025, 2, 9, 5, 35, 18, 857, DateTimeKind.Utc).AddTicks(4877), null, "DoctorFirstName5", null, "DoctorLastName5", null, "5ac63158-274e-4acc-acf1-b0c2ec142181" }
+                    { 1, new DateTime(2025, 2, 9, 5, 50, 48, 577, DateTimeKind.Utc).AddTicks(5598), null, "DoctorFirstName1", null, "DoctorLastName1", null, "1f216f95-87f6-4303-9888-1a29d1ccfa3d" },
+                    { 2, new DateTime(2025, 2, 9, 5, 50, 48, 768, DateTimeKind.Utc).AddTicks(6581), null, "DoctorFirstName2", null, "DoctorLastName2", null, "9aa95f69-2b47-4ec3-aec3-ac023b0d26c9" },
+                    { 3, new DateTime(2025, 2, 9, 5, 50, 48, 963, DateTimeKind.Utc).AddTicks(26), null, "DoctorFirstName3", null, "DoctorLastName3", null, "0841d3b7-b31a-4b90-a94b-263235a54766" },
+                    { 4, new DateTime(2025, 2, 9, 5, 50, 49, 153, DateTimeKind.Utc).AddTicks(9264), null, "DoctorFirstName4", null, "DoctorLastName4", null, "24e3af45-92b4-4e72-803d-de91fc240340" },
+                    { 5, new DateTime(2025, 2, 9, 5, 50, 49, 343, DateTimeKind.Utc).AddTicks(42), null, "DoctorFirstName5", null, "DoctorLastName5", null, "b3eaac7f-00e4-48d4-a5c1-159c6a4158d6" }
                 });
 
             migrationBuilder.InsertData(
@@ -508,11 +508,11 @@ namespace BeHealthy.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "DepartmentId", "FirstName", "Image", "LastName", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 9, 5, 35, 18, 126, DateTimeKind.Utc).AddTicks(7733), null, "NurseFirstName1", null, "NurseLastName1", "04692c47-f89c-4fa8-ba2f-987f8519ee66" },
-                    { 2, new DateTime(2025, 2, 9, 5, 35, 18, 356, DateTimeKind.Utc).AddTicks(2387), null, "NurseFirstName2", null, "NurseLastName2", "a1212140-332d-4fc5-807d-8fefc129311b" },
-                    { 3, new DateTime(2025, 2, 9, 5, 35, 18, 544, DateTimeKind.Utc).AddTicks(9731), null, "NurseFirstName3", null, "NurseLastName3", "66601ee2-e093-4b49-81d1-b9897d7e9d38" },
-                    { 4, new DateTime(2025, 2, 9, 5, 35, 18, 732, DateTimeKind.Utc).AddTicks(5692), null, "NurseFirstName4", null, "NurseLastName4", "da1d5df6-a9d8-4221-af41-bd0e227b876f" },
-                    { 5, new DateTime(2025, 2, 9, 5, 35, 18, 919, DateTimeKind.Utc).AddTicks(9462), null, "NurseFirstName5", null, "NurseLastName5", "4407b12e-ec59-49ed-b75f-380f05269380" }
+                    { 1, new DateTime(2025, 2, 9, 5, 50, 48, 639, DateTimeKind.Utc).AddTicks(7767), null, "NurseFirstName1", null, "NurseLastName1", "16448dfc-91ea-49d5-887a-f2b8eb2c439f" },
+                    { 2, new DateTime(2025, 2, 9, 5, 50, 48, 834, DateTimeKind.Utc).AddTicks(2715), null, "NurseFirstName2", null, "NurseLastName2", "007db76f-2b01-4538-b901-68c74fc81346" },
+                    { 3, new DateTime(2025, 2, 9, 5, 50, 49, 28, DateTimeKind.Utc).AddTicks(2826), null, "NurseFirstName3", null, "NurseLastName3", "99f2b23d-6103-4bae-8b4c-d561edf2d2c2" },
+                    { 4, new DateTime(2025, 2, 9, 5, 50, 49, 218, DateTimeKind.Utc).AddTicks(346), null, "NurseFirstName4", null, "NurseLastName4", "e9fac186-5f4c-4de6-8ce5-fd17c6be365e" },
+                    { 5, new DateTime(2025, 2, 9, 5, 50, 49, 405, DateTimeKind.Utc).AddTicks(4219), null, "NurseFirstName5", null, "NurseLastName5", "90f35c8d-b97f-41d4-9cf6-acf9eaf50a54" }
                 });
 
             migrationBuilder.InsertData(
@@ -520,11 +520,11 @@ namespace BeHealthy.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "DepartmentId", "FirstName", "Image", "LastName", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 9, 5, 35, 18, 198, DateTimeKind.Utc).AddTicks(5733), null, "PatientFirstName1", null, "PatientLastName1", "686aa49c-ea4d-4c64-a51e-31fd4a94db5b" },
-                    { 2, new DateTime(2025, 2, 9, 5, 35, 18, 419, DateTimeKind.Utc).AddTicks(5409), null, "PatientFirstName2", null, "PatientLastName2", "40ae5911-5f60-4ebe-8816-d7b0e9a70385" },
-                    { 3, new DateTime(2025, 2, 9, 5, 35, 18, 607, DateTimeKind.Utc).AddTicks(8558), null, "PatientFirstName3", null, "PatientLastName3", "5086f0bf-ba04-4e17-8f72-d8f7cd02d0b5" },
-                    { 4, new DateTime(2025, 2, 9, 5, 35, 18, 794, DateTimeKind.Utc).AddTicks(5243), null, "PatientFirstName4", null, "PatientLastName4", "67f78a80-d3d1-4c1d-b3ee-28cf910e87ca" },
-                    { 5, new DateTime(2025, 2, 9, 5, 35, 18, 982, DateTimeKind.Utc).AddTicks(6045), null, "PatientFirstName5", null, "PatientLastName5", "ca875d5f-bddf-41cc-beb8-528f4bc0ac3d" }
+                    { 1, new DateTime(2025, 2, 9, 5, 50, 48, 703, DateTimeKind.Utc).AddTicks(4768), null, "PatientFirstName1", null, "PatientLastName1", "2a4d9452-9913-46c9-ae49-f7d01771d782" },
+                    { 2, new DateTime(2025, 2, 9, 5, 50, 48, 899, DateTimeKind.Utc).AddTicks(1544), null, "PatientFirstName2", null, "PatientLastName2", "a8efe163-211c-422f-b11e-789ad05b6621" },
+                    { 3, new DateTime(2025, 2, 9, 5, 50, 49, 91, DateTimeKind.Utc).AddTicks(2208), null, "PatientFirstName3", null, "PatientLastName3", "d9c24d72-8c57-4225-846a-9a7fc19afb0a" },
+                    { 4, new DateTime(2025, 2, 9, 5, 50, 49, 280, DateTimeKind.Utc).AddTicks(1272), null, "PatientFirstName4", null, "PatientLastName4", "33de060f-5ced-412e-bc2c-6d57ac6a0c39" },
+                    { 5, new DateTime(2025, 2, 9, 5, 50, 49, 467, DateTimeKind.Utc).AddTicks(26), null, "PatientFirstName5", null, "PatientLastName5", "75a6b557-8dd2-4d67-b0a3-2692d458609c" }
                 });
 
             migrationBuilder.InsertData(
@@ -545,25 +545,20 @@ namespace BeHealthy.Infrastructure.Migrations
                 columns: new[] { "Id", "AppointmentDate", "DoctorId", "Duration", "Notes", "NurseId", "PatientId", "Reason", "RoomId", "Status" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 2, 9, 10, 0, 0, 0, DateTimeKind.Utc), 1, 60, null, null, 1, 0, null, 1 },
-                    { 2, new DateTime(2025, 2, 9, 11, 0, 0, 0, DateTimeKind.Utc), 2, 60, null, null, 2, 1, null, 1 },
-                    { 3, new DateTime(2025, 2, 9, 12, 0, 0, 0, DateTimeKind.Utc), 3, 60, null, null, 3, 2, null, 2 },
-                    { 4, new DateTime(2025, 2, 9, 13, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 4, 3, null, 0 },
-                    { 5, new DateTime(2025, 2, 9, 14, 0, 0, 0, DateTimeKind.Utc), 5, 60, null, null, 5, 4, null, 0 },
-                    { 6, new DateTime(2025, 2, 10, 10, 0, 0, 0, DateTimeKind.Utc), 1, 60, null, null, 2, 0, null, 3 },
-                    { 7, new DateTime(2025, 2, 10, 11, 0, 0, 0, DateTimeKind.Utc), 2, 60, null, null, 3, 1, null, 0 },
-                    { 8, new DateTime(2025, 2, 10, 12, 0, 0, 0, DateTimeKind.Utc), 3, 60, null, null, 4, 2, null, 2 },
-                    { 9, new DateTime(2025, 2, 10, 13, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 5, 3, null, 0 },
-                    { 10, new DateTime(2025, 2, 10, 14, 0, 0, 0, DateTimeKind.Utc), 5, 60, null, null, 1, 4, null, 3 },
-                    { 11, new DateTime(2025, 2, 2, 9, 0, 0, 0, DateTimeKind.Utc), 2, 60, null, null, 2, 1, null, 0 },
-                    { 12, new DateTime(2025, 2, 13, 12, 0, 0, 0, DateTimeKind.Utc), 3, 60, null, null, 3, 2, null, 0 },
-                    { 13, new DateTime(2025, 2, 15, 13, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 4, 3, null, 0 },
-                    { 14, new DateTime(2025, 2, 14, 14, 0, 0, 0, DateTimeKind.Utc), 5, 60, null, null, 5, 4, null, 2 },
-                    { 15, new DateTime(2025, 2, 13, 10, 0, 0, 0, DateTimeKind.Utc), 1, 60, null, null, 2, 0, null, 3 },
-                    { 16, new DateTime(2025, 3, 10, 11, 0, 0, 0, DateTimeKind.Utc), 2, 60, null, null, 3, 1, null, 0 },
-                    { 17, new DateTime(2025, 2, 20, 12, 0, 0, 0, DateTimeKind.Utc), 3, 60, null, null, 4, 2, null, 1 },
-                    { 18, new DateTime(2025, 3, 3, 13, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 5, 3, null, 0 },
-                    { 19, new DateTime(2025, 2, 22, 14, 0, 0, 0, DateTimeKind.Utc), 5, 60, null, null, 1, 4, null, 3 }
+                    { 1, new DateTime(2025, 2, 4, 10, 0, 0, 0, DateTimeKind.Utc), 1, 60, null, null, 1, 0, null, 1 },
+                    { 2, new DateTime(2025, 2, 6, 11, 0, 0, 0, DateTimeKind.Utc), 2, 60, null, null, 2, 1, null, 2 },
+                    { 3, new DateTime(2025, 2, 7, 9, 0, 0, 0, DateTimeKind.Utc), 3, 60, null, null, 3, 1, null, 2 },
+                    { 4, new DateTime(2025, 2, 8, 12, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 4, 1, null, 1 },
+                    { 5, new DateTime(2025, 2, 9, 12, 0, 0, 0, DateTimeKind.Utc), 3, 60, null, null, 3, 2, null, 0 },
+                    { 6, new DateTime(2025, 2, 9, 14, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 4, 3, null, 3 },
+                    { 7, new DateTime(2025, 2, 9, 9, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 1, 3, null, 0 },
+                    { 8, new DateTime(2025, 2, 9, 11, 0, 0, 0, DateTimeKind.Utc), 3, 60, null, null, 2, 3, null, 0 },
+                    { 9, new DateTime(2025, 2, 9, 15, 0, 0, 0, DateTimeKind.Utc), 1, 60, null, null, 1, 3, null, 3 },
+                    { 10, new DateTime(2025, 2, 10, 10, 0, 0, 0, DateTimeKind.Utc), 5, 60, null, null, 5, 4, null, 0 },
+                    { 11, new DateTime(2025, 2, 11, 11, 0, 0, 0, DateTimeKind.Utc), 1, 60, null, null, 2, 0, null, 3 },
+                    { 12, new DateTime(2025, 2, 12, 12, 0, 0, 0, DateTimeKind.Utc), 2, 60, null, null, 3, 1, null, 0 },
+                    { 13, new DateTime(2025, 2, 19, 13, 0, 0, 0, DateTimeKind.Utc), 4, 60, null, null, 5, 3, null, 0 },
+                    { 14, new DateTime(2025, 2, 24, 14, 0, 0, 0, DateTimeKind.Utc), 5, 60, null, null, 1, 4, null, 3 }
                 });
 
             migrationBuilder.CreateIndex(
