@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeHealthy.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250208200744_Initial")]
+    [Migration("20250209120742_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -193,7 +193,7 @@ namespace BeHealthy.Infrastructure.Migrations
                         {
                             Id = "admin",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6d578dd3-d312-4523-98be-f212b13f4082",
+                            ConcurrencyStamp = "5c5ab505-a8b3-402f-9469-588d6ae763db",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Admin",
@@ -201,17 +201,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECNqqIeqwnY3yQm2E9+UKccFVYpICyvLxjq/R8f5mNrULlfeMLyjSTSNXrbUZmpV+A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFZ3qpP3voUVs4nl38sxvLnLDzH3fhZcmFCSpN0Z1a1V4uL5BcPakBKG7R5PwSTu7g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "03b3472c-d01b-4ee4-965f-ec31d8b79f62",
+                            SecurityStamp = "94b87810-9ffe-42c1-b618-cd961fbc8eb0",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         },
                         new
                         {
-                            Id = "9cb38449-3a3c-4b6b-86c9-89575b9078af",
+                            Id = "04aac39b-e962-437f-944a-496b0172a908",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "50cb6bf3-7183-46c6-8487-cd806ee916b0",
+                            ConcurrencyStamp = "4b8eb44e-54e5-4fd4-aa82-d6803eab1206",
                             Email = "doctor1@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "DoctorFirstName1",
@@ -219,17 +219,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DOCTOR1@HOSPITAL.COM",
                             NormalizedUserName = "DOCTOR1@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFseB4t3J4s7FYmuyP2QuS0OAPQ+4pOXYVUkbhFHs6Z0kR4vqkfoxTG9sj+dUCYxOg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB6lk1iDIZVpeoB7/NKRd+dowpBPqLFIMZgcy2NTUwdB214uGd2DKEfEsydPKD6t5A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "234f6bc6-f013-4ac0-a678-563d9fd6c3fa",
+                            SecurityStamp = "b7310163-d40d-403e-a270-54f8a8298848",
                             TwoFactorEnabled = false,
                             UserName = "doctor1@hospital.com"
                         },
                         new
                         {
-                            Id = "0397ae9c-b983-4371-9ae4-f71fa07d94ec",
+                            Id = "122baafd-bbdc-480c-94b2-65123904a3f7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f6bde931-fb7a-43cf-89dd-c583d10eae4a",
+                            ConcurrencyStamp = "87049a6a-b005-468f-864c-d9f1056fdf6b",
                             Email = "nurse1@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "NurseFirstName1",
@@ -237,17 +237,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "NURSE1@HOSPITAL.COM",
                             NormalizedUserName = "NURSE1@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEB4+GkP7XNcxeA3o8MR1T0OHo62MPrRwoeAxnlJo0lUEQUGFHctb8Mp6oQPOq5X9ng==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFfUrA0oC5rejyVhDwSD0jdJ/eP1i1e4eoxjdyA/EwDqBznanwLiZH1WMQD1YvOkeQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1116e4ae-1322-404c-a4e7-65fa519a77d8",
+                            SecurityStamp = "f5383b91-c7ae-45d6-a40a-f9e2c1f79031",
                             TwoFactorEnabled = false,
                             UserName = "nurse1@hospital.com"
                         },
                         new
                         {
-                            Id = "ffff3493-5849-4efe-ba6e-92bbc570f8ce",
+                            Id = "dd971efe-f077-43be-a667-b243966d74d2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6c799115-7e98-4fbe-8719-00879195050d",
+                            ConcurrencyStamp = "a6b08ed0-082a-466e-a7c1-edb540abd4c9",
                             Email = "patient1@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "PatientFirstName1",
@@ -255,17 +255,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PATIENT1@HOSPITAL.COM",
                             NormalizedUserName = "PATIENT1@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFSp2PE1acapOGgBL6GiNs97Rx6B3TNWmoCmGSzrZyKs4EMM/rpTD4MOFIA68tbtgQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECK6jKi4HzTSXF42gYkCbUS+Cnm6wfYHBF3XCY8Jx3i3OIUjKuRjkcWMJKAtqgdniA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6cf83c15-cf3b-4239-945d-47520d9d6c79",
+                            SecurityStamp = "88ffa93d-ce40-42f3-99d0-fb5ae1e2b342",
                             TwoFactorEnabled = false,
                             UserName = "patient1@hospital.com"
                         },
                         new
                         {
-                            Id = "4c369bd1-8936-4b9c-8f8d-bf41d5c2d639",
+                            Id = "18310304-cdbf-4b38-9519-fdd102f4d3ae",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0609c1b1-cc0a-4687-8787-83591478de54",
+                            ConcurrencyStamp = "0591a4d9-1b8c-458e-96b2-77e890a7e6a0",
                             Email = "doctor2@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "DoctorFirstName2",
@@ -273,17 +273,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DOCTOR2@HOSPITAL.COM",
                             NormalizedUserName = "DOCTOR2@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBB9zV2kqRSgZUs5nQ/d7zHbfJfy861o6pGuRWyipt7EDHuMvow8oR5IVGndwVpOpw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL+h8ekHxH0rQcNgSDpbs0nfk1yuCUphASutDH3NAnE1ARQ0ey133C02XJtoFjRQww==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "061cfd2c-1e77-49ec-bf5e-6bc472215b64",
+                            SecurityStamp = "67542aef-4c73-4898-8304-8ecd245de7fe",
                             TwoFactorEnabled = false,
                             UserName = "doctor2@hospital.com"
                         },
                         new
                         {
-                            Id = "7dbca746-42a3-4ef6-b534-88f264c618c0",
+                            Id = "e2f6cb31-7069-4f54-9ed7-9a0b9b822d65",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b52f7640-31d0-4d6e-a0a3-248a3141c47f",
+                            ConcurrencyStamp = "ae2332e2-680a-4d67-bc8c-8832b054920c",
                             Email = "nurse2@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "NurseFirstName2",
@@ -291,17 +291,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "NURSE2@HOSPITAL.COM",
                             NormalizedUserName = "NURSE2@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEI6RabpfjAv6yyKhQjsbZngmh+Y9ZvGc6sFGLM0fBXo8ZKd3wkvCsXklWi+qR3lLgw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJYEHjNtQDIewbNlY6lJE66qKr2NyWopvWI+F1xE/BwU4Yn6EFuLe8Fd7neLMGZqHg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "64e1a8cf-45e2-4c12-928e-76c3bee8b668",
+                            SecurityStamp = "88ea5c69-5f7f-48af-9582-8b325bdfb557",
                             TwoFactorEnabled = false,
                             UserName = "nurse2@hospital.com"
                         },
                         new
                         {
-                            Id = "238eb6ae-b314-4feb-97e5-a6796f105334",
+                            Id = "bef1fb4e-ca3d-48f1-8dd3-178558aff3e7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d20e189d-ebb5-4120-9cfc-eb02a1788996",
+                            ConcurrencyStamp = "b915e4f7-3d61-40c1-a9fd-721b60a0f4b4",
                             Email = "patient2@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "PatientFirstName2",
@@ -309,17 +309,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PATIENT2@HOSPITAL.COM",
                             NormalizedUserName = "PATIENT2@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAQO7CSRY0pVsrdZHjQZADww5VFAZXhhvGos86hGlUkL87qDyj9FmpJBS9sBGZTlGA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEILiuJLrtbldXNsTe87o7OGu4TMtNBLyyllmgK7dCFy21f2p7VXwPWRydbSlU9TlRQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a7e0c70e-896f-4c88-ae98-ec4aa1d95a28",
+                            SecurityStamp = "44b8c997-a269-4b21-9db0-ad4a2e846c0c",
                             TwoFactorEnabled = false,
                             UserName = "patient2@hospital.com"
                         },
                         new
                         {
-                            Id = "c54be023-67b8-4ea9-a7e7-fefc68510f68",
+                            Id = "b2980f2f-9fc9-4476-96e3-ded86037d63e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8ba74890-d9e2-4da3-b538-a4424c81c38e",
+                            ConcurrencyStamp = "59dd5810-e6aa-4ec3-9220-2160b9d45af3",
                             Email = "doctor3@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "DoctorFirstName3",
@@ -327,17 +327,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DOCTOR3@HOSPITAL.COM",
                             NormalizedUserName = "DOCTOR3@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENfY8tvJJ+Vwn3Rw2bQD44IORzKOYPc3m71TeQbPU72NCgcmbVSCIc9hfxFQ9B/lvg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFaMRo1tpRbVFO1OedsDcmfrSTOYmT7rrrlQ0Vn1hHoQBQ6+xdPVUTA8xQhhkaELfQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6bf5b1bb-ec52-4400-8d8c-27aa43efec13",
+                            SecurityStamp = "6f63a2e1-5a6e-4c57-b4fe-c020c2ebff7a",
                             TwoFactorEnabled = false,
                             UserName = "doctor3@hospital.com"
                         },
                         new
                         {
-                            Id = "28bd2f90-e12d-47c7-9eaf-ca603d053a8a",
+                            Id = "7d8933c4-3277-45cc-9c89-130468e5d2bd",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e3cdb6ae-3799-4a05-8a84-54b31b747c53",
+                            ConcurrencyStamp = "3f8c1407-ad79-449c-901b-b641fb5948a9",
                             Email = "nurse3@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "NurseFirstName3",
@@ -345,17 +345,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "NURSE3@HOSPITAL.COM",
                             NormalizedUserName = "NURSE3@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEA5iX+O1ALDc5sqUDeUrry4mTi70AWgrdnh/ew1K+rlDdcHK6wOq83b89yENod7hsg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC8M/X9cs0H7pI1kh9v2y/KCCaWw5Ih2oVVFO6OT3a7XBHD4zXTwzFZ665vEPok48g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2e61996d-ca11-4162-a9e6-4ba059a19e22",
+                            SecurityStamp = "0ec33550-34ff-4b6b-8e63-6848ccebe3f1",
                             TwoFactorEnabled = false,
                             UserName = "nurse3@hospital.com"
                         },
                         new
                         {
-                            Id = "3946916e-103d-4f9d-a7ae-1e95469952b8",
+                            Id = "344aaeb2-e68c-4b77-a085-10526e91cf97",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6f47e241-b1cd-4054-98ce-56deeb6b8ab4",
+                            ConcurrencyStamp = "6dbae35c-0900-453e-90ed-5c5c3be7688f",
                             Email = "patient3@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "PatientFirstName3",
@@ -363,17 +363,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PATIENT3@HOSPITAL.COM",
                             NormalizedUserName = "PATIENT3@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPHAJbD3DP7HgPsf5U75O9YpFw1RJSPXheVUHOZdX0rKtNMhVX1vEjd0A5Mmee52GQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPaDiYWOE+DcHSS4KlboATN66EvhkV1Rauz2USzREK5r8YzY4WBycafMGrNxyRYnGw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5f90f68d-1001-42e4-8646-dd73996f0d7a",
+                            SecurityStamp = "d619f1ac-c6bf-47bd-876f-9679c5d2db0e",
                             TwoFactorEnabled = false,
                             UserName = "patient3@hospital.com"
                         },
                         new
                         {
-                            Id = "d9a6e9f3-6137-4388-9745-02765fb200c3",
+                            Id = "ad8c4968-852f-4cc6-bf4f-5fccead39335",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2cc07658-e345-4703-a872-0388d19af17d",
+                            ConcurrencyStamp = "a0a8e6ac-f299-4fd9-aa14-127a2609bb49",
                             Email = "doctor4@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "DoctorFirstName4",
@@ -381,17 +381,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DOCTOR4@HOSPITAL.COM",
                             NormalizedUserName = "DOCTOR4@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE48Y4AneNs5sO/SEqL4nEY7Jh/zRqPIhXQ8iiVwE1rzN5+wILpDHTmC6Cw2ONa1hw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEcCvMshVDXy9CNV0nXzeK1HgJGq3ELX6oBFrBIekCluwuteURW7vnzJCf9Ma1HPMA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "40d6ba1c-3b1f-4093-9f15-4489005fd448",
+                            SecurityStamp = "6d85c987-8a3a-4c37-ae5c-6acc0431817e",
                             TwoFactorEnabled = false,
                             UserName = "doctor4@hospital.com"
                         },
                         new
                         {
-                            Id = "db3040a9-ee23-48ed-b272-a6584fed270e",
+                            Id = "8192db18-055e-46da-817c-dab4f45fa5a1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "538e173d-c6b4-465c-bc06-e9c08a5fe855",
+                            ConcurrencyStamp = "e5d7454b-5109-47e9-87ab-b56f5e60f45b",
                             Email = "nurse4@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "NurseFirstName4",
@@ -399,17 +399,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "NURSE4@HOSPITAL.COM",
                             NormalizedUserName = "NURSE4@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJHHDxSpbWxHDYqv6Daw2BsyGxOteK6jEimidijSsNcC5DUxL7wBBPMpxPWBCl9W8g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGjudCH8JX4Jz3IXKMe8xERgUk8QSuH+tVlHV/SFZgcRcsqMKyfFe9frHH3cI2CKJw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ecb3cc2b-2165-43d1-b2c5-3624fb695312",
+                            SecurityStamp = "e5ecaf23-059b-4c0b-abfb-2cc0f4d3a233",
                             TwoFactorEnabled = false,
                             UserName = "nurse4@hospital.com"
                         },
                         new
                         {
-                            Id = "54406172-49a9-450a-82c6-abaac31032c3",
+                            Id = "1eb3c211-11d5-4279-910e-fd541705c607",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fb8582c4-72f8-46b2-8d0c-49bd3b9d460b",
+                            ConcurrencyStamp = "59b91b82-bb6d-4e48-9e03-d4a9c06e9835",
                             Email = "patient4@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "PatientFirstName4",
@@ -417,17 +417,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PATIENT4@HOSPITAL.COM",
                             NormalizedUserName = "PATIENT4@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAT7Zahn47Jet54l+Z4kQCNjFO685RAkOmZOQynEhyCH0WDXpkCa3UF5ei4FcXj/Gw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN+D+AOr5slYT6EkBIU38Ldv3isceK/TAWa7ziQNk2uWlRoBdc+jneiESHrS0RvOXw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2f980558-1cf7-4346-9e51-3bdd05f47fd9",
+                            SecurityStamp = "36f6cd6b-466a-48b8-887e-61da8fc00feb",
                             TwoFactorEnabled = false,
                             UserName = "patient4@hospital.com"
                         },
                         new
                         {
-                            Id = "05435dd4-4ebf-4362-89ac-eff6dd5e1459",
+                            Id = "d329c623-b0c4-411e-8b7b-da6c6ddb01ef",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "da21d2bc-d3bb-4c33-9608-22ac6dc953c8",
+                            ConcurrencyStamp = "483b1317-7254-4a2b-905f-237ad5668eb6",
                             Email = "doctor5@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "DoctorFirstName5",
@@ -435,17 +435,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DOCTOR5@HOSPITAL.COM",
                             NormalizedUserName = "DOCTOR5@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKsuAMq8Ia8y0Tbtfv8cM6xpBttRo39YjsbHX4YXFIB/K1bxXRyF7KTtQKFP+JOMbw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAT0YAcR7GWzdWjZ6PhCXYk+eAnrbb4xb1h/OQCvj2AFFZMMvKu8okpFVkKEsiCJQQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ae62f0ef-92fb-442f-9532-b0f649ea3988",
+                            SecurityStamp = "6c36aba5-aad4-477f-a1d1-f8eb5a6386c3",
                             TwoFactorEnabled = false,
                             UserName = "doctor5@hospital.com"
                         },
                         new
                         {
-                            Id = "c6c11fe9-e030-4ded-bf68-c000331ae54d",
+                            Id = "534b8153-fb31-4d95-86b1-205a15380f70",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7c3c09ac-4ac6-4b75-adc3-04e03dddffc8",
+                            ConcurrencyStamp = "147c7774-99df-4112-b350-8d5051a7cc9f",
                             Email = "nurse5@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "NurseFirstName5",
@@ -453,17 +453,17 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "NURSE5@HOSPITAL.COM",
                             NormalizedUserName = "NURSE5@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJcDpLuonL7GIHe8GhWsJW7wb6nxdf7WWjB5b2q2Y7wJjwlqyPxIluOUoQ8uCN0FXA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDq2NvLBQv0QSMfmnH4w0WSBs5XMnfZtqxyHDl0EGWT7cUKixP9geHb8RzX+S+yTrQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f596da1c-49b0-451e-8ea7-ebc56c5a53dc",
+                            SecurityStamp = "6374a8ce-4485-4fce-890b-f1ddeb80b816",
                             TwoFactorEnabled = false,
                             UserName = "nurse5@hospital.com"
                         },
                         new
                         {
-                            Id = "09d2f364-2cac-44c6-8f24-f10f0bd141f4",
+                            Id = "a93d843c-bb70-4919-ae6d-712e3bc60c98",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "27f4524f-62b8-465f-85a9-6178f7e863cc",
+                            ConcurrencyStamp = "8b3e6253-8b96-4986-acdb-de8d8fa18373",
                             Email = "patient5@hospital.com",
                             EmailConfirmed = false,
                             FirstName = "PatientFirstName5",
@@ -471,9 +471,9 @@ namespace BeHealthy.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PATIENT5@HOSPITAL.COM",
                             NormalizedUserName = "PATIENT5@HOSPITAL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELHlNVL/CI7QssJJ49PlyVy7R6vbLwQurVqyscT1Uk2A+OFSRWhNGqdAkHNO3hCNNA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECav2JvEKsjCvTSWy1ML0/ui9/2CLPmKSJdmQe0PbRgydkCrHCKwLOVl+iHbdkWF7w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "075efb86-d14b-4a0c-a651-9d3ab48b417b",
+                            SecurityStamp = "c3a9b803-b427-4b75-b75b-5030ca9b4a96",
                             TwoFactorEnabled = false,
                             UserName = "patient5@hospital.com"
                         });
@@ -531,26 +531,46 @@ namespace BeHealthy.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            AppointmentDate = new DateTime(2025, 2, 9, 10, 0, 0, 0, DateTimeKind.Utc),
+                            AppointmentDate = new DateTime(2025, 2, 4, 10, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 1,
                             Duration = 60,
                             PatientId = 1,
                             Reason = 0,
-                            Status = 0
+                            Status = 1
                         },
                         new
                         {
                             Id = 2,
-                            AppointmentDate = new DateTime(2025, 2, 9, 11, 0, 0, 0, DateTimeKind.Utc),
+                            AppointmentDate = new DateTime(2025, 2, 6, 11, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 2,
                             Duration = 60,
                             PatientId = 2,
                             Reason = 1,
-                            Status = 0
+                            Status = 2
                         },
                         new
                         {
                             Id = 3,
+                            AppointmentDate = new DateTime(2025, 2, 7, 9, 0, 0, 0, DateTimeKind.Utc),
+                            DoctorId = 3,
+                            Duration = 60,
+                            PatientId = 3,
+                            Reason = 1,
+                            Status = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AppointmentDate = new DateTime(2025, 2, 8, 12, 0, 0, 0, DateTimeKind.Utc),
+                            DoctorId = 4,
+                            Duration = 60,
+                            PatientId = 4,
+                            Reason = 1,
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = 5,
                             AppointmentDate = new DateTime(2025, 2, 9, 12, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 3,
                             Duration = 60,
@@ -560,18 +580,48 @@ namespace BeHealthy.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 4,
-                            AppointmentDate = new DateTime(2025, 2, 9, 13, 0, 0, 0, DateTimeKind.Utc),
+                            Id = 6,
+                            AppointmentDate = new DateTime(2025, 2, 9, 14, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 4,
                             Duration = 60,
                             PatientId = 4,
+                            Reason = 3,
+                            Status = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AppointmentDate = new DateTime(2025, 2, 9, 9, 0, 0, 0, DateTimeKind.Utc),
+                            DoctorId = 4,
+                            Duration = 60,
+                            PatientId = 1,
                             Reason = 3,
                             Status = 0
                         },
                         new
                         {
-                            Id = 5,
-                            AppointmentDate = new DateTime(2025, 2, 9, 14, 0, 0, 0, DateTimeKind.Utc),
+                            Id = 8,
+                            AppointmentDate = new DateTime(2025, 2, 9, 11, 0, 0, 0, DateTimeKind.Utc),
+                            DoctorId = 3,
+                            Duration = 60,
+                            PatientId = 2,
+                            Reason = 3,
+                            Status = 0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AppointmentDate = new DateTime(2025, 2, 9, 15, 0, 0, 0, DateTimeKind.Utc),
+                            DoctorId = 1,
+                            Duration = 60,
+                            PatientId = 1,
+                            Reason = 3,
+                            Status = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AppointmentDate = new DateTime(2025, 2, 10, 10, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 5,
                             Duration = 60,
                             PatientId = 5,
@@ -580,18 +630,18 @@ namespace BeHealthy.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 6,
-                            AppointmentDate = new DateTime(2025, 2, 10, 10, 0, 0, 0, DateTimeKind.Utc),
+                            Id = 11,
+                            AppointmentDate = new DateTime(2025, 2, 11, 11, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 1,
                             Duration = 60,
                             PatientId = 2,
                             Reason = 0,
-                            Status = 0
+                            Status = 3
                         },
                         new
                         {
-                            Id = 7,
-                            AppointmentDate = new DateTime(2025, 2, 10, 11, 0, 0, 0, DateTimeKind.Utc),
+                            Id = 12,
+                            AppointmentDate = new DateTime(2025, 2, 12, 12, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 2,
                             Duration = 60,
                             PatientId = 3,
@@ -600,18 +650,8 @@ namespace BeHealthy.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 8,
-                            AppointmentDate = new DateTime(2025, 2, 10, 12, 0, 0, 0, DateTimeKind.Utc),
-                            DoctorId = 3,
-                            Duration = 60,
-                            PatientId = 4,
-                            Reason = 2,
-                            Status = 0
-                        },
-                        new
-                        {
-                            Id = 9,
-                            AppointmentDate = new DateTime(2025, 2, 10, 13, 0, 0, 0, DateTimeKind.Utc),
+                            Id = 13,
+                            AppointmentDate = new DateTime(2025, 2, 19, 13, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 4,
                             Duration = 60,
                             PatientId = 5,
@@ -620,13 +660,13 @@ namespace BeHealthy.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = 10,
-                            AppointmentDate = new DateTime(2025, 2, 10, 14, 0, 0, 0, DateTimeKind.Utc),
+                            Id = 14,
+                            AppointmentDate = new DateTime(2025, 2, 24, 14, 0, 0, 0, DateTimeKind.Utc),
                             DoctorId = 5,
                             Duration = 60,
                             PatientId = 1,
                             Reason = 4,
-                            Status = 0
+                            Status = 3
                         });
                 });
 
@@ -708,42 +748,42 @@ namespace BeHealthy.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 486, DateTimeKind.Utc).AddTicks(1190),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 40, 769, DateTimeKind.Utc).AddTicks(1976),
                             FirstName = "DoctorFirstName1",
                             LastName = "DoctorLastName1",
-                            UserId = "9cb38449-3a3c-4b6b-86c9-89575b9078af"
+                            UserId = "04aac39b-e962-437f-944a-496b0172a908"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 680, DateTimeKind.Utc).AddTicks(8851),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 40, 989, DateTimeKind.Utc).AddTicks(3220),
                             FirstName = "DoctorFirstName2",
                             LastName = "DoctorLastName2",
-                            UserId = "4c369bd1-8936-4b9c-8f8d-bf41d5c2d639"
+                            UserId = "18310304-cdbf-4b38-9519-fdd102f4d3ae"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 871, DateTimeKind.Utc).AddTicks(4694),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 182, DateTimeKind.Utc).AddTicks(6245),
                             FirstName = "DoctorFirstName3",
                             LastName = "DoctorLastName3",
-                            UserId = "c54be023-67b8-4ea9-a7e7-fefc68510f68"
+                            UserId = "b2980f2f-9fc9-4476-96e3-ded86037d63e"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 44, 60, DateTimeKind.Utc).AddTicks(4112),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 371, DateTimeKind.Utc).AddTicks(9953),
                             FirstName = "DoctorFirstName4",
                             LastName = "DoctorLastName4",
-                            UserId = "d9a6e9f3-6137-4388-9745-02765fb200c3"
+                            UserId = "ad8c4968-852f-4cc6-bf4f-5fccead39335"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 44, 246, DateTimeKind.Utc).AddTicks(3306),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 571, DateTimeKind.Utc).AddTicks(6600),
                             FirstName = "DoctorFirstName5",
                             LastName = "DoctorLastName5",
-                            UserId = "05435dd4-4ebf-4362-89ac-eff6dd5e1459"
+                            UserId = "d329c623-b0c4-411e-8b7b-da6c6ddb01ef"
                         });
                 });
 
@@ -789,42 +829,42 @@ namespace BeHealthy.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 550, DateTimeKind.Utc).AddTicks(6411),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 40, 841, DateTimeKind.Utc).AddTicks(6680),
                             FirstName = "NurseFirstName1",
                             LastName = "NurseLastName1",
-                            UserId = "0397ae9c-b983-4371-9ae4-f71fa07d94ec"
+                            UserId = "122baafd-bbdc-480c-94b2-65123904a3f7"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 743, DateTimeKind.Utc).AddTicks(7543),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 54, DateTimeKind.Utc).AddTicks(7382),
                             FirstName = "NurseFirstName2",
                             LastName = "NurseLastName2",
-                            UserId = "7dbca746-42a3-4ef6-b534-88f264c618c0"
+                            UserId = "e2f6cb31-7069-4f54-9ed7-9a0b9b822d65"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 934, DateTimeKind.Utc).AddTicks(4917),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 246, DateTimeKind.Utc).AddTicks(2817),
                             FirstName = "NurseFirstName3",
                             LastName = "NurseLastName3",
-                            UserId = "28bd2f90-e12d-47c7-9eaf-ca603d053a8a"
+                            UserId = "7d8933c4-3277-45cc-9c89-130468e5d2bd"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 44, 122, DateTimeKind.Utc).AddTicks(8034),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 434, DateTimeKind.Utc).AddTicks(3223),
                             FirstName = "NurseFirstName4",
                             LastName = "NurseLastName4",
-                            UserId = "db3040a9-ee23-48ed-b272-a6584fed270e"
+                            UserId = "8192db18-055e-46da-817c-dab4f45fa5a1"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 44, 307, DateTimeKind.Utc).AddTicks(8910),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 633, DateTimeKind.Utc).AddTicks(9385),
                             FirstName = "NurseFirstName5",
                             LastName = "NurseLastName5",
-                            UserId = "c6c11fe9-e030-4ded-bf68-c000331ae54d"
+                            UserId = "534b8153-fb31-4d95-86b1-205a15380f70"
                         });
                 });
 
@@ -870,42 +910,42 @@ namespace BeHealthy.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 615, DateTimeKind.Utc).AddTicks(8528),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 40, 921, DateTimeKind.Utc).AddTicks(867),
                             FirstName = "PatientFirstName1",
                             LastName = "PatientLastName1",
-                            UserId = "ffff3493-5849-4efe-ba6e-92bbc570f8ce"
+                            UserId = "dd971efe-f077-43be-a667-b243966d74d2"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 807, DateTimeKind.Utc).AddTicks(5965),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 119, DateTimeKind.Utc).AddTicks(4118),
                             FirstName = "PatientFirstName2",
                             LastName = "PatientLastName2",
-                            UserId = "238eb6ae-b314-4feb-97e5-a6796f105334"
+                            UserId = "bef1fb4e-ca3d-48f1-8dd3-178558aff3e7"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 43, 997, DateTimeKind.Utc).AddTicks(6375),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 309, DateTimeKind.Utc).AddTicks(1179),
                             FirstName = "PatientFirstName3",
                             LastName = "PatientLastName3",
-                            UserId = "3946916e-103d-4f9d-a7ae-1e95469952b8"
+                            UserId = "344aaeb2-e68c-4b77-a085-10526e91cf97"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 44, 184, DateTimeKind.Utc).AddTicks(7178),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 509, DateTimeKind.Utc).AddTicks(7627),
                             FirstName = "PatientFirstName4",
                             LastName = "PatientLastName4",
-                            UserId = "54406172-49a9-450a-82c6-abaac31032c3"
+                            UserId = "1eb3c211-11d5-4279-910e-fd541705c607"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 2, 8, 20, 7, 44, 369, DateTimeKind.Utc).AddTicks(6776),
+                            CreatedAt = new DateTime(2025, 2, 9, 12, 7, 41, 696, DateTimeKind.Utc).AddTicks(2566),
                             FirstName = "PatientFirstName5",
                             LastName = "PatientLastName5",
-                            UserId = "09d2f364-2cac-44c6-8f24-f10f0bd141f4"
+                            UserId = "a93d843c-bb70-4919-ae6d-712e3bc60c98"
                         });
                 });
 
@@ -956,6 +996,9 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.Property<int>("Name")
                         .HasColumnType("integer");
 
+                    b.Property<short>("Role")
+                        .HasColumnType("smallint");
+
                     b.Property<bool>("Value")
                         .HasColumnType("boolean");
 
@@ -968,60 +1011,78 @@ namespace BeHealthy.Infrastructure.Migrations
                         {
                             Id = 1,
                             Name = 0,
-                            Value = false
+                            Role = (short)2,
+                            Value = true
                         },
                         new
                         {
                             Id = 2,
                             Name = 1,
+                            Role = (short)2,
+                            Value = true
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = 4,
+                            Role = (short)2,
+                            Value = true
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = 5,
+                            Role = (short)2,
                             Value = false
-                        });
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.RolePrivilege", b =>
-                {
-                    b.Property<short>("Role")
-                        .HasColumnType("smallint");
-
-                    b.Property<int>("PrivilegeId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Role", "PrivilegeId");
-
-                    b.HasIndex("PrivilegeId");
-
-                    b.ToTable("RolePrivileges");
-
-                    b.HasData(
+                        },
                         new
                         {
+                            Id = 5,
+                            Name = 3,
                             Role = (short)2,
-                            PrivilegeId = 1
+                            Value = false
                         },
                         new
                         {
+                            Id = 6,
+                            Name = 2,
                             Role = (short)2,
-                            PrivilegeId = 2
+                            Value = false
                         },
                         new
                         {
+                            Id = 7,
+                            Name = 6,
                             Role = (short)4,
-                            PrivilegeId = 1
+                            Value = false
                         },
                         new
                         {
+                            Id = 8,
+                            Name = 7,
                             Role = (short)4,
-                            PrivilegeId = 2
+                            Value = false
                         },
                         new
                         {
+                            Id = 9,
+                            Name = 8,
                             Role = (short)3,
-                            PrivilegeId = 1
+                            Value = false
                         },
                         new
                         {
+                            Id = 10,
+                            Name = 9,
                             Role = (short)3,
-                            PrivilegeId = 2
+                            Value = false
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = 10,
+                            Role = (short)3,
+                            Value = false
                         });
                 });
 
@@ -1226,77 +1287,77 @@ namespace BeHealthy.Infrastructure.Migrations
                         },
                         new
                         {
-                            UserId = "9cb38449-3a3c-4b6b-86c9-89575b9078af",
+                            UserId = "04aac39b-e962-437f-944a-496b0172a908",
                             RoleId = "2"
                         },
                         new
                         {
-                            UserId = "0397ae9c-b983-4371-9ae4-f71fa07d94ec",
+                            UserId = "122baafd-bbdc-480c-94b2-65123904a3f7",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "ffff3493-5849-4efe-ba6e-92bbc570f8ce",
+                            UserId = "dd971efe-f077-43be-a667-b243966d74d2",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "4c369bd1-8936-4b9c-8f8d-bf41d5c2d639",
+                            UserId = "18310304-cdbf-4b38-9519-fdd102f4d3ae",
                             RoleId = "2"
                         },
                         new
                         {
-                            UserId = "7dbca746-42a3-4ef6-b534-88f264c618c0",
+                            UserId = "e2f6cb31-7069-4f54-9ed7-9a0b9b822d65",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "238eb6ae-b314-4feb-97e5-a6796f105334",
+                            UserId = "bef1fb4e-ca3d-48f1-8dd3-178558aff3e7",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "c54be023-67b8-4ea9-a7e7-fefc68510f68",
+                            UserId = "b2980f2f-9fc9-4476-96e3-ded86037d63e",
                             RoleId = "2"
                         },
                         new
                         {
-                            UserId = "28bd2f90-e12d-47c7-9eaf-ca603d053a8a",
+                            UserId = "7d8933c4-3277-45cc-9c89-130468e5d2bd",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "3946916e-103d-4f9d-a7ae-1e95469952b8",
+                            UserId = "344aaeb2-e68c-4b77-a085-10526e91cf97",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "d9a6e9f3-6137-4388-9745-02765fb200c3",
+                            UserId = "ad8c4968-852f-4cc6-bf4f-5fccead39335",
                             RoleId = "2"
                         },
                         new
                         {
-                            UserId = "db3040a9-ee23-48ed-b272-a6584fed270e",
+                            UserId = "8192db18-055e-46da-817c-dab4f45fa5a1",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "54406172-49a9-450a-82c6-abaac31032c3",
+                            UserId = "1eb3c211-11d5-4279-910e-fd541705c607",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "05435dd4-4ebf-4362-89ac-eff6dd5e1459",
+                            UserId = "d329c623-b0c4-411e-8b7b-da6c6ddb01ef",
                             RoleId = "2"
                         },
                         new
                         {
-                            UserId = "c6c11fe9-e030-4ded-bf68-c000331ae54d",
+                            UserId = "534b8153-fb31-4d95-86b1-205a15380f70",
                             RoleId = "3"
                         },
                         new
                         {
-                            UserId = "09d2f364-2cac-44c6-8f24-f10f0bd141f4",
+                            UserId = "a93d843c-bb70-4919-ae6d-712e3bc60c98",
                             RoleId = "3"
                         });
                 });
@@ -1443,17 +1504,6 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.Navigation("Patient");
                 });
 
-            modelBuilder.Entity("BeHealthy.Domain.Entities.RolePrivilege", b =>
-                {
-                    b.HasOne("BeHealthy.Domain.Entities.Privilege", "Privilege")
-                        .WithMany("RolePrivileges")
-                        .HasForeignKey("PrivilegeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Privilege");
-                });
-
             modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>
                 {
                     b.HasOne("BeHealthy.Domain.Entities.Department", "Department")
@@ -1549,11 +1599,6 @@ namespace BeHealthy.Infrastructure.Migrations
             modelBuilder.Entity("BeHealthy.Domain.Entities.Patient", b =>
                 {
                     b.Navigation("Appointments");
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.Privilege", b =>
-                {
-                    b.Navigation("RolePrivileges");
                 });
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>

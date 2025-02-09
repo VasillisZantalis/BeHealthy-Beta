@@ -59,6 +59,15 @@ public enum Severity
 
 public enum PrivilegeName
 {
-    EditAppointments,
-    DeleteAppointments
+    DoctorEditAppointments,
+    DoctorDeleteAppointments,
+    DoctorEditPatient,
+    DoctorDeletePatient,
+    DoctorPrescribeMedications,
+    DoctorGenerateMedicalReports,
+    PatientEditAppointments,
+    PatientDeleteAppointments,
+    NurseSeePatientPrescriptions,
+    NurseEditAppointments,
+    NurseDeleteAppointments,
 }

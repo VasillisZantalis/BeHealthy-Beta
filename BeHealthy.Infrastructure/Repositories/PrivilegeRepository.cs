@@ -19,7 +19,6 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
 
         var privileges = await context.Privileges
             .AsQueryable()
-            .Include(p => p.RolePrivileges)
             .ToListAsync();
 
         return privileges;
@@ -31,8 +30,7 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
 
         var privileges = await context.Privileges
             .AsQueryable()
-            .Include(p => p.RolePrivileges)
-            .Where(p => p.RolePrivileges.Any(rp => rp.Role == userRole))
+            .Where(p => p.Role == userRole)
             .Select(p => new
             {
                 Name = p.Name!,
@@ -49,13 +47,11 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
 
         var privilege = await context.Privileges
             .AsQueryable()
-            .Include(p => p.RolePrivileges)
             .FirstOrDefaultAsync(w => w.Name == privilegeName);
 
         if (privilege == null) return false;
 
-        var hasPrivilege = privilege.RolePrivileges
-            .Any(rp => rp.Role == role && rp.Privilege!.Value);
+        var hasPrivilege = privilege.Value;
 
         return hasPrivilege;
     }
@@ -71,8 +67,9 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
             {
                 existingPrivilege.Value = privilege.Value;
                 context.Privileges.Update(existingPrivilege);
-                context.SaveChanges();
             }
         }
+
+        await context.SaveChangesAsync();
     }
 }

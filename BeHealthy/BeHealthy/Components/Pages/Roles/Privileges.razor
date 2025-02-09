@@ -16,17 +16,17 @@
 else
 {
     <div class="container-fluid">
-        <button class="btn btn-success px-4" @onclick="SavePrivileges">@Resource.Save</button>
+        <button class="btn btn-success px-4 mb-4" @onclick="SavePrivileges">@Resource.Save</button>
         @foreach (var roleGroup in _groupedPrivileges)
         {
             <div class="card shadow border-0 rounded px-3 py-2 mt-3">
-                <h4>@roleGroup.Key.ToLocalizedString()</h4>
+                <h4 class="text-primary">@roleGroup.Key.ToLocalizedString()</h4>
                 <div class="card-body">
                     @foreach (var privilege in roleGroup.Value)
                     {
-                        <div class="form-control mb-3">
+                        <div class="form-check mb-2">
                             <InputCheckbox @bind-Value="privilege.Value" class="form-check-input" />
-                            <label class="form-check-label">@privilege.Name.ToLocalizedString()</label>
+                            <label class="form-check-label ms-2">@privilege.Name.ToLocalizedString()</label>
                         </div>
                     }
                 </div>
@@ -46,13 +46,12 @@ else
 
         var privileges = await PrivilegeService.GetPrivilegesAsync();
 
+        // Group privileges by role
         _groupedPrivileges = privileges
-            .Where(p => p.RoleNames != null)
-            .SelectMany(p => p.RoleNames, (p, roleName) => new { Privilege = p, RoleName = roleName })
-            .GroupBy(pr => pr.RoleName)
+            .GroupBy(p => p.Role)
             .ToDictionary(
                 group => group.Key,
-                group => group.Select(pr => pr.Privilege).ToList()
+                group => group.ToList()
             );
 
         LoaderService.SetLoader(false);
@@ -74,11 +73,13 @@ else
         if (_groupedPrivileges == null)
             return;
 
+        // Flatten the privileges to a single list before saving
         var privilegesToSave = _groupedPrivileges
             .SelectMany(group => group.Value)
             .ToList();
 
         await PrivilegeService.SavePrivilegesAsync(privilegesToSave);
+
         LoaderService.SetLoader(false);
         NavigationManager.Refresh(forceReload: true);
     }

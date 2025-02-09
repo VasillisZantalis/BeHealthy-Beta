@@ -50,9 +50,12 @@
         var appointments = await AppointmentService.GetAllAppointmentsAsync();
 
         _upcomingAppointments = appointments
-            .Where(a => a.AppointmentDate >= today && a.AppointmentDate <= today.AddDays(3))
+            .Where(a => a.AppointmentDate >= today 
+                && a.AppointmentDate <= today.AddDays(3)
+                && a.Status != AppointmentStatus.Cancelled
+                && a.Status != AppointmentStatus.Completed)
             .OrderBy(a => a.AppointmentDate)
-            .Take(10)
+            .Take(5)
             .ToList();
     }
 
