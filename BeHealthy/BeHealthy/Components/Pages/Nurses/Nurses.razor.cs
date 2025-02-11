@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Nurse;
+using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
 using BeHealthy.Domain;
@@ -6,6 +7,7 @@ using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Components.Pages.Nurses;
@@ -16,13 +18,12 @@ public partial class Nurses : BasePage
     [Inject] INurseService _nurseService { get; set; } = default!;
 
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<NurseDto> _nurses { get; set; } = default!;
 
     private string _selectedView = "Card";
     private bool hasActionRights;
-    private bool hasEditRight;
-    private bool hasDeleteRight;
 
     private PaginationState _paginationState = new();
 
@@ -31,12 +32,11 @@ public partial class Nurses : BasePage
         LoaderService.SetLoader(true);
 
         SetBreadcrumbs();
+        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
 
         _nurses = (await _nurseService.GetAllNursesAsync()).ToList();
         _paginationState.ItemsPerPage = 10;
-        //hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
-        //hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
-        hasActionRights = hasEditRight || hasDeleteRight;
+        hasActionRights = authState.User.GetUserRoleEnum() == UserRole.Admin;
 
         LoaderService.SetLoader(false);
     }

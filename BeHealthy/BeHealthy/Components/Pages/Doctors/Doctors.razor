@@ -38,8 +38,8 @@ else
                                   Email="@doctor.Email"
                                   Phone="@doctor.PhoneNumber"
                                   Specialty="@doctor.Specialty?.Name"
-                                  CanEdit="hasEditRight"
-                                  CanDelete="hasDeleteRight"
+                                  CanEdit="hasActionRights"
+                                  CanDelete="hasActionRights"
                                   Edit="() => EditDoctor(doctor.Id)"
                                   Delete="() => ConfirmDelete(doctor.Id)" />
                     </div>
@@ -93,18 +93,12 @@ else
                         {
                             <TemplateColumn Title="@Resource.Actions" Align="Align.End">
                                 <div class="d-flex justify-content-end">
-                                    @if (hasEditRight)
-                                    {
-                                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDoctor(context.Id))">
-                                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                                        </button>
-                                    }
-                                    @if (hasDeleteRight)
-                                    {
-                                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
-                                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                        </button>
-                                    }
+                                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDoctor(context.Id))">
+                                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                                    </button>
+                                    <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
+                                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                    </button>
                                 </div>
                             </TemplateColumn>
                         }

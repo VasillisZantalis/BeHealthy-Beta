@@ -157,7 +157,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             });
 
             users.Add(patientUser);
-            userRoles.Add(new IdentityUserRole<string> { UserId = patientUser.Id, RoleId = ((short)UserRole.Nurse).ToString() });
+            userRoles.Add(new IdentityUserRole<string> { UserId = patientUser.Id, RoleId = ((short)UserRole.Patient).ToString() });
 
         }
         modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRoles);

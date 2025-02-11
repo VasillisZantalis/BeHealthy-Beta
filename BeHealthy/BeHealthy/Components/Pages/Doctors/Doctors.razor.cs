@@ -1,11 +1,11 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Extensions;
+using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
 using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
-using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
@@ -16,6 +16,7 @@ public partial class Doctors : BasePage
 {
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] IPatientService _patientsService { get; set; } = default!;
+    [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -23,8 +24,6 @@ public partial class Doctors : BasePage
 
     private string _selectedView = "Card";
     private bool hasActionRights;
-    private bool hasEditRight;
-    private bool hasDeleteRight;
     private UserRole? _userRole;
 
     private PaginationState _paginationState = new();
@@ -42,9 +41,7 @@ public partial class Doctors : BasePage
         await LoadDoctors(userId, _userRole);
 
         _paginationState.ItemsPerPage = 10;
-        //hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
-        //hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
-        hasActionRights = hasEditRight || hasDeleteRight;
+        hasActionRights = _userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
     }
