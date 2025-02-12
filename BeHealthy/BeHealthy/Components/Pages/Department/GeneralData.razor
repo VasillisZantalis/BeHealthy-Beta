@@ -62,27 +62,36 @@
 
     private ValidationComponent? _validationComponent;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await GetSettings();
-    }
-
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         _doctorsSelect = Doctors.Select(s => new SelectItem
-        {
-            Value = s.Id,
-            Text = s.FullName
-        }).ToList();
+            {
+                Value = s.Id,
+                Text = s.FullName
+            }).ToList();
         _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        await GetSettings();
     }
 
     private async Task GetSettings()
     {
-        var keys = new[] { "DepartmentRequiresSupervisor" }.ToList();
-        var setting = await _appSettingsService.GetSettingByKeyAsync("DepartmentRequiresSupervisor");
+        var keys = new[] { "DepartmentRequiresSupervisor", "DefaultDepartmentSupervison" }.ToList();
+        var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
 
-        _isRequiredHeadOfDepartment = setting?.GetBooleanValue() ?? false;
+        var requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
+        var defaultSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DefaultDepartmentSupervison");
+
+        _isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;
+        var defaultSupervisor = defaultSupervisorSetting?.GetIntValue();
+
+        if (!IsEditMode && defaultSupervisor.HasValue && (DepartmentDto.HeadOfDepartmentId == null || DepartmentDto.HeadOfDepartmentId == 0))
+        {
+            if (_doctorsSelect.Any(d => d.Value == defaultSupervisor.Value))
+            {
+                DepartmentDto.HeadOfDepartmentId = defaultSupervisor.Value;
+            }
+        }
     }
 
     private async Task HandleSubmit()

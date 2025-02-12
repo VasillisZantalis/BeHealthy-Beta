@@ -127,11 +127,11 @@ public partial class AppointmentModal : BasePage
 
     protected async Task GetAppSettings()
     {
-        var keys = new[] { "RequiredRoomsInAppointments", "NurseIsRequiredForAppointment" }.ToList();
+        var keys = new[] { "AppointmentRequiresRoom", "NurseIsRequiredForAppointment" }.ToList();
         var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
 
         var nurseSetting = settings.FirstOrDefault(s => s.Key == "NurseIsRequiredForAppointment");
-        var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "RequiredRoomsInAppointments");
+        var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "AppointmentRequiresRoom");
 
         _showNurses = nurseSetting?.GetBooleanValue() ?? false;
         _showRooms = requireRoomSetting?.GetBooleanValue() ?? false;

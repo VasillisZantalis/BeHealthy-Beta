@@ -27,6 +27,7 @@ public partial class Appointments : BasePage
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
+    [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -70,8 +71,8 @@ public partial class Appointments : BasePage
                 break;
         }
 
-        //hasEditRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.EditAppointments);
-        //hasDeleteRight = await PrivilegeStateService.HasPrivilegeAsync(PrivilegeName.DeleteAppointments);
+        await GetUserPrivilege(userRole.Value);
+
         hasActionRights = hasEditRight || hasDeleteRight;
 
         await LoadDoctors();
@@ -175,5 +176,25 @@ public partial class Appointments : BasePage
             await _appointmentService.DeleteAppointmentAsync(appointmentId);
             _navigationManager.Refresh(forceReload: true);
         });
+    }
+
+    private async Task GetUserPrivilege(UserRole userRole)
+    {
+        (hasEditRight, hasDeleteRight) = userRole switch
+        {
+            UserRole.Admin => (true, true),
+            UserRole.Doctor => (await GetPrivilege(UserRole.Doctor, PrivilegeName.DoctorEditAppointments),
+                                await GetPrivilege(UserRole.Doctor, PrivilegeName.DoctorDeleteAppointments)),
+            UserRole.Patient => (await GetPrivilege(UserRole.Patient, PrivilegeName.PatientEditAppointments),
+                                 await GetPrivilege(UserRole.Patient, PrivilegeName.PatientDeleteAppointments)),
+            UserRole.Nurse => (await GetPrivilege(UserRole.Nurse, PrivilegeName.NurseEditAppointments),
+                               await GetPrivilege(UserRole.Nurse, PrivilegeName.NurseDeleteAppointments)),
+            _ => (false, false)
+        };
+    }
+
+    private async Task<bool> GetPrivilege(UserRole role, PrivilegeName privilege)
+    {
+        return await _privilegeService.HasPrivilege(role, privilege);
     }
 }
