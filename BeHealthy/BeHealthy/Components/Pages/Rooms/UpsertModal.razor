@@ -100,7 +100,6 @@
     public void CloseModal()
     {
         _showModal = false;
-        NavigationManager.Refresh(true);
         StateHasChanged();
     }
 
@@ -118,7 +117,7 @@
                 var roomForCreation = _roomDto.MapDtoToCreateDto();
                 await RoomService.AddRoomAsync(roomForCreation);
             }
-            CloseModal();
+            NavigationManager.Refresh(true);
         }
     }
 }

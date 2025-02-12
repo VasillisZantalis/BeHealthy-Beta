@@ -14,6 +14,6 @@ internal class SpecialtyRepository : GenericRepository<Specialty>, ISpecialtyRep
     public async Task<List<Specialty>> GetAllSpecialtiesAsync()
     {
         using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Specialities.ToListAsync();
+        return await context.Specialties.ToListAsync();
     }
 }

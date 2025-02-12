@@ -32,7 +32,7 @@
                                 <input type="checkbox" checked="@Convert.ToBoolean(setting.Value)" class="form-check-input" @onchange="e => UpdateSettingValue(setting, e.Value.ToString())"/>
                                 break;
                             case SettingType.SingleSelect:
-                                <select class="form-select" @onchange="e => UpdateSettingValue(setting, e.Value.ToString())">
+                                <select class="form-select w-25" @onchange="e => UpdateSettingValue(setting, e.Value.ToString())">
                                     @if (setting.Key == "DefaultDepartmentSupervison")
                                     {
                                         @foreach (var doctor in _doctorsSelect)

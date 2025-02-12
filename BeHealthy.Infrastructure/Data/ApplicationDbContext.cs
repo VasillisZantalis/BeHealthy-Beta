@@ -20,7 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Room> Rooms { get; set; } = null!;
     public DbSet<AppSetting> AppSettings { get; set; } = null!;
     public DbSet<Privilege> Privileges { get; set; } = null!;
-    public DbSet<Specialty> Specialities { get; set; } = null!;
+    public DbSet<Specialty> Specialties { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,6 +56,43 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         );
 
         var passwordHasher = new PasswordHasher<ApplicationUser>();
+
+        // Seed Departments
+        modelBuilder.Entity<Department>().HasData(
+            new Department { Id = 1, Name = "Cardiology", Location = "Building A - Floor 3", CreatedAt = DateTime.UtcNow },
+            new Department { Id = 2, Name = "Neurology", Location = "Building B - Floor 2", CreatedAt = DateTime.UtcNow },
+            new Department { Id = 3, Name = "Orthopedics", Location = "Building C - Floor 1", CreatedAt = DateTime.UtcNow },
+            new Department { Id = 4, Name = "Pediatrics", Location = "Building D - Floor 4", CreatedAt = DateTime.UtcNow },
+            new Department { Id = 5, Name = "Emergency", Location = "Building E - Ground Floor", CreatedAt = DateTime.UtcNow }
+        );
+
+        // Seed Rooms
+        modelBuilder.Entity<Room>().HasData(
+            new Room { Id = 1, Name = "Room 301", Number = 301, CreatedAt = DateTime.UtcNow, DepartmentId = 1 },
+            new Room { Id = 2, Name = "Room 302", Number = 302, CreatedAt = DateTime.UtcNow, DepartmentId = 1 },
+            new Room { Id = 3, Name = "Room 201", Number = 201, CreatedAt = DateTime.UtcNow, DepartmentId = 2 },
+            new Room { Id = 4, Name = "Room 202", Number = 202, CreatedAt = DateTime.UtcNow, DepartmentId = 2 },
+            new Room { Id = 5, Name = "Room 101", Number = 101, CreatedAt = DateTime.UtcNow, DepartmentId = 3 },
+            new Room { Id = 6, Name = "Room 102", Number = 102, CreatedAt = DateTime.UtcNow, DepartmentId = 3 },
+            new Room { Id = 7, Name = "Room 401", Number = 401, CreatedAt = DateTime.UtcNow, DepartmentId = 4 },
+            new Room { Id = 8, Name = "Room 402", Number = 402, CreatedAt = DateTime.UtcNow, DepartmentId = 4 },
+            new Room { Id = 9, Name = "Emergency Room 1", Number = 1, CreatedAt = DateTime.UtcNow, DepartmentId = 5 },
+            new Room { Id = 10, Name = "Emergency Room 2", Number = 2, CreatedAt = DateTime.UtcNow, DepartmentId = 5 }
+        );
+
+        // Seed Specialties
+        modelBuilder.Entity<Specialty>().HasData(
+            new Specialty { Id = 1, Name = "Cardiology", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 2, Name = "Neurology", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 3, Name = "Orthopedics", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 4, Name = "Pediatrics", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 5, Name = "Emergency Medicine", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 6, Name = "Radiology", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 7, Name = "Oncology", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 8, Name = "Dermatology", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 9, Name = "General Surgery", CreatedAt = DateTime.UtcNow },
+            new Specialty { Id = 10, Name = "Anesthesiology", CreatedAt = DateTime.UtcNow }
+        );
 
         // Seed Admin
         var adminUser = new ApplicationUser
