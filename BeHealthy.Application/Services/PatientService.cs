@@ -72,7 +72,11 @@ public class PatientService : IPatientService
 
         if (doctorIds.Any())
         {
-            var treatingDoctors = await _unitOfWork.DoctorRepository.FindAsync(w => doctorIds.Contains(w.Id));
+            var treatingDoctors = await _unitOfWork.DoctorRepository.FindWithIncludesAsync(
+                w => doctorIds.Contains(w.Id),
+                false,
+                w => w.User!);
+
             doctors.AddRange(treatingDoctors);
         }
 

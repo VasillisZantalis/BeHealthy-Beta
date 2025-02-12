@@ -12,6 +12,7 @@ public interface IGenericRepository<T> where T : class
     IQueryable<T> GetQueryable();
     Task<T?> GetByIdWithIncludes(int id, params Expression<Func<T, object>>[] includes);
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, bool trackChanges = false);
+    Task<IEnumerable<T>> FindWithIncludesAsync(Expression<Func<T, bool>> predicate, bool trackChanges = false, params Expression<Func<T, object>>[] includes);
     Task AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(int id);

@@ -76,6 +76,26 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             : await context.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
     }
 
+    public async Task<IEnumerable<T>> FindWithIncludesAsync(
+    Expression<Func<T, bool>> predicate,
+    bool trackChanges = false,
+    params Expression<Func<T, object>>[] includes)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        IQueryable<T> query = context.Set<T>();
+
+        if (includes != null && includes.Any())
+        {
+            query = includes.Aggregate(query, (current, include) => current.Include(include));
+        }
+
+        query = trackChanges ? query : query.AsNoTracking();
+
+        return await query.Where(predicate).ToListAsync();
+    }
+
+
     public async Task AddAsync(T entity)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
