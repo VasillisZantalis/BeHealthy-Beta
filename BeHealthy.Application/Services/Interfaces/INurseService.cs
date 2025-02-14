@@ -6,6 +6,7 @@ public interface INurseService
 {
     Task<IEnumerable<NurseDto>> GetAllNursesAsync();
     Task<NurseDto?> GetNurseByIdAsync(int id);
+    Task<NurseDto?> GetNursesOfPatientByUserId(int userId);
     Task AddNurseAsync(NurseForCreationDto nurse);
     Task UpdateNurseAsync(int id, NurseForUpdateDto nurse);
     Task DeleteNurseAsync(int id);

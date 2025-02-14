@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Nurse;
 using BeHealthy.Application.Extensions;
+using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
 using BeHealthy.Domain;
@@ -33,10 +34,12 @@ public partial class Nurses : BasePage
 
         SetBreadcrumbs();
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        var userRole = authState.User.GetUserRoleEnum();
 
-        _nurses = (await _nurseService.GetAllNursesAsync()).ToList();
+        await LoadNurses(authState.User.GetUserId(), userRole);
+
         _paginationState.ItemsPerPage = 10;
-        hasActionRights = authState.User.GetUserRoleEnum() == UserRole.Admin;
+        hasActionRights = userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
     }
@@ -56,6 +59,20 @@ public partial class Nurses : BasePage
         {
             _paginationState.ItemsPerPage = int.Parse((string)e.Value);
         }
+    }
+
+    private async Task LoadNurses(string? userId, UserRole? userRole = UserRole.Admin)
+    {
+        LoaderService.SetLoader(true);
+
+        _nurses = userRole switch
+        {
+            UserRole.Patient when userId is not null => (await _nurses.GetMyDoctorsAsync(userId)).ToList(),
+            _ => (await _nurseService.GetAllNursesAsync()).ToList()
+        };
+
+
+        LoaderService.SetLoader(false);
     }
 
     private void EditNurse(int id)
