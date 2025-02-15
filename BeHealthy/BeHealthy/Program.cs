@@ -76,7 +76,6 @@ builder.Services.Configure<JsonOptions>(options =>
 // States
 builder.Services.AddScoped<ModalStateService>();
 builder.Services.AddScoped<NavMenuState>();
-builder.Services.AddScoped<PrivilegeStateService>();
 builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<ConfirmDeleteStateService>();

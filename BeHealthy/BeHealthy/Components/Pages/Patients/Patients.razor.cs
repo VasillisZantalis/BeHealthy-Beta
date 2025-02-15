@@ -63,8 +63,8 @@ public partial class Patients : BasePage
 
         _paginationState.ItemsPerPage = 10;
 
-        hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilege(userRole.Value, PrivilegeName.DoctorEditPatient);
-        hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilege(userRole.Value, PrivilegeName.DoctorDeletePatient);
+        hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.EditPatient);
+        hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.DeletePatient);
         hasActionRights = hasEditRight || hasDeleteRight;
         LoaderService.SetLoader(false);
     }

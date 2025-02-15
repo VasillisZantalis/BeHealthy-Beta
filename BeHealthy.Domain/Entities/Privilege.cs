@@ -6,6 +6,5 @@ public class Privilege
 {
     public int Id { get; set; }
     public PrivilegeName Name { get; set; }
-    public bool Value { get; set; }
-    public UserRole Role { get; set; }
+    public ICollection<UserRolePrivilege> UserRolePrivileges { get; set; }
 }

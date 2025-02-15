@@ -19,8 +19,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Department> Departments { get; set; } = null!;
     public DbSet<Room> Rooms { get; set; } = null!;
     public DbSet<AppSetting> AppSettings { get; set; } = null!;
-    public DbSet<Privilege> Privileges { get; set; } = null!;
     public DbSet<Specialty> Specialties { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
+    public DbSet<Privilege> Privileges { get; set; } = null!;
+    public DbSet<UserRolePrivilege> UserRolePrivileges { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,7 +30,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         // Seed Roles
-        var roles = Enum.GetValues(typeof(UserRole))
+        var identityRoles = Enum.GetValues(typeof(UserRole))
             .Cast<UserRole>()
             .Select(role => new IdentityRole
             {
@@ -38,22 +40,45 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             })
             .ToArray();
 
-        modelBuilder.Entity<IdentityRole>().HasData(roles);
+        modelBuilder.Entity<IdentityRole>().HasData(identityRoles);
 
         // Seed Privileges
-        modelBuilder.Entity<Privilege>().HasData(
-            new Privilege { Id = 1, Name = PrivilegeName.DoctorEditAppointments, Role = UserRole.Doctor, Value = true },
-            new Privilege { Id = 2, Name = PrivilegeName.DoctorDeleteAppointments, Role = UserRole.Doctor, Value = true },
-            new Privilege { Id = 3, Name = PrivilegeName.DoctorPrescribeMedications, Role = UserRole.Doctor, Value = true },
-            new Privilege { Id = 4, Name = PrivilegeName.DoctorGenerateMedicalReports, Role = UserRole.Doctor, Value = false },
-            new Privilege { Id = 5, Name = PrivilegeName.DoctorDeletePatient, Role = UserRole.Doctor, Value = false },
-            new Privilege { Id = 6, Name = PrivilegeName.DoctorEditPatient, Role = UserRole.Doctor, Value = false },
-            new Privilege { Id = 7, Name = PrivilegeName.PatientEditAppointments, Role = UserRole.Patient, Value = false },
-            new Privilege { Id = 8, Name = PrivilegeName.PatientDeleteAppointments, Role = UserRole.Patient, Value = false },
-            new Privilege { Id = 9, Name = PrivilegeName.NurseSeePatientPrescriptions, Role = UserRole.Nurse, Value = false },
-            new Privilege { Id = 10, Name = PrivilegeName.NurseEditAppointments, Role = UserRole.Nurse, Value = false },
-            new Privilege { Id = 11, Name = PrivilegeName.NurseDeleteAppointments, Role = UserRole.Nurse, Value = false }
-        );
+        var privileges = Enum.GetValues(typeof(PrivilegeName))
+            .Cast<PrivilegeName>()
+            .Select(p => new Privilege
+            {
+                Id = (int)p,
+                Name = p
+            }).ToList();
+
+        modelBuilder.Entity<Privilege>().HasData(privileges);
+
+        var roles = Enum.GetValues(typeof(UserRole))
+            .Cast<UserRole>()
+            .Select(r => new Role
+            {
+                Id = (short)r,
+                Name = r
+            }).ToList();
+
+        modelBuilder.Entity<Role>().HasData(roles);
+
+        var userRolePrivileges = new List<UserRolePrivilege>();
+
+        foreach (var role in roles)
+        {
+            foreach (var privilege in privileges)
+            {
+                userRolePrivileges.Add(new UserRolePrivilege
+                {
+                    Id = role.Id,
+                    PrivilegeId = privilege.Id,
+                    HasPrivilege = false
+                });
+            }
+        }
+
+        modelBuilder.Entity<UserRolePrivilege>().HasData(userRolePrivileges);
 
         var passwordHasher = new PasswordHasher<ApplicationUser>();
 

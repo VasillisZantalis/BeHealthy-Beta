@@ -16,7 +16,6 @@ public partial class Home : BasePage
     protected override async Task OnInitializedAsync()
     {
         SetBreadcrumbs();
-        await PrivilegeStateService.LoadUserPrivileges();
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _isAdminUser = authState.User.IsAdminUser();

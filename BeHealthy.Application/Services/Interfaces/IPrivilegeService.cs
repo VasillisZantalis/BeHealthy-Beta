@@ -6,7 +6,7 @@ namespace BeHealthy.Application.Services.Interfaces;
 public interface IPrivilegeService
 {
     Task<List<PrivilegeDto>> GetPrivilegesAsync();
-    Task<Dictionary<PrivilegeName, bool>> GetPrivilegesForRoleAsync(UserRole role);
-    Task<bool> HasPrivilege(UserRole role, PrivilegeName privilegeName);
+    Task<bool> HasPrivilegeAsync(UserRole role, PrivilegeName privilegeName);
     Task SavePrivilegesAsync(List<PrivilegeDto> privileges);
+    Task SavePrivilegesAsync(UserRole userRole, List<PrivilegeName> privilegeNames, bool hasPrivilege);
 }

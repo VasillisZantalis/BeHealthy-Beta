@@ -31,6 +31,8 @@ public static class DependencyInjection
         services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
         services.AddScoped<IPrivilegeRepository, PrivilegeRepository>();
         services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IUserRolePrivilegeRepository, UserRolePrivilegeRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));

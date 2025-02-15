@@ -10,9 +10,6 @@ public class BasePage : ComponentBase
 
     public bool IsLoading { get; set; } = true;
 
-    [Inject] 
-    protected PrivilegeStateService PrivilegeStateService { get; set; } = default!;
-
     [Inject]
     protected BreadcrumbServiceState Breadcrumbs { get; set; } = default!;
 

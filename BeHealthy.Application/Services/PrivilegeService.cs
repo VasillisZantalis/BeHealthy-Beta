@@ -24,23 +24,29 @@ public class PrivilegeService : IPrivilegeService
         {
             Id = p.Id,
             Name = p.Name,
-            Value = p.Value,
-            Role = p.Role
         }).ToList();
 
         return privilegesDto;
     }
 
-    public async Task<Dictionary<PrivilegeName, bool>> GetPrivilegesForRoleAsync(UserRole role)
+    public async Task<bool> HasPrivilegeAsync(UserRole userRole, PrivilegeName privilegeName)
     {
-        var privileges = await _unitOfWork.PrivilegeRepository.GetUserPrivilegesAsync(role);
+        if (userRole == UserRole.Admin)
+            return true;
 
-        return privileges;
-    }
+        var role = (await _unitOfWork.RoleRepository.FindAsync(r => r.Name == userRole)).FirstOrDefault();
 
-    public async Task<bool> HasPrivilege(UserRole role, PrivilegeName privilegeName)
-    {
-        return role == UserRole.Admin ? true : await _unitOfWork.PrivilegeRepository.HasPrivilegeAsync(role, privilegeName);
+        var privilege = (await _unitOfWork.PrivilegeRepository.FindAsync(p => p.Name == privilegeName)).FirstOrDefault();
+
+        if (role == null || privilege == null)
+        {
+            return false;
+        }
+
+        var userRolePrivilege = await _unitOfWork.UserRolePrivilegeRepository.FindAsync(urp =>
+           urp.Id == role.Id && urp.PrivilegeId == privilege.Id);
+
+        return userRolePrivilege?.FirstOrDefault()?.HasPrivilege ?? false;
     }
 
     public async Task SavePrivilegesAsync(List<PrivilegeDto> privileges)
@@ -49,10 +55,13 @@ public class PrivilegeService : IPrivilegeService
         {
             Id = dto.Id,
             Name = dto.Name,
-            Value = dto.Value,
-            Role = dto.Role
         }).ToList();
 
         await _unitOfWork.PrivilegeRepository.UpdatePrivilegesAsync(entities);
+    }
+
+    public Task SavePrivilegesAsync(UserRole userRole, List<PrivilegeName> privilegeNames, bool hasPrivilege)
+    {
+        throw new NotImplementedException();
     }
 }

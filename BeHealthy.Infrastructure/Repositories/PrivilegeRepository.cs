@@ -24,23 +24,6 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
         return privileges;
     }
 
-    public async Task<Dictionary<PrivilegeName, bool>> GetUserPrivilegesAsync(UserRole userRole)
-    {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        var privileges = await context.Privileges
-            .AsQueryable()
-            .Where(p => p.Role == userRole)
-            .Select(p => new
-            {
-                Name = p.Name!,
-                p.Value
-            })
-            .ToDictionaryAsync(k => k.Name, v => v.Value);
-
-        return privileges;
-    }
-
     public async Task<bool> HasPrivilegeAsync(UserRole role, PrivilegeName privilegeName)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
@@ -51,7 +34,7 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
 
         if (privilege == null) return false;
 
-        var hasPrivilege = privilege.Value;
+        var hasPrivilege = privilege.UserRolePrivileges.Select(s => s.HasPrivilege).FirstOrDefault();
 
         return hasPrivilege;
     }
@@ -65,7 +48,7 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
             var existingPrivilege = await context.Privileges.FindAsync(privilege.Id);
             if (existingPrivilege != null)
             {
-                existingPrivilege.Value = privilege.Value;
+                //existingPrivilege.Value = privilege.Value;
                 context.Privileges.Update(existingPrivilege);
             }
         }

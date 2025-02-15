@@ -183,18 +183,13 @@ public partial class Appointments : BasePage
         (hasEditRight, hasDeleteRight) = userRole switch
         {
             UserRole.Admin => (true, true),
-            UserRole.Doctor => (await GetPrivilege(UserRole.Doctor, PrivilegeName.DoctorEditAppointments),
-                                await GetPrivilege(UserRole.Doctor, PrivilegeName.DoctorDeleteAppointments)),
-            UserRole.Patient => (await GetPrivilege(UserRole.Patient, PrivilegeName.PatientEditAppointments),
-                                 await GetPrivilege(UserRole.Patient, PrivilegeName.PatientDeleteAppointments)),
-            UserRole.Nurse => (await GetPrivilege(UserRole.Nurse, PrivilegeName.NurseEditAppointments),
-                               await GetPrivilege(UserRole.Nurse, PrivilegeName.NurseDeleteAppointments)),
-            _ => (false, false)
+            _ => (await GetPrivilege(userRole, PrivilegeName.EditAppointments),
+                await GetPrivilege(userRole, PrivilegeName.DeleteAppointments))
         };
     }
 
     private async Task<bool> GetPrivilege(UserRole role, PrivilegeName privilege)
     {
-        return await _privilegeService.HasPrivilege(role, privilege);
+        return await _privilegeService.HasPrivilegeAsync(role, privilege);
     }
 }
