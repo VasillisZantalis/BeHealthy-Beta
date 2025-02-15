@@ -67,15 +67,11 @@ public enum Severity
 [TypeConverter(typeof(EnumResourceConverter))]
 public enum PrivilegeName
 {
-    DoctorEditAppointments,
-    DoctorDeleteAppointments,
-    DoctorEditPatient,
-    DoctorDeletePatient,
-    DoctorPrescribeMedications,
-    DoctorGenerateMedicalReports,
-    PatientEditAppointments,
-    PatientDeleteAppointments,
-    NurseSeePatientPrescriptions,
-    NurseEditAppointments,
-    NurseDeleteAppointments,
+    EditAppointments,
+    DeleteAppointments,
+    EditPatient,
+    DeletePatient,
+    PrescribeMedications,
+    ViewPatientPrescriptions,
+    GenerateMedicalReports
 }
