@@ -50,10 +50,11 @@ else
 
         // Group privileges by role
         _groupedPrivileges = privileges
-            .GroupBy(p => p.Role)
+            .SelectMany(p => p.Roles, (privilege, roleName) => new { privilege, roleName }) // Flatten the data
+            .GroupBy(p => p.roleName) // Parse the role name into UserRole enum
             .ToDictionary(
-                group => group.Key,
-                group => group.ToList()
+                group => group.Key, // Group by UserRole
+                group => group.Select(p => p.privilege).ToList() // Map to the list of PrivilegeDto
             );
 
         LoaderService.SetLoader(false);

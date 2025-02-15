@@ -19,6 +19,8 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
 
         var privileges = await context.Privileges
             .AsQueryable()
+            .Include(i => i.UserRolePrivileges)
+            .ThenInclude(i => i.Role)
             .ToListAsync();
 
         return privileges;

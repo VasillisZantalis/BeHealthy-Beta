@@ -24,6 +24,10 @@ public class PrivilegeService : IPrivilegeService
         {
             Id = p.Id,
             Name = p.Name,
+            Roles = p.UserRolePrivileges
+            .Where(w => w.Role.Name != UserRole.Admin
+                && w.Role.Name != UserRole.Staff)
+            .Select(s => s.Role.Name).ToList(),
         }).ToList();
 
         return privilegesDto;
