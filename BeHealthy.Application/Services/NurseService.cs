@@ -1,6 +1,7 @@
 ﻿using BeHealthy.Application.Dtos.Nurse;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 
 namespace BeHealthy.Application.Services;
@@ -41,6 +42,36 @@ public class NurseService : INurseService
     public async Task DeleteNurseAsync(int id)
     {
         await _unitOfWork.NurseRepository.DeleteNurseAsync(id);
+    }
+
+    public async Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId)
+    {
+        List<Nurse> nurses = new();
+
+        var patient = await _unitOfWork.PatientRepository.GetByUserIdAsync(userId);
+
+        if (patient is null)
+            return Enumerable.Empty<NurseDto>();
+
+        var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id);
+
+        List<int?> nurseIds = patientAppointments
+            .Select(s => s.NurseId)
+            .Distinct()
+            .ToList();
+
+        if (nurseIds.Any())
+        {
+            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.FindAsync(w => nurseIds.Contains(w.Id));
+            nurses.AddRange(nursesThatTreatPatient);
+        }
+
+        var distinctNurses = nurses
+            .GroupBy(g => g.Id)
+            .Select(s => s.First())
+            .ToList();
+
+        return distinctNurses.MapToDto();
     }
 }
 
