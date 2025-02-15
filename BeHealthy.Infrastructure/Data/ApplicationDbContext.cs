@@ -43,25 +43,34 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<IdentityRole>().HasData(identityRoles);
 
         // Seed Privileges
-        var privileges = Enum.GetValues(typeof(PrivilegeName))
-            .Cast<PrivilegeName>()
-            .Select(p => new Privilege
-            {
-                Id = (int)p,
-                Name = p
-            }).ToList();
+        var privileges = new List<Privilege>
+        {
+            new Privilege { Id = 1, Name = PrivilegeName.EditAppointments },
+            new Privilege { Id = 2, Name = PrivilegeName.DeleteAppointments },
+            new Privilege { Id = 3, Name = PrivilegeName.EditPatient },
+            new Privilege { Id = 4, Name = PrivilegeName.DeletePatient },
+            new Privilege { Id = 5, Name = PrivilegeName.PrescribeMedications },
+            new Privilege { Id = 6, Name = PrivilegeName.ViewPatientPrescriptions },
+            new Privilege { Id = 7, Name = PrivilegeName.GenerateMedicalReports }
+        };
 
+        // Add the privileges to the model
         modelBuilder.Entity<Privilege>().HasData(privileges);
 
-        var roles = Enum.GetValues(typeof(UserRole))
-            .Cast<UserRole>()
-            .Select(r => new Role
-            {
-                Id = (short)r,
-                Name = r
-            }).ToList();
 
+        // Seed Roles
+        var roles = new List<Role>
+        {
+            new Role { Id = 1, Name = UserRole.Admin },
+            new Role { Id = 2, Name = UserRole.Staff },
+            new Role { Id = 3, Name = UserRole.Doctor },
+            new Role { Id = 4, Name = UserRole.Nurse },
+            new Role { Id = 5, Name = UserRole.Patient }
+        };
+
+        // Add the roles to the model
         modelBuilder.Entity<Role>().HasData(roles);
+
 
         var userRolePrivileges = new List<UserRolePrivilege>();
 
@@ -143,7 +152,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         var nurses = new List<Nurse>();
         var patients = new List<Patient>();
 
-        for (int i = 1; i <= 5; i++)
+        for (int i = 1; i <= 15; i++)
         {
             var doctorUserId = Guid.NewGuid().ToString();
             var nurseUserId = Guid.NewGuid().ToString();

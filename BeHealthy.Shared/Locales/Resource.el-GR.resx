@@ -384,38 +384,26 @@
   <data name="Privilege" xml:space="preserve">
     <value>Δικαίωμα</value>
   </data>
-  <data name="PrivilegeName_DoctorDeleteAppointments" xml:space="preserve">
+  <data name="PrivilegeName_DeleteAppointments" xml:space="preserve">
     <value>Διαγραφή Ραντεβού</value>
   </data>
-  <data name="PrivilegeName_DoctorDeletePatient" xml:space="preserve">
+  <data name="PrivilegeName_DeletePatient" xml:space="preserve">
     <value>Διαγραφή Ασθενή</value>
   </data>
-  <data name="PrivilegeName_DoctorEditAppointments" xml:space="preserve">
+  <data name="PrivilegeName_EditAppointments" xml:space="preserve">
     <value>Επεξεργασία Ραντεβού</value>
   </data>
-  <data name="PrivilegeName_DoctorEditPatient" xml:space="preserve">
+  <data name="PrivilegeName_EditPatient" xml:space="preserve">
     <value>Επεξεργασία Ασθενή</value>
   </data>
-  <data name="PrivilegeName_DoctorGenerateMedicalReports" xml:space="preserve">
+  <data name="PrivilegeName_GenerateMedicalReports" xml:space="preserve">
     <value>Δημιουργία ιατρικών αναφορών</value>
   </data>
-  <data name="PrivilegeName_DoctorPrescribeMedications" xml:space="preserve">
+  <data name="PrivilegeName_PrescribeMedications" xml:space="preserve">
     <value>Συνταγογράφηση Φαρμάκων</value>
   </data>
-  <data name="PrivilegeName_NurseDeleteAppointments" xml:space="preserve">
-    <value>Διαγραφή Ραντεβού</value>
-  </data>
-  <data name="PrivilegeName_NurseEditAppointments" xml:space="preserve">
-    <value>Επεξεργασία Ραντεβού</value>
-  </data>
-  <data name="PrivilegeName_NurseSeePatientPrescriptions" xml:space="preserve">
-    <value>Δει Συνταγές των Ασθενών</value>
-  </data>
-  <data name="PrivilegeName_PatientDeleteAppointments" xml:space="preserve">
-    <value>Διαγραφή Ραντεβού</value>
-  </data>
-  <data name="PrivilegeName_PatientEditAppointments" xml:space="preserve">
-    <value>Επεξεργασία Ραντεβού</value>
+  <data name="PrivilegeName_ViewPatientPrescriptions" xml:space="preserve">
+    <value>Βλέπει Συνταγές των Ασθενών</value>
   </data>
   <data name="Privileges" xml:space="preserve">
     <value>Δικαιώματα</value>
