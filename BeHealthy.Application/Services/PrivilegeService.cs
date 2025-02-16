@@ -16,21 +16,27 @@ public class PrivilegeService : IPrivilegeService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<List<PrivilegeDto>> GetPrivilegesAsync()
+    public async Task<List<RolePrivilegesDto>> GetPrivilegesAsync()
     {
         var privileges = await _unitOfWork.PrivilegeRepository.GetPrivilegesAsync();
 
-        var privilegesDto = privileges.Select(p => new PrivilegeDto
-        {
-            Id = p.Id,
-            Name = p.Name,
-            Roles = p.UserRolePrivileges
-            .Where(w => w.Role.Name != UserRole.Admin
-                && w.Role.Name != UserRole.Staff)
-            .Select(s => s.Role.Name).ToList(),
-        }).ToList();
+        var rolesWithPrivileges = privileges
+            .SelectMany(p => p.UserRolePrivileges
+                .Where(urp => urp.Role != null)
+                .Select(urp => new { urp.Role, p.Name, urp.HasPrivilege }))
+            .GroupBy(x => x.Role)
+            .Select(group => new RolePrivilegesDto
+            {
+                Role = group.Key.Name,
+                Privileges = group.Select(x => new PrivilegeDto
+                {
+                    PrivilegeName = x.Name,
+                    HasPrivilege = x.HasPrivilege
+                }).ToList()
+            })
+            .ToList();
 
-        return privilegesDto;
+        return rolesWithPrivileges;
     }
 
     public async Task<bool> HasPrivilegeAsync(UserRole userRole, PrivilegeName privilegeName)
@@ -53,19 +59,9 @@ public class PrivilegeService : IPrivilegeService
         return userRolePrivilege?.FirstOrDefault()?.HasPrivilege ?? false;
     }
 
-    public async Task SavePrivilegesAsync(List<PrivilegeDto> privileges)
+    public async Task UpdatePrivilegeAsync(UserRole roleName, PrivilegeName privilegeName, bool hasPrivilege)
     {
-        var entities = privileges.Select(dto => new Privilege
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-        }).ToList();
+        await _unitOfWork.PrivilegeRepository.UpdatePrivilegeAsync(roleName, privilegeName, hasPrivilege);
 
-        await _unitOfWork.PrivilegeRepository.UpdatePrivilegesAsync(entities);
-    }
-
-    public Task SavePrivilegesAsync(UserRole userRole, List<PrivilegeName> privilegeNames, bool hasPrivilege)
-    {
-        throw new NotImplementedException();
     }
 }

@@ -10,24 +10,24 @@
 
 <PageTitle>@Resource.Privileges</PageTitle>
 
-@if (_groupedPrivileges == null)
+@if (_rolePrivileges is null || !_rolePrivileges.Any())
 {
     <p>Loading privileges...</p>
 }
 else
 {
     <div class="container-fluid">
-        <button class="btn btn-success px-4 mb-4" @onclick="SavePrivileges">@Resource.Save</button>
-        @foreach (var roleGroup in _groupedPrivileges)
+        @foreach (var rolePrivilege in _rolePrivileges)
         {
             <div class="card shadow border-0 rounded px-3 py-2 mt-3">
-                <h4 class="">@EnumResourceConverter.ConvertToLocalizedString(roleGroup.Key)</h4>
+                <h4 class="">@EnumResourceConverter.ConvertToLocalizedString(rolePrivilege.Role)</h4>
                 <div class="card-body">
-                    @foreach (var privilege in roleGroup.Value)
+                    @foreach (var privilege in rolePrivilege.Privileges)
                     {
                         <div class="form-check mb-2">
-                            <InputCheckbox @bind-Value="privilege.Value" class="form-check-input" />
-                            <label class="form-check-label ms-2">@EnumResourceConverter.ConvertToLocalizedString(privilege.Name)</label>
+                            <input type="checkbox" class="form-check-input" checked="@(privilege.HasPrivilege)"
+                                @onchange="() => UpdatePrivilege(rolePrivilege.Role, privilege.PrivilegeName, !privilege.HasPrivilege)" />
+                            <label class="form-check-label ms-2">@EnumResourceConverter.ConvertToLocalizedString(privilege.PrivilegeName)</label>
                         </div>
                         <hr>
                     }
@@ -38,7 +38,7 @@ else
 }
 
 @code {
-    private Dictionary<UserRole, List<PrivilegeDto>>? _groupedPrivileges;
+    private List<RolePrivilegesDto> _rolePrivileges;
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,16 +46,8 @@ else
 
         SetBreadcrumbs();
 
-        var privileges = await PrivilegeService.GetPrivilegesAsync();
-
-        // Group privileges by role
-        _groupedPrivileges = privileges
-            .SelectMany(p => p.Roles, (privilege, roleName) => new { privilege, roleName }) // Flatten the data
-            .GroupBy(p => p.roleName) // Parse the role name into UserRole enum
-            .ToDictionary(
-                group => group.Key, // Group by UserRole
-                group => group.Select(p => p.privilege).ToList() // Map to the list of PrivilegeDto
-            );
+        var rolePrivileges = await PrivilegeService.GetPrivilegesAsync();
+        _rolePrivileges = rolePrivileges.Where(w => w.Role != UserRole.Admin && w.Role != UserRole.Staff).ToList();
 
         LoaderService.SetLoader(false);
     }
@@ -69,20 +61,10 @@ else
         });
     }
 
-    private async Task SavePrivileges()
+    private async Task UpdatePrivilege(UserRole roleName, PrivilegeName privilegeName, bool hasPrivilege)
     {
         LoaderService.SetLoader(true);
-
-        if (_groupedPrivileges == null)
-            return;
-
-        // Flatten the privileges to a single list before saving
-        var privilegesToSave = _groupedPrivileges
-            .SelectMany(group => group.Value)
-            .ToList();
-
-        await PrivilegeService.SavePrivilegesAsync(privilegesToSave);
-
+        await PrivilegeService.UpdatePrivilegeAsync(roleName, privilegeName, hasPrivilege);
         LoaderService.SetLoader(false);
         NavigationManager.Refresh(forceReload: true);
     }

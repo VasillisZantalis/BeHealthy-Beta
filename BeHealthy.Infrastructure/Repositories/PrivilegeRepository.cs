@@ -50,11 +50,32 @@ public class PrivilegeRepository : GenericRepository<Privilege>, IPrivilegeRepos
             var existingPrivilege = await context.Privileges.FindAsync(privilege.Id);
             if (existingPrivilege != null)
             {
-                //existingPrivilege.Value = privilege.Value;
                 context.Privileges.Update(existingPrivilege);
             }
         }
 
         await context.SaveChangesAsync();
     }
+
+    public async Task UpdatePrivilegeAsync(UserRole roleName, PrivilegeName privilegeName, bool hasPrivilege)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        var role = await context.Roles
+            .Include(r => r.UserRolePrivileges)
+            .FirstOrDefaultAsync(r => r.Name == roleName);
+
+        var privilege = await context.Privileges
+            .FirstOrDefaultAsync(p => p.Name == privilegeName);
+
+        var userRolePrivilege = role?.UserRolePrivileges
+            .FirstOrDefault(urp => urp.PrivilegeId == privilege.Id);
+
+        if (userRolePrivilege != null)
+        {
+            userRolePrivilege.HasPrivilege = hasPrivilege;
+            await context.SaveChangesAsync();
+        }
+    }
+
 }
