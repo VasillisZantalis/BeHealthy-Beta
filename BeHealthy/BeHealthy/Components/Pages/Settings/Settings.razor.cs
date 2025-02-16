@@ -7,7 +7,7 @@ using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 
-namespace BeHealthy.Components.Pages;
+namespace BeHealthy.Components.Pages.Settings;
 
 public partial class Settings : BasePage
 {
@@ -15,7 +15,7 @@ public partial class Settings : BasePage
 
     private IEnumerable<IGrouping<SettingGroup, AppSetting>>? _settingsGroupedByArea;
 
-    [Inject] 
+    [Inject]
     IAppSettingsService AppSettingsService { get; set; } = default!;
     [Inject]
     private NavigationManager _navigationManager { get; set; } = default!;
@@ -29,7 +29,7 @@ public partial class Settings : BasePage
     {
         LoaderService.SetLoader(true);
 
-        SetBreadcrumbs(); 
+        SetBreadcrumbs();
         _settings = (await AppSettingsService.GetAppSettingsAsync()).ToList();
         _settingsGroupedByArea = _settings
             .OrderBy(o => o.Group)
@@ -47,7 +47,7 @@ public partial class Settings : BasePage
             }).ToList();
             _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
         }
-        
+
 
         LoaderService.SetLoader(false);
     }
@@ -61,10 +61,8 @@ public partial class Settings : BasePage
         });
     }
 
-    private async Task UpdateSettingValue(AppSetting setting, string newValue)
+    private async Task UpdateSettingValue(AppSetting setting)
     {
-        setting.Value = newValue;
-
         await AppSettingsService.UpdateSettingAsync(setting);
         await ToastrStateService.ShowSuccess(Resource.Success, 500);
     }

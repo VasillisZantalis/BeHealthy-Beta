@@ -1,0 +1,46 @@
+﻿@using BeHealthy.Shared.Common
+
+<div class="form-group w-100 p-3 border rounded-3 mb-2">
+    <div class="d-flex flex-row justify-content-between">
+        <div>
+            <span title="@Setting.Description">
+                <Icon IconClass="@FAIcon.CircleInfo" TextClass="text-info" />
+            </span>
+            <span>@Setting.Caption</span>
+        </div>
+        @switch (Setting.Type)
+        {
+            case SettingType.TextField:
+                <input type="text" value="@Setting.Value" @onchange="e => UpdateSettingValue(e)" />
+                break;
+            case SettingType.Checkbox:
+                <input type="checkbox" checked="@Convert.ToBoolean(Setting.Value)" class="form-check-input" @onchange="e => UpdateSettingValue(e)" />
+                break;
+            case SettingType.SingleSelect:
+                <select class="form-select w-25" @onchange="e => UpdateSettingValue(e)">
+                    @if (Setting.Key == "DefaultDepartmentSupervison")
+                    {
+                        @foreach (var doctor in SelectItems)
+                        {
+                            <option value="@doctor.Value" selected="@(doctor.Value.ToString() == Setting.Value)">
+                                @doctor.Text
+                            </option>
+                        }
+                    }
+                </select>
+                break;
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public AppSetting Setting { get; set; }
+    [Parameter] public EventCallback<AppSetting> OnSettingChanged { get; set; }
+    [Parameter] public List<SelectItem> SelectItems { get; set; }
+
+    private async Task UpdateSettingValue(ChangeEventArgs e)
+    {
+        Setting.Value = e.Value.ToString();
+        await OnSettingChanged.InvokeAsync(Setting);
+    }
+}

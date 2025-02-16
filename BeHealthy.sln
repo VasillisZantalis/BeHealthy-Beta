@@ -5,15 +5,15 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeHealthy", "BeHealthy\BeHealthy\BeHealthy.csproj", "{714A8826-A95C-4EBA-95F0-04EA8842A0B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Domain", "BeHealthy.Domain\BeHealthy.Domain.csproj", "{DCA2A44C-DA03-4E81-B52B-BF99E8221CE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeHealthy.Domain", "BeHealthy.Domain\BeHealthy.Domain.csproj", "{DCA2A44C-DA03-4E81-B52B-BF99E8221CE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Application", "BeHealthy.Application\BeHealthy.Application.csproj", "{DCD9C815-314E-4D7B-9425-0FA5C95AFC3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeHealthy.Application", "BeHealthy.Application\BeHealthy.Application.csproj", "{DCD9C815-314E-4D7B-9425-0FA5C95AFC3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Infrastructure", "BeHealthy.Infrastructure\BeHealthy.Infrastructure.csproj", "{6B727CCE-5B24-4C14-8EB9-F75AF5EC9FDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeHealthy.Infrastructure", "BeHealthy.Infrastructure\BeHealthy.Infrastructure.csproj", "{6B727CCE-5B24-4C14-8EB9-F75AF5EC9FDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Shared", "BeHealthy.Shared\BeHealthy.Shared.csproj", "{6735CEE5-FEE5-4161-A7D7-B5FCF4BAF65C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeHealthy.Shared", "BeHealthy.Shared\BeHealthy.Shared.csproj", "{6735CEE5-FEE5-4161-A7D7-B5FCF4BAF65C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Tests", "BeHealthy.Tests\BeHealthy.Tests.csproj", "{5F4B9824-929E-4E62-91D9-21F035EA1C15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeHealthy.Tests", "BeHealthy.Tests\BeHealthy.Tests.csproj", "{5F4B9824-929E-4E62-91D9-21F035EA1C15}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{67CBA599-3D73-4042-9E77-2E978B8F1B40}"
 EndProject
