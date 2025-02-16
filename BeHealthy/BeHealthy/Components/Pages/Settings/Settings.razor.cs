@@ -63,7 +63,9 @@ public partial class Settings : BasePage
 
     private async Task UpdateSettingValue(AppSetting setting)
     {
+        LoaderService.SetLoader(true);
         await AppSettingsService.UpdateSettingAsync(setting);
-        await ToastrStateService.ShowSuccess(Resource.Success, 500);
+        LoaderService.SetLoader(false);
+        //await ToastrStateService.ShowSuccess(Resource.Success);
     }
 }
