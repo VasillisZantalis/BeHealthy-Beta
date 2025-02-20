@@ -16,7 +16,7 @@
 
 <div class="container-fluid p-5 border rounded shadow">
     <EditForm Model="Input" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
-        <DataAnnotationsValidator />
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
@@ -102,6 +102,9 @@
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
+
+    private FluentValidationValidator _fluentValidationValidator = new();
+
     private bool _inProgress = false;
     private int? _departmentId;
 
@@ -164,7 +167,7 @@
         {
             _inProgress = false;
             identityErrors = result.Errors;
-            var errors = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
+            var errors = identityErrors is null ? "Failed" : string.Join(Environment.NewLine, identityErrors.Select(error => error.Description));
             _alert.ShowFailed(errors);
             return;
         }
@@ -183,14 +186,17 @@
             Image = Input.Image
         };
 
-        var doctorCreationResult = await DoctorService.AddDoctorAsync(doctorForCreationDto);
-
-        if (!doctorCreationResult.Success)
+        if (await _fluentValidationValidator.ValidateAsync())
         {
-            await UserManager.DeleteAsync(user);
-            _inProgress = false;
-            _alert.ShowFailed(Resource.SomethingWentWrong);
-            return;
+            var doctorCreationResult = await DoctorService.AddDoctorAsync(doctorForCreationDto);
+
+            if (!doctorCreationResult.Success)
+            {
+                await UserManager.DeleteAsync(user);
+                _inProgress = false;
+                _alert.ShowFailed(Resource.SomethingWentWrong);
+                return;
+            }
         }
 
         _inProgress = false;

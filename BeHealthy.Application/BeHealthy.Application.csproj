@@ -21,4 +21,11 @@
     <ProjectReference Include="..\BeHealthy.Shared\BeHealthy.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validations\Prescription\" />
+    <Folder Include="Validations\Specialty\" />
+    <Folder Include="Validations\Nurse\" />
+    <Folder Include="Validations\Patient\" />
+  </ItemGroup>
+
 </Project>

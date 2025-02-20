@@ -18,8 +18,17 @@ public class LocalizedIdentityErrorDescriber : IdentityErrorDescriber
     {
         return new IdentityError
         {
-            Code = nameof(PasswordTooShort),
+            Code = nameof(InvalidEmail),
             Description = Resource.InvalidEmail
+        };
+    }
+
+    public override IdentityError InvalidUserName(string? userName)
+    {
+        return new IdentityError
+        {
+            Code = nameof(InvalidEmail),
+            Description = Resource.InvalidUserName
         };
     }
 

@@ -279,6 +279,9 @@
   <data name="InvalidLoginCredentials" xml:space="preserve">
     <value>Invalid Login Credentials</value>
   </data>
+  <data name="InvalidUserName" xml:space="preserve">
+    <value>Invalid Username</value>
+  </data>
   <data name="Joined" xml:space="preserve">
     <value>Joined</value>
   </data>
