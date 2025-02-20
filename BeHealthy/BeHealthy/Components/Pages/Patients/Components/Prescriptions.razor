@@ -6,33 +6,48 @@
 
 
 <div class="py-3">
-
-    <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreatePrescription">
-        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-    </button>
+    @if (CanCreatePrescription)
+    {
+        <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreatePrescription">
+            <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
+        </button>
+    }
 
     <PrescriptionModal @ref="_prescriptionModal"
-                       Successful="HandleResponse"
-                       PrescriptionId="_prescriptionId" />
+    Successful="HandleResponse"
+    PrescriptionId="_prescriptionId" />
 
     @if (_prescriptions is not null && _prescriptions.Any())
     {
         <QuickGrid @ref="quickGrid"
-                   Class="table table-responsive"
-                   Items="@_prescriptions.AsQueryable()"
-                   ItemKey="@(x => x.Id)">
+        Class="table table-responsive"
+        Items="@_prescriptions.AsQueryable()"
+        ItemKey="@(x => x.Id)">
             <PropertyColumn Title="@Resource.Medication"
-                            Property="@(x => x.Medication)" />
+            Property="@(x => x.Medication)" />
             <PropertyColumn Title="@Resource.Dosage"
-                            Property="@(x => x.Dosage)" />
+            Property="@(x => x.Dosage)" />
             <PropertyColumn Title="@Resource.Doctor"
-                            Property="@(x => x.Doctor.FullName)" />
+            Property="@(x => x.Doctor.FullName)" />
             <PropertyColumn Title="@Resource.DatePrescribed"
-                            Property="@(x => x.DatePrescribed)"
-                            Format="dd MMM yyyy"
-                            IsDefaultSortColumn="true"
-                            InitialSortDirection="SortDirection.Descending" />
-            @if (hasActionRights)
+            Property="@(x => x.DatePrescribed)"
+            Format="dd MMM yyyy"
+            IsDefaultSortColumn="true"
+            InitialSortDirection="SortDirection.Descending" />
+
+            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
+                <div class="d-flex justify-content-end">
+                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditPrescription(context.Id))">
+                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                    </button>
+                    <button class="btn" title="@(Resource.Delete)" @onclick="() => DeletePrescription(context.Id)">
+                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                    </button>
+                </div>
+            </TemplateColumn>
+
+            @*IMPLEMENT SETTINGS OR PRIVILEGES*@
+            @* @if (hasActionRights)
             {
                 <TemplateColumn Title="@Resource.Actions" Align="Align.End">
                     <div class="d-flex justify-content-end">
@@ -50,7 +65,7 @@
                         }
                     </div>
                 </TemplateColumn>
-            }
+            } *@
         </QuickGrid>
     }
     else
@@ -62,6 +77,8 @@
 @code {
     [Parameter]
     public int PatientId { get; set; }
+    [Parameter, EditorRequired]
+    public bool CanCreatePrescription { get; set; }
 
     private List<PrescriptionDto> _prescriptions { get; set; } = default!;
 
@@ -79,7 +96,7 @@
     {
         LoaderService.SetLoader(true);
 
-        hasActionRights = hasEditRight || hasDeleteRight;
+        //hasActionRights = hasEditRight || hasDeleteRight;
 
         _prescriptions = (await PrescriptionService.GetPrescriptionsByPatientIdAsync(PatientId)).ToList();
 

@@ -69,6 +69,7 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
         return await context.Patients
             .AsNoTracking()
             .Where(w => w.DepartmentId == departmentId)
+            .Include(i => i.User)
             .ToListAsync();
     }
 }

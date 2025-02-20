@@ -19,7 +19,11 @@
 
     private string? _icon;
 
-    private void CloseAlert() => _showAlert = false;
+    private void CloseAlert()
+    {
+        _showAlert = false;
+        StateHasChanged();
+    }
 
     public void ShowFailed(string? message)
     {

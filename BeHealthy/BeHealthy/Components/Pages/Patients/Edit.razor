@@ -6,8 +6,10 @@
 
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
+@inject IPrivilegeService PrivilegeService
 @inject IUserStore<ApplicationUser> UserStore
 @inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Edit</PageTitle>
 
@@ -16,9 +18,12 @@
         <li class="nav-item">
             <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Prescriptions</a>
-        </li>
+        @if (canSeePrecriptions)
+        {
+            <li class="nav-item">
+                <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Prescriptions</a>
+            </li>
+        }
     </ul>
     @if (activeTab == 0)
     {
@@ -77,9 +82,10 @@
             </EditForm>
         </div>
     }
-    else if (activeTab == 1)
+    else if (activeTab == 1 && canSeePrecriptions)
     {
-        <Prescriptions PatientId="PatientId" />
+        <Prescriptions PatientId="PatientId"
+                       CanCreatePrescription="canCreatePrecriptions" />
     }
 </div>
 
@@ -100,6 +106,17 @@
 
     private int activeTab = 0;
     private void SelectTab(int tabName) => activeTab = tabName;
+    private bool canSeePrecriptions;
+    private bool canCreatePrecriptions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userRole = authState.User.GetUserRoleEnum();
+
+        canSeePrecriptions = await PrivilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.ViewPatientPrescriptions);
+        canCreatePrecriptions = await PrivilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.PrescribeMedications);
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {

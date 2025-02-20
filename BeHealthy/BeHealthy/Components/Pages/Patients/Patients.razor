@@ -1,5 +1,5 @@
 ﻿@page "/patients"
-@attribute [Authorize]
+@attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
