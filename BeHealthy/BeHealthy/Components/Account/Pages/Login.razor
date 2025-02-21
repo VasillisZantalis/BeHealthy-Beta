@@ -93,7 +93,10 @@
 
             await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
 
-            NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE, forceLoad: true);
+            var redirectUrl = ReturnUrl ?? RoutingEndpoints.HOME_PAGE;
+            Console.WriteLine("RETURN URL: " + ReturnUrl);
+            Console.WriteLine("REDIRECT URL: " + redirectUrl);
+            NavigationManager.NavigateTo(redirectUrl);
         }
         else
         {
