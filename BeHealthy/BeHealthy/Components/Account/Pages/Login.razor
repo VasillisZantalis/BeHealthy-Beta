@@ -93,9 +93,6 @@
 
             await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
 
-            Console.WriteLine("BASE URI" + NavigationManager.BaseUri);
-            Console.WriteLine("URI" + NavigationManager.Uri);
-
             var uri = new Uri(NavigationManager.Uri);
             var returnUrl = uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped)
                           .Replace("http://", "https://") + ReturnUrl?.Replace(uri.GetLeftPart(UriPartial.Authority), "");
