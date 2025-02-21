@@ -11,6 +11,7 @@ namespace BeHealthy.Infrastructure.Data
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
             var configuration = new ConfigurationBuilder()
+               .AddEnvironmentVariables()
                .AddUserSecrets<ApplicationDbContextFactory>()
                .Build();
 
