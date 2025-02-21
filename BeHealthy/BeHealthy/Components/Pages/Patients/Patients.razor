@@ -25,16 +25,10 @@
              FilterModel="_filters"
              OnSearch="HandleFilterApplied">
         <div class="col-12 col-sm-4">
-            <div class="form-floating">
-                <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" />
-                <label for="firstNameFilter" class="form-label">@Resource.FirstName</label>
-            </div>
+            <input id="firstNameFilter" class="form-control" @bind="_filters.FirstName" placeholder="@Resource.FirstName" />
         </div>
         <div class="col-12 col-sm-4">
-            <div class="form-floating">
-                <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" />
-                <label for="lastNameFilter" class="form-label">@Resource.LastName</label>
-            </div>
+            <input id="lastNameFilter" class="form-control" @bind="_filters.LastName" placeholder="@Resource.LastName"/>
         </div>
     </Filters>
 }

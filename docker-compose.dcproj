@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿
 <Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
@@ -8,6 +8,7 @@
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>behealthy</DockerServiceName>
+    <UserSecretsId>c816e3f2-4e9a-476e-8285-dbbd21876024</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

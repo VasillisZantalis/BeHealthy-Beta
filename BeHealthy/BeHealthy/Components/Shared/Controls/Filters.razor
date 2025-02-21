@@ -1,17 +1,18 @@
 ﻿@typeparam TFilter
 
 <div id="filters-container" class="mt-3">
-    <div class="card border rounded p-3">
+    <fieldset>
+        <legend>@Resource.Filters</legend>
         <div class="row">
             @ChildContent
             <div class="col-4 text-end">
-                <button class="btn btn-sm main-color text-white" @onclick="OnSearchClicked">
+                <button class="btn main-color text-white" @onclick="OnSearchClicked">
                     <Icon IconClass="@FAIcon.Search" />
                     @Resource.Search
                 </button>
             </div>
         </div>
-    </div>
+    </fieldset>
 </div>
 
 @code {

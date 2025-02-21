@@ -35,7 +35,13 @@
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-primary">@Resource.Login</button>
+                    <button type="submit" class="w-100 btn btn-primary">
+                        @if (_inProgress)
+                        {
+                            <span class="spinner-border spinner-border-sm"></span>
+                        }
+                        @Resource.Login
+                    </button>
                 </div>
             </EditForm>
         </section>
@@ -53,6 +59,7 @@
     private string? ReturnUrl { get; set; }
 
     private Alert _alert = new();
+    private bool _inProgress = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,6 +71,7 @@
 
     public async Task LoginUser()
     {
+        _inProgress = true;
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, false);
 
         if (result.Succeeded)
@@ -85,12 +93,19 @@
 
             await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
 
-            NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
+            var uri = new Uri(NavigationManager.Uri);
+            var returnUrl = uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped)
+                          .Replace("http://", "https://") + ReturnUrl?.Replace(uri.GetLeftPart(UriPartial.Authority), "");
+
+            var redirectUrl = string.IsNullOrEmpty(ReturnUrl) ? RoutingEndpoints.HOME_PAGE : returnUrl;
+
+            NavigationManager.NavigateTo(redirectUrl);
         }
         else
         {
             _alert.ShowFailed(Resource.InvalidLoginCredentials);
         }
+        _inProgress = false;
     }
 
     private sealed class InputModel

@@ -55,8 +55,6 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 Log.Logger.Information("Application is building....");
 
-var connectionString = builder.Configuration.GetConnectionString("Default");
-
 builder.Services.AddLocalization();
 
 string[] supportedCultures = ["en-US", "el-GR"];
@@ -66,7 +64,7 @@ var localizationOptions = new RequestLocalizationOptions()
     .AddSupportedUICultures(supportedCultures);
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(connectionString!);
+builder.Services.AddInfrastructure();
 
 builder.Services.Configure<JsonOptions>(options =>
 {
@@ -87,19 +85,19 @@ try
 
     app.UseSerilogRequestLogging();
 
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
+    }
+
     if (app.Environment.IsDevelopment())
     {
         app.UseWebAssemblyDebugging();
-        
-        using (var scope = app.Services.CreateScope())
-        {
-            var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<ApplicationDbContext>();
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
-        }
     }
     else
     {
