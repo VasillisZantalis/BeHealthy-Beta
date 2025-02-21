@@ -87,19 +87,19 @@ try
 
     app.UseSerilogRequestLogging();
 
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
+    }
+
     if (app.Environment.IsDevelopment())
     {
         app.UseWebAssemblyDebugging();
-        
-        using (var scope = app.Services.CreateScope())
-        {
-            var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<ApplicationDbContext>();
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
-        }
     }
     else
     {
