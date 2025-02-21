@@ -8,14 +8,21 @@ using BeHealthy.Infrastructure.Repositories;
 using BeHealthy.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeHealthy.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
+        var configuration = new ConfigurationBuilder()
+               .AddUserSecrets<ApplicationDbContextFactory>()
+               .Build();
+
+        var connectionString = configuration.GetConnectionString("Default");
+
         services.AddDbContextFactory<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
 

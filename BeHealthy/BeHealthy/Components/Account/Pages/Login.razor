@@ -93,9 +93,15 @@
 
             await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
 
-            var redirectUrl = ReturnUrl ?? RoutingEndpoints.HOME_PAGE;
-            Console.WriteLine("RETURN URL: " + ReturnUrl);
-            Console.WriteLine("REDIRECT URL: " + redirectUrl);
+            Console.WriteLine("BASE URI" + NavigationManager.BaseUri);
+            Console.WriteLine("URI" + NavigationManager.Uri);
+
+            var uri = new Uri(NavigationManager.Uri);
+            var returnUrl = uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.Unescaped)
+                          .Replace("http://", "https://") + ReturnUrl?.Replace(uri.GetLeftPart(UriPartial.Authority), "");
+
+            var redirectUrl = string.IsNullOrEmpty(ReturnUrl) ? RoutingEndpoints.HOME_PAGE : returnUrl;
+
             NavigationManager.NavigateTo(redirectUrl);
         }
         else

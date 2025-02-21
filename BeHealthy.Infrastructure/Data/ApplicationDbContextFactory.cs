@@ -8,15 +8,19 @@ namespace BeHealthy.Infrastructure.Data
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {
-            //var connectionString = "Host=behealthydb;Port=5432;Database=behealthy;Username=admin;Password=7530";
-            var connectionString = "Host=dpg-cus7h6rv2p9s73ataba0-a;Port=5432;Database=behealthy_w1ur;Username=behealthy_w1ur_user;Password=MAAzUNXPSpDiGW7weNC3voseF8FL8zq2";
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+
+            var configuration = new ConfigurationBuilder()
+               .AddUserSecrets<ApplicationDbContextFactory>()
+               .Build();
+
+            var connectionString = configuration.GetConnectionString("Default");
 
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new InvalidOperationException("Connection string 'Default' not found.");
             }
 
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
 
             return new ApplicationDbContext(optionsBuilder.Options);

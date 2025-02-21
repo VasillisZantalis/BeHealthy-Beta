@@ -55,8 +55,6 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 Log.Logger.Information("Application is building....");
 
-var connectionString = builder.Configuration.GetConnectionString("Default");
-
 builder.Services.AddLocalization();
 
 string[] supportedCultures = ["en-US", "el-GR"];
@@ -66,7 +64,7 @@ var localizationOptions = new RequestLocalizationOptions()
     .AddSupportedUICultures(supportedCultures);
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(connectionString!);
+builder.Services.AddInfrastructure();
 
 builder.Services.Configure<JsonOptions>(options =>
 {
