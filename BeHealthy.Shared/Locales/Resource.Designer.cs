@@ -538,6 +538,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Email Format.
+        /// </summary>
+        public static string InvalidEmailFormat {
+            get {
+                return ResourceManager.GetString("InvalidEmailFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Login Credentials.
         /// </summary>
         public static string InvalidLoginCredentials {
@@ -799,6 +808,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passwords do not match.
+        /// </summary>
+        public static string PasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("PasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  Password must be at least {0} characters.
         /// </summary>
         public static string PasswordTooShort {
@@ -948,6 +966,24 @@ namespace BeHealthy.Shared.Locales {
         public static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} invalid format.
+        /// </summary>
+        public static string PropertyInvalidFormat {
+            get {
+                return ResourceManager.GetString("PropertyInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} should have at least {1} characters..
+        /// </summary>
+        public static string PropertyMinimumCharacters {
+            get {
+                return ResourceManager.GetString("PropertyMinimumCharacters", resourceCulture);
             }
         }
         

@@ -276,6 +276,9 @@
   <data name="InvalidEmail" xml:space="preserve">
     <value>Invalid Email</value>
   </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>Invalid Email Format</value>
+  </data>
   <data name="InvalidLoginCredentials" xml:space="preserve">
     <value>Invalid Login Credentials</value>
   </data>
@@ -363,6 +366,9 @@
   <data name="PasswordNeedsUppercase" xml:space="preserve">
     <value>Password must have at least one uppercase</value>
   </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>Passwords do not match</value>
+  </data>
   <data name="PasswordTooShort" xml:space="preserve">
     <value> Password must be at least {0} characters</value>
   </data>
@@ -413,6 +419,12 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="PropertyInvalidFormat" xml:space="preserve">
+    <value>{0} invalid format</value>
+  </data>
+  <data name="PropertyMinimumCharacters" xml:space="preserve">
+    <value>{0} should have at least {1} characters.</value>
   </data>
   <data name="PropertyRequired" xml:space="preserve">
     <value>{0} is required</value>
