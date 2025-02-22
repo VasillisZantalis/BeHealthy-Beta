@@ -48,9 +48,11 @@ public class DoctorService : IDoctorService
 
     public async Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctorDto)
     {
-        var doctor = doctorDto.MapToDomain();
+        var doctor = doctorDto?.MapToDomain();
 
-        if (await _unitOfWork.SpecialtyRepository.ExistsAsync(id))
+        if (!await _unitOfWork.DoctorRepository.ExistsAsync(id)
+            || !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctor?.SpecialtyId ?? 0)
+            || doctor is null)
             return;
 
         await _unitOfWork.DoctorRepository.UpdateAsync(doctor);

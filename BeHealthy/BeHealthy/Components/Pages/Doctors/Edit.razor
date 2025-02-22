@@ -1,4 +1,5 @@
 ﻿@page "/doctors/edit/{DoctorId:int}"
+@using BeHealthy.Application.Validations.Doctor
 @attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -6,6 +7,7 @@
 @inject IDoctorService DoctorService
 @inject IDepartmentService DepartmentService
 @inject ISpecialtyService SpecialtyService
+@inject IAppSettingsService AppSettingsService
 @inject IUserStore<ApplicationUser> UserStore
 @inject UserManager<ApplicationUser> UserManager
 
@@ -13,7 +15,8 @@
 
 <div class="container-fluid p-5 border rounded shadow">
     <EditForm Model="_doctorForUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
-        <DataAnnotationsValidator />
+        <ValidationComponent @ref="_validationComponent"/>
+
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
@@ -65,7 +68,8 @@
                         <option value="@specialty.Value">@specialty.Text</option>
                     }
                 </InputSelect>
-                <label for="specialty">@Resource.Specialty</label>
+                <label for="specialty" class="@(_doNotAllowDoctorWithoutSpecialty ? "required" : "")">@Resource.Specialty</label>
+                <ValidationMessage For="() => _doctorForUpdateDto.SpecialtyId" class="text-danger" />
             </div>
         }
 
@@ -88,10 +92,17 @@
     private DoctorForUpdateDto _doctorForUpdateDto { get; set; } = new();
 
     private bool _inProgress = false;
+    private bool _doNotAllowDoctorWithoutSpecialty = false;
     private Alert _alert = new();
+    private ValidationComponent? _validationComponent;
 
     private List<SelectItem>? _departmentsSelect = new();
     private List<SelectItem>? _specialtiesSelect = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSettings();
+    }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -136,6 +147,12 @@
         });
     }
 
+    private async Task GetSettings()
+    {
+        AppSetting? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
+        _doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
+    }
+
     async Task OnFileChange(InputFileChangeEventArgs e)
     {
         var format = e.File.ContentType;
@@ -147,6 +164,21 @@
 
     private async Task UpdateDoctor()
     {
+        _inProgress = true;
+
+        _validationComponent?.ClearErrors();
+
+        var validator = new DoctorForUpdateDtoValidator(_doNotAllowDoctorWithoutSpecialty);
+        var validationResult = await validator.ValidateAsync(_doctorForUpdateDto);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.GetErrorsGroupedByProperty();
+            _validationComponent?.DisplayErrors(errors);
+            _inProgress = false;
+            return;
+        }
+
         var user = await UserManager.FindByIdAsync(_doctorForUpdateDto.UserId);
 
         if (user != null)
