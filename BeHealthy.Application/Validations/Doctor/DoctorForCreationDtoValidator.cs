@@ -6,7 +6,7 @@ namespace BeHealthy.Application.Validations.Doctor;
 
 public class DoctorForCreationDtoValidator : AbstractValidator<DoctorForCreationDto>
 {
-    public DoctorForCreationDtoValidator()
+    public DoctorForCreationDtoValidator(bool requiredSpecialty)
     {
         RuleFor(x => x.FirstName)
             .NotEmpty()
@@ -15,5 +15,13 @@ public class DoctorForCreationDtoValidator : AbstractValidator<DoctorForCreation
         RuleFor(x => x.LastName)
             .NotEmpty()
             .WithMessage(string.Format(Resource.TheFieldIsRequired, Resource.Doctor));
+
+        When(_ => requiredSpecialty, () =>
+        {
+            RuleFor(x => x.SpecialtyId)
+                .NotEmpty()
+                .GreaterThan(0)
+                .WithMessage(string.Format(Resource.TheFieldIsRequired, Resource.Specialty));
+        });
     }
 }

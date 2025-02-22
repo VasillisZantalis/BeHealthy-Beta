@@ -1,6 +1,7 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Helpers;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Appointments;
@@ -188,13 +189,7 @@ public partial class AppointmentModal : BasePage
 
         if (!validationResult.IsValid)
         {
-            var errors = validationResult.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(e => e.ErrorMessage).ToList()
-                );
-
+            var errors = validationResult.GetErrorsGroupedByProperty();
             _validationComponent?.DisplayErrors(errors);
         }
         else

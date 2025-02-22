@@ -1,4 +1,5 @@
 ﻿@page "/doctors/create"
+@using BeHealthy.Application.Validations.Doctor
 @using BeHealthy.Infrastructure.Data
 @attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
@@ -9,6 +10,7 @@
 @inject IDoctorService DoctorService
 @inject IDepartmentService DepartmentService
 @inject ISpecialtyService SpecialtyService
+@inject IAppSettingsService AppSettingsService
 @inject NavigationManager NavigationManager
 @inject ApplicationDbContext _dbContext
 
@@ -16,7 +18,8 @@
 
 <div class="container-fluid p-5 border rounded shadow">
     <EditForm Model="Input" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
-        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <ValidationComponent @ref="_validationComponent"/>
+
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
@@ -83,7 +86,8 @@
                         <option value="@specialty.Value">@specialty.Text</option>
                     }
                 </InputSelect>
-                <label for="specialty">@Resource.Specialty</label>
+                <label for="specialty" class="@(_doNotAllowDoctorWithoutSpecialty ? "required" : "")">@Resource.Specialty</label>
+                <ValidationMessage For="() => Input.SpecialtyId" class="text-danger" />
             </div>
         }
 
@@ -103,9 +107,10 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
-    private FluentValidationValidator _fluentValidationValidator = new();
+    private ValidationComponent? _validationComponent;
 
     private bool _inProgress = false;
+    private bool _doNotAllowDoctorWithoutSpecialty = false;
     private int? _departmentId;
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
@@ -118,6 +123,8 @@
     protected override async Task OnInitializedAsync()
     {
         SetBreadcrumbs();
+
+        await GetSettings();
 
         var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         _departmentsSelect = departments.Select(s => new SelectItem
@@ -135,6 +142,12 @@
             Text = s.Name
         }).ToList();
         _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+    }
+
+    private async Task GetSettings()
+    {
+        AppSetting? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
+        _doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
     }
 
     private void SetBreadcrumbs()
@@ -186,21 +199,34 @@
             Image = Input.Image
         };
 
-        if (await _fluentValidationValidator.ValidateAsync())
+        _validationComponent?.ClearErrors();
+
+        var validator = new DoctorForCreationDtoValidator(_doNotAllowDoctorWithoutSpecialty);
+        var validationResult = await validator.ValidateAsync(doctorForCreationDto);
+
+        if (!validationResult.IsValid)
+        {
+            await UserManager.DeleteAsync(user);
+
+            var errors = validationResult.GetErrorsGroupedByProperty();
+            _validationComponent?.DisplayErrors(errors);
+        }
+        else 
         {
             var doctorCreationResult = await DoctorService.AddDoctorAsync(doctorForCreationDto);
 
             if (!doctorCreationResult.Success)
             {
                 await UserManager.DeleteAsync(user);
-                _inProgress = false;
                 _alert.ShowFailed(Resource.SomethingWentWrong);
-                return;
+            }
+            else
+            {
+                _alert.ShowSuccess(Resource.Success);
             }
         }
 
         _inProgress = false;
-        _alert.ShowSuccess(Resource.Success);
     }
 
     private void HandleModalClose(bool success)

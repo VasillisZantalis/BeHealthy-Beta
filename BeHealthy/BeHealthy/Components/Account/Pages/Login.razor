@@ -13,7 +13,7 @@
 
     <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-4 rounded p-5 shadow">
         <section>
-            <Alert @ref="_alert" />
+            <Alert @ref="_alert" ShowCloseButton="false"/>
             <EditForm id="LoginForm" Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login" Enhance>
                 <DataAnnotationsValidator />
                 <h2>@Resource.LoginWithYourCredentials</h2>

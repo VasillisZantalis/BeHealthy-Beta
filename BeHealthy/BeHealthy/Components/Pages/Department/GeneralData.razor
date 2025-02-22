@@ -1,5 +1,4 @@
 ﻿@inherits BasePage
-@using BeHealthy.Application.Helpers;
 
 <div class="container-fluid my-3 p-3 border rounded">
     <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
@@ -79,7 +78,7 @@
         var keys = new[] { "DepartmentRequiresSupervisor", "DefaultDepartmentSupervison" }.ToList();
         var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
 
-        var requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
+        AppSetting? requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
         var defaultSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DefaultDepartmentSupervison");
 
         _isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;

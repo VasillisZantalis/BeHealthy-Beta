@@ -4,7 +4,10 @@
         <div class="d-flex flex-row gap-2">
             <span class="fs-5 @_icon text-@_severity.ToString().ToLower()"></span>
             <span class="fw-bold">@Message</span>
-            <button @onclick="CloseAlert" type="button" class="btn-close" aria-label="Close"></button>
+            @if (ShowCloseButton)
+            {
+                <button @onclick="CloseAlert" type="button" class="btn-close" aria-label="Close"></button>
+            }
         </div>
     </div>
 }
@@ -12,6 +15,9 @@
 @code {
     [Parameter]
     public string? Message { get; set; }
+
+    [Parameter]
+    public bool ShowCloseButton { get; set; } = true;
 
     private Severity _severity { get; set; }
 
