@@ -15,8 +15,8 @@ services:
     container_name: behealthydb
     environment:
       - POSTGRES_DB=behealthy
-      - POSTGRES_USER=behealthy_w1ur_user
-      - POSTGRES_PASSWORD=MAAzUNXPSpDiGW7weNC3voseF8FL8zq2
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=7530
     #volumes:
     # - ./.containers/behealthy-db:/var/lib/postgresql/data
     ports:
