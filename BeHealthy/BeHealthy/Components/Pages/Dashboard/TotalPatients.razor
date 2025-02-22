@@ -8,17 +8,27 @@
                 <Icon IconClass="@FAIcon.Viruses" SizeClass="fs-4"/>
                 <h5 class="align-self-center">@Resource.Patients</h5>
             </div>
-            <h5 class="text-muted text-center fs-2">@totalPatientsCount</h5>
+            @if (_isLoading)
+            {
+                <SmallLoader />
+            }
+            else
+            {
+                <h5 class="text-muted text-center fs-2">@totalPatientsCount</h5>
+            }
         </div>
     </div>
 </div>
 
 @code {
     private int totalPatientsCount;
+    private bool _isLoading;
 
     protected override async Task OnInitializedAsync()
     {
+        _isLoading = true;
         totalPatientsCount = (await patientService.GetAllPatientsAsync(new PatientSearchingParameters())).Count();
+        _isLoading = false;
     }
 
 }

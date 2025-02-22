@@ -8,17 +8,26 @@
                 <Icon IconClass="@FAIcon.UserNurse" SizeClass="fs-4"/>
                 <h5 class="align-self-center">@Resource.Nurses</h5>
             </div>
-            <h5 class="text-muted text-center fs-2">@totalNursesCount</h5>
+            @if (_isLoading)
+            {
+                <SmallLoader />
+            }
+            else
+            {
+                <h5 class="text-muted text-center fs-2">@totalNursesCount</h5>
+            }
         </div>
     </div>
 </div>
 
 @code {
     private int totalNursesCount;
+    private bool _isLoading;
 
     protected override async Task OnInitializedAsync()
     {
+        _isLoading = true;
         totalNursesCount = (await nurseService.GetAllNursesAsync()).Count();
+        _isLoading = false;
     }
-
 }
