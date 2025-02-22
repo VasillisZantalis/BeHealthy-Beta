@@ -95,12 +95,12 @@
             
             <div class="d-flex flex-lg-row flex-column gap-2 justify-content-evenly">
                 <a class="btn btn-outline-dark px-3 w-100" href="@returnUrl">Cancel</a>
-                <button type="submit" class="btn btn-primary w-100" disabled="@_inProgress">
+                <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
                     @if (_inProgress)
                     {
-                        <span class="spinner-border spinner-border-sm"></span>
+                        <SmallLoader />
                     }
-                    @Resource.Create
+                    <span>@Resource.Create</span>
                 </button>
             </div>
         </EditForm>

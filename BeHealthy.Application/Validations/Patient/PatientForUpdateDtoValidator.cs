@@ -1,0 +1,24 @@
+﻿using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Shared.Locales;
+using FluentValidation;
+
+namespace BeHealthy.Application.Validations.Patient;
+
+public class PatientForUpdateDtoValidator : AbstractValidator<PatientForUpdateDto>
+{
+    public PatientForUpdateDtoValidator()
+    {
+        RuleFor(x => x.FirstName)
+            .NotEmpty()
+            .WithMessage(string.Format(Resource.TheFieldIsRequired, Resource.FirstName));
+
+        RuleFor(x => x.LastName)
+            .NotEmpty()
+            .WithMessage(string.Format(Resource.TheFieldIsRequired, Resource.LastName));
+
+        RuleFor(x => x.PhoneNumber)
+           .Matches(@"^\+?[1-9]\d{1,14}$")
+           .WithMessage(string.Format(Resource.PropertyInvalidFormat, Resource.PhoneNumber))
+           .When(x => !string.IsNullOrEmpty(x.PhoneNumber));
+    }
+}

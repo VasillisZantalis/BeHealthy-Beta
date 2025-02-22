@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
+using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Mappings;
@@ -31,15 +32,28 @@ public class PatientService : IPatientService
         return patient?.MapToDto();
     }
 
-    public async Task AddPatientAsync(PatientForCreationDto patientDto)
+    public async Task<ServiceResponse> AddPatientAsync(PatientForCreationDto patientDto)
     {
-        var patient = patientDto.MapToDomain();
-        await _unitOfWork.PatientRepository.AddAsync(patient);
+        try
+        {
+            var patient = patientDto.MapToDomain();
+            await _unitOfWork.PatientRepository.AddAsync(patient);
+            return ServiceResponse.Successful();
+        }
+        catch (Exception)
+        {
+            return ServiceResponse.Failed();
+        }
     }
 
     public async Task UpdatePatientAsync(int id, PatientForUpdateDto patientDto)
     {
         var patient = patientDto.MapToDomain();
+
+        if (!await _unitOfWork.PatientRepository.ExistsAsync(id)
+            || patient is null)
+            return;
+
         await _unitOfWork.PatientRepository.UpdateAsync(patient);
     }
 

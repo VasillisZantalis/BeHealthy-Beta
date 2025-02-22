@@ -1,4 +1,5 @@
-﻿using BeHealthy.Application.Dtos.Nurse;
+﻿using BeHealthy.Application.Dtos.Common;
+using BeHealthy.Application.Dtos.Nurse;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
@@ -27,10 +28,18 @@ public class NurseService : INurseService
         return nurse?.MapToDto();
     }
 
-    public async Task AddNurseAsync(NurseForCreationDto nurseDto)
+    public async Task<ServiceResponse> AddNurseAsync(NurseForCreationDto nurseDto)
     {
-        var nurse = nurseDto.MapToDomain();
-        await _unitOfWork.NurseRepository.AddAsync(nurse);
+        try
+        {
+            var nurse = nurseDto.MapToDomain();
+            await _unitOfWork.NurseRepository.AddAsync(nurse);
+            return ServiceResponse.Successful();
+        }
+        catch (Exception)
+        {
+            return ServiceResponse.Failed();
+        }
     }
 
     public async Task UpdateNurseAsync(int id, NurseForUpdateDto nurseDto)

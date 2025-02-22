@@ -12,25 +12,25 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="Input" method="post" OnValidSubmit="RegisterNurse" FormName="RegisterForm" Enhance>
-        <DataAnnotationsValidator />
+    <EditForm Model="_nurseForCreationDto" method="post" OnValidSubmit="RegisterNurse" FormName="RegisterForm" Enhance>
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
-                <img src="@(Input.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+                <img src="@(_nurseForCreationDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="_nurseForCreationDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => _nurseForCreationDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="_nurseForCreationDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                    <ValidationMessage For="() => _nurseForCreationDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
@@ -38,30 +38,30 @@
             <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
-            <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
+            <InputText @bind-Value="_nurseForCreationDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
             <label for="email">@Resource.Email</label>
-            <ValidationMessage For="() => Input.Email" class="text-danger" />
+            <ValidationMessage For="() => _nurseForCreationDto.Email" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
+            <InputText type="password" @bind-Value="_nurseForCreationDto.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
             <label for="password">@Resource.Password</label>
-            <ValidationMessage For="() => Input.Password" class="text-danger" />
+            <ValidationMessage For="() => _nurseForCreationDto.Password" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
+            <InputText type="password" @bind-Value="_nurseForCreationDto.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
             <label for="confirmPassword">@Resource.ConfirmPassword</label>
-            <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+            <ValidationMessage For="() => _nurseForCreationDto.ConfirmPassword" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="Input.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <InputText id="phoneNumber" @bind-Value="_nurseForCreationDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+            <ValidationMessage For="() => _nurseForCreationDto.PhoneNumber" class="text-danger" />
         </div>
 
         @if (_departments is not null && _departments.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_departmentId" class="form-control">
+                <InputSelect id="Department" @bind-Value="_nurseForCreationDto.DepartmentId" class="form-control">
                     @foreach (var department in _departmentsSelect)
                     {
                         <option value="@department.Value">@department.Text</option>
@@ -71,12 +71,12 @@
             </div>
         }
 
-        <button type="submit" class="btn btn-success px-5" disabled="@_inProgress">
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
             @if (_inProgress)
             {
-                <span class="spinner-border spinner-border-sm"></span>
+                <SmallLoader />
             }
-            @Resource.Save
+            <span>@Resource.Save</span>
         </button>
     </EditForm>
 </div>
@@ -85,7 +85,7 @@
     private IEnumerable<IdentityError>? identityErrors;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private NurseForCreationDto _nurseForCreationDto { get; set; } = new();
     private bool _inProgress = false;
     private List<DepartmentDto>? _departments { get; set; }
     private int? _departmentId;
@@ -93,6 +93,7 @@
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     private Alert _alert = new();
+    private FluentValidationValidator _fluentValidationValidator = new();
 
     private List<SelectItem> _departmentsSelect = new List<SelectItem>();
 
@@ -122,17 +123,24 @@
     public async Task RegisterNurse(EditContext editContext)
     {
         _inProgress = true;
+
+        if (!await _fluentValidationValidator.ValidateAsync())
+        {
+            _inProgress = false;
+            return;
+        }
+
         var user = new ApplicationUser
-            {
-                FirstName = Input.FirstName,
-                LastName = Input.LastName,
-                PhoneNumber = Input.PhoneNumber
-            };
+        {
+            FirstName = _nurseForCreationDto.FirstName,
+            LastName = _nurseForCreationDto.LastName,
+            PhoneNumber = _nurseForCreationDto.PhoneNumber
+        };
 
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        await UserManager.SetEmailAsync(user, Input.Email);
+        await UserStore.SetUserNameAsync(user, _nurseForCreationDto.Email, CancellationToken.None);
+        await UserManager.SetEmailAsync(user, _nurseForCreationDto.Email);
 
-        var result = await UserManager.CreateAsync(user, Input.Password);
+        var result = await UserManager.CreateAsync(user, _nurseForCreationDto.Password);
 
         if (!result.Succeeded)
         {
@@ -145,18 +153,20 @@
 
         await UserManager.AddToRoleAsync(user, nameof(UserRole.Nurse));
 
-        var nurseForCreationDto = new NurseForCreationDto
-            {
-                FirstName = Input.FirstName,
-                LastName = Input.LastName,
-                UserId = user.Id,
-                DepartmentId = _departmentId
-            };
+        _nurseForCreationDto.UserId = user.Id;
+        var nurseCreationResult = await NurseService.AddNurseAsync(_nurseForCreationDto);
 
-        await NurseService.AddNurseAsync(nurseForCreationDto);
+        if (!nurseCreationResult.Success)
+        {
+            await UserManager.DeleteAsync(user);
+            _alert.ShowFailed(Resource.SomethingWentWrong);
+        }
+        else
+        {
+            _alert.ShowSuccess(Resource.Success);
+        }
 
         _inProgress = false;
-        _alert.ShowSuccess(Resource.Success);
     }
 
     private void HandleModalClose(bool success)
@@ -175,36 +185,6 @@
         var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
         var buffer = new byte[resizeImage.Size];
         await resizeImage.OpenReadStream().ReadAsync(buffer);
-        Input.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-    }
-
-    private sealed class InputModel
-    {
-        [Required]
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; } = "";
-
-        [Required]
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; } = "";
-
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; } = "";
-
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; } = "";
-
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; } = "";
-
-        public string? PhoneNumber { get; set; }
-        public string? Image { get; set; }
+        _nurseForCreationDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 }

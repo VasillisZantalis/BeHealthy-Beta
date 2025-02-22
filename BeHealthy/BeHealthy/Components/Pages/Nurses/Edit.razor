@@ -11,7 +11,7 @@
 
 <div class="container-fluid p-5 border rounded shadow">
     <EditForm Model="_nurseForUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
-        <DataAnnotationsValidator />
+        <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
@@ -54,12 +54,12 @@
             </div>
         }
 
-        <button type="submit" class="btn btn-success px-5" disabled="@_inProgress">
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
             @if (_inProgress)
             {
-                <span class="spinner-border spinner-border-sm"></span>
+                <SmallLoader />
             }
-            @Resource.Save
+            <span>@Resource.Save</span>
         </button>
     </EditForm>
 </div>
@@ -76,6 +76,7 @@
 
     private bool _inProgress = false;
     private Alert _alert = new();
+    private FluentValidationValidator _fluentValidationValidator = new();
 
     private List<SelectItem> _departmentsSelect = new List<SelectItem>();
 
@@ -120,6 +121,14 @@
 
     private async Task UpdateNurse()
     {
+        _inProgress = true;
+
+        if (!await _fluentValidationValidator.ValidateAsync())
+        {
+            _inProgress = false;
+            return;
+        }
+
         var user = await UserManager.FindByIdAsync(_nurseForUpdateDto.UserId);
 
         if (user != null)

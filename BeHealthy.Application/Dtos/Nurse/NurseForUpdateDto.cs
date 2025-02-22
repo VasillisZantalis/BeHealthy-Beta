@@ -9,5 +9,4 @@ public class NurseForUpdateDto
     public string UserId { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public int? DepartmentId { get; set; }
-
 }

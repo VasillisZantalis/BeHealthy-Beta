@@ -24,8 +24,6 @@
   <ItemGroup>
     <Folder Include="Validations\Prescription\" />
     <Folder Include="Validations\Specialty\" />
-    <Folder Include="Validations\Nurse\" />
-    <Folder Include="Validations\Patient\" />
   </ItemGroup>
 
 </Project>

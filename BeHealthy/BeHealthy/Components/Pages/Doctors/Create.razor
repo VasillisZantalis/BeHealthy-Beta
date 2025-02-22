@@ -91,12 +91,12 @@
             </div>
         }
 
-        <button type="submit" class="btn btn-success px-5" disabled="@_inProgress">
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
             @if (_inProgress)
             {
-                <span class="spinner-border spinner-border-sm"></span>
+                <SmallLoader />
             }
-            @Resource.Save
+            <span>@Resource.Save</span>
         </button>
     </EditForm>
 </div>
