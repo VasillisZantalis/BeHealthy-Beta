@@ -1,0 +1,19 @@
+name: Run Scheduled PostgreSQL Procedure
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual execution
+
+jobs:
+  run-db-task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install PostgreSQL Client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Execute SQL Procedure
+        run: |
+          PGPASSWORD=${{ secrets.DB_PASSWORD }} psql -h ${{ secrets.DB_HOST }} -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -c "CALL MarkAppointmentsAsCompleted();"
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
