@@ -7,7 +7,6 @@ using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Domain.Interfaces;
 using BeHealthy.Shared.Parameters;
-using System.Collections.Generic;
 
 namespace BeHealthy.Application.Services;
 
@@ -95,5 +94,10 @@ public class PatientService : IPatientService
         }
 
         return doctors.MapToDto();
+    }
+
+    public Task<int> GetPatientCountAsync()
+    {
+        return _unitOfWork.PatientRepository.GetCountAsync();
     }
 }

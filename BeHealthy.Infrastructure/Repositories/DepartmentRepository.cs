@@ -27,6 +27,8 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
                     .AsNoTracking()
                     .Include(d => d.Doctors)
                     .ThenInclude(doc => doc.User)
+                    .Include(d => d.Doctors)
+                    .ThenInclude(doc => doc.Specialty)
                     .Include(d => d.Patients)
                     .ThenInclude(p => p.User)
                     .Include(d => d.Nurses)

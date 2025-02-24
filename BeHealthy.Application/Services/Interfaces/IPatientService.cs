@@ -13,6 +13,7 @@ public interface IPatientService
     Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsByUserIdAsync(string userId);
     Task<IEnumerable<DoctorDto>> GetMyDoctorsAsync(string userId);
     Task<ServiceResponse> AddPatientAsync(PatientForCreationDto patient);
+    Task<int> GetPatientCountAsync();
     Task UpdatePatientAsync(int id, PatientForUpdateDto patient);
     Task DeletePatientAsync(int id);
 }

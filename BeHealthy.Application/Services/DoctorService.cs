@@ -50,9 +50,10 @@ public class DoctorService : IDoctorService
     {
         var doctor = doctorDto?.MapToDomain();
 
-        if (!await _unitOfWork.DoctorRepository.ExistsAsync(id)
-            || !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctor?.SpecialtyId ?? 0)
-            || doctor is null)
+        if (doctor is null || !await _unitOfWork.DoctorRepository.ExistsAsync(id))
+            return;
+
+        if (doctor.SpecialtyId.HasValue && !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctor.SpecialtyId.Value))
             return;
 
         await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
@@ -131,6 +132,11 @@ public class DoctorService : IDoctorService
             .ToList();
 
         return distinctPatients.MapToDto();
+    }
+
+    public Task<int> GetDoctorCountAsync()
+    {
+        return _unitOfWork.DoctorRepository.GetCountAsync();
     }
 }
 

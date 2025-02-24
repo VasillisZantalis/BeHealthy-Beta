@@ -13,15 +13,15 @@
                     </div>
                     <div class="d-flex flex-column align-items-center">
                         <span class="text-muted small-text">@Resource.Specialty</span>
-                        <h6>@doctor.Specialty</h6>
+                        <h6>@doctor?.Specialty?.Name</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
                         <span class="text-muted small-text">@Resource.Email</span>
-                        <h6>@doctor.Email</h6>
+                        <h6>@doctor?.Email</h6>
                     </div>
                     <div class="d-flex flex-column align-items-center">
                         <span class="text-muted small-text">@Resource.PhoneNumber</span>
-                        <h6>@(!string.IsNullOrEmpty(doctor.PhoneNumber) ? doctor.PhoneNumber : Resource.NotAvailable)</h6>
+                        <h6>@(doctor?.PhoneNumber ?? "-")</h6>
                     </div>
 
                     <div class="d-flex flex-column align-items-center">

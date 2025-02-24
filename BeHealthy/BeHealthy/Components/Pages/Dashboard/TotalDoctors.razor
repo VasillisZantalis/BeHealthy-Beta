@@ -27,7 +27,7 @@
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
-        totalDoctorsCount = (await doctorService.GetAllDoctorsAsync()).Count();
+        totalDoctorsCount = await doctorService.GetDoctorCountAsync();
         _isLoading = false;
     }
 }

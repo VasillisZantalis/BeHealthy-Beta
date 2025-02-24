@@ -82,6 +82,11 @@ public class NurseService : INurseService
 
         return distinctNurses.MapToDto();
     }
+
+    public Task<int> GetNurseCountAsync()
+    {
+        return _unitOfWork.NurseRepository.GetCountAsync();
+    }
 }
 
 
