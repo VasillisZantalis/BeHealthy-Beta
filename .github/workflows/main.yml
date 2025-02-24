@@ -15,7 +15,7 @@ jobs:
       - name: Execute SQL Procedure
         run: |
           echo "Running MarkAppointmentsAsCompleted() procedure..."
-          psql -h ${{ secrets.DB_HOST }} -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -p ${{ secrets.DB_PORT }} -c "CALL MarkAppointmentsAsCompleted();"
+          psql -h ${{ secrets.DB_HOST }} -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -p ${{ secrets.DB_PORT }} -c "CALL public.MarkAppointmentsAsCompleted();"
           echo "Procedure executed successfully!"
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
