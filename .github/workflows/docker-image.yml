@@ -18,5 +18,5 @@ jobs:
         run: docker build -t vasillizantalis/behealthy:test2 -f BeHealthy/BeHealthy/Dockerfile .
       - name: Push Docker Image to Docker Hub
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_TOKEN }}" --password-stdin
+          echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_TOKEN }}" --password-stdin
           docker push vasillizantalis/behealthy:dev
