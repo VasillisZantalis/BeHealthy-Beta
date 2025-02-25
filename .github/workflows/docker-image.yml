@@ -19,4 +19,4 @@ jobs:
       - name: Push Docker Image to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          docker push vasillizantalis/behealthy:dev
+          docker push vasillizantalis/behealthy:test2
