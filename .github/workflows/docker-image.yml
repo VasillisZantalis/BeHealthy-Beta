@@ -14,20 +14,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
       - name: Build Docker Image
-        run: |
-          docker build -t vasillizantalis/behealthy:dev -f BeHealthy/BeHealthy/Dockerfile .
-
-      - name: Verify Docker Image
-        run: docker images | grep behealthy
-
-      - name: Login to Docker Hub
-        run: docker login -u "${{ secrets.DOCKER_USERNAME }}" -p ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - name: Verify Docker Login
-        run: docker info
-
+        run: docker build -t vasillizantalis/behealthy:test2 -f BeHealthy/BeHealthy/Dockerfile .
       - name: Push Docker Image to Docker Hub
         run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_TOKEN }}" --password-stdin
           docker push vasillizantalis/behealthy:dev
