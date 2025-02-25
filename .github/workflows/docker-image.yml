@@ -5,6 +5,7 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
 
@@ -21,7 +22,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t vasillizantalis/behealthy:dev -f BeHealthy/BeHealthy/Dockerfile BeHealthy/BeHealthy/
+          docker build -t vasillizantalis/behealthy:dev -f BeHealthy/BeHealthy/Dockerfile .
 
       - name: Push Docker Image to Docker Hub
         run: |
