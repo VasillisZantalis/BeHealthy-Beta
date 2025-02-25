@@ -5,12 +5,10 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual re-runs
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -22,9 +20,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t vasillizantalis/behealthy:dev -f BeHealthy/BeHealthy/Dockerfile .
+          docker build -t vasillizantalis/behealthy:dev -f BeHealthy/BeHealthy/Dockerfile BeHealthy/
+
+      - name: Verify Docker Image
+        run: docker images | grep behealthy
 
       - name: Push Docker Image to Docker Hub
         run: |
-          docker push vasilliszantalis/behealthy:dev
-      
+          docker push vasillizantalis/behealthy:dev
