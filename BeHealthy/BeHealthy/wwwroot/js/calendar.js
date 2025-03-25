@@ -7,8 +7,18 @@ function populateCalendar(events) {
     }
 } 
 
+function destroyCalendar() {
+    if (calendar) {
+        calendar.destroy();
+        calendar = null;
+    }
+}
+
 async function initializeCalendar(events) {
     var calendarEl = document.getElementById('calendar');
+
+    destroyCalendar();
+
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: getLocale(),
