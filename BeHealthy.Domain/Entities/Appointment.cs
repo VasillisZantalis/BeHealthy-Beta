@@ -3,9 +3,10 @@
 public class Appointment
 {
     public int Id { get; set; }
-    public DateTime AppointmentDate { get; set; }
+    public DateOnly AppointmentDate { get; set; }
+    public TimeOnly AppointmentStartTime { get; set; }
+    public TimeOnly AppointmentEndTime { get; set; }
     public string? Notes { get; set; }
-    public int Duration { get; set; }
     public AppointmentStatus Status { get; set; }
     public AppointmentReason Reason { get; set; }
 

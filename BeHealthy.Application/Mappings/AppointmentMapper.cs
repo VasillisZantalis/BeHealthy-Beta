@@ -11,10 +11,11 @@ namespace BeHealthy.Application.Mappings
             {
                 Id = dto.Id,
                 AppointmentDate = dto.AppointmentDate,
+                AppointmentStartTime = dto.AppointmentStartTime,
+                AppointmentEndTime = dto.AppointmentEndTime,
                 Notes = dto.Notes,
                 Status = dto.Status,
                 Reason = dto.Reason,
-                Duration = dto.Duration,
                 PatientId = dto.PatientId,
                 DoctorId = dto.DoctorId,
                 RoomId = dto.RoomId,
@@ -28,10 +29,11 @@ namespace BeHealthy.Application.Mappings
             {
                 Id = entity.Id,
                 AppointmentDate = entity.AppointmentDate,
+                AppointmentStartTime = entity.AppointmentStartTime,
+                AppointmentEndTime = entity.AppointmentEndTime,
                 Notes = entity.Notes ?? string.Empty,
                 Status = entity.Status,
                 Reason = entity.Reason,
-                Duration = entity.Duration,
                 PatientId = entity.PatientId,
                 Patient = entity.Patient?.MapToDto(),
                 DoctorId = entity.DoctorId,
@@ -50,10 +52,11 @@ namespace BeHealthy.Application.Mappings
                 PatientId = dto.PatientId,
                 DoctorId = dto.DoctorId,
                 AppointmentDate = dto.AppointmentDate,
+                AppointmentStartTime = dto.AppointmentStartTime,
+                AppointmentEndTime = dto.AppointmentEndTime,
                 Notes = dto.Notes,
                 Status = dto.Status,
                 Reason = dto.Reason,
-                Duration = dto.Duration,
                 RoomId = dto.RoomId,
                 NurseId = dto.NurseId
             };
@@ -67,10 +70,11 @@ namespace BeHealthy.Application.Mappings
                 PatientId = dto.PatientId,
                 DoctorId = dto.DoctorId,
                 AppointmentDate = dto.AppointmentDate,
+                AppointmentStartTime = dto.AppointmentStartTime,
+                AppointmentEndTime = dto.AppointmentEndTime,
                 Notes = dto.Notes,
                 Status = dto.Status,
                 Reason = dto.Reason,
-                Duration = dto.Duration,
                 RoomId = dto.RoomId,
                 NurseId = dto.NurseId
             };
@@ -84,9 +88,10 @@ namespace BeHealthy.Application.Mappings
                 PatientId = dto.PatientId,
                 Notes = dto.Notes,
                 AppointmentDate = dto.AppointmentDate,
+                AppointmentStartTime = dto.AppointmentStartTime,
+                AppointmentEndTime = dto.AppointmentEndTime,
                 Reason = dto.Reason,
                 Status = dto.Status,
-                Duration = dto.Duration,
                 RoomId = dto.RoomId,
                 NurseId = dto.NurseId
             };
@@ -101,22 +106,19 @@ namespace BeHealthy.Application.Mappings
                 PatientId = dto.PatientId,
                 Notes = dto.Notes,
                 AppointmentDate = dto.AppointmentDate,
+                AppointmentStartTime = dto.AppointmentStartTime,
+                AppointmentEndTime = dto.AppointmentEndTime,
                 Reason = dto.Reason,
                 Status = dto.Status,
-                Duration = dto.Duration,
                 RoomId = dto.RoomId,
                 NurseId = dto.NurseId
             };
         }
 
-        public static IEnumerable<Appointment> MapToDomain(this IEnumerable<AppointmentDto> dtos)
-        {
-            return dtos.Select(dto => dto.MapToDomain());
-        }
+        public static IEnumerable<Appointment> MapToDomain(this IEnumerable<AppointmentDto> dtos) 
+            => dtos.Select(dto => dto.MapToDomain());
 
         public static IEnumerable<AppointmentDto> MapToDto(this IEnumerable<Appointment> entities)
-        {
-            return entities.Select(entity => entity.MapToDto());
-        }
+            => entities.Select(entity => entity.MapToDto());
     }
 }

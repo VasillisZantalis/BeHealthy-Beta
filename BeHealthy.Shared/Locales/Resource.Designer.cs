@@ -439,6 +439,24 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End Time.
+        /// </summary>
+        public static string EndTime {
+            get {
+                return ResourceManager.GetString("EndTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Time cannot be earlier than Start Time.
+        /// </summary>
+        public static string EndTimeCannotBeEarlierThanStartTime {
+            get {
+                return ResourceManager.GetString("EndTimeCannotBeEarlierThanStartTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         public static string English {
@@ -1128,6 +1146,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Specialty {
             get {
                 return ResourceManager.GetString("Specialty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Time.
+        /// </summary>
+        public static string StartTime {
+            get {
+                return ResourceManager.GetString("StartTime", resourceCulture);
             }
         }
         

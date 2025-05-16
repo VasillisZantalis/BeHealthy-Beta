@@ -53,35 +53,21 @@
                             <div class="form-group">
                                 <div class="row mb-3">
                                     <div class="col">
-                                        <label class="fw-bold" for="appointmentHour">@Resource.Hour</label>
-                                        <InputNumber id="appointmentHour"
-                                                     @bind-Value="AppointmentHour"
-                                                     TValue="int"
-                                                     min="0"
-                                                     max="23"
-                                                     class="form-control"
-                                                     placeholder="HH" />
+                                        <label class="fw-bold" for="appointmentStartTime">@Resource.StartTime</label>
+                                        <input type="time"
+                                               id="appointmentStartTime"
+                                               @bind="_appointmentDto.AppointmentStartTime"
+                                               class="form-control"/>
                                     </div>
                                     <div class="col">
-                                        <label class="fw-bold" for="appointmentMinute">@Resource.Minutes</label>
-                                        <InputNumber id="appointmentMinute"
-                                                     @bind-Value="AppointmentMinute"
-                                                     TValue="int"
-                                                     min="0"
-                                                     max="59"
-                                                     class="form-control"
-                                                     placeholder="MM" />
+                                            <label class="fw-bold" for="appointmentEndTime">@Resource.EndTime</label>
+                                        <input type="time"
+                                               id="appointmentEndTime"
+                                               @bind="_appointmentDto.AppointmentEndTime"
+                                               class="form-control"/>
+                                        <ValidationMessage For="@(() => _appointmentDto.AppointmentEndTime)" />
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="fw-bold" for="duration">@Resource.Duration (min)</label>
-                                <InputNumber id="duration"
-                                             @bind-Value="_appointmentDto.Duration"
-                                             TValue="int"
-                                             class="form-control" />
-                                <ValidationMessage For="@(() => _appointmentDto.Duration)" />
                             </div>
 
                             @if (_showNurses)

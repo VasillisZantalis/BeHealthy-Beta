@@ -243,6 +243,12 @@
   <data name="EmailAlreadyUsed" xml:space="preserve">
     <value>Το ηλεκτρονικό ταχυδρομείο χρησιμοποιείται ήδη</value>
   </data>
+  <data name="EndTime" xml:space="preserve">
+    <value>'Ωρα Λήξης</value>
+  </data>
+  <data name="EndTimeCannotBeEarlierThanStartTime" xml:space="preserve">
+    <value>Η ώρα λήξης δεν μπορεί να είναι νωρίτερα από την ώρα έναρξης</value>
+  </data>
   <data name="English" xml:space="preserve">
     <value>Αγγλικά</value>
   </data>
@@ -473,6 +479,9 @@
   </data>
   <data name="Specialty" xml:space="preserve">
     <value>Ειδικότητα</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>Ώρα Έναρξης</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Κατάσταση</value>

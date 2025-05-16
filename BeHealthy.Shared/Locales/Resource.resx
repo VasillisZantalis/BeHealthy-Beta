@@ -243,6 +243,12 @@
   <data name="EmailAlreadyUsed" xml:space="preserve">
     <value>Email is already used</value>
   </data>
+  <data name="EndTime" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="EndTimeCannotBeEarlierThanStartTime" xml:space="preserve">
+    <value>End Time cannot be earlier than Start Time</value>
+  </data>
   <data name="English" xml:space="preserve">
     <value>English</value>
   </data>
@@ -473,6 +479,9 @@
   </data>
   <data name="Specialty" xml:space="preserve">
     <value>Specialty</value>
+  </data>
+  <data name="StartTime" xml:space="preserve">
+    <value>Start Time</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>

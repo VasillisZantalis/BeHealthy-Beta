@@ -58,20 +58,22 @@ public partial class Appointments : BasePage
 
         userRole = authState.User.GetUserRoleEnum();
 
-        switch (userRole)
+        switch (userRole, _currentUserId)
         {
-            case UserRole.Doctor when _currentUserId is not null:
-                await LoadDoctorAppointments(_currentUserId);
+            case (UserRole.Doctor, not null):
+                _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(_currentUserId)).ToList();
                 break;
-            case UserRole.Patient when _currentUserId is not null:
-                await LoadPatientAppointments(_currentUserId);
+
+            case (UserRole.Patient, not null):
+                _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(_currentUserId)).ToList();
                 break;
+
             default:
-                await LoadAppointments();
+                _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
                 break;
         }
 
-        await GetUserPrivilege(userRole.Value);
+        await GetUserPrivilege(userRole!.Value);
 
         hasActionRights = hasEditRight || hasDeleteRight;
 
@@ -128,21 +130,6 @@ public partial class Appointments : BasePage
             await ToastrStateService.ShowSuccess(Resource.Success, 1000);
             _navigationManager.Refresh(true);
         }
-    }
-
-    private async Task LoadAppointments()
-    {
-        _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
-    }
-
-    private async Task LoadPatientAppointments(string userId)
-    {
-        _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(userId)).ToList();
-    }
-
-    private async Task LoadDoctorAppointments(string userId)
-    {
-        _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(userId)).ToList();
     }
 
     private async Task LoadDoctors()

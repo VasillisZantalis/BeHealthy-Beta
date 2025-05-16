@@ -13,11 +13,13 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.HasKey(a => a.Id);
 
         builder.Property(a => a.AppointmentDate)
-            .IsRequired()
-            .HasConversion(
-                v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
-                v => DateTime.SpecifyKind(v, DateTimeKind.Local)
-            ); 
+            .IsRequired();
+
+        builder.Property(a => a.AppointmentStartTime)
+            .IsRequired();
+
+        builder.Property(a => a.AppointmentEndTime)
+            .IsRequired();
 
         builder.Property(a => a.Notes)
             .HasMaxLength(500);

@@ -58,8 +58,8 @@ public partial class AppointmentModal : BasePage
     private bool _showRooms;
     private bool _showNurses;
 
-    private int AppointmentHour { get; set; } = 0;
-    private int AppointmentMinute { get; set; } = 0;
+    private TimeOnly AppointmentStartTime { get; set; }
+    private TimeOnly AppointmentEndTime { get; set; }
 
     private ValidationComponent? _validationComponent;
 
@@ -104,26 +104,6 @@ public partial class AppointmentModal : BasePage
             Text = s.FullName
         }).ToList();
         _patientsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
-
-        //_statusDropdownItems = Enum.GetValues(typeof(AppointmentStatus))
-        //    .Cast<AppointmentStatus>()
-        //    .Where(status => status != AppointmentStatus.Scheduled)
-        //    .Select(status => new SelectItem
-        //    {
-        //        Value = (int)status,
-        //        Text = status.ToLocalizedString(),
-        //        Selected = _appointmentDto.Status == status
-        //    })
-        //    .ToList();
-
-        //_reasonDropdownItems = Enum.GetValues(typeof(AppointmentReason))
-        //    .Cast<AppointmentReason>()
-        //    .Select(status => new SelectItem
-        //    {
-        //        Value = (int)status,
-        //        Text = status.ToLocalizedString()
-        //    })
-        //    .ToList();
     }
 
     protected async Task GetAppSettings()
@@ -145,7 +125,7 @@ public partial class AppointmentModal : BasePage
         _isEdit = false;
         _appointmentDto = new();
         _appointmentId = 0;
-        _appointmentDto.AppointmentDate = DateTime.Now;
+        _appointmentDto.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
         
         if (Role == UserRole.Doctor)
         {
@@ -168,11 +148,10 @@ public partial class AppointmentModal : BasePage
         _appointmentDto.NurseId = appointment.NurseId;
         _appointmentDto.Notes = appointment.Notes;
         _appointmentDto.AppointmentDate = appointment.AppointmentDate;
-        _appointmentDto.Duration = appointment.Duration;
         _appointmentId = appointment.Id;
-        AppointmentHour = appointment.AppointmentDate.Hour;
-        AppointmentMinute = appointment.AppointmentDate.Minute;
         _appointmentDto.Status = appointment.Status;
+        _appointmentDto.AppointmentStartTime = appointment.AppointmentStartTime;
+        _appointmentDto.AppointmentEndTime = appointment.AppointmentEndTime;
     }
 
     public void Close()
@@ -194,16 +173,6 @@ public partial class AppointmentModal : BasePage
         }
         else
         {
-            var appointmentTime = new TimeSpan(AppointmentHour, AppointmentMinute, 0);
-            _appointmentDto.AppointmentDate =
-                new DateTime(
-                    _appointmentDto.AppointmentDate.Year,
-                    _appointmentDto.AppointmentDate.Month,
-                    _appointmentDto.AppointmentDate.Day,
-                    appointmentTime.Hours,
-                    appointmentTime.Minutes,
-                    0);
-
             await OnFormSubmit.InvokeAsync((_appointmentDto, _isEdit, _appointmentId));
         }
     }

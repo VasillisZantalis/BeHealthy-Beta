@@ -238,31 +238,31 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<Nurse>().HasData(nurses);
         modelBuilder.Entity<Patient>().HasData(patients);
 
-        var today = DateTime.Now.Date;
+        var today = DateOnly.FromDateTime(DateTime.Now.Date);
 
         // Seed Appointments
         var appointments = new List<Appointment>
         {
-            new Appointment { Id = 1, AppointmentDate = today.AddDays(-5).AddHours(10), Duration = 60, Status = AppointmentStatus.Completed, Reason = AppointmentReason.GeneralCheckup, DoctorId = 1, PatientId = 1 },
-            new Appointment { Id = 2, AppointmentDate = today.AddDays(-3).AddHours(11), Duration = 60, Status = AppointmentStatus.Cancelled, Reason = AppointmentReason.FollowUp, DoctorId = 2, PatientId = 2 },
-            new Appointment { Id = 3, AppointmentDate = today.AddDays(-2).AddHours(9), Duration = 60, Status = AppointmentStatus.Cancelled, Reason = AppointmentReason.FollowUp, DoctorId = 3, PatientId = 3 },
-            new Appointment { Id = 4, AppointmentDate = today.AddDays(-1).AddHours(12), Duration = 60, Status = AppointmentStatus.Completed, Reason = AppointmentReason.FollowUp, DoctorId = 4, PatientId = 4 },
+            new Appointment { Id = 1, AppointmentDate = today.AddDays(-5), AppointmentStartTime = new TimeOnly(10, 0), AppointmentEndTime = new TimeOnly(11, 0), Status = AppointmentStatus.Completed, Reason = AppointmentReason.GeneralCheckup, DoctorId = 1, PatientId = 1 },
+            new Appointment { Id = 2, AppointmentDate = today.AddDays(-3), AppointmentStartTime = new TimeOnly(11, 0), AppointmentEndTime = new TimeOnly(12, 0), Status = AppointmentStatus.Cancelled, Reason = AppointmentReason.FollowUp, DoctorId = 2, PatientId = 2 },
+            new Appointment { Id = 3, AppointmentDate = today.AddDays(-2), AppointmentStartTime = new TimeOnly(9, 0), AppointmentEndTime = new TimeOnly(10, 0), Status = AppointmentStatus.Cancelled, Reason = AppointmentReason.FollowUp, DoctorId = 3, PatientId = 3 },
+            new Appointment { Id = 4, AppointmentDate = today.AddDays(-1), AppointmentStartTime = new TimeOnly(12, 0), AppointmentEndTime = new TimeOnly(13, 0), Status = AppointmentStatus.Completed, Reason = AppointmentReason.FollowUp, DoctorId = 4, PatientId = 4 },
 
-            // Today's Appointments (Scheduled or Rescheduled)
-            new Appointment { Id = 5, AppointmentDate = today.AddHours(12), Duration = 60, Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Illness, DoctorId = 3, PatientId = 3 },
-            new Appointment { Id = 6, AppointmentDate = today.AddHours(14), Duration = 60, Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.Injury, DoctorId = 4, PatientId = 4 },
-            new Appointment { Id = 7, AppointmentDate = today.AddHours(9), Duration = 60, Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Injury, DoctorId = 4, PatientId = 1 },
-            new Appointment { Id = 8, AppointmentDate = today.AddHours(11), Duration = 60, Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Injury, DoctorId = 3, PatientId = 2 },
-            new Appointment { Id = 9, AppointmentDate = today.AddHours(15), Duration = 60, Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.Injury, DoctorId = 1, PatientId = 1 },
+            // Today's Appointments
+            new Appointment { Id = 5, AppointmentDate = today, AppointmentStartTime = new TimeOnly(12, 0), AppointmentEndTime = new TimeOnly(13, 0), Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Illness, DoctorId = 3, PatientId = 3 },
+            new Appointment { Id = 6, AppointmentDate = today, AppointmentStartTime = new TimeOnly(14, 0), AppointmentEndTime = new TimeOnly(15, 0), Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.Injury, DoctorId = 4, PatientId = 4 },
+            new Appointment { Id = 7, AppointmentDate = today, AppointmentStartTime = new TimeOnly(9, 0), AppointmentEndTime = new TimeOnly(10, 0), Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Injury, DoctorId = 4, PatientId = 1 },
+            new Appointment { Id = 8, AppointmentDate = today, AppointmentStartTime = new TimeOnly(11, 0), AppointmentEndTime = new TimeOnly(12, 0), Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Injury, DoctorId = 3, PatientId = 2 },
+            new Appointment { Id = 9, AppointmentDate = today, AppointmentStartTime = new TimeOnly(15, 0), AppointmentEndTime = new TimeOnly(16, 0), Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.Injury, DoctorId = 1, PatientId = 1 },
 
-            // Future Appointments (Scheduled)
-            new Appointment { Id = 10, AppointmentDate = today.AddDays(1).AddHours(10), Duration = 60, Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Prescription, DoctorId = 5, PatientId = 5 },
-            new Appointment { Id = 11, AppointmentDate = today.AddDays(2).AddHours(11), Duration = 60, Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.GeneralCheckup, DoctorId = 1, PatientId = 2 },
-            new Appointment { Id = 12, AppointmentDate = today.AddDays(3).AddHours(12), Duration = 60, Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.FollowUp, DoctorId = 2, PatientId = 3 },
+            // Future Appointments
+            new Appointment { Id = 10, AppointmentDate = today.AddDays(1), AppointmentStartTime = new TimeOnly(10, 0), AppointmentEndTime = new TimeOnly(11, 0), Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Prescription, DoctorId = 5, PatientId = 5 },
+            new Appointment { Id = 11, AppointmentDate = today.AddDays(2), AppointmentStartTime = new TimeOnly(11, 0), AppointmentEndTime = new TimeOnly(12, 0), Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.GeneralCheckup, DoctorId = 1, PatientId = 2 },
+            new Appointment { Id = 12, AppointmentDate = today.AddDays(3), AppointmentStartTime = new TimeOnly(12, 0), AppointmentEndTime = new TimeOnly(13, 0), Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.FollowUp, DoctorId = 2, PatientId = 3 },
 
             // Further Future Appointments
-            new Appointment { Id = 13, AppointmentDate = today.AddDays(10).AddHours(13), Duration = 60, Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Injury, DoctorId = 4, PatientId = 5 },
-            new Appointment { Id = 14, AppointmentDate = today.AddDays(15).AddHours(14), Duration = 60, Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.Prescription, DoctorId = 5, PatientId = 1 }
+            new Appointment { Id = 13, AppointmentDate = today.AddDays(10), AppointmentStartTime = new TimeOnly(13, 0), AppointmentEndTime = new TimeOnly(14, 0), Status = AppointmentStatus.Scheduled, Reason = AppointmentReason.Injury, DoctorId = 4, PatientId = 5 },
+            new Appointment { Id = 14, AppointmentDate = today.AddDays(15), AppointmentStartTime = new TimeOnly(14, 0), AppointmentEndTime = new TimeOnly(15, 0), Status = AppointmentStatus.Rescheduled, Reason = AppointmentReason.Prescription, DoctorId = 5, PatientId = 1 }
         };
 
         modelBuilder.Entity<Appointment>().HasData(appointments);

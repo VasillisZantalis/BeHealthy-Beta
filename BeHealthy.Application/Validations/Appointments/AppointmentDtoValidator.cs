@@ -16,9 +16,9 @@ public class AppointmentDtoValidator : AbstractValidator<AppointmentDto>
             .GreaterThan(0)
             .WithMessage(string.Format(Resource.TheFieldIsRequired, Resource.Patient));
 
-        RuleFor(x => x.Duration)
-            .InclusiveBetween(1, 1440)
-            .WithMessage(string.Format(Resource.MustBeBetween, Resource.Duration, 1, 1440));
+        RuleFor(x => x.AppointmentEndTime)
+            .GreaterThanOrEqualTo(x => x.AppointmentStartTime)
+            .WithMessage(Resource.EndTimeCannotBeEarlierThanStartTime);
 
         When(_ => showNurses, () =>
         {

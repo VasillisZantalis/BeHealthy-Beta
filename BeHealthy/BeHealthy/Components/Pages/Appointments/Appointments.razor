@@ -37,7 +37,7 @@ else
                                Pagination="_paginationState">
                         <PropertyColumn Title="@Resource.Date"
                                         Property="@(x => x.AppointmentDate)"
-                                        Format="dd MMM yyyy HH:mm"
+                                        Format="dd MMM yyyy"
                                         Sortable="true"
                                         IsDefaultSortColumn="true"
                                         InitialSortDirection="SortDirection.Descending" />
@@ -52,9 +52,10 @@ else
                         <PropertyColumn Title="@Resource.Room"
                                         Property="@(x => x.Room != null ? x.Room.Name : string.Empty)"
                                         Sortable="true" />
-                        <PropertyColumn Title="@Resource.Duration"
-                                        Property="@(x => x.Duration)"
-                                        Sortable="true" />
+                        <PropertyColumn Title="@Resource.StartTime"
+                                        Property="@(x => x.AppointmentStartTime)" />
+                        <PropertyColumn Title="@Resource.EndTime"
+                                        Property="@(x => x.AppointmentEndTime)"/>
                         <PropertyColumn Title="@Resource.Reason"
                                         Property="@(x => x.Reason.ToLocalizedString())" />
                         <TemplateColumn Title="@Resource.Status"

@@ -17,7 +17,7 @@
                     <div class="list-group">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex flex-row align-items-center justify-content-between border-bottom">
-                                <span><strong>Date:</strong> @DateTimeExtensions.ToFullDateTimeString(appointment.AppointmentDate)</span>
+                                <span><strong>Date:</strong> @appointment.AppointmentDate</span>
                                 <div class="d-flex flex-column">
                                     <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
                                     <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
@@ -46,15 +46,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var today = DateTime.Now.Date;
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var threeDaysFromNow = today.AddDays(3);
+
         var appointments = await AppointmentService.GetAllAppointmentsAsync();
 
         _upcomingAppointments = appointments
-            .Where(a => a.AppointmentDate >= today 
-                && a.AppointmentDate <= today.AddDays(3)
-                && a.Status != AppointmentStatus.Cancelled
-                && a.Status != AppointmentStatus.Completed)
+            .Where(a =>
+                a.AppointmentDate >= today &&
+                a.AppointmentDate <= threeDaysFromNow &&
+                a.Status != AppointmentStatus.Cancelled &&
+                a.Status != AppointmentStatus.Completed)
             .OrderBy(a => a.AppointmentDate)
+            .ThenBy(a => a.AppointmentStartTime)
             .Take(5)
             .ToList();
     }

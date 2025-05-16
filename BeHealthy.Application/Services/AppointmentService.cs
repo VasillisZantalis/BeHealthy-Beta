@@ -58,7 +58,8 @@ public class AppointmentService : IAppointmentService
             appointmentDto.NurseId,
             appointmentDto.RoomId,
             appointmentDto.AppointmentDate,
-            appointmentDto.Duration);
+            appointmentDto.AppointmentStartTime,
+            appointmentDto.AppointmentEndTime);
 
         if (!conflictCheck.Success)
         {
@@ -82,7 +83,8 @@ public class AppointmentService : IAppointmentService
             appointmentDto.NurseId,
             appointmentDto.RoomId,
             appointmentDto.AppointmentDate,
-            appointmentDto.Duration,
+            appointmentDto.AppointmentStartTime,
+            appointmentDto.AppointmentEndTime,
             appointmentDto.Id);
 
         if (!conflictCheck.Success)
@@ -121,108 +123,85 @@ public class AppointmentService : IAppointmentService
         int patientId, 
         int? nurseId,
         int? roomId,
-        DateTime appointmentDate, 
-        int duration, 
+        DateOnly appointmentDate,
+        TimeOnly appointmentStartTime,
+        TimeOnly appointmentEndTime,
         int? appointmentId = null)
     {
-        var doctorsAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
+        DateTime newStart = appointmentDate.ToDateTime(appointmentStartTime);
+        DateTime newEnd = appointmentDate.ToDateTime(appointmentEndTime);
 
-        var newAppointmentStart = appointmentDate;
-        var newAppointmentEnd = newAppointmentStart.AddMinutes(duration);
-
-        var doctorConflict = doctorsAppointments.FirstOrDefault(existingAppointment =>
-        {
-            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
-                return false;
-
-            var existingStart = existingAppointment.AppointmentDate;
-            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
-
-            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
-        });
+        var doctorAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
+        var doctorConflict =  FindConflict(doctorAppointments, newStart, newEnd, appointmentId);
 
         if (doctorConflict != null)
         {
             var errorMessage = string.Format(
                 Resource.AppointmentExistsForDoctor,
                 doctorConflict.Doctor?.FullName,
-                doctorConflict.AppointmentDate.ToString("HH:mm"),
-                doctorConflict.AppointmentDate.AddMinutes(doctorConflict.Duration).ToString("HH:mm")
+                doctorConflict.AppointmentStartTime.ToString("HH:mm"),
+                doctorConflict.AppointmentEndTime.ToString("HH:mm")
             );
             return ServiceResponse.Failed(errorMessage);
         }
 
         var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
-
-        var patientConflict = patientAppointments.FirstOrDefault(existingAppointment =>
-        {
-            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
-                return false;
-
-            var existingStart = existingAppointment.AppointmentDate;
-            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
-
-            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
-        });
+        var patientConflict = FindConflict(patientAppointments, newStart, newEnd, appointmentId);
 
         if (patientConflict != null)
         {
             var errorMessage = string.Format(
                 Resource.AppointmentExistsForPatient,
                 patientConflict.Patient?.FullName,
-                patientConflict.AppointmentDate.ToString("HH:mm"),
-                patientConflict.AppointmentDate.AddMinutes(patientConflict.Duration).ToString("HH:mm")
+                patientConflict.AppointmentStartTime.ToString("HH:mm"),
+                patientConflict.AppointmentEndTime.ToString("HH:mm")
             );
             return ServiceResponse.Failed(errorMessage);
         }
 
-        var nurseAppointments = nurseId.HasValue
-            ? await _unitOfWork.AppointmentRepository.GetAllAppointmentsByNurseIdAsync(nurseId.Value)
-            : Enumerable.Empty<Appointment>();
-
-        var nurseConflict = nurseAppointments.FirstOrDefault(existingAppointment =>
+        if (nurseId.HasValue)
         {
-            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
-                return false;
+            var nurseAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByNurseIdAsync(nurseId.Value);
+            var nurseConflict = FindConflict(nurseAppointments, newStart, newEnd, appointmentId);
 
-            var existingStart = existingAppointment.AppointmentDate;
-            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
-
-            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
-        });
-
-        if (nurseConflict != null)
-        {
-            var errorMessage = string.Format(
-                Resource.AppointmentExistsForPatient,
-                nurseConflict.Nurse?.FullName,
-                nurseConflict.AppointmentDate.ToString("HH:mm"),
-                nurseConflict.AppointmentDate.AddMinutes(nurseConflict.Duration).ToString("HH:mm")
-            );
-            return ServiceResponse.Failed(errorMessage);
+            if (nurseConflict != null)
+            {
+                var errorMessage = string.Format(
+                    Resource.AppointmentExistsForNurse,
+                    nurseConflict.Nurse?.FullName,
+                    nurseConflict.AppointmentStartTime.ToString("HH:mm"),
+                    nurseConflict.AppointmentEndTime.ToString("HH:mm")
+                );
+                return ServiceResponse.Failed(errorMessage);
+            }
         }
 
-        var roomsAppointments = roomId.HasValue
-            ? await _unitOfWork.RoomRepository.GetRoomAppointmentsAsync(roomId.Value)
-            : Enumerable.Empty<Appointment>();
-
-        var roomsConflict = roomsAppointments.FirstOrDefault(existingAppointment =>
+        if (roomId.HasValue)
         {
-            if (appointmentId.HasValue && existingAppointment.Id == appointmentId.Value)
-                return false;
+            var roomAppointments = await _unitOfWork.RoomRepository.GetRoomAppointmentsAsync(roomId.Value);
+            var roomConflict = FindConflict(roomAppointments, newStart, newEnd, appointmentId);
 
-            var existingStart = existingAppointment.AppointmentDate;
-            var existingEnd = existingStart.AddMinutes(existingAppointment.Duration);
-
-            return newAppointmentStart < existingEnd && newAppointmentEnd > existingStart;
-        });
-
-        if (roomsConflict != null)
-        {
-            return ServiceResponse.Failed(Resource.RoomIsBookedAtThatTime);
+            if (roomConflict != null)
+            {
+                return ServiceResponse.Failed(Resource.RoomIsBookedAtThatTime);
+            }
         }
 
         return ServiceResponse.Successful();
+    }
+
+    private Appointment? FindConflict(IEnumerable<Appointment> appointments, DateTime newStart, DateTime newEnd, int? excludeId)
+    {
+        return appointments.FirstOrDefault(existing =>
+        {
+            if (excludeId.HasValue && existing.Id == excludeId.Value)
+                return false;
+
+            DateTime existingStart = existing.AppointmentDate.ToDateTime(existing.AppointmentStartTime);
+            DateTime existingEnd = existing.AppointmentDate.ToDateTime(existing.AppointmentEndTime);
+
+            return newStart <= existingEnd && newEnd >= existingStart;
+        });
     }
 }
 
