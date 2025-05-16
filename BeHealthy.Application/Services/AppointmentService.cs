@@ -139,8 +139,8 @@ public class AppointmentService : IAppointmentService
             var errorMessage = string.Format(
                 Resource.AppointmentExistsForDoctor,
                 doctorConflict.Doctor?.FullName,
-                doctorConflict.AppointmentStartTime.ToString("HH:mm"),
-                doctorConflict.AppointmentEndTime.ToString("HH:mm")
+                doctorConflict.AppointmentStartTime.ToShortTimeString(),
+                doctorConflict.AppointmentEndTime.ToShortTimeString()
             );
             return ServiceResponse.Failed(errorMessage);
         }
@@ -153,8 +153,8 @@ public class AppointmentService : IAppointmentService
             var errorMessage = string.Format(
                 Resource.AppointmentExistsForPatient,
                 patientConflict.Patient?.FullName,
-                patientConflict.AppointmentStartTime.ToString("HH:mm"),
-                patientConflict.AppointmentEndTime.ToString("HH:mm")
+                patientConflict.AppointmentStartTime.ToShortTimeString(),
+                patientConflict.AppointmentEndTime.ToShortTimeString()
             );
             return ServiceResponse.Failed(errorMessage);
         }
@@ -169,8 +169,8 @@ public class AppointmentService : IAppointmentService
                 var errorMessage = string.Format(
                     Resource.AppointmentExistsForNurse,
                     nurseConflict.Nurse?.FullName,
-                    nurseConflict.AppointmentStartTime.ToString("HH:mm"),
-                    nurseConflict.AppointmentEndTime.ToString("HH:mm")
+                    nurseConflict.AppointmentStartTime.ToShortTimeString(),
+                    nurseConflict.AppointmentEndTime.ToShortTimeString()
                 );
                 return ServiceResponse.Failed(errorMessage);
             }
