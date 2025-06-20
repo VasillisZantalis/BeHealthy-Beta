@@ -53,7 +53,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 builder.Host.UseSerilog();
-Log.Logger.Information("Application is building....");
 
 builder.Services.AddLocalization();
 
@@ -79,63 +78,50 @@ builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<ConfirmDeleteStateService>();
 builder.Services.AddScoped<ToastrStateService>();
 
-try
-{
-    var app = builder.Build();
+var app = builder.Build();
 
-    app.UseSerilogRequestLogging();
+app.UseSerilogRequestLogging();
   
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseWebAssemblyDebugging(); 
+if (app.Environment.IsDevelopment())
+{
+    app.UseWebAssemblyDebugging(); 
 
-        using (var scope = app.Services.CreateScope())
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        if (context.Database.GetPendingMigrations().Any())
         {
-            var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<ApplicationDbContext>();
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
+            context.Database.Migrate();
         }
+    }
 
-    }
-    else
-    {
-        app.UseExceptionHandler("/Error", createScopeForErrors: true);
-        app.UseHsts();
-    }
+}
+else
+{
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseHsts();
+}
    
-    app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
-    app.UseStaticFiles();
-    app.UseAntiforgery();
+app.UseStaticFiles();
+app.UseAntiforgery();
 
-    app.UseRequestLocalization(localizationOptions);
+app.UseRequestLocalization(localizationOptions);
 
-    app.MapRazorComponents<App>()
-        .AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
-    app.MapAdditionalIdentityEndpoints();
-    app.MapCultureEndpoints();
-    app.MapAppointmentsEndpoints();
-    app.MapDepartmentEndpoints();
-    app.MapDoctorsEndpoints();
-    app.MapNursesEndpoints();
-    app.MapPatientEndpoints();
-    app.MapPrescriptionsEndpoints();
-    app.MapRoomsEndpoints();
-    app.MapUsersEndpoints();
+app.MapAdditionalIdentityEndpoints();
+app.MapCultureEndpoints();
+app.MapAppointmentsEndpoints();
+app.MapDepartmentEndpoints();
+app.MapDoctorsEndpoints();
+app.MapNursesEndpoints();
+app.MapPatientEndpoints();
+app.MapPrescriptionsEndpoints();
+app.MapRoomsEndpoints();
+app.MapUsersEndpoints();
 
-    Log.Logger.Information("Application is running....");
-    app.Run();
-}
-catch (Exception ex)
-{
-    Log.Logger.Error(ex, "Application failed to start....");
-}
-finally
-{
-    Log.CloseAndFlush();
-}
-
+app.Run();
