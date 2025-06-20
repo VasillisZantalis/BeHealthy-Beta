@@ -58,9 +58,6 @@ public partial class AppointmentModal : BasePage
     private bool _showRooms;
     private bool _showNurses;
 
-    private TimeOnly AppointmentStartTime { get; set; }
-    private TimeOnly AppointmentEndTime { get; set; }
-
     private ValidationComponent? _validationComponent;
 
     protected override async Task OnInitializedAsync()
