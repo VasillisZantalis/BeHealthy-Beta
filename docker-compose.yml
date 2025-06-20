@@ -1,5 +1,6 @@
 services:
   behealthy:
+    container_name: behealthywebapp
     image: ${DOCKER_REGISTRY-}behealthy
     build:
       context: .
