@@ -111,7 +111,6 @@
 
     private bool _inProgress = false;
     private bool _doNotAllowDoctorWithoutSpecialty = false;
-    private int? _departmentId;
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 

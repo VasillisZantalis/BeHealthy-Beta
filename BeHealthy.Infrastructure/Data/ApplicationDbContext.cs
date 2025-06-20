@@ -3,7 +3,6 @@ using BeHealthy.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace BeHealthy.Infrastructure.Data;
@@ -11,18 +10,18 @@ namespace BeHealthy.Infrastructure.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : IdentityDbContext<ApplicationUser>(options)
 {
-    public DbSet<Patient> Patients { get; set; } = null!;
-    public DbSet<Doctor> Doctors { get; set; } = null!;
-    public DbSet<Nurse> Nurses { get; set; } = null!;
-    public DbSet<Appointment> Appointments { get; set; } = null!;
-    public DbSet<Prescription> Prescriptions { get; set; } = null!;
-    public DbSet<Department> Departments { get; set; } = null!;
-    public DbSet<Room> Rooms { get; set; } = null!;
-    public DbSet<AppSetting> AppSettings { get; set; } = null!;
-    public DbSet<Specialty> Specialties { get; set; } = null!;
-    public DbSet<Role> Roles { get; set; } = null!;
-    public DbSet<Privilege> Privileges { get; set; } = null!;
-    public DbSet<UserRolePrivilege> UserRolePrivileges { get; set; } = null!;
+    public DbSet<Patient> Patients => Set<Patient>();
+    public DbSet<Doctor> Doctors => Set<Doctor>();
+    public DbSet<Nurse> Nurses => Set<Nurse>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<Prescription> Prescriptions => Set<Prescription>();
+    public DbSet<Department> Departments => Set<Department>();
+    public DbSet<Room> Rooms => Set<Room>();
+    public DbSet<AppSetting> AppSettings => Set<AppSetting>();
+    public DbSet<Specialty> Specialties => Set<Specialty>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Privilege> Privileges => Set<Privilege>();
+    public DbSet<UserRolePrivilege> UserRolePrivileges => Set<UserRolePrivilege>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

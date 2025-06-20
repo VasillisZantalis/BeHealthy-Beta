@@ -11,15 +11,21 @@ public class EnumResourceConverter : EnumConverter
 
     public EnumResourceConverter(Type type) : base(type) { }
 
-    public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+    public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
     {
         if (destinationType == typeof(string) && value is Enum enumValue)
         {
             return ConvertToLocalizedString(enumValue, culture);
         }
 
+        if (value == null || destinationType == null)
+        {
+            return base.ConvertTo(context, culture, value, destinationType!);
+        }
+
         return base.ConvertTo(context, culture, value, destinationType);
     }
+
 
     public static string ConvertToLocalizedString(Enum enumValue, CultureInfo? culture = null)
     {
