@@ -1,7 +1,6 @@
 ﻿using BeHealthy.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Security.Claims;
 
 namespace BeHealthy.Application.Extensions;
 
@@ -21,27 +20,21 @@ public static class EnumExtensions
         return enumValue?.ToString() ?? string.Empty;
     }
 
-    public static string GetBadgeClass(this AppointmentStatus status)
+    public static string GetBadgeClass(this AppointmentStatus status) => status switch
     {
-        return status switch
-        {
-            AppointmentStatus.Scheduled => "bg-info",
-            AppointmentStatus.Completed => "bg-success",
-            AppointmentStatus.Cancelled => "bg-danger",
-            AppointmentStatus.Rescheduled => "bg-warning",
-            _ => "bg-secondary"
-        };
-    }
+        AppointmentStatus.Scheduled => "bg-info",
+        AppointmentStatus.Completed => "bg-success",
+        AppointmentStatus.Cancelled => "bg-danger",
+        AppointmentStatus.Rescheduled => "bg-warning",
+        _ => "bg-secondary"
+    };
 
-    public static string GetStatusColor(this AppointmentStatus status)
+    public static string GetStatusColor(this AppointmentStatus status) => status switch
     {
-        return status switch
-        {
-            AppointmentStatus.Scheduled => "#4094f5",
-            AppointmentStatus.Completed => "#1b942f",
-            AppointmentStatus.Cancelled => "#e82113",
-            AppointmentStatus.Rescheduled => "#e8b613",
-            _ => "#4094f5"
-        };
-    }
+        AppointmentStatus.Scheduled => "#4094f5",
+        AppointmentStatus.Completed => "#1b942f",
+        AppointmentStatus.Cancelled => "#e82113",
+        AppointmentStatus.Rescheduled => "#e8b613",
+        _ => "#4094f5"
+    };
 }

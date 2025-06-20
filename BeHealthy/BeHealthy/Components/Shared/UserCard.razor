@@ -10,7 +10,7 @@
                 {
                     <div class="form-group">
                         <span class="text-muted small-text" for="fullName">@Resource.FullName</span>
-                        <h6 id="fullName" title="@FullName">@FullName</h6>
+                        <h6 id="fullName" title="@FullName" class="clickable">@(FullName.Length > 20 ? FullName.Substring(0, 20) + "..." : FullName)</h6>
                     </div>
                 }
                 @if (Role == UserRole.Doctor)
