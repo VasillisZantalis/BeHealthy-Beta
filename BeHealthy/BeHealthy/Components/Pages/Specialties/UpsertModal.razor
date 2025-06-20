@@ -11,10 +11,10 @@
                 </div>
                 <div class="modal-body">
                     <EditForm Model="_specialtyDto" FormName="SpecialtyForm" OnValidSubmit="SaveSpecialty">
-                        <DataAnnotationsValidator />
+                        <FluentValidationValidator @ref="_fluentValidationValidator" />
                         <div class="d-flex flex-column gap-3">
                             <div class="form">
-                                <label class="fw-bold" for="name">@Resource.Name</label>
+                                <label class="fw-bold required" aria-required="true" for="name">@Resource.Name</label>
                                 <InputText id="name" class="form-control" @bind-Value="_specialtyDto.Name" />
                                 <ValidationMessage For="@(() => _specialtyDto.Name)" />
                             </div>
@@ -41,6 +41,8 @@
     [SupplyParameterFromForm]
     private SpecialtyDto _specialtyDto { get; set; } = new();
 
+    private FluentValidationValidator _fluentValidationValidator = new();
+
     private string ModalTitle => SpecialtyId.HasValue ? Resource.Edit : Resource.Create;
 
     private bool _show;
@@ -65,22 +67,25 @@
 
     private async Task SaveSpecialty()
     {
-        if (SpecialtyId.HasValue)
+        if (await _fluentValidationValidator.ValidateAsync())
         {
-            var specialtyForUpdateDto = new SpecialtyForUpdateDto
+            if (SpecialtyId.HasValue)
             {
-                Id = SpecialtyId.Value,
-                Name = _specialtyDto.Name
-            };
-            await SpecialtyService.UpdateSpecialtyAsync(SpecialtyId.Value, specialtyForUpdateDto);
-        }
-        else
-        {
-            var specialtyForCreationDto = new SpecialtyForCreationDto
+                var specialtyForUpdateDto = new SpecialtyForUpdateDto
+                {
+                    Id = SpecialtyId.Value,
+                    Name = _specialtyDto.Name
+                };
+                await SpecialtyService.UpdateSpecialtyAsync(SpecialtyId.Value, specialtyForUpdateDto);
+            }
+            else
             {
-                Name = _specialtyDto.Name
-            };
-            await SpecialtyService.AddSpecialtyAsync(specialtyForCreationDto);
+                var specialtyForCreationDto = new SpecialtyForCreationDto
+                {
+                    Name = _specialtyDto.Name
+                };
+                await SpecialtyService.AddSpecialtyAsync(specialtyForCreationDto);
+            }
         }
 
         CloseModal();

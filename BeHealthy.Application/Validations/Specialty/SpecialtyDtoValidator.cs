@@ -1,0 +1,15 @@
+﻿using BeHealthy.Application.Dtos.Specialty;
+using BeHealthy.Shared.Locales;
+using FluentValidation;
+
+namespace BeHealthy.Application.Validations.Specialty;
+
+public class SpecialtyDtoValidator : AbstractValidator<SpecialtyDto>
+{
+    public SpecialtyDtoValidator()
+    {
+        RuleFor(s => s.Name)
+            .NotEmpty()
+            .WithMessage(string.Format(Resource.PropertyRequired, Resource.Name));
+    }
+}
