@@ -45,7 +45,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="fw-bold" for="appointmentDate">@string.Join(" ", Resource.Date, Resource.Appointments)</label>
+                                <label class="fw-bold" for="appointmentDate">@Resource.Date</label>
                                 <InputDate id="appointmentDate" class="form-control" @bind-Value="_appointmentDto.AppointmentDate" />
                                 <ValidationMessage For="@(() => _appointmentDto.AppointmentDate)" />
                             </div>

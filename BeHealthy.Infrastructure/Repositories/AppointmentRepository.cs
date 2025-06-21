@@ -72,7 +72,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                     .Include(a => a.Doctor)
                     .Include(i => i.Room)
                     .Include(i => i.Nurse)
-                    .Where(a => a.Doctor!.UserId == userId || a.Doctor!.UserId == userId)
+                    .Where(a => a.Doctor!.UserId == userId || a.Patient!.UserId == userId || a.Nurse!.UserId == userId)
                     .ToListAsync();
     }
 
@@ -85,7 +85,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                     .Include(a => a.Doctor)
                     .Include(i => i.Room)
                     .Include(i => i.Nurse)
-                    .Where(a => a.Doctor!.UserId == userId || a.Patient!.UserId == userId)
+                    .Where(a => a.Doctor!.UserId == userId || a.Patient!.UserId == userId || a.Nurse!.UserId == userId)
                     .ToListAsync();
     }
 }

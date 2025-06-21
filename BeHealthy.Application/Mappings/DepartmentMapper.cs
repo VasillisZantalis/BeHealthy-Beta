@@ -56,6 +56,29 @@ public static class DepartmentMapper
         };
     }
 
+    public static DepartmentForCreationDto MapToCreationDto(this DepartmentDto department) => new DepartmentForCreationDto
+        {
+            Name = department.Name,
+            Location = department.Location,
+            HeadOfDepartmentId = department.HeadOfDepartmentId,
+            Doctors = department.Doctors,
+            Nurses = department.Nurses,
+            Patients = department.Patients,
+            Rooms = department.Rooms
+        };
+
+    public static DepartmentForUpdateDto MapToUpdateDto(this DepartmentDto department) => new DepartmentForUpdateDto
+        {
+            Id = department.Id,
+            Name = department.Name,
+            Location = department.Location,
+            HeadOfDepartmentId = department.HeadOfDepartmentId,
+            Doctors = department.Doctors,
+            Nurses = department.Nurses,
+            Patients = department.Patients,
+            Rooms = department.Rooms
+        };
+
     public static IEnumerable<DepartmentDto> MapToDto(this IEnumerable<Department> departments)
     {
         return departments.Select(department => department.MapToDto()).ToList();

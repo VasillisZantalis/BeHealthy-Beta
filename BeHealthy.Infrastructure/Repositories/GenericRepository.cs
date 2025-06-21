@@ -77,9 +77,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     }
 
     public async Task<IEnumerable<T>> FindWithIncludesAsync(
-    Expression<Func<T, bool>> predicate,
-    bool trackChanges = false,
-    params Expression<Func<T, object>>[] includes)
+        Expression<Func<T, bool>> predicate,
+        bool trackChanges = false,
+        params Expression<Func<T, object>>[] includes)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 

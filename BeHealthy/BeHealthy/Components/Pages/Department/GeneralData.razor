@@ -1,4 +1,5 @@
-﻿@inherits BasePage
+﻿@using BeHealthy.Application.Dtos.Common
+@inherits BasePage
 
 <div class="container-fluid my-3 p-3 border rounded">
     <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
@@ -78,7 +79,7 @@
         var keys = new[] { "DepartmentRequiresSupervisor", "DefaultDepartmentSupervison" }.ToList();
         var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
 
-        AppSetting? requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
+        var requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
         var defaultSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DefaultDepartmentSupervison");
 
         _isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;
@@ -96,11 +97,12 @@
     private async Task HandleSubmit()
     {
         _inProgress = true;
+        ServiceResponse result;
 
         _validationComponent?.ClearErrors();
         var errors = new Dictionary<string, List<string>>();
 
-        if (_isRequiredHeadOfDepartment && DepartmentDto.HeadOfDepartmentId is null)
+        if (_isRequiredHeadOfDepartment && !(DepartmentDto.HeadOfDepartmentId > 0))
         {
             errors.Add(nameof(DepartmentDto.HeadOfDepartmentId),
                 new() { string.Format(Resource.TheFieldIsRequired, Resource.HeadΟfDepartment) });
@@ -114,34 +116,23 @@
         {
             if (IsEditMode)
             {
-                var roomForUpdateDto = new DepartmentForUpdateDto
-                    {
-                        Id = DepartmentDto.Id,
-                        Name = DepartmentDto.Name,
-                        Location = DepartmentDto.Location,
-                        HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
-                        Doctors = DepartmentDto.Doctors,
-                        Nurses = DepartmentDto.Nurses,
-                        Patients = DepartmentDto.Patients,
-                        Rooms = DepartmentDto.Rooms
-                    };
-                await _departmentService.UpdateDepartmentAsync(roomForUpdateDto);
+                var departmentForUpdateDto = DepartmentDto.MapToUpdateDto();
+                result = await _departmentService.UpdateDepartmentAsync(departmentForUpdateDto);
             }
             else
             {
-                var roomForCreateDto = new DepartmentForCreationDto
-                    {
-                        Name = DepartmentDto.Name,
-                        Location = DepartmentDto.Location,
-                        HeadOfDepartmentId = DepartmentDto.HeadOfDepartmentId,
-                        Doctors = DepartmentDto.Doctors,
-                        Nurses = DepartmentDto.Nurses,
-                        Patients = DepartmentDto.Patients,
-                        Rooms = DepartmentDto.Rooms
-                    };
-                await _departmentService.AddDepartmentAsync(roomForCreateDto);
+                var departmentForCreateDto = DepartmentDto.MapToCreationDto();
+                result = await _departmentService.AddDepartmentAsync(departmentForCreateDto);
             }
-            _navigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
+
+            if (!result.Success)
+            {
+                _alert.ShowFailed(result.ErrorMessage!);
+            }
+            else
+            {
+                _navigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
+            }
         }
         _inProgress = false;
     }
