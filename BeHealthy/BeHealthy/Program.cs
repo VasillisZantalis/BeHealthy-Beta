@@ -7,6 +7,7 @@ using BeHealthy.Infrastructure.Data;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -53,6 +54,14 @@ var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture(supportedCultures[0])
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
+
+var provider = localizationOptions.RequestCultureProviders
+    .FirstOrDefault(p => p is AcceptLanguageHeaderRequestCultureProvider);
+
+if (provider != null)
+{
+    localizationOptions.RequestCultureProviders.Remove(provider);
+}
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
