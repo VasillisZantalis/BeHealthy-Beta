@@ -51,7 +51,6 @@ public partial class Appointments : BasePage
         LoaderService.SetLoader(true);
 
         SetBreadcrumbs();
-        _paginationState.ItemsPerPage = 10;
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _currentUserId = authState.User.GetUserId();
@@ -80,6 +79,8 @@ public partial class Appointments : BasePage
         await LoadDoctors();
         await LoadPatients();
 
+        _paginationState.ItemsPerPage = _appointments.Count;
+
         LoaderService.SetLoader(false);
     }
 
@@ -90,14 +91,6 @@ public partial class Appointments : BasePage
             new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
             new Breadcrumb(){ Text = Resource.Appointments, Link = string.Empty, Active = true },
         });
-    }
-
-    private void OnPageSizeChanged(ChangeEventArgs e)
-    {
-        if (e.Value is not null)
-        {
-            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
-        }
     }
 
     private async Task HandleAppointmentFormSubmission((AppointmentDto, bool, int) submission)

@@ -6,7 +6,6 @@ using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
-using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
@@ -61,10 +60,10 @@ public partial class Patients : BasePage
 
         SetBreadcrumbs();
 
-        _paginationState.ItemsPerPage = 10;
+        _paginationState.ItemsPerPage = _patients.Count();
 
-        hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.EditPatient);
-        hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.DeletePatient);
+        hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole!.Value, PrivilegeName.EditPatient);
+        hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole!.Value, PrivilegeName.DeletePatient);
         hasActionRights = hasEditRight || hasDeleteRight;
         LoaderService.SetLoader(false);
     }

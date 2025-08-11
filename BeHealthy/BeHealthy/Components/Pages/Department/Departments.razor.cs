@@ -43,14 +43,6 @@ public partial class Departments : BasePage
         });
     }
 
-    private void OnPageSizeChanged(ChangeEventArgs e)
-    {
-        if (e.Value is not null)
-        {
-            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
-        }
-    }
-
     public void EditDepartment(int departmentId)
     {
         _navigationManager.NavigateTo($"/departments/edit/{departmentId}");

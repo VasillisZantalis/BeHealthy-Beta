@@ -38,7 +38,7 @@ public partial class Nurses : BasePage
 
         await LoadNurses(authState.User.GetUserId(), userRole);
 
-        _paginationState.ItemsPerPage = 10;
+        _paginationState.ItemsPerPage = _nurses.Count;
         hasActionRights = userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
@@ -51,14 +51,6 @@ public partial class Nurses : BasePage
             new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
             new Breadcrumb(){ Text = Resource.Nurses, Link = string.Empty, Active = true },
         });
-    }
-
-    private void OnPageSizeChanged(ChangeEventArgs e)
-    {
-        if (e.Value is not null)
-        {
-            _paginationState.ItemsPerPage = int.Parse((string)e.Value);
-        }
     }
 
     private async Task LoadNurses(string? userId, UserRole? userRole = UserRole.Admin)

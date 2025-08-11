@@ -40,7 +40,7 @@ public partial class Doctors : BasePage
 
         await LoadDoctors(userId, _userRole);
 
-        _paginationState.ItemsPerPage = 10;
+        _paginationState.ItemsPerPage = _doctors.Count;
         hasActionRights = _userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
