@@ -28,8 +28,8 @@ public partial class Departments : BasePage
         SetBreadcrumbs();
 
         _hasActionRights = true;
-        _paginationState.ItemsPerPage = 10;
         _departments = (await _departmentService.GetAllDepartmentsAsync()).ToList();
+        _paginationState.ItemsPerPage = _departments.Count;
 
         LoaderService.SetLoader(false);
     }

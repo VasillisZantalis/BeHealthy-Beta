@@ -1,15 +1,7 @@
 using BeHealthy.Application;
 using BeHealthy.Components;
 using BeHealthy.Components.Account;
-using BeHealthy.Endpoints.Appointments;
 using BeHealthy.Endpoints.Culture;
-using BeHealthy.Endpoints.Department;
-using BeHealthy.Endpoints.Doctors;
-using BeHealthy.Endpoints.Nurse;
-using BeHealthy.Endpoints.Patient;
-using BeHealthy.Endpoints.Prescription;
-using BeHealthy.Endpoints.Room;
-using BeHealthy.Endpoints.User;
 using BeHealthy.Infrastructure;
 using BeHealthy.Infrastructure.Data;
 using BeHealthy.States;
@@ -81,10 +73,10 @@ builder.Services.AddScoped<ToastrStateService>();
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
-  
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseWebAssemblyDebugging(); 
+    app.UseWebAssemblyDebugging();
 
     using (var scope = app.Services.CreateScope())
     {
@@ -101,7 +93,7 @@ else
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
-   
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
