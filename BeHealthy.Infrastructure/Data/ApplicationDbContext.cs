@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace BeHealthy.Infrastructure.Data;
 
@@ -28,6 +29,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        //SeedData(modelBuilder);
+    }
+
+    private void SeedData(ModelBuilder modelBuilder)
+    {
         // Seed Roles
         var identityRoles = Enum.GetValues(typeof(UserRole))
             .Cast<UserRole>()
@@ -37,7 +43,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 Name = role.ToString(),
                 NormalizedName = role.ToString().ToUpper()
             })
-            .ToArray();
+        .ToArray();
 
         modelBuilder.Entity<IdentityRole>().HasData(identityRoles);
 
@@ -311,5 +317,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            }
        );
     }
-
 }

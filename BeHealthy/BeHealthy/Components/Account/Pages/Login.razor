@@ -9,7 +9,7 @@
 
 <PageTitle>@Resource.Login</PageTitle>
 
-<div class="row d-flex justify-content-center mt-5">
+<div class="d-flex justify-content-center mt-5">
 
     <div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-4 rounded p-5 shadow">
         <section>
@@ -33,6 +33,11 @@
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
                         @Resource.RememberMe
                     </label>
+                </div>
+                <div class="form-floating mb-3">
+                    <span>Don't have an account? 
+                        <a href="/register">Register here</a>
+                    </span>
                 </div>
                 <div>
                     <button type="submit" class="w-100 btn btn-primary">

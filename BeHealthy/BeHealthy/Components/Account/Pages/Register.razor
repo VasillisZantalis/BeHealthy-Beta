@@ -1,5 +1,7 @@
 ﻿@page "/register"
 @rendermode InteractiveServer
+@using BeHealthy.Components.Layout
+@layout EmptyLayout
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -14,7 +16,7 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 
-<div class="row d-flex justify-content-center">
+<div class="d-flex justify-content-center">
     <div class="col-md-4 rounded p-4 shadow">
         @* <h3 class="alert-danger">@Message</h3> *@
 
@@ -92,10 +94,15 @@
                 <label for="role">Role</label>
                 <ValidationMessage For="() => Input.Role" class="text-danger" />
             </div>
-            
-            <div class="d-flex flex-lg-row flex-column gap-2 justify-content-evenly">
-                <a class="btn btn-outline-dark px-3 w-100" href="@returnUrl">Cancel</a>
-                <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+            <div class="form-floating mb-3">
+                <span>
+                    Already have an account?
+                    <a href="/login">Login</a>
+                </span>
+            </div>
+            <div class="d-flex flex-lg-row flex-column justify-content-between gap-2">
+                <a class="btn btn-outline-dark w-100" href="@returnUrl">Cancel</a>
+                <button type="submit" class="btn btn-success d-flex flex-row w-100 justify-content-center" disabled="@_inProgress">
                     @if (_inProgress)
                     {
                         <SmallLoader />
