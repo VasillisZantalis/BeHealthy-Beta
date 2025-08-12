@@ -1,0 +1,73 @@
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+
+<div class="sidebar-container2 main-color gap-3 py-5 px-1
+    @(isExpanded ? "sidebar-expand" : "sidebar-collapse")"
+    @onmouseenter="ExpandSidebar"
+    @onmouseleave="CollapseSidebar">
+    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+        <Icon IconClass="@FAIcon.House" SizeClass="fs-5" />
+        <span class="menu-name">@Resource.Dashboard</span>
+    </NavLink>
+    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Nurse, UserRole.Patient }.ToRoleString())">
+        <NavLink class="nav-link" href="@(RoutingEndpoints.DOCTORS_PAGE)">
+            <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Doctors</span>
+        </NavLink>
+        <NavLink class="nav-link" href="@(RoutingEndpoints.NURSES_PAGE)">
+            <Icon IconClass="@FAIcon.UserNurse" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Nurses</span>
+        </NavLink>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Nurse }.ToRoleString())">
+        <NavLink class="nav-link" href="@(RoutingEndpoints.PATIENTS_PAGE)">
+            <Icon IconClass="@FAIcon.Viruses" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Patients</span>
+        </NavLink>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(new[] { UserRole.Admin, UserRole.Doctor, UserRole.Patient, UserRole.Nurse }.ToRoleString())">
+        <NavLink class="nav-link" href="@(RoutingEndpoints.APPOINTMENTS_PAGE)">
+            <Icon IconClass="@FAIcon.CalendarDays" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Appointments</span>
+        </NavLink>
+    </AuthorizeView>
+
+    <AuthorizeView Roles="@(new[] { UserRole.Admin }.ToRoleString())">
+        <NavLink class="nav-link" href="@(RoutingEndpoints.ROOMS_PAGE)">
+            <Icon IconClass="@FAIcon.BedPulse" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Rooms</span>
+        </NavLink>
+    </AuthorizeView>
+    <AuthorizeView Roles="@(new[] { UserRole.Admin }.ToRoleString())">
+        <NavLink class="nav-link" href="@(RoutingEndpoints.SETTINGS_PAGE)">
+            <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Settings</span>
+        </NavLink>
+
+        <NavLink class="nav-link" href="@(RoutingEndpoints.ROLES_PRIVILEGES_PAGE)">
+            <Icon IconClass="@FAIcon.Fingerprint" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Privileges</span>
+        </NavLink>
+
+        <NavLink class="nav-link" href="@(RoutingEndpoints.DEPARTMENTS_PAGE)">
+            <Icon IconClass="@FAIcon.Hospital" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Specialties</span>
+        </NavLink>
+
+        <NavLink class="nav-link" href="@(RoutingEndpoints.SPECIALTIES_PAGE)">
+            <Icon IconClass="@FAIcon.Stethoscope" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Specialties</span>
+        </NavLink>
+    </AuthorizeView>
+</div>
+
+
+@code {
+    bool isExpanded;
+
+    private void ExpandSidebar() => isExpanded = true;
+
+    private void CollapseSidebar() => isExpanded = false;
+
+}

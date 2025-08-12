@@ -4,12 +4,13 @@
     <ChildContent>
         <div class="page">
             <AuthorizeView>
-                <NavMenu />
+                @* <NavMenu /> *@
+                <Sidebar />
             </AuthorizeView>
 
             <main>
                 <div class="top-row px-4" style="z-index: 10!important">
-                    <NavToggleComponent />
+                   @*  <NavToggleComponent /> *@
                     <Loader />
                     <ConfirmDeleteModal />
                     <Toastr />
@@ -31,7 +32,7 @@
                     </AuthorizeView>
                 </div>
 
-                <article class="content px-4">
+                <article class="content">
                     <Breadcrumbs />
                     @Body
                 </article>

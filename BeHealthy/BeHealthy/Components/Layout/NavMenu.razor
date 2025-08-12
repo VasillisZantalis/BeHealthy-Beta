@@ -4,7 +4,9 @@
 
 @rendermode InteractiveServer
 
-<div class="sidebar-container" style="@(NavMenuState.IsVisible ? "display: block;" : "display: none;")">
+@* <div class="sidebar-container" style="@(NavMenuState.IsVisible ? "display: block;" : "display: none;")"> *@
+
+<div class="sidebar-container @(NavMenuState.IsVisible ? "show" : "hide")">
     <div class="sidebar h-auto main-color">
 
         <div class="top-row ps-3 navbar navbar-dark">
@@ -14,7 +16,6 @@
         </div>
 
         <div class="nav-scrollable">
-            <div>
                 <nav class="flex-column">
                     <div class="m-3 ms-2">
                         <h5 class="text-white-50">@Resource.Management</h5>
@@ -100,7 +101,6 @@
                         </div>
                     </AuthorizeView>
                 </nav>
-            </div>
         </div>
     </div>
 </div>
