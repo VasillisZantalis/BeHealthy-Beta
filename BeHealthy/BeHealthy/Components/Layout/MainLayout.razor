@@ -3,35 +3,34 @@
 <ErrorBoundary>
     <ChildContent>
         <div class="page">
-            <AuthorizeView>
-                @* <NavMenu /> *@
-                <Sidebar />
-            </AuthorizeView>
+            <div class="top-row px-4" style="z-index: 10!important">
+                @*  <NavToggleComponent /> *@
+                <Loader />
+                <ConfirmDeleteModal />
+                <Toastr />
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="d-flex flex-row align-items-center ms-auto gap-3">
+                            <CultureSelector />
+                            <a class="m-0 p-0 nav-link" href="/profile" title="profile">@Resource.Hello, @context.User.Identity?.Name</a>
+                            <div class="nav-item clickable">
+                                <form action="/logout" method="post">
+                                    <AntiforgeryToken />
+                                    <button type="submit" class="btn m-0 p-0">
+                                        <Icon IconClass="@FAIcon.RightFromBracket" />
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
 
             <main>
-                <div class="top-row px-4" style="z-index: 10!important">
-                   @*  <NavToggleComponent /> *@
-                    <Loader />
-                    <ConfirmDeleteModal />
-                    <Toastr />
-                    <AuthorizeView>
-                        <Authorized>
-                            <div class="d-flex flex-row align-items-center ms-auto gap-3">
-                                <CultureSelector />
-                                <a class="m-0 p-0 nav-link" href="/profile" title="profile">@Resource.Hello, @context.User.Identity?.Name</a>
-                                <div class="nav-item clickable">
-                                    <form action="/logout" method="post">
-                                        <AntiforgeryToken />
-                                        <button type="submit" class="btn m-0 p-0">
-                                            <Icon IconClass="@FAIcon.RightFromBracket" />
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </Authorized>
-                    </AuthorizeView>
-                </div>
-
+                <AuthorizeView>
+                    @* <NavMenu /> *@
+                    <Sidebar />
+                </AuthorizeView>
                 <article class="content">
                     <Breadcrumbs />
                     @Body

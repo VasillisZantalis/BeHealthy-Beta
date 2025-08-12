@@ -1,11 +1,15 @@
 .page {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    height: 100vh;
 }
 
 main {
+    display: flex;
+}
+
+article {
     flex: 1;
+    height: 100vh;
 }
 
 .top-row {

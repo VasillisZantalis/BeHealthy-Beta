@@ -3,7 +3,9 @@
     flex-direction: column;
     color: white;
     border-radius: 0 10px 10px 0;
-    height: 100vh;
+    max-height: 35rem;
+    position: sticky;
+    top: 15%;
 }
 
 .sidebar-expand {
