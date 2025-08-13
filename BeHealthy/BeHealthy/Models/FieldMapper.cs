@@ -1,6 +1,8 @@
-﻿using BeHealthy.Domain;
+﻿using BeHealthy.Application.Dtos.Appointment;
+using BeHealthy.Domain;
 using BeHealthy.Extensions;
 using BeHealthy.Models.Enums;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Models;
 
@@ -19,23 +21,23 @@ public static class FieldMapper
             case ImportEntity.Nurse:
                 return new List<FieldDefinition>
                 {
-                    new FieldDefinition { Name = "FirstName", DisplayName = "First Name", Type = FieldType.Text, IsRequired = true },
-                    new FieldDefinition { Name = "LastName", DisplayName = "Last Name", Type = FieldType.Text, IsRequired = true },
-                    new FieldDefinition { Name = "Email", DisplayName = "Email", Type = FieldType.Text, IsRequired = true },
-                    new FieldDefinition { Name = "Department", DisplayName = "Department", Type = FieldType.Dropdown, IsRequired = true, Options = departments }
+                    new FieldDefinition { Name = "FirstName", DisplayName = Resource.FirstName, Type = FieldType.Text, IsRequired = true },
+                    new FieldDefinition { Name = "LastName", DisplayName = Resource.LastName, Type = FieldType.Text, IsRequired = true },
+                    new FieldDefinition { Name = "Email", DisplayName = Resource.Email, Type = FieldType.Text, IsRequired = true },
+                    new FieldDefinition { Name = "Department", DisplayName = Resource.Department, Type = FieldType.Dropdown, IsRequired = true, Options = departments }
                 };
 
             case ImportEntity.Appointment:
                 return new List<FieldDefinition>
                 {
-                    new FieldDefinition { Name = "DoctorId", DisplayName = "Doctor", Type = FieldType.Dropdown, IsRequired = true, Options = doctors },
-                    new FieldDefinition { Name = "PatientId", DisplayName = "Patient", Type = FieldType.Dropdown, IsRequired = true, Options = patients },
-                    new FieldDefinition { Name = "Date", DisplayName = "Date", Type = FieldType.Date, IsRequired = true },
-                    new FieldDefinition { Name = "StartTime", DisplayName = "Start Time", Type = FieldType.Time, IsRequired = true },
-                    new FieldDefinition { Name = "EndTime", DisplayName = "End Time", Type = FieldType.Time, IsRequired = true },
-                    new FieldDefinition { Name = "Reason", DisplayName = "Reason", Type = FieldType.Dropdown, IsRequired = true, Options = GetReasons() },
-                    new FieldDefinition { Name = "Status", DisplayName = "Status", Type = FieldType.Dropdown, IsRequired = true, Options = GetStatuses() },
-                    new FieldDefinition { Name = "Notes", DisplayName = "Notes", Type = FieldType.Text, IsRequired = false }
+                    new FieldDefinition { Name = nameof(AppointmentDto.DoctorId), DisplayName = Resource.Doctor, Type = FieldType.Dropdown, IsRequired = true, Options = doctors },
+                    new FieldDefinition { Name = nameof(AppointmentDto.PatientId), DisplayName = Resource.Patient, Type = FieldType.Dropdown, IsRequired = true, Options = patients },
+                    new FieldDefinition { Name = nameof(AppointmentDto.AppointmentDate), DisplayName = Resource.Date, Type = FieldType.Date, IsRequired = true },
+                    new FieldDefinition { Name = nameof(AppointmentDto.AppointmentStartTime), DisplayName = Resource.StartTime, Type = FieldType.Time, IsRequired = true },
+                    new FieldDefinition { Name = nameof(AppointmentDto.AppointmentEndTime), DisplayName = Resource.EndTime, Type = FieldType.Time, IsRequired = true },
+                    new FieldDefinition { Name = nameof(AppointmentDto.Reason), DisplayName = Resource.Reason, Type = FieldType.Dropdown, IsRequired = true, Options = GetReasons() },
+                    new FieldDefinition { Name = nameof(AppointmentDto.Status), DisplayName = Resource.Status, Type = FieldType.Dropdown, IsRequired = true, Options = GetStatuses() },
+                    new FieldDefinition { Name = nameof(AppointmentDto.Notes), DisplayName = Resource.Notes, Type = FieldType.Text, IsRequired = false }
                 };
 
             default:

@@ -173,13 +173,13 @@
     {
         var appointments = Rows.Select(row => new AppointmentForCreationDto
         {
-            AppointmentDate = DateOnly.Parse(row[nameof(Appointment.AppointmentDate)]?.ToString() ?? ""),
-            Notes = row[nameof(Appointment.Notes)]?.ToString() ?? string.Empty,
-            PatientId = Convert.ToInt32(row[nameof(Appointment.PatientId)]),
-            DoctorId = Convert.ToInt32(row[nameof(Appointment.DoctorId)]),
-            RoomId = Convert.ToInt32(row[nameof(Appointment.RoomId)]),
-            AppointmentStartTime = TimeOnly.Parse(row[nameof(Appointment.AppointmentStartTime)]?.ToString() ?? ""),
-            AppointmentEndTime = TimeOnly.Parse(row[nameof(Appointment.AppointmentEndTime)]?.ToString() ?? ""),
+            AppointmentDate = row.GetValueOrDefault<DateOnly>(nameof(AppointmentForCreationDto.AppointmentDate)),
+            Notes = row.GetValueOrDefault<string>(nameof(AppointmentForCreationDto.Notes)) ?? string.Empty,
+            PatientId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.PatientId)),
+            DoctorId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.DoctorId)),
+            RoomId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.RoomId)),
+            AppointmentStartTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentStartTime)),
+            AppointmentEndTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentEndTime)),
         }).ToList();
 
         foreach (var appointment in appointments)
