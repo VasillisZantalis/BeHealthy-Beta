@@ -1,0 +1,242 @@
+﻿
+
+<div class="modal" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Mass Import</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="OnClose"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @foreach (var field in FieldDefinitions)
+                            {
+                                <th>@field.DisplayName</th>
+                            }
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Rows.Count; i++)
+                        {
+                            <tr>
+                                @foreach (var field in FieldDefinitions)
+                                {
+                                    <td>
+                                        @RenderCell(field, Rows[i])
+                                    </td>
+                                }
+                                <td>
+                                    <button class="btn" @onclick="@(() => RemoveRow(i))">
+                                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+
+
+
+<button @onclick="AddRow">+ Add Row</button>
+
+@code {
+    [Parameter] public ImportEntity Entity { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    private List<FieldDefinition> FieldDefinitions;
+    private List<Dictionary<string, object>> Rows = new();
+
+    private void Close() => OnClose.InvokeAsync();
+
+    protected override void OnInitialized()
+    {
+        FieldDefinitions = FieldMapper.GetFields(Entity);
+        AddRow();
+    }
+
+    private void AddRow()
+    {
+        var row = new Dictionary<string, object>();
+        foreach (var field in FieldDefinitions)
+        {
+            row[field.Name] = field.Type switch
+            {
+                FieldType.Number => 0,
+                FieldType.Date => DateTime.Today,
+                FieldType.Time => TimeSpan.Zero,
+                _ => string.Empty
+            };
+        }
+        Rows.Add(row);
+    }
+
+    private void RemoveRow(int index) => Rows.RemoveAt(index);
+
+    private RenderFragment RenderCell(FieldDefinition field, Dictionary<string, object> row) => builder =>
+    {
+        int seq = 0;
+        switch (field.Type)
+        {
+            case FieldType.Text:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Number:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "type", "number");
+                builder.AddAttribute(seq++, "value", row[field.Name]);
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = Convert.ToInt32(e.Value)));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Date:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "type", "date");
+                builder.AddAttribute(seq++, "value", ((DateTime)row[field.Name]).ToString("yyyy-MM-dd"));
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = DateTime.Parse(e.Value.ToString())));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Time:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "type", "time");
+                builder.AddAttribute(seq++, "value", ((TimeSpan)row[field.Name]).ToString(@"hh\:mm"));
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = TimeSpan.Parse(e.Value.ToString())));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Dropdown:
+                builder.OpenElement(seq++, "select");
+                builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
+                builder.AddAttribute(seq++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
+
+                foreach (var option in field.Options)
+                {
+                    builder.OpenElement(seq++, "option");
+                    builder.AddAttribute(seq++, "value", option.Value);
+                    builder.AddContent(seq++, option.Text);
+                    builder.CloseElement();
+                }
+
+                builder.CloseElement();
+                break;
+        }
+    };
+
+    public enum FieldType
+    {
+        Text,
+        Number,
+        Date,
+        Time,
+        Dropdown
+    }
+
+    public class FieldDefinition
+    {
+        public string Name { get; set; }        // e.g., "FirstName"
+        public string DisplayName { get; set; } // e.g., "First Name"
+        public FieldType Type { get; set; }     // e.g., Text, Date, etc.
+        public bool IsRequired { get; set; }
+        public IEnumerable<SelectItem> Options { get; set; } // For dropdowns
+    }
+
+    public static class FieldMapper
+    {
+        public static List<FieldDefinition> GetFields(ImportEntity entity)
+        {
+            switch (entity)
+            {
+                case ImportEntity.Doctor:
+                case ImportEntity.Patient:
+                case ImportEntity.Nurse:
+                    return new List<FieldDefinition>
+                {
+                    new FieldDefinition { Name = "FirstName", DisplayName = "First Name", Type = FieldType.Text, IsRequired = true },
+                    new FieldDefinition { Name = "LastName", DisplayName = "Last Name", Type = FieldType.Text, IsRequired = true },
+                    new FieldDefinition { Name = "Email", DisplayName = "Email", Type = FieldType.Text, IsRequired = true },
+                    new FieldDefinition { Name = "Department", DisplayName = "Department", Type = FieldType.Dropdown, IsRequired = true,
+                        Options = GetDepartments() }
+                };
+
+                case ImportEntity.Appointment:
+                    return new List<FieldDefinition>
+                {
+                    new FieldDefinition { Name = "DoctorId", DisplayName = "Doctor", Type = FieldType.Dropdown, IsRequired = true, Options = GetDoctors() },
+                    new FieldDefinition { Name = "PatientId", DisplayName = "Patient", Type = FieldType.Dropdown, IsRequired = true, Options = GetPatients() },
+                    new FieldDefinition { Name = "Date", DisplayName = "Date", Type = FieldType.Date, IsRequired = true },
+                    new FieldDefinition { Name = "StartTime", DisplayName = "Start Time", Type = FieldType.Time, IsRequired = true },
+                    new FieldDefinition { Name = "EndTime", DisplayName = "End Time", Type = FieldType.Time, IsRequired = true },
+                    new FieldDefinition { Name = "Reason", DisplayName = "Reason", Type = FieldType.Dropdown, IsRequired = true, Options = GetReasons() },
+                    new FieldDefinition { Name = "Status", DisplayName = "Status", Type = FieldType.Dropdown, IsRequired = true, Options = GetStatuses() },
+                    new FieldDefinition { Name = "Notes", DisplayName = "Notes", Type = FieldType.Text, IsRequired = false }
+                };
+
+                default:
+                    return new List<FieldDefinition>();
+            }
+        }
+    }
+
+    private static IEnumerable<SelectItem> GetDepartments()
+    {
+        return new List<SelectItem>
+        {
+            new SelectItem { Value = 1, Text = "Cardiology" },
+            new SelectItem { Value = 2, Text = "Neurology" },
+            new SelectItem { Value = 3, Text = "Pediatrics" }
+        };
+    }
+
+    private static IEnumerable<SelectItem> GetDoctors()
+    {
+        return new List<SelectItem>
+        {
+            new SelectItem { Value = 1, Text = "Dr. Smith" },
+            new SelectItem { Value = 2, Text = "Dr. Johnson" },
+            new SelectItem { Value = 3, Text = "Dr. Williams" }
+        };
+    }
+
+    private static IEnumerable<SelectItem> GetPatients()
+    {
+        return new List<SelectItem>
+        {
+            new SelectItem { Value = 1, Text = "John Doe" },
+            new SelectItem { Value = 2, Text = "Jane Doe" },
+            new SelectItem { Value = 3, Text = "Alice Smith" }
+        };
+    }
+
+    private static IEnumerable<SelectItem> GetReasons()
+    {
+        return new List<SelectItem>
+        {
+            new SelectItem { Value = 1, Text = "Checkup" },
+            new SelectItem { Value = 2, Text = "Follow-up" },
+            new SelectItem { Value = 3, Text = "Consultation" }
+        };
+    }
+
+    private static IEnumerable<SelectItem> GetStatuses()
+    {
+        return new List<SelectItem>
+        {
+            new SelectItem { Value = 1, Text = "Scheduled" },
+            new SelectItem { Value = 2, Text = "Completed" },
+            new SelectItem { Value = 3, Text = "Cancelled" }
+        };
+    }
+
+
+}

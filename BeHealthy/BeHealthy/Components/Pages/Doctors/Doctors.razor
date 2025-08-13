@@ -1,4 +1,5 @@
 ﻿@page "/doctors"
+@using BeHealthy.Components.Shared.Wizards
 @attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -9,6 +10,9 @@
         <div class="">
             <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreateDoctor">
                 <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
+            </button>
+            <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
+                <Icon IconClass="@FAIcon.Plus" /> Mass Import
             </button>
         </div>
     }
@@ -113,4 +117,9 @@ else
             </div>
         </div>
     }
+}
+
+@if (showWizard)
+{
+    <MassImportWizard Entity="@(ImportEntity.Doctor)" OnClose="HideImportWizard" />
 }

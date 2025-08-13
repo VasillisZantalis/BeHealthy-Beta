@@ -75,3 +75,11 @@ public enum PrivilegeName
     ViewPatientPrescriptions,
     GenerateMedicalReports
 }
+
+public enum ImportEntity
+{
+    Patient,
+    Doctor,
+    Nurse,
+    Appointment
+}
