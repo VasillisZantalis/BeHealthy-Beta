@@ -26,6 +26,9 @@ public static class DictionaryExtensions
                 if (targetType.IsEnum)
                     return (T)Enum.Parse(targetType, str);
 
+                if (string.IsNullOrWhiteSpace(str))
+                    return default; // return null for nullable types
+
                 return (T)Convert.ChangeType(str, targetType);
             }
 

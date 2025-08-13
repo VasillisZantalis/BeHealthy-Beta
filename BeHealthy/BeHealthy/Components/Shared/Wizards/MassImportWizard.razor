@@ -5,6 +5,7 @@
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
 @inject IAppointmentService AppointmentService
+@inject NavigationManager NavigationManager
 
 <div class="modal" tabindex="-1" role="dialog" style="display:block;">
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
@@ -144,7 +145,10 @@
             LastName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.Email)) ?? string.Empty,
             DepartmentId = row.GetValueOrDefault<int>(nameof(DoctorForCreationDto.DepartmentId))
-        }).ToList();
+            }).ToList();
+
+        Close();
+        NavigationManager.Refresh(true);
     }
 
     private async Task ConvertAndSaveAsPatient()
@@ -155,7 +159,10 @@
             LastName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.Email)) ?? string.Empty,
             DepartmentId = row.GetValueOrDefault<int>(nameof(PatientForCreationDto.DepartmentId))
-        }).ToList();
+            }).ToList();
+
+        Close();
+        NavigationManager.Refresh(true);
     }
 
     private async Task ConvertAndSaveAsNurse()
@@ -166,7 +173,10 @@
             LastName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Email)) ?? string.Empty,
             DepartmentId = row.GetValueOrDefault<int>(nameof(NurseForCreationDto.DepartmentId))
-        });
+            });
+
+        Close();
+        NavigationManager.Refresh(true);
     }
 
     private async Task ConvertAndSaveAsAppointment()
@@ -177,7 +187,7 @@
             Notes = row.GetValueOrDefault<string>(nameof(AppointmentForCreationDto.Notes)) ?? string.Empty,
             PatientId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.PatientId)),
             DoctorId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.DoctorId)),
-            RoomId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.RoomId)),
+            RoomId = row.GetValueOrDefault<int?>(nameof(AppointmentForCreationDto.RoomId)),
             AppointmentStartTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentStartTime)),
             AppointmentEndTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentEndTime)),
         }).ToList();
@@ -186,6 +196,9 @@
         {
             await AppointmentService.AddAppointmentAsync(appointment);
         }
+
+        Close();
+        NavigationManager.Refresh(true);
     }
 
     private RenderFragment RenderCell(FieldDefinition field, Dictionary<string, object> row) => builder =>
