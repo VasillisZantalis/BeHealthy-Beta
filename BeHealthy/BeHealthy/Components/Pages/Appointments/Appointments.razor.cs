@@ -46,6 +46,10 @@ public partial class Appointments : BasePage
 
     private PaginationState _paginationState = new();
 
+    private bool showWizard = false;
+    void ShowImportWizard() => showWizard = true;
+    void HideImportWizard() => showWizard = false;
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);

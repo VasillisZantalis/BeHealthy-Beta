@@ -1,5 +1,5 @@
 ﻿@page "/doctors"
-@using BeHealthy.Components.Shared.Wizards
+
 @attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -12,7 +12,7 @@
                 <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
             </button>
             <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
-                <Icon IconClass="@FAIcon.Plus" /> Mass Import
+                <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
             </button>
         </div>
     }

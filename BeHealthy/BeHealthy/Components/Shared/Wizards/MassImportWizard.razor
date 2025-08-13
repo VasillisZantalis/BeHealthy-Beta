@@ -1,4 +1,9 @@
-﻿
+﻿@using BeHealthy.Models.Enums
+@inherits BasePage
+
+@inject IDoctorService DoctorService
+@inject IPatientService PatientService
+@inject IDepartmentService DepartmentService
 
 <div class="modal" tabindex="-1" role="dialog" style="display:block;">
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
@@ -8,6 +13,12 @@
                 <button type="button" class="btn-close" aria-label="Close" @onclick="OnClose"></button>
             </div>
             <div class="modal-body">
+                <button class="btn main-color text-white rounded-pill px-3" @onclick="Save">
+                    @Resource.Save
+                </button>
+                <button class="btn btn-outline-secondary rounded-pill" @onclick="AddRow">
+                    <Icon IconClass="@FAIcon.Plus" /> @Resource.AddRow
+                </button>
                 <table class="table">
                     <thead>
                         <tr>
@@ -21,15 +32,16 @@
                     <tbody>
                         @for (int i = 0; i < Rows.Count; i++)
                         {
+                            var idx = i; // Capture the current index for the lambda expression
                             <tr>
                                 @foreach (var field in FieldDefinitions)
                                 {
                                     <td>
-                                        @RenderCell(field, Rows[i])
+                                        @RenderCell(field, Rows[idx])
                                     </td>
                                 }
                                 <td>
-                                    <button class="btn" @onclick="@(() => RemoveRow(i))">
+                                    <button class="btn" @onclick="@(() => RemoveRow(idx))">
                                         <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                                     </button>
                                 </td>
@@ -43,22 +55,40 @@
 </div>
 <div class="modal-backdrop fade show"></div>
 
-
-
-<button @onclick="AddRow">+ Add Row</button>
-
 @code {
     [Parameter] public ImportEntity Entity { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
-    private List<FieldDefinition> FieldDefinitions;
+
+    private List<FieldDefinition> FieldDefinitions = [];
     private List<Dictionary<string, object>> Rows = new();
+
+    private List<SelectItem> _doctorsSelect = new();
+    private List<SelectItem> _patientsSelect = new();
+    private List<SelectItem> _departmentsSelect = new();
 
     private void Close() => OnClose.InvokeAsync();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        FieldDefinitions = FieldMapper.GetFields(Entity);
+        LoaderService.SetLoader(true);
+
+        var doctors = await DoctorService.GetAllDoctorsAsync();
+        var patients = await PatientService.GetAllPatientsAsync(new PatientSearchingParameters());
+        var departments = await DepartmentService.GetAllDepartmentsAsync();
+
+        _doctorsSelect = doctors.Select(d => new SelectItem { Value = d.Id, Text = d.FullName }).ToList();
+        _doctorsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        _patientsSelect = patients.Select(p => new SelectItem { Value = p.Id, Text = p.FullName }).ToList();
+        _patientsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        _departmentsSelect = departments.Select(d => new SelectItem { Value = d.Id, Text = d.Name }).ToList();
+        _departmentsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        FieldDefinitions = FieldMapper.GetFields(Entity, _doctorsSelect, _departmentsSelect, _patientsSelect);
         AddRow();
+
+        LoaderService.SetLoader(false);
     }
 
     private void AddRow()
@@ -77,7 +107,78 @@
         Rows.Add(row);
     }
 
-    private void RemoveRow(int index) => Rows.RemoveAt(index);
+    private void RemoveRow(int index)
+    {
+        if (!Rows.Any()) return;
+
+        Rows.RemoveAt(index);
+    }
+
+    private void Save()
+    {
+        switch (Entity)
+        {
+            case ImportEntity.Doctor:
+                ConvertToDoctor();
+                break;
+            case ImportEntity.Patient:
+                ConvertToPatient();
+                break;
+            case ImportEntity.Nurse:
+                ConvertToNurse();
+                break;
+            case ImportEntity.Appointment:
+                ConvertToAppointment();
+                break;
+        }
+    }
+
+    private void ConvertToDoctor()
+    {
+        var doctors = Rows.Select(row => new DoctorForCreationDto
+        {
+            FirstName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.Email)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int>(nameof(DoctorForCreationDto.DepartmentId))
+        }).ToList();
+    }
+
+    private void ConvertToPatient()
+    {
+        var patients = Rows.Select(row => new PatientForCreationDto
+        {
+            FirstName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.Email)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int>(nameof(PatientForCreationDto.DepartmentId))
+        }).ToList();
+    }
+
+    private void ConvertToNurse()
+    {
+        var nurses = Rows.Select(row => new NurseForCreationDto
+        {
+            FirstName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Email)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int>(nameof(NurseForCreationDto.DepartmentId))
+        });
+    }
+
+    private void ConvertToAppointment()
+    {
+        var appointments = Rows.Select(row => new AppointmentForCreationDto
+        {
+            AppointmentDate = DateOnly.Parse(row[nameof(Appointment.AppointmentDate)]?.ToString() ?? ""),
+            Notes = row[nameof(Appointment.Notes)]?.ToString() ?? string.Empty,
+            PatientId = Convert.ToInt32(row[nameof(Appointment.PatientId)]),
+            DoctorId = Convert.ToInt32(row[nameof(Appointment.DoctorId)]),
+            RoomId = Convert.ToInt32(row[nameof(Appointment.RoomId)]),
+            AppointmentStartTime = TimeOnly.Parse(row[nameof(Appointment.AppointmentStartTime)]?.ToString() ?? ""),
+            AppointmentEndTime = TimeOnly.Parse(row[nameof(Appointment.AppointmentEndTime)]?.ToString() ?? ""),
+        }).ToList();
+    }
 
     private RenderFragment RenderCell(FieldDefinition field, Dictionary<string, object> row) => builder =>
     {
@@ -86,6 +187,7 @@
         {
             case FieldType.Text:
                 builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
                 builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
                 builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
                 builder.CloseElement();
@@ -93,6 +195,7 @@
 
             case FieldType.Number:
                 builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
                 builder.AddAttribute(seq++, "type", "number");
                 builder.AddAttribute(seq++, "value", row[field.Name]);
                 builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = Convert.ToInt32(e.Value)));
@@ -101,6 +204,7 @@
 
             case FieldType.Date:
                 builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
                 builder.AddAttribute(seq++, "type", "date");
                 builder.AddAttribute(seq++, "value", ((DateTime)row[field.Name]).ToString("yyyy-MM-dd"));
                 builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = DateTime.Parse(e.Value.ToString())));
@@ -109,6 +213,7 @@
 
             case FieldType.Time:
                 builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
                 builder.AddAttribute(seq++, "type", "time");
                 builder.AddAttribute(seq++, "value", ((TimeSpan)row[field.Name]).ToString(@"hh\:mm"));
                 builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = TimeSpan.Parse(e.Value.ToString())));
@@ -117,6 +222,7 @@
 
             case FieldType.Dropdown:
                 builder.OpenElement(seq++, "select");
+                builder.AddAttribute(seq++, "class", "form-select");
                 builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
                 builder.AddAttribute(seq++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
 
@@ -132,111 +238,4 @@
                 break;
         }
     };
-
-    public enum FieldType
-    {
-        Text,
-        Number,
-        Date,
-        Time,
-        Dropdown
-    }
-
-    public class FieldDefinition
-    {
-        public string Name { get; set; }        // e.g., "FirstName"
-        public string DisplayName { get; set; } // e.g., "First Name"
-        public FieldType Type { get; set; }     // e.g., Text, Date, etc.
-        public bool IsRequired { get; set; }
-        public IEnumerable<SelectItem> Options { get; set; } // For dropdowns
-    }
-
-    public static class FieldMapper
-    {
-        public static List<FieldDefinition> GetFields(ImportEntity entity)
-        {
-            switch (entity)
-            {
-                case ImportEntity.Doctor:
-                case ImportEntity.Patient:
-                case ImportEntity.Nurse:
-                    return new List<FieldDefinition>
-                {
-                    new FieldDefinition { Name = "FirstName", DisplayName = "First Name", Type = FieldType.Text, IsRequired = true },
-                    new FieldDefinition { Name = "LastName", DisplayName = "Last Name", Type = FieldType.Text, IsRequired = true },
-                    new FieldDefinition { Name = "Email", DisplayName = "Email", Type = FieldType.Text, IsRequired = true },
-                    new FieldDefinition { Name = "Department", DisplayName = "Department", Type = FieldType.Dropdown, IsRequired = true,
-                        Options = GetDepartments() }
-                };
-
-                case ImportEntity.Appointment:
-                    return new List<FieldDefinition>
-                {
-                    new FieldDefinition { Name = "DoctorId", DisplayName = "Doctor", Type = FieldType.Dropdown, IsRequired = true, Options = GetDoctors() },
-                    new FieldDefinition { Name = "PatientId", DisplayName = "Patient", Type = FieldType.Dropdown, IsRequired = true, Options = GetPatients() },
-                    new FieldDefinition { Name = "Date", DisplayName = "Date", Type = FieldType.Date, IsRequired = true },
-                    new FieldDefinition { Name = "StartTime", DisplayName = "Start Time", Type = FieldType.Time, IsRequired = true },
-                    new FieldDefinition { Name = "EndTime", DisplayName = "End Time", Type = FieldType.Time, IsRequired = true },
-                    new FieldDefinition { Name = "Reason", DisplayName = "Reason", Type = FieldType.Dropdown, IsRequired = true, Options = GetReasons() },
-                    new FieldDefinition { Name = "Status", DisplayName = "Status", Type = FieldType.Dropdown, IsRequired = true, Options = GetStatuses() },
-                    new FieldDefinition { Name = "Notes", DisplayName = "Notes", Type = FieldType.Text, IsRequired = false }
-                };
-
-                default:
-                    return new List<FieldDefinition>();
-            }
-        }
-    }
-
-    private static IEnumerable<SelectItem> GetDepartments()
-    {
-        return new List<SelectItem>
-        {
-            new SelectItem { Value = 1, Text = "Cardiology" },
-            new SelectItem { Value = 2, Text = "Neurology" },
-            new SelectItem { Value = 3, Text = "Pediatrics" }
-        };
-    }
-
-    private static IEnumerable<SelectItem> GetDoctors()
-    {
-        return new List<SelectItem>
-        {
-            new SelectItem { Value = 1, Text = "Dr. Smith" },
-            new SelectItem { Value = 2, Text = "Dr. Johnson" },
-            new SelectItem { Value = 3, Text = "Dr. Williams" }
-        };
-    }
-
-    private static IEnumerable<SelectItem> GetPatients()
-    {
-        return new List<SelectItem>
-        {
-            new SelectItem { Value = 1, Text = "John Doe" },
-            new SelectItem { Value = 2, Text = "Jane Doe" },
-            new SelectItem { Value = 3, Text = "Alice Smith" }
-        };
-    }
-
-    private static IEnumerable<SelectItem> GetReasons()
-    {
-        return new List<SelectItem>
-        {
-            new SelectItem { Value = 1, Text = "Checkup" },
-            new SelectItem { Value = 2, Text = "Follow-up" },
-            new SelectItem { Value = 3, Text = "Consultation" }
-        };
-    }
-
-    private static IEnumerable<SelectItem> GetStatuses()
-    {
-        return new List<SelectItem>
-        {
-            new SelectItem { Value = 1, Text = "Scheduled" },
-            new SelectItem { Value = 2, Text = "Completed" },
-            new SelectItem { Value = 3, Text = "Cancelled" }
-        };
-    }
-
-
 }
