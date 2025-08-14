@@ -51,7 +51,7 @@ public static class NurseEndpoints
             if (nurseDto is null)
                 return TypedResults.BadRequest();
 
-            await nurseService.UpdateNurseAsync(nurseDto.Id, nurseDto);
+            await nurseService.UpdateNurseAsync(nurseDto);
 
             return TypedResults.NoContent();
         });

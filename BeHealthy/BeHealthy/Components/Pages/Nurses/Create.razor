@@ -3,8 +3,6 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IUserStore<ApplicationUser> UserStore
 @inject INurseService NurseService
 @inject IDepartmentService DepartmentService
 @inject NavigationManager NavigationManager
@@ -82,14 +80,11 @@
 </div>
 
 @code {
-    private IEnumerable<IdentityError>? identityErrors;
 
     [SupplyParameterFromForm]
     private NurseForCreationDto _nurseForCreationDto { get; set; } = new();
     private bool _inProgress = false;
     private List<DepartmentDto>? _departments { get; set; }
-
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     private Alert _alert = new();
     private FluentValidationValidator _fluentValidationValidator = new();
@@ -129,36 +124,11 @@
             return;
         }
 
-        var user = new ApplicationUser
-        {
-            FirstName = _nurseForCreationDto.FirstName,
-            LastName = _nurseForCreationDto.LastName,
-            PhoneNumber = _nurseForCreationDto.PhoneNumber
-        };
-
-        await UserStore.SetUserNameAsync(user, _nurseForCreationDto.Email, CancellationToken.None);
-        await UserManager.SetEmailAsync(user, _nurseForCreationDto.Email);
-
-        var result = await UserManager.CreateAsync(user, _nurseForCreationDto.Password);
-
-        if (!result.Succeeded)
-        {
-            _inProgress = false;
-            identityErrors = result.Errors;
-            var errors = identityErrors is null ? "Failed" : string.Join(", ", identityErrors.Select(error => error.Description));
-            _alert.ShowFailed(errors);
-            return;
-        }
-
-        await UserManager.AddToRoleAsync(user, nameof(UserRole.Nurse));
-
-        _nurseForCreationDto.UserId = user.Id;
         var nurseCreationResult = await NurseService.AddNurseAsync(_nurseForCreationDto);
 
         if (!nurseCreationResult.Success)
         {
-            await UserManager.DeleteAsync(user);
-            _alert.ShowFailed(Resource.SomethingWentWrong);
+            _alert.ShowFailed(nurseCreationResult.ErrorMessage);
         }
         else
         {

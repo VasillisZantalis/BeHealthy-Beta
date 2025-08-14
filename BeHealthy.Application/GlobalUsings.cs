@@ -7,4 +7,5 @@ global using BeHealthy.Application.Mappings;
 global using BeHealthy.Application.Services.Interfaces;
 global using BeHealthy.Domain;
 global using BeHealthy.Domain.Entities;
+global using BeHealthy.Application.Dtos.Nurse;
 global using BeHealthy.Domain.Interfaces;
