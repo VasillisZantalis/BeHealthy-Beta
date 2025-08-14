@@ -78,6 +78,7 @@ builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<ConfirmDeleteStateService>();
 builder.Services.AddScoped<ToastrStateService>();
+builder.Services.AddScoped<AlertModalStateService>();
 
 var app = builder.Build();
 

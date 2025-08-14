@@ -19,6 +19,9 @@ public class BasePage : ComponentBase
     [Inject]
     protected ToastrStateService ToastrStateService { get; set; } = default!;
 
+    [Inject]
+    protected AlertModalStateService AlertModalStateService { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
         Breadcrumbs.ResetBreadcrumb();
