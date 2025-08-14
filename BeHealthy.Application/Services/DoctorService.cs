@@ -1,22 +1,14 @@
-﻿using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Application.Dtos.Common;
-using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Dtos.Patient;
-using BeHealthy.Application.Dtos.User;
-using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
-
-namespace BeHealthy.Application.Services;
+﻿namespace BeHealthy.Application.Services;
 
 public class DoctorService : IDoctorService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserService _userService;
 
-    public DoctorService(IUnitOfWork unitOfWork)
+    public DoctorService(IUnitOfWork unitOfWork, IUserService userService)
     {
         _unitOfWork = unitOfWork;
+        _userService = userService;
     }
 
     public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync()
@@ -33,8 +25,20 @@ public class DoctorService : IDoctorService
 
     public async Task<ServiceResponse> AddDoctorAsync(DoctorForCreationDto doctorDto)
     {
+        var user = new ApplicationUser
+        {
+            FirstName = doctorDto.FirstName,
+            LastName = doctorDto.LastName,
+            PhoneNumber = doctorDto.PhoneNumber,
+            Email = doctorDto.Email
+        };
+
         try
         {
+            await _userService.CreateApplicationUser(user, doctorDto.Password);
+            await _userService.AddUserToRoleAsync(user, UserRole.Doctor);
+            
+            doctorDto.UserId = user.Id;
             var doctor = doctorDto.MapToDomain();
             await _unitOfWork.DoctorRepository.AddAsync(doctor);
 
@@ -42,6 +46,7 @@ public class DoctorService : IDoctorService
         }
         catch (Exception)
         {
+            await _userService.DeleteUserAsync(user);
             return ServiceResponse.Failed();
         }
     }

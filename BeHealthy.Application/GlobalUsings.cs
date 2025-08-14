@@ -1,0 +1,10 @@
+﻿global using BeHealthy.Application.Dtos.Appointment;
+global using BeHealthy.Application.Dtos.Common;
+global using BeHealthy.Application.Dtos.Doctor;
+global using BeHealthy.Application.Dtos.Patient;
+global using BeHealthy.Application.Dtos.User;
+global using BeHealthy.Application.Mappings;
+global using BeHealthy.Application.Services.Interfaces;
+global using BeHealthy.Domain;
+global using BeHealthy.Domain.Entities;
+global using BeHealthy.Domain.Interfaces;

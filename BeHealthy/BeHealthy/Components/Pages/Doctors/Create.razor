@@ -102,7 +102,6 @@
 </div>
 
 @code {
-    private IEnumerable<IdentityError>? identityErrors;
 
     [SupplyParameterFromForm]
     private DoctorForCreationDto _doctorForCreationDto { get; set; } = new();
@@ -111,8 +110,6 @@
 
     private bool _inProgress = false;
     private bool _doNotAllowDoctorWithoutSpecialty = false;
-
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
     private Alert _alert = new();
 
@@ -177,37 +174,10 @@
             return;
         }
 
-        var user = new ApplicationUser
-        {
-            FirstName = _doctorForCreationDto.FirstName,
-            LastName = _doctorForCreationDto.LastName,
-            PhoneNumber = _doctorForCreationDto.PhoneNumber
-        };
-
-        await UserStore.SetUserNameAsync(user, _doctorForCreationDto.Email, CancellationToken.None);
-        await UserManager.SetEmailAsync(user, _doctorForCreationDto.Email);
-
-        var result = await UserManager.CreateAsync(user, _doctorForCreationDto.Password);
-
-        if (!result.Succeeded)
-        {
-            _inProgress = false;
-            identityErrors = result.Errors;
-            var errors = identityErrors is null ? "Failed" : string.Join(Environment.NewLine, identityErrors.Select(error => error.Description));
-            _alert.ShowFailed(errors);
-            return;
-        }
-
-        await UserManager.AddToRoleAsync(user, nameof(UserRole.Doctor));
-
-        await _dbContext.SaveChangesAsync();
-
-        _doctorForCreationDto.UserId = user.Id;
         var doctorCreationResult = await DoctorService.AddDoctorAsync(_doctorForCreationDto);
 
         if (!doctorCreationResult.Success)
         {
-            await UserManager.DeleteAsync(user);
             _alert.ShowFailed(Resource.SomethingWentWrong);
         }
         else
