@@ -8,4 +8,5 @@ public interface IUserService
     Task<ServiceResponse> RemoveUserFromRoleAsync(ApplicationUser user, UserRole role);
     Task<ApplicationUser?> GetUserByIdAsync(string userId);
     Task<ServiceResponse> DeleteUserAsync(ApplicationUser applicationUser);
+    Task<ServiceResponse> UpdateUserAsync(ApplicationUser applicationUser, CancellationToken cancellationToken = default);
 }

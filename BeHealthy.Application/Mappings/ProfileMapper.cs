@@ -1,7 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Dtos.User;
-
-namespace BeHealthy.Application.Mappings;
+﻿namespace BeHealthy.Application.Mappings;
 
 public static class ProfileMapper
 {

@@ -9,6 +9,6 @@ public interface IDoctorService
     Task<IEnumerable<AppointmentDto>> GetDoctorAppointmentsByUserIdAsync(string userId);
     Task<ServiceResponse> AddDoctorAsync(DoctorForCreationDto doctor);
     Task<int> GetDoctorCountAsync();
-    Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctor);
+    Task<ServiceResponse> UpdateDoctorAsync(DoctorForUpdateDto doctor);
     Task DeleteDoctorAsync(int id);
 }

@@ -1,4 +1,8 @@
-﻿namespace BeHealthy.Application.Services;
+﻿using BeHealthy.Domain.Entities;
+using BeHealthy.Shared.Locales;
+using Microsoft.AspNetCore.Identity;
+
+namespace BeHealthy.Application.Services;
 
 public class DoctorService : IDoctorService
 {
@@ -35,11 +39,17 @@ public class DoctorService : IDoctorService
 
         try
         {
-            await _userService.CreateApplicationUser(user, doctorDto.Password);
-            await _userService.AddUserToRoleAsync(user, UserRole.Doctor);
-            
+            var userCreationResult = await _userService.CreateApplicationUser(user, doctorDto.Password);
+            if (!userCreationResult.Success)
+                return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
+
+            var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Doctor);
+            if (!addToRoleResult.Success)
+                return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
+
             doctorDto.UserId = user.Id;
             var doctor = doctorDto.MapToDomain();
+
             await _unitOfWork.DoctorRepository.AddAsync(doctor);
 
             return ServiceResponse.Successful();
@@ -51,17 +61,31 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctorDto)
+    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorForUpdateDto doctorDto)
     {
-        var doctor = doctorDto?.MapToDomain();
+        var existingUser = await _userService.GetUserByIdAsync(doctorDto.UserId);
+        if (existingUser == null)
+            return ServiceResponse.Failed(Resource.NotFound);
 
-        if (doctor is null || !await _unitOfWork.DoctorRepository.ExistsAsync(id))
-            return;
+        existingUser.FirstName = doctorDto.FirstName;
+        existingUser.LastName = doctorDto.LastName;
+        existingUser.PhoneNumber = doctorDto.PhoneNumber;
+
+        var updateUserResult = await _userService.UpdateUserAsync(existingUser);
+        if (!updateUserResult.Success)
+            return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
+
+        var doctor = doctorDto.MapToDomain();
+
+        if (doctor is null || !await _unitOfWork.DoctorRepository.ExistsAsync(doctorDto.Id))
+            return ServiceResponse.Failed(Resource.NotFound);
 
         if (doctor.SpecialtyId.HasValue && !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctor.SpecialtyId.Value))
-            return;
+            return ServiceResponse.Failed(Resource.NotFound);
 
         await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
+
+        return ServiceResponse.Successful();
     }
 
     public async Task DeleteDoctorAsync(int id)

@@ -5,14 +5,11 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IUserStore<ApplicationUser> UserStore
 @inject IDoctorService DoctorService
 @inject IDepartmentService DepartmentService
 @inject ISpecialtyService SpecialtyService
 @inject IAppSettingsService AppSettingsService
 @inject NavigationManager NavigationManager
-@inject ApplicationDbContext _dbContext
 
 <PageTitle>@Resource.Create</PageTitle>
 

@@ -8,8 +8,6 @@
 @inject IDepartmentService DepartmentService
 @inject ISpecialtyService SpecialtyService
 @inject IAppSettingsService AppSettingsService
-@inject IUserStore<ApplicationUser> UserStore
-@inject UserManager<ApplicationUser> UserManager
 
 <PageTitle>@Resource.Edit</PageTitle>
 
@@ -179,27 +177,17 @@
             return;
         }
 
-        var user = await UserManager.FindByIdAsync(_doctorForUpdateDto.UserId);
-
-        if (user != null)
+        var result = await DoctorService.UpdateDoctorAsync(_doctorForUpdateDto);
+        if (!result.Success)
         {
-            user.FirstName = _doctorForUpdateDto.FirstName;
-            user.LastName = _doctorForUpdateDto.LastName;
-            user.PhoneNumber = _doctorForUpdateDto.PhoneNumber;
-
-            var result = await UserManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                _inProgress = false;
-                _alert.ShowSuccess(Resource.SomethingWentWrong);
-            }
-            else 
-            {
-                await DoctorService.UpdateDoctorAsync(_doctorForUpdateDto.Id, _doctorForUpdateDto);
-                _alert.ShowSuccess(Resource.Success);
-            }
+            _inProgress = false;
+            _alert.ShowSuccess(result.ErrorMessage);
         }
+        else
+        {
+            _alert.ShowSuccess(Resource.Success);
+        }
+
         _inProgress = false;
     }
 }

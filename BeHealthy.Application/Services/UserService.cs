@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BeHealthy.Shared.Locales;
+using Microsoft.AspNetCore.Identity;
 
 namespace BeHealthy.Application.Services;
 
@@ -114,6 +115,19 @@ public class UserService : IUserService
         }
 
         var result = await _userManager.DeleteAsync(applicationUser);
+
+        if (!result.Succeeded)
+        {
+            var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+            return ServiceResponse.Failed(errorMessage);
+        }
+
+        return ServiceResponse.Successful();
+    }
+
+    public async Task<ServiceResponse> UpdateUserAsync(ApplicationUser applicationUser, CancellationToken cancellationToken = default)
+    {
+        var result = await _userManager.UpdateAsync(applicationUser);
 
         if (!result.Succeeded)
         {

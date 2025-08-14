@@ -119,7 +119,7 @@
                 {
                     case UserRole.Doctor:
                         var doctorForUpdate = _profileDto.MapToDoctorForUpdateDto();
-                        await DoctorService.UpdateDoctorAsync(doctorForUpdate.Id, doctorForUpdate);
+                        await DoctorService.UpdateDoctorAsync(doctorForUpdate);
                         break;
                     case UserRole.Nurse:
                         break;
