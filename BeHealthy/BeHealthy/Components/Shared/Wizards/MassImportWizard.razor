@@ -50,6 +50,20 @@
                         }
                     </tbody>
                 </table>
+                @if (Entity != ImportEntity.Appointment)
+                {
+                    <label class="form-label">
+                        <InputCheckbox @bind-Value="_useValidation" class="form-check-input" id="useValidation" />
+                        @Resource.UseValidation
+                    </label>
+
+                    @if (_useValidation)
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            @Resource.DisabledValidationMessage
+                        </div>
+                    }
+                }
             </div>
         </div>
     </div>
@@ -59,7 +73,7 @@
 @code {
     [Parameter] public ImportEntity Entity { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
-    [Parameter] public EventCallback<List<TEntity>> OnSave { get; set; }
+    [Parameter] public EventCallback<(List<TEntity> Items, bool UseValidation)> OnSave { get; set; }
 
     private List<FieldDefinition> FieldDefinitions = [];
     private List<Dictionary<string, object>> Rows = new();
@@ -67,6 +81,7 @@
     private List<SelectItem> _doctorsSelect = new();
     private List<SelectItem> _patientsSelect = new();
     private List<SelectItem> _departmentsSelect = new();
+    private bool _useValidation;
 
     private void Close() => OnClose.InvokeAsync();
 
@@ -151,7 +166,7 @@
 
         if (!doctors.Any() || doctors is null) return;
 
-        await OnSave.InvokeAsync(doctors.Cast<TEntity>().ToList());
+        await OnSave.InvokeAsync((doctors.Cast<TEntity>().ToList(), _useValidation));
 
         Close();
     }
@@ -170,7 +185,7 @@
 
         if (!patients.Any() || patients is null) return;
 
-        await OnSave.InvokeAsync(patients.Cast<TEntity>().ToList());
+        await OnSave.InvokeAsync((patients.Cast<TEntity>().ToList(), _useValidation));
 
         Close();
     }
@@ -189,7 +204,7 @@
 
         if (!nurses.Any() || nurses is null) return;
 
-        await OnSave.InvokeAsync(nurses.Cast<TEntity>().ToList());
+        await OnSave.InvokeAsync((nurses.Cast<TEntity>().ToList(), _useValidation));
 
         Close();
     }
@@ -210,7 +225,7 @@
 
         if (!appointments.Any() || appointments is null) return;
 
-        await OnSave.InvokeAsync(appointments.Cast<TEntity>().ToList());
+        await OnSave.InvokeAsync((appointments.Cast<TEntity>().ToList(), _useValidation));
 
         Close();
     }

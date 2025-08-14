@@ -1,7 +1,7 @@
-﻿using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Dtos.Patient;
+﻿using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
+using BeHealthy.Application.Validations.Patient;
 using BeHealthy.Common;
 using BeHealthy.Domain;
 using BeHealthy.Models;
@@ -114,16 +114,30 @@ public partial class Patients : BasePage
         _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
     }
 
-    private async Task BulkCreatePatients(List<PatientForCreationDto> patientForCreationDtos)
+    private async Task BulkCreatePatients((List<PatientForCreationDto> patientForCreationDtos, bool UseValidation) result)
     {
         LoaderService.SetLoader(true);
 
-        foreach (var patient in patientForCreationDtos)
+        var useValidation = result.UseValidation;
+        var validator = new PatientForCreationDtoValidator();
+
+        foreach (var patient in result.patientForCreationDtos)
         {
-            var result = await _patientService.AddPatientAsync(patient);
-            if (!result.Success)
+            if (useValidation)
             {
-                AlertModalStateService.Show(Resource.Error, result.ErrorMessage!);
+                var validationResponse = await validator.ValidateAsync(patient);
+                if (!validationResponse.IsValid)
+                {
+                    AlertModalStateService.Show(null, validationResponse.Errors.FirstOrDefault()?.ErrorMessage);
+                    LoaderService.SetLoader(false);
+                    return;
+                }
+            }
+
+            var response = await _patientService.AddPatientAsync(patient);
+            if (!response.Success)
+            {
+                AlertModalStateService.Show(Resource.Error, response.ErrorMessage!);
                 LoaderService.SetLoader(false);
                 return;
             }

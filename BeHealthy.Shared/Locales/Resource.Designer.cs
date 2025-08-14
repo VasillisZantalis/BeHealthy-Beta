@@ -385,6 +385,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disabling this may bypass certain validations when creating the entity, except for the fundamental checks enforced by the system..
+        /// </summary>
+        public static string DisabledValidationMessage {
+            get {
+                return ResourceManager.GetString("DisabledValidationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Doctor.
         /// </summary>
         public static string Doctor {
@@ -1299,6 +1308,15 @@ namespace BeHealthy.Shared.Locales {
         public static string UserRole_Patient {
             get {
                 return ResourceManager.GetString("UserRole_Patient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Validation.
+        /// </summary>
+        public static string UseValidation {
+            get {
+                return ResourceManager.GetString("UseValidation", resourceCulture);
             }
         }
         

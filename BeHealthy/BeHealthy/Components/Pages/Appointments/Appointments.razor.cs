@@ -179,17 +179,18 @@ public partial class Appointments : BasePage
         await HandleServiceResponse(result);
     }
 
-    private async Task BulkCreateAppointments(List<AppointmentForCreationDto> appointmentForCreationDtos)
+    private async Task BulkCreateAppointments((List<AppointmentForCreationDto> appointmentForCreationDtos, bool UseValidation) result)
     {
-        foreach (var appointment in appointmentForCreationDtos)
+        var useValidation = result.UseValidation;
+        foreach (var appointment in result.appointmentForCreationDtos)
         {
-            var result = await CreateAppointmentAsync(appointment);
-            if (!result.Success)
+            var response = await CreateAppointmentAsync(appointment);
+            if (!response.Success)
             {
-                await HandleServiceResponse(result, false);
+                await HandleServiceResponse(response, false);
                 return;
             }
-            await HandleServiceResponse(result, false);
+            await HandleServiceResponse(response, false);
         }
 
         _navigationManager.Refresh(true);
