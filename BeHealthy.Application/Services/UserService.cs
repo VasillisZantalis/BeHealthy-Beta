@@ -137,4 +137,24 @@ public class UserService : IUserService
 
         return ServiceResponse.Successful();
     }
+
+    public async Task<ServiceResponse> CreateAdminAsync(ApplicationUser applicationUser, string password, CancellationToken cancellationToken = default)
+    {
+        await _userManager.SetEmailAsync(applicationUser, applicationUser.Email);
+        await _userStore.SetUserNameAsync(applicationUser, applicationUser.Email, cancellationToken);
+
+        var result = await _userManager.CreateAsync(applicationUser, password);
+
+        if (!result.Succeeded)
+        {
+            var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+            return ServiceResponse.Failed(errorMessage);
+        }
+
+        var assignToAdminResult = await AddUserToRoleAsync(applicationUser, UserRole.Admin);
+        if (!assignToAdminResult.Success)
+            return ServiceResponse.Failed(assignToAdminResult.ErrorMessage!);
+
+        return ServiceResponse.Successful();
+    }
 }

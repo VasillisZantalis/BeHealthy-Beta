@@ -8,6 +8,7 @@
 @inject INurseService NurseService
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
+@inject IUserService UserService
 
 <PageTitle>@Resource.Create</PageTitle>
 
@@ -144,6 +145,8 @@
             nameof(UserRole.Doctor) => DoctorService.AddDoctorAsync(ToDoctor()),
             nameof(UserRole.Nurse) => NurseService.AddNurseAsync(ToNurse()),
             nameof(UserRole.Patient) => PatientService.AddPatientAsync(ToPatient()),
+            nameof(UserRole.Admin) => UserService.CreateAdminAsync(ToUser(), Input.Password),
+            _ => throw new InvalidOperationException("Invalid role specified.")
         };
 
         var result = await task;
@@ -184,6 +187,18 @@
             Password = Input.Password,
             ConfirmPassword = Input.ConfirmPassword,
             Email = Input.Email
+        };
+    }
+
+    private ApplicationUser ToUser()
+    {
+        return new ApplicationUser
+        {
+            UserName = Input.Email,
+            Email = Input.Email,
+            FirstName = Input.FirstName,
+            LastName = Input.LastName,
+            PhoneNumber = Input.PhoneNumber
         };
     }
 
