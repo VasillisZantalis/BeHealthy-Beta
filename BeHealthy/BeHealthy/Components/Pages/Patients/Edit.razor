@@ -7,8 +7,6 @@
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
 @inject IPrivilegeService PrivilegeService
-@inject IUserStore<ApplicationUser> UserStore
-@inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Edit</PageTitle>
@@ -169,26 +167,15 @@
             return;
         }
 
-        var user = await UserManager.FindByIdAsync(_patientForUpdateDto.UserId);
+        var result = await PatientService.UpdatePatientAsync(_patientForUpdateDto);
 
-        if (user != null)
+        if (!result.Success)
         {
-            user.FirstName = _patientForUpdateDto.FirstName;
-            user.LastName = _patientForUpdateDto.LastName;
-            user.PhoneNumber = _patientForUpdateDto.PhoneNumber;
-
-            var result = await UserManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                _inProgress = false;
-                _alert.ShowSuccess(Resource.SomethingWentWrong);
-            }
-            else
-            {
-                await PatientService.UpdatePatientAsync(_patientForUpdateDto.Id, _patientForUpdateDto);
-                _alert.ShowSuccess(Resource.Success);
-            }
+            _alert.ShowFailed(result.ErrorMessage);
+        }
+        else
+        {
+            _alert.ShowSuccess(Resource.Success);
         }
 
         _inProgress = false;
