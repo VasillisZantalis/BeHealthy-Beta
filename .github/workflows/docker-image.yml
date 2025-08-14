@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
         
       - name: Build Docker Image
-        run: docker build -t vasilliszantalis/behealthy:test -f BeHealthy/BeHealthy/Dockerfile .
+        run: docker build -t vasilliszantalis/behealthy:dev -f BeHealthy/BeHealthy/Dockerfile .
 
       - name: Push Docker Image to Docker Hub
-        run: docker push vasilliszantalis/behealthy:test
+        run: docker push vasilliszantalis/behealthy:dev
