@@ -1,4 +1,5 @@
-﻿using BeHealthy.Application.Dtos.Patient;
+﻿using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
@@ -47,6 +48,10 @@ public partial class Patients : BasePage
     private PatientSearchingParameters _filters = new();
 
     private QuickGrid<PatientDto>? _quickGrid;
+
+    private bool showWizard = false;
+    void ShowImportWizard() => showWizard = true;
+    void HideImportWizard() => showWizard = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,6 +112,24 @@ public partial class Patients : BasePage
     private void CreatePatient()
     {
         _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
+    }
+
+    private async Task BulkCreatePatients(List<PatientForCreationDto> patientForCreationDtos)
+    {
+        LoaderService.SetLoader(true);
+
+        foreach (var patient in patientForCreationDtos)
+        {
+            var result = await _patientService.AddPatientAsync(patient);
+            if (!result.Success)
+            {
+                AlertModalStateService.Show(Resource.Error, result.ErrorMessage!);
+                LoaderService.SetLoader(false);
+                return;
+            }
+        }
+        LoaderService.SetLoader(false);
+        _navigationManager.Refresh(true);
     }
 
     private void ConfirmDelete(int patientId)

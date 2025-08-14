@@ -144,7 +144,9 @@
             FirstName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.FirstName)) ?? string.Empty,
             LastName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.Email)) ?? string.Empty,
-            DepartmentId = row.GetValueOrDefault<int>(nameof(DoctorForCreationDto.DepartmentId))
+            Password = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(DoctorForCreationDto.DepartmentId))
         }).ToList();
 
         if (!doctors.Any() || doctors is null) return;
@@ -161,7 +163,9 @@
             FirstName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.FirstName)) ?? string.Empty,
             LastName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.Email)) ?? string.Empty,
-            DepartmentId = row.GetValueOrDefault<int>(nameof(PatientForCreationDto.DepartmentId))
+            Password = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(PatientForCreationDto.DepartmentId))
         }).ToList();
 
         if (!patients.Any() || patients is null) return;
@@ -178,7 +182,9 @@
             FirstName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.FirstName)) ?? string.Empty,
             LastName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Email)) ?? string.Empty,
-            DepartmentId = row.GetValueOrDefault<int>(nameof(NurseForCreationDto.DepartmentId))
+            Password = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(NurseForCreationDto.DepartmentId))
         }).ToList();
 
         if (!nurses.Any() || nurses is null) return;
@@ -199,6 +205,7 @@
             RoomId = row.GetValueOrDefault<int?>(nameof(AppointmentForCreationDto.RoomId)),
             AppointmentStartTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentStartTime)),
             AppointmentEndTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentEndTime)),
+            Reason = row.GetValueOrDefault<AppointmentReason>(nameof(AppointmentForCreationDto.Reason)),
         }).ToList();
 
         if (!appointments.Any() || appointments is null) return;
@@ -216,6 +223,15 @@
             case FieldType.Text:
                 builder.OpenElement(seq++, "input");
                 builder.AddAttribute(seq++, "class", "form-control");
+                builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Password:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
+                builder.AddAttribute(seq++, "type", "password");
                 builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
                 builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
                 builder.CloseElement();

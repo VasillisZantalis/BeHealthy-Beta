@@ -6,5 +6,6 @@ public enum FieldType
     Number,
     Date,
     Time,
-    Dropdown
+    Dropdown,
+    Password
 }

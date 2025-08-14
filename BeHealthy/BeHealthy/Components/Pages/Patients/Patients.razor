@@ -10,6 +10,9 @@
         <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreatePatient">
             <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
         </button>
+        <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
+            <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
+        </button>
     </div>
     <div class="">
         <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
@@ -18,6 +21,15 @@
         </InputSelect>
     </div>
 </div>
+
+@if (showWizard)
+{
+    <MassImportWizard TEntity="PatientForCreationDto"
+                      OnSave="BulkCreatePatients"
+                      Entity="@(ImportEntity.Patient)"
+                      OnClose="HideImportWizard" />
+}
+
 
 @if (_selectedView == "Grid")
 {

@@ -113,7 +113,8 @@ public partial class Appointments : BasePage
         else
         {
             var appointmentForCreation = appointmentDto.MapToCreationDto();
-            await CreateAppointmentAsync(appointmentForCreation);
+            var result = await CreateAppointmentAsync(appointmentForCreation);
+            await HandleServiceResponse(result);
         }
     }
 
@@ -165,10 +166,10 @@ public partial class Appointments : BasePage
         return await _privilegeService.HasPrivilegeAsync(role, privilege);
     }
 
-    private async Task CreateAppointmentAsync(AppointmentForCreationDto appointmentForCreationDto)
+    private async Task<ServiceResponse> CreateAppointmentAsync(AppointmentForCreationDto appointmentForCreationDto)
     {
         var result = await _appointmentService.AddAppointmentAsync(appointmentForCreationDto);
-        await HandleServiceResponse(result);
+        return result;
     }
 
     private async Task UpdateAppointmentAsync(int appointmentId, AppointmentForUpdateDto appointmentForUpdateDto)
@@ -182,11 +183,19 @@ public partial class Appointments : BasePage
     {
         foreach (var appointment in appointmentForCreationDtos)
         {
-            await CreateAppointmentAsync(appointment);
+            var result = await CreateAppointmentAsync(appointment);
+            if (!result.Success)
+            {
+                await HandleServiceResponse(result, false);
+                return;
+            }
+            await HandleServiceResponse(result, false);
         }
+
+        _navigationManager.Refresh(true);
     }
 
-    private async Task HandleServiceResponse(ServiceResponse response)
+    private async Task HandleServiceResponse(ServiceResponse response, bool refreshOnSuccess = true)
     {
         if (!response.Success)
         {
@@ -196,7 +205,8 @@ public partial class Appointments : BasePage
         else
         {
             await ToastrStateService.ShowSuccess(Resource.Success, 1000);
-            _navigationManager.Refresh(true);
+            if (refreshOnSuccess)
+                _navigationManager.Refresh(true);
         }
     }
 }

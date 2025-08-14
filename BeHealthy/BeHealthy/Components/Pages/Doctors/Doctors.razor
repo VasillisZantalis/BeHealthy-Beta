@@ -24,6 +24,14 @@
     </div>
 </div>
 
+@if (showWizard)
+{
+    <MassImportWizard TEntity="DoctorForCreationDto"
+                      OnSave="BulkCreateDoctors"
+                      Entity="@(ImportEntity.Doctor)"
+                      OnClose="HideImportWizard" />
+}
+
 @if (_doctors is null || !_doctors.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
@@ -117,12 +125,4 @@ else
             </div>
         </div>
     }
-}
-
-@if (showWizard)
-{
-    <MassImportWizard TEntity="DoctorForCreationDto"
-                      OnSave="() => {}"
-                      Entity="@(ImportEntity.Doctor)"
-                      OnClose="HideImportWizard" />
 }

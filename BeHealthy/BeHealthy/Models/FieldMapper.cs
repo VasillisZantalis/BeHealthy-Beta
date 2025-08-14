@@ -24,6 +24,7 @@ public static class FieldMapper
                     new FieldDefinition { Name = "FirstName", DisplayName = Resource.FirstName, Type = FieldType.Text, IsRequired = true },
                     new FieldDefinition { Name = "LastName", DisplayName = Resource.LastName, Type = FieldType.Text, IsRequired = true },
                     new FieldDefinition { Name = "Email", DisplayName = Resource.Email, Type = FieldType.Text, IsRequired = true },
+                    new FieldDefinition { Name = "Password", DisplayName = Resource.Password, Type = FieldType.Password, IsRequired = true },
                     new FieldDefinition { Name = "Department", DisplayName = Resource.Department, Type = FieldType.Dropdown, IsRequired = true, Options = departments }
                 };
 
@@ -36,7 +37,6 @@ public static class FieldMapper
                     new FieldDefinition { Name = nameof(AppointmentDto.AppointmentStartTime), DisplayName = Resource.StartTime, Type = FieldType.Time, IsRequired = true },
                     new FieldDefinition { Name = nameof(AppointmentDto.AppointmentEndTime), DisplayName = Resource.EndTime, Type = FieldType.Time, IsRequired = true },
                     new FieldDefinition { Name = nameof(AppointmentDto.Reason), DisplayName = Resource.Reason, Type = FieldType.Dropdown, IsRequired = true, Options = GetReasons() },
-                    new FieldDefinition { Name = nameof(AppointmentDto.Status), DisplayName = Resource.Status, Type = FieldType.Dropdown, IsRequired = true, Options = GetStatuses() },
                     new FieldDefinition { Name = nameof(AppointmentDto.Notes), DisplayName = Resource.Notes, Type = FieldType.Text, IsRequired = false }
                 };
 

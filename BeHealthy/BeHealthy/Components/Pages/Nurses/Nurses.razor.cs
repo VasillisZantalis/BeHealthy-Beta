@@ -1,4 +1,5 @@
-﻿using BeHealthy.Application.Dtos.Nurse;
+﻿using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Dtos.Nurse;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
@@ -27,6 +28,10 @@ public partial class Nurses : BasePage
     private bool hasActionRights;
 
     private PaginationState _paginationState = new();
+
+    private bool showWizard = false;
+    void ShowImportWizard() => showWizard = true;
+    void HideImportWizard() => showWizard = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,6 +80,24 @@ public partial class Nurses : BasePage
     private void CreateNurse()
     {
         _navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/create");
+    }
+
+    private async Task BulkCreateNurses(List<NurseForCreationDto> nurseForCreationDtos)
+    {
+        LoaderService.SetLoader(true);
+
+        foreach (var nurse in nurseForCreationDtos)
+        {
+            var result = await _nurseService.AddNurseAsync(nurse);
+            if (!result.Success)
+            {
+                AlertModalStateService.Show(Resource.Error, result.ErrorMessage!);
+                LoaderService.SetLoader(false);
+                return;
+            }
+        }
+        LoaderService.SetLoader(false);
+        _navigationManager.Refresh(true);
     }
 
     private void ConfirmDelete(int nurseId)

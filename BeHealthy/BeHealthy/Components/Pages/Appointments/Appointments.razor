@@ -12,6 +12,14 @@
     </button>
 </div>
 
+@if (showWizard)
+{
+    <MassImportWizard TEntity="AppointmentForCreationDto"
+                      OnSave="BulkCreateAppointments"
+                      Entity="@(ImportEntity.Appointment)"
+                      OnClose="HideImportWizard" />
+}
+
 <Alert @ref="_alert"/>
 
 @if (_appointments is null || !_appointments.Any())
@@ -108,12 +116,4 @@ else
                       Patients="_patients"
                       Role="userRole"
                       CurrentUserId="@_currentUserId" />
-}
-
-@if (showWizard)
-{
-    <MassImportWizard TEntity="AppointmentForCreationDto"
-                      OnSave="BulkCreateAppointments"
-                      Entity="@(ImportEntity.Appointment)"
-                      OnClose="HideImportWizard" />
 }

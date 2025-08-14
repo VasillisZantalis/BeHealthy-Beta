@@ -10,6 +10,9 @@
         <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreateNurse">
             <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
         </button>
+        <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
+            <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
+        </button>
     </div>
     <div class="">
         <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
@@ -18,6 +21,14 @@
         </InputSelect>
     </div>
 </div>
+
+@if (showWizard)
+{
+    <MassImportWizard TEntity="NurseForCreationDto"
+                      OnSave="BulkCreateNurses"
+                      Entity="@(ImportEntity.Nurse)"
+                      OnClose="HideImportWizard" />
+}
 
 @if (_nurses is null || !_nurses.Any())
 {

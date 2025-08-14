@@ -83,6 +83,24 @@ public partial class Doctors : BasePage
         _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
+    private async Task BulkCreateDoctors(List<DoctorForCreationDto> doctorForCreationDtos)
+    {
+        LoaderService.SetLoader(true);
+
+        foreach (var doctor in doctorForCreationDtos)
+        {
+            var result = await _doctorService.AddDoctorAsync(doctor);
+            if (!result.Success)
+            {
+                AlertModalStateService.Show(Resource.Error, result.ErrorMessage!);
+                LoaderService.SetLoader(false);
+                return;
+            }
+        }
+        LoaderService.SetLoader(false);
+        _navigationManager.Refresh(true);
+    }
+
     private void ConfirmDelete(int doctorId)
     {
         ConfirmDeleteService.RequestDelete(async () =>
