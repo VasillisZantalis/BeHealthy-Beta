@@ -1,22 +1,25 @@
-﻿@if (_showModal)
-{
+﻿@implements IDisposable
+@inject AlertModalStateService AlertService
 
+@if (_showModal)
+{
     <div class="modal fade show" tabindex="-1" style="display:block">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header border-0">
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
+                    <h5 class="modal-title">@AlertService.Title</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Hide"></button>
                 </div>
                 <div class="modal-body text-center">
                     <div class="d-flex flex-column justify-content-center">
-                        <Icon IconClass="@(Success ? FAIcon.CircleCheck : FAIcon.CircleXmark)" 
-                              TextClass="@(Success ? "text-success" : "text-danger")"
-                              SizeClass="fs-1" />
-                        <label class="h5 fw-normal">@Message</label>
+                        <Icon IconClass="@(AlertService.Success ? FAIcon.CircleCheck : FAIcon.CircleXmark)"
+                              TextClass="@(AlertService.Success ? "text-success" : "text-danger")"
+                        SizeClass="fs-1" />
+                        <label class="h5 fw-normal">@AlertService.Message</label>
                     </div>
                 </div>
                 <div class="d-flex flex-row justify-content-end m-3">
-                    <button type="button" class="btn btn-@(Success ? "success" : "danger") px-4 me-2" @onclick="CloseModal">@Resource.OK</button>
+                    <button type="button" class="btn btn-@(AlertService.Success ? "success" : "danger") px-4 me-2" @onclick="Hide">@Resource.OK</button>
                 </div>
             </div>
         </div>
@@ -28,30 +31,27 @@
 
     private bool _showModal { get; set; }
 
-    [Parameter] 
-    public bool Success { get; set; }
-
-    [Parameter] 
-    public string? Message { get; set; }
-
-    [Parameter]
-    public EventCallback OnSuccessClose { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> OnClose { get; set; }
-
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
+        AlertService.OnShow += Show;
+        AlertService.OnHide += Hide;
     }
 
-    public void OpenModal()
+    private void Show()
     {
         _showModal = true;
+        StateHasChanged();
     }
 
-    public void CloseModal()
+    private void Hide()
     {
         _showModal = false;
-        OnClose.InvokeAsync(Success);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        AlertService.OnShow -= Show;
+        AlertService.OnHide -= Hide;
     }
 }
