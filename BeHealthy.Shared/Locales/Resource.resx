@@ -123,6 +123,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Actions</value>
   </data>
+  <data name="AddRow" xml:space="preserve">
+    <value>Add Row</value>
+  </data>
   <data name="AppointmentExistsForDoctor" xml:space="preserve">
     <value>An appointment already exists for doctor {0} from {1} to {2}. Please choose a different time</value>
   </data>
@@ -252,6 +255,9 @@
   <data name="English" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
   <data name="Filters" xml:space="preserve">
     <value>Filters</value>
   </data>
@@ -314,6 +320,9 @@
   </data>
   <data name="Management" xml:space="preserve">
     <value>Management</value>
+  </data>
+  <data name="MassImport" xml:space="preserve">
+    <value>Mass Import</value>
   </data>
   <data name="Medication" xml:space="preserve">
     <value>Medication</value>

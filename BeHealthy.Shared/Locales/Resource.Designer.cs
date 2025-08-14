@@ -79,6 +79,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Row.
+        /// </summary>
+        public static string AddRow {
+            get {
+                return ResourceManager.GetString("AddRow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An appointment already exists for doctor {0} from {1} to {2}. Please choose a different time.
         /// </summary>
         public static string AppointmentExistsForDoctor {
@@ -466,6 +475,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filters.
         /// </summary>
         public static string Filters {
@@ -651,6 +669,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Management {
             get {
                 return ResourceManager.GetString("Management", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mass Import.
+        /// </summary>
+        public static string MassImport {
+            get {
+                return ResourceManager.GetString("MassImport", resourceCulture);
             }
         }
         

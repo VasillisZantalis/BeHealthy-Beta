@@ -123,6 +123,9 @@
   <data name="Actions" xml:space="preserve">
     <value>Ενέργειες</value>
   </data>
+  <data name="AddRow" xml:space="preserve">
+    <value>Προσθήκη γραμμής</value>
+  </data>
   <data name="AppointmentExistsForDoctor" xml:space="preserve">
     <value>Υπάρχει ήδη ραντεβού για τον γιατρό {0} από {1} έως {2}</value>
   </data>
@@ -252,6 +255,9 @@
   <data name="English" xml:space="preserve">
     <value>Αγγλικά</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Σφάλμα</value>
+  </data>
   <data name="Filters" xml:space="preserve">
     <value>Φίλτρα</value>
   </data>
@@ -314,6 +320,9 @@
   </data>
   <data name="Management" xml:space="preserve">
     <value>Διαχείριση</value>
+  </data>
+  <data name="MassImport" xml:space="preserve">
+    <value>Μαζική Εισαγωγή</value>
   </data>
   <data name="Medication" xml:space="preserve">
     <value>Φάρμακο</value>

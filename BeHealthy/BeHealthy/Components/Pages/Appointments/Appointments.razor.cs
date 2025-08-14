@@ -46,6 +46,10 @@ public partial class Appointments : BasePage
 
     private PaginationState _paginationState = new();
 
+    private bool showWizard = false;
+    void ShowImportWizard() => showWizard = true;
+    void HideImportWizard() => showWizard = false;
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
@@ -97,7 +101,6 @@ public partial class Appointments : BasePage
     {
         var (appointmentDto, isEdit, appointmentId) = submission;
         _appointmentModal.Close();
-        ServiceResponse result;
 
         if (isEdit)
         {
@@ -105,23 +108,13 @@ public partial class Appointments : BasePage
 
             var appointmentForUpdate = appointmentDto.MapToUpdateDto();
 
-            result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
+            await UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
         }
         else
         {
             var appointmentForCreation = appointmentDto.MapToCreationDto();
-
-            result = await _appointmentService.AddAppointmentAsync(appointmentForCreation);
-        }
-
-        if (!result.Success)
-        {
-            _alert.ShowFailed(result.ErrorMessage!);
-        }
-        else
-        {
-            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
-            _navigationManager.Refresh(true);
+            var result = await CreateAppointmentAsync(appointmentForCreation);
+            await HandleServiceResponse(result);
         }
     }
 
@@ -171,5 +164,49 @@ public partial class Appointments : BasePage
     private async Task<bool> GetPrivilege(UserRole role, PrivilegeName privilege)
     {
         return await _privilegeService.HasPrivilegeAsync(role, privilege);
+    }
+
+    private async Task<ServiceResponse> CreateAppointmentAsync(AppointmentForCreationDto appointmentForCreationDto)
+    {
+        var result = await _appointmentService.AddAppointmentAsync(appointmentForCreationDto);
+        return result;
+    }
+
+    private async Task UpdateAppointmentAsync(int appointmentId, AppointmentForUpdateDto appointmentForUpdateDto)
+    {
+        var result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdateDto);
+
+        await HandleServiceResponse(result);
+    }
+
+    private async Task BulkCreateAppointments(List<AppointmentForCreationDto> appointmentForCreationDtos)
+    {
+        foreach (var appointment in appointmentForCreationDtos)
+        {
+            var result = await CreateAppointmentAsync(appointment);
+            if (!result.Success)
+            {
+                await HandleServiceResponse(result, false);
+                return;
+            }
+            await HandleServiceResponse(result, false);
+        }
+
+        _navigationManager.Refresh(true);
+    }
+
+    private async Task HandleServiceResponse(ServiceResponse response, bool refreshOnSuccess = true)
+    {
+        if (!response.Success)
+        {
+            AlertModalStateService.Show(null, response.ErrorMessage);
+            return;
+        }
+        else
+        {
+            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+            if (refreshOnSuccess)
+                _navigationManager.Refresh(true);
+        }
     }
 }

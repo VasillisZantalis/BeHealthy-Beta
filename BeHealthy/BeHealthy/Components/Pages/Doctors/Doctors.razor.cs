@@ -28,6 +28,10 @@ public partial class Doctors : BasePage
 
     private PaginationState _paginationState = new();
 
+    private bool showWizard = false;
+    void ShowImportWizard() => showWizard = true;
+    void HideImportWizard() => showWizard = false;
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
@@ -77,6 +81,24 @@ public partial class Doctors : BasePage
     private void CreateDoctor()
     {
         _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
+    }
+
+    private async Task BulkCreateDoctors(List<DoctorForCreationDto> doctorForCreationDtos)
+    {
+        LoaderService.SetLoader(true);
+
+        foreach (var doctor in doctorForCreationDtos)
+        {
+            var result = await _doctorService.AddDoctorAsync(doctor);
+            if (!result.Success)
+            {
+                AlertModalStateService.Show(Resource.Error, result.ErrorMessage!);
+                LoaderService.SetLoader(false);
+                return;
+            }
+        }
+        LoaderService.SetLoader(false);
+        _navigationManager.Refresh(true);
     }
 
     private void ConfirmDelete(int doctorId)

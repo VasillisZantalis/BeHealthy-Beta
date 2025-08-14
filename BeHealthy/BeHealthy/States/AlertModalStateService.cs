@@ -1,4 +1,6 @@
-﻿namespace BeHealthy.States;
+﻿using BeHealthy.Shared.Locales;
+
+namespace BeHealthy.States;
 
 public class AlertModalStateService
 {
@@ -8,10 +10,10 @@ public class AlertModalStateService
     public string Message { get; private set; } = string.Empty;
     public bool Success { get; private set; }
 
-    public void Show(string title, string message, bool success = false)
+    public void Show(string? title, string? message, bool success = false)
     {
-        Title = title;
-        Message = message;
+        Title = title ?? Resource.Error;
+        Message = message ?? Resource.SomethingWentWrong;
         Success = success;
         OnShow?.Invoke();
     }

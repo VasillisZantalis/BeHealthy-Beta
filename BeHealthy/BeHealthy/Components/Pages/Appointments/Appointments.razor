@@ -3,11 +3,22 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-<div class="">
-    <button class="btn btn-outline-secondary rounded-pill px-4 mb-3" @onclick="() => _appointmentModal.Open()">
+<div class="mb-3">
+    <button class="btn btn-outline-secondary rounded-pill px-4" @onclick="() => _appointmentModal.Open()">
         <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
     </button>
+    <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
+        <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
+    </button>
 </div>
+
+@if (showWizard)
+{
+    <MassImportWizard TEntity="AppointmentForCreationDto"
+                      OnSave="BulkCreateAppointments"
+                      Entity="@(ImportEntity.Appointment)"
+                      OnClose="HideImportWizard" />
+}
 
 <Alert @ref="_alert"/>
 

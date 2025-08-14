@@ -33,4 +33,5 @@ public static class FAIcon
     public static string EditSquare => "fa-solid fa-pen-to-square";
     public static string Stethoscope => "fa-solid fa-stethoscope";
     public static string Fingerprint => "fa-solid fa-fingerprint";
+    public static string Import => "fa-solid fa-file-import";
 }
