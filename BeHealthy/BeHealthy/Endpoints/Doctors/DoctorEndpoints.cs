@@ -62,7 +62,7 @@ public static class DoctorEndpoints
             if (doctorDto is null)
                 return TypedResults.BadRequest();
 
-            await doctorService.UpdateDoctorAsync(id, doctorDto);
+            await doctorService.UpdateDoctorAsync(doctorDto);
 
             return TypedResults.NoContent();
         });

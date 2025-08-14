@@ -64,7 +64,7 @@ public static class PatientEndpoints
             if (patientDto is null)
                 return TypedResults.BadRequest();
 
-            await patientService.UpdatePatientAsync(id, patientDto);
+            await patientService.UpdatePatientAsync(patientDto);
 
             return TypedResults.NoContent();
         });

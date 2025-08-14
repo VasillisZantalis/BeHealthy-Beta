@@ -5,7 +5,6 @@
 
 @inject INurseService NurseService
 @inject IDepartmentService DepartmentService
-@inject UserManager<ApplicationUser> UserManager
 
 <PageTitle>@Resource.Edit</PageTitle>
 
@@ -129,26 +128,15 @@
             return;
         }
 
-        var user = await UserManager.FindByIdAsync(_nurseForUpdateDto.UserId);
+        var result = await NurseService.UpdateNurseAsync(_nurseForUpdateDto);
 
-        if (user != null)
+        if (!result.Success)
         {
-            user.FirstName = _nurseForUpdateDto.FirstName;
-            user.LastName = _nurseForUpdateDto.LastName;
-            user.PhoneNumber = _nurseForUpdateDto.PhoneNumber;
-
-            var result = await UserManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                _inProgress = false;
-                _alert.ShowSuccess(Resource.SomethingWentWrong);
-            }
-            else
-            {
-                await NurseService.UpdateNurseAsync(_nurseForUpdateDto.Id, _nurseForUpdateDto);
-                _alert.ShowSuccess(Resource.Success);
-            }
+            _alert.ShowFailed(result.ErrorMessage);
+        }
+        else
+        {
+            _alert.ShowSuccess(Resource.Success);
         }
 
         _inProgress = false;

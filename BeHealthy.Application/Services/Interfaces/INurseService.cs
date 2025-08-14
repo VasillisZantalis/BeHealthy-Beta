@@ -10,6 +10,6 @@ public interface INurseService
     Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId);
     Task<ServiceResponse> AddNurseAsync(NurseForCreationDto nurse);
     Task<int> GetNurseCountAsync();
-    Task UpdateNurseAsync(int id, NurseForUpdateDto nurse);
+    Task<ServiceResponse> UpdateNurseAsync(NurseForUpdateDto nurse);
     Task DeleteNurseAsync(int id);
 }

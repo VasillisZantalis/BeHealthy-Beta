@@ -1,22 +1,18 @@
-﻿using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Application.Dtos.Common;
-using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Dtos.Patient;
-using BeHealthy.Application.Dtos.User;
-using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
+﻿using BeHealthy.Domain.Entities;
+using BeHealthy.Shared.Locales;
+using Microsoft.AspNetCore.Identity;
 
 namespace BeHealthy.Application.Services;
 
 public class DoctorService : IDoctorService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserService _userService;
 
-    public DoctorService(IUnitOfWork unitOfWork)
+    public DoctorService(IUnitOfWork unitOfWork, IUserService userService)
     {
         _unitOfWork = unitOfWork;
+        _userService = userService;
     }
 
     public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync()
@@ -33,30 +29,63 @@ public class DoctorService : IDoctorService
 
     public async Task<ServiceResponse> AddDoctorAsync(DoctorForCreationDto doctorDto)
     {
+        var user = new ApplicationUser
+        {
+            FirstName = doctorDto.FirstName,
+            LastName = doctorDto.LastName,
+            PhoneNumber = doctorDto.PhoneNumber,
+            Email = doctorDto.Email
+        };
+
         try
         {
+            var userCreationResult = await _userService.CreateApplicationUser(user, doctorDto.Password);
+            if (!userCreationResult.Success)
+                return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
+
+            var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Doctor);
+            if (!addToRoleResult.Success)
+                return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
+
+            doctorDto.UserId = user.Id;
             var doctor = doctorDto.MapToDomain();
+
             await _unitOfWork.DoctorRepository.AddAsync(doctor);
 
             return ServiceResponse.Successful();
         }
         catch (Exception)
         {
+            await _userService.DeleteUserAsync(user);
             return ServiceResponse.Failed();
         }
     }
 
-    public async Task UpdateDoctorAsync(int id, DoctorForUpdateDto doctorDto)
+    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorForUpdateDto doctorDto)
     {
-        var doctor = doctorDto?.MapToDomain();
+        var existingUser = await _userService.GetUserByIdAsync(doctorDto.UserId);
+        if (existingUser == null)
+            return ServiceResponse.Failed(Resource.NotFound);
 
-        if (doctor is null || !await _unitOfWork.DoctorRepository.ExistsAsync(id))
-            return;
+        existingUser.FirstName = doctorDto.FirstName;
+        existingUser.LastName = doctorDto.LastName;
+        existingUser.PhoneNumber = doctorDto.PhoneNumber;
+
+        var updateUserResult = await _userService.UpdateUserAsync(existingUser);
+        if (!updateUserResult.Success)
+            return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
+
+        var doctor = doctorDto.MapToDomain();
+
+        if (doctor is null || !await _unitOfWork.DoctorRepository.ExistsAsync(doctorDto.Id))
+            return ServiceResponse.Failed(Resource.NotFound);
 
         if (doctor.SpecialtyId.HasValue && !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctor.SpecialtyId.Value))
-            return;
+            return ServiceResponse.Failed(Resource.NotFound);
 
         await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
+
+        return ServiceResponse.Successful();
     }
 
     public async Task DeleteDoctorAsync(int id)
