@@ -3,7 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-<div class="">
+<div class="mb-3">
     <button class="btn btn-outline-secondary rounded-pill px-4" @onclick="() => _appointmentModal.Open()">
         <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
     </button>
@@ -112,5 +112,8 @@ else
 
 @if (showWizard)
 {
-    <MassImportWizard Entity="@(ImportEntity.Appointment)" OnClose="HideImportWizard" />
+    <MassImportWizard TEntity="AppointmentForCreationDto"
+                      OnSave="BulkCreateAppointments"
+                      Entity="@(ImportEntity.Appointment)"
+                      OnClose="HideImportWizard" />
 }

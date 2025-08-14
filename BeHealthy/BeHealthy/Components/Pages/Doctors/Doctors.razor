@@ -121,5 +121,8 @@ else
 
 @if (showWizard)
 {
-    <MassImportWizard Entity="@(ImportEntity.Doctor)" OnClose="HideImportWizard" />
+    <MassImportWizard TEntity="DoctorForCreationDto"
+                      OnSave="() => {}"
+                      Entity="@(ImportEntity.Doctor)"
+                      OnClose="HideImportWizard" />
 }

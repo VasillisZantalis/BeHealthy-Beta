@@ -101,7 +101,6 @@ public partial class Appointments : BasePage
     {
         var (appointmentDto, isEdit, appointmentId) = submission;
         _appointmentModal.Close();
-        ServiceResponse result;
 
         if (isEdit)
         {
@@ -109,23 +108,12 @@ public partial class Appointments : BasePage
 
             var appointmentForUpdate = appointmentDto.MapToUpdateDto();
 
-            result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
+            await UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
         }
         else
         {
             var appointmentForCreation = appointmentDto.MapToCreationDto();
-
-            result = await _appointmentService.AddAppointmentAsync(appointmentForCreation);
-        }
-
-        if (!result.Success)
-        {
-            _alert.ShowFailed(result.ErrorMessage!);
-        }
-        else
-        {
-            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
-            _navigationManager.Refresh(true);
+            await CreateAppointmentAsync(appointmentForCreation);
         }
     }
 
@@ -175,5 +163,41 @@ public partial class Appointments : BasePage
     private async Task<bool> GetPrivilege(UserRole role, PrivilegeName privilege)
     {
         return await _privilegeService.HasPrivilegeAsync(role, privilege);
+    }
+
+    private async Task CreateAppointmentAsync(AppointmentForCreationDto appointmentForCreationDto)
+    {
+        var result = await _appointmentService.AddAppointmentAsync(appointmentForCreationDto);
+        await HandleServiceResponse(result);
+    }
+
+    private async Task UpdateAppointmentAsync(int appointmentId, AppointmentForUpdateDto appointmentForUpdateDto)
+    {
+        var result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdateDto);
+
+        await HandleServiceResponse(result);
+    }
+
+    private async Task BulkCreateAppointments(List<AppointmentForCreationDto> appointmentForCreationDtos)
+    {
+        foreach (var appointment in appointmentForCreationDtos)
+        {
+            await CreateAppointmentAsync(appointment);
+        }
+    }
+
+    private async Task HandleServiceResponse(ServiceResponse response)
+    {
+        if (!response.Success)
+        {
+            //AlertModalStateService.Show(Resource.SomethingWentWrong, response.ErrorMessage!);
+            _alert.ShowFailed(response.ErrorMessage!);
+            return;
+        }
+        else
+        {
+            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+            _navigationManager.Refresh(true);
+        }
     }
 }

@@ -1,18 +1,17 @@
 ﻿@using BeHealthy.Models.Enums
 @inherits BasePage
+@typeparam TEntity
 
 @inject IDoctorService DoctorService
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
-@inject IAppointmentService AppointmentService
-@inject NavigationManager NavigationManager
 
 <div class="modal" tabindex="-1" role="dialog" style="display:block;">
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header border-0">
                 <h5 class="modal-title">Mass Import</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="OnClose"></button>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
             </div>
             <div class="modal-body">
                 <button class="btn main-color text-white rounded-pill px-3" @onclick="Save">
@@ -60,6 +59,7 @@
 @code {
     [Parameter] public ImportEntity Entity { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<List<TEntity>> OnSave { get; set; }
 
     private List<FieldDefinition> FieldDefinitions = [];
     private List<Dictionary<string, object>> Rows = new();
@@ -123,21 +123,21 @@
         switch (Entity)
         {
             case ImportEntity.Doctor:
-                await ConvertAndSaveAsDoctor();
+                await ConvertToDoctors();
                 break;
             case ImportEntity.Patient:
-                await ConvertAndSaveAsPatient();
+                await ConvertToPatients();
                 break;
             case ImportEntity.Nurse:
-                await ConvertAndSaveAsNurse();
+                await ConvertToNurses();
                 break;
             case ImportEntity.Appointment:
-                await ConvertAndSaveAsAppointment();
+                await ConvertToAppointments();
                 break;
         }
     }
 
-    private async Task ConvertAndSaveAsDoctor()
+    private async Task ConvertToDoctors()
     {
         var doctors = Rows.Select(row => new DoctorForCreationDto
         {
@@ -145,13 +145,16 @@
             LastName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.Email)) ?? string.Empty,
             DepartmentId = row.GetValueOrDefault<int>(nameof(DoctorForCreationDto.DepartmentId))
-            }).ToList();
+        }).ToList();
+
+        if (!doctors.Any() || doctors is null) return;
+
+        await OnSave.InvokeAsync(doctors.Cast<TEntity>().ToList());
 
         Close();
-        NavigationManager.Refresh(true);
     }
 
-    private async Task ConvertAndSaveAsPatient()
+    private async Task ConvertToPatients()
     {
         var patients = Rows.Select(row => new PatientForCreationDto
         {
@@ -159,13 +162,16 @@
             LastName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.Email)) ?? string.Empty,
             DepartmentId = row.GetValueOrDefault<int>(nameof(PatientForCreationDto.DepartmentId))
-            }).ToList();
+        }).ToList();
+
+        if (!patients.Any() || patients is null) return;
+
+        await OnSave.InvokeAsync(patients.Cast<TEntity>().ToList());
 
         Close();
-        NavigationManager.Refresh(true);
     }
 
-    private async Task ConvertAndSaveAsNurse()
+    private async Task ConvertToNurses()
     {
         var nurses = Rows.Select(row => new NurseForCreationDto
         {
@@ -173,13 +179,16 @@
             LastName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.LastName)) ?? string.Empty,
             Email = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Email)) ?? string.Empty,
             DepartmentId = row.GetValueOrDefault<int>(nameof(NurseForCreationDto.DepartmentId))
-            });
+        }).ToList();
+
+        if (!nurses.Any() || nurses is null) return;
+
+        await OnSave.InvokeAsync(nurses.Cast<TEntity>().ToList());
 
         Close();
-        NavigationManager.Refresh(true);
     }
 
-    private async Task ConvertAndSaveAsAppointment()
+    private async Task ConvertToAppointments()
     {
         var appointments = Rows.Select(row => new AppointmentForCreationDto
         {
@@ -192,13 +201,11 @@
             AppointmentEndTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentEndTime)),
         }).ToList();
 
-        foreach (var appointment in appointments)
-        {
-            await AppointmentService.AddAppointmentAsync(appointment);
-        }
+        if (!appointments.Any() || appointments is null) return;
+
+        await OnSave.InvokeAsync(appointments.Cast<TEntity>().ToList());
 
         Close();
-        NavigationManager.Refresh(true);
     }
 
     private RenderFragment RenderCell(FieldDefinition field, Dictionary<string, object> row) => builder =>

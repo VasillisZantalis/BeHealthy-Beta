@@ -10,6 +10,7 @@ public class AlertModalStateService
 
     public void Show(string title, string message, bool success = false)
     {
+        Console.WriteLine("Modal Show triggered");
         Title = title;
         Message = message;
         Success = success;
