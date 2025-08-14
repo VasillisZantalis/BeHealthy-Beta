@@ -255,6 +255,9 @@
   <data name="English" xml:space="preserve">
     <value>Αγγλικά</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Σφάλμα</value>
+  </data>
   <data name="Filters" xml:space="preserve">
     <value>Φίλτρα</value>
   </data>

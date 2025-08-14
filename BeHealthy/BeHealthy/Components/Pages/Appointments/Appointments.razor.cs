@@ -190,8 +190,7 @@ public partial class Appointments : BasePage
     {
         if (!response.Success)
         {
-            //AlertModalStateService.Show(Resource.SomethingWentWrong, response.ErrorMessage!);
-            _alert.ShowFailed(response.ErrorMessage!);
+            AlertModalStateService.Show(null, response.ErrorMessage);
             return;
         }
         else
