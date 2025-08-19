@@ -108,6 +108,9 @@
                 new() { string.Format(Resource.TheFieldIsRequired, Resource.HeadΟfDepartment) });
         }
 
+        if (DepartmentDto.HeadOfDepartmentId == 0)
+            DepartmentDto.HeadOfDepartmentId = null;
+
         if (errors.Any())
         {
             _validationComponent?.DisplayErrors(errors);
