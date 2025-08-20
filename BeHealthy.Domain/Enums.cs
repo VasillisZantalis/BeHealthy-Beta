@@ -75,3 +75,10 @@ public enum PrivilegeName
     ViewPatientPrescriptions,
     GenerateMedicalReports
 }
+
+public enum AllergySeverity
+{
+    Mild,
+    Moderate,
+    Severe
+}

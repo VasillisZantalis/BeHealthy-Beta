@@ -24,6 +24,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Privilege> Privileges => Set<Privilege>();
     public DbSet<UserRolePrivilege> UserRolePrivileges => Set<UserRolePrivilege>();
+    public DbSet<MedicalRecord> MedicalRecords => Set<MedicalRecord>();
+    public DbSet<Visit> Visits => Set<Visit>();
+    public DbSet<Allergy> Allergies => Set<Allergy>();
+    public DbSet<LabResult> LabResults => Set<LabResult>();
+    public DbSet<Diagnosis> Diagnoses => Set<Diagnosis>();
+    public DbSet<Treatment> Treatments => Set<Treatment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

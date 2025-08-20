@@ -16,5 +16,8 @@ public class Patient
     public Department? Department { get; set; }
 
     public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+    public ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
+    public ICollection<Allergy> Allergies { get; set; } = new List<Allergy>();
+    public ICollection<Visit> Visits { get; set; } = new List<Visit>();
 }
 
