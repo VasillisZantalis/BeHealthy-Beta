@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validations\Allergy\" />
     <Folder Include="Validations\Prescription\" />
   </ItemGroup>
 

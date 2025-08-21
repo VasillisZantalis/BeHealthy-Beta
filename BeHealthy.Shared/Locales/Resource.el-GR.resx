@@ -126,6 +126,9 @@
   <data name="AddRow" xml:space="preserve">
     <value>Προσθήκη γραμμής</value>
   </data>
+  <data name="Allergy" xml:space="preserve">
+    <value>Αλλεργία</value>
+  </data>
   <data name="AppointmentExistsForDoctor" xml:space="preserve">
     <value>Υπάρχει ήδη ραντεβού για τον γιατρό {0} από {1} έως {2}</value>
   </data>
@@ -326,6 +329,9 @@
   </data>
   <data name="MassImport" xml:space="preserve">
     <value>Μαζική Εισαγωγή</value>
+  </data>
+  <data name="MedicalRecord" xml:space="preserve">
+    <value>Ιατρικός Φάκελος</value>
   </data>
   <data name="Medication" xml:space="preserve">
     <value>Φάρμακο</value>
@@ -536,6 +542,9 @@
   </data>
   <data name="UseValidation" xml:space="preserve">
     <value>Χρήση Επαλήθευσης</value>
+  </data>
+  <data name="VisitDate" xml:space="preserve">
+    <value>Ημερομηνία Επίσκεψης</value>
   </data>
   <data name="YouAreNotAuthorizedToAccessPage" xml:space="preserve">
     <value>Δεν έχεις πρόσβαση σε αυτή την σελίδα</value>
