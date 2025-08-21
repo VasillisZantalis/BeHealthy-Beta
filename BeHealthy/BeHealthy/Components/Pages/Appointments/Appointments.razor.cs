@@ -41,6 +41,7 @@ public partial class Appointments : BasePage
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
+    private int? _appointmentId;
 
     private UserRole? userRole;
 
@@ -97,23 +98,23 @@ public partial class Appointments : BasePage
         });
     }
 
-    private async Task HandleAppointmentFormSubmission((AppointmentDto, bool, int) submission)
+    private async Task HandleAppointmentFormSubmission((AppointmentDto, int?) submission)
     {
-        var (appointmentDto, isEdit, appointmentId) = submission;
+        var (appointmentDto, appointmentId) = submission;
         _appointmentModal.Close();
 
-        if (isEdit)
+        if (appointmentId is not null)
         {
-            appointmentDto.Id = appointmentId;
+            appointmentDto.Id = appointmentId.Value;
 
             var appointmentForUpdate = appointmentDto.MapToUpdateDto();
 
-            await UpdateAppointmentAsync(appointmentId, appointmentForUpdate);
+            await UpdateAppointmentAsync(appointmentForUpdate);
         }
         else
         {
-            var appointmentForCreation = appointmentDto.MapToCreationDto();
-            var result = await CreateAppointmentAsync(appointmentForCreation);
+            var appointmentForCreate = appointmentDto.MapToCreationDto();
+            var result = await CreateAppointmentAsync(appointmentForCreate);
             await HandleServiceResponse(result);
         }
     }
@@ -135,11 +136,8 @@ public partial class Appointments : BasePage
 
     private void EditAppointment(int appointmentId)
     {
-        var appointment = _appointments.FirstOrDefault(a => a.Id == appointmentId);
-        if (appointment != null)
-        {
-            _appointmentModal.OpenForEdit(appointment);
-        }
+        _appointmentId = appointmentId;
+        _appointmentModal.Open();
     }
 
     private void ConfirmDelete(int appointmentId)
@@ -172,9 +170,9 @@ public partial class Appointments : BasePage
         return result;
     }
 
-    private async Task UpdateAppointmentAsync(int appointmentId, AppointmentUpdateDto appointmentForUpdateDto)
+    private async Task UpdateAppointmentAsync(AppointmentUpdateDto appointmentForUpdateDto)
     {
-        var result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdateDto);
+        var result = await _appointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
 
         await HandleServiceResponse(result);
     }

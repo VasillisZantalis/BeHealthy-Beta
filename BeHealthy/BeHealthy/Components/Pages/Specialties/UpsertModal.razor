@@ -52,18 +52,12 @@
         _specialtyDto = new();
 
         if (SpecialtyId.HasValue)
-            _specialtyDto = await SpecialtyService.GetSpecialtyByIdAsync(SpecialtyId.Value);
+            _specialtyDto = await SpecialtyService.GetSpecialtyByIdAsync(SpecialtyId.Value) ?? new();
     }
 
-    public void OpenModal()
-    {
-        _show = true;
-    }
+    public void OpenModal() => _show = true;
 
-    public void CloseModal()
-    {
-        _show = false;
-    }
+    public void CloseModal() => _show = false;
 
     private async Task SaveSpecialty()
     {

@@ -6,6 +6,7 @@ using BeHealthy.Application.Helpers;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Appointments;
 using BeHealthy.Domain;
+using BeHealthy.Extensions;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
@@ -14,8 +15,11 @@ namespace BeHealthy.Components.Pages.Appointments;
 
 public partial class AppointmentModal : BasePage
 {
+    [Parameter, EditorRequired]
+    public int? AppointmentId { get; set; }
+
     [Parameter]
-    public EventCallback<(AppointmentDto, bool, int)> OnFormSubmit { get; set; }
+    public EventCallback<(AppointmentDto, int?)> OnFormSubmit { get; set; }
 
     [SupplyParameterFromForm]
     private AppointmentDto _appointmentDto { get; set; } = new();
@@ -32,14 +36,6 @@ public partial class AppointmentModal : BasePage
     [Parameter]
     public UserRole? Role { get; set; }
 
-    private List<SelectItem> _doctorsSelect = new();
-    private List<SelectItem> _patientsSelect = new();
-    private List<SelectItem> _roomsSelect = new();
-    private List<SelectItem> _nursesSelect = new();
-
-    //private List<SelectItem> _statusDropdownItems = new();
-    //private List<SelectItem> _reasonDropdownItems = new();
-
     [Inject]
     private IRoomService _roomService { get; set; } = default!;
 
@@ -49,12 +45,19 @@ public partial class AppointmentModal : BasePage
     [Inject]
     private INurseService _nurseService { get; set; } = default!;
 
+    [Inject]
+    private IAppointmentService _appointmentService { get; set; } = default!;
+
+    private List<SelectItem> _doctorsSelect = new();
+    private List<SelectItem> _patientsSelect = new();
+    private List<SelectItem> _roomsSelect = new();
+    private List<SelectItem> _nursesSelect = new();
+
     private bool LockDoctorsDropdown => Role == UserRole.Doctor;
     private bool LockPatientsDropdown => Role == UserRole.Patient;
 
     private bool _show;
-    private bool _isEdit;
-    private int _appointmentId;
+    private bool _isEdit => AppointmentId.HasValue;
     private bool _showRooms;
     private bool _showNurses;
 
@@ -83,6 +86,8 @@ public partial class AppointmentModal : BasePage
         }).ToList();
         _nursesSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
+        _appointmentDto.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
+
         LoaderService.SetLoader(false);
     }
 
@@ -103,6 +108,22 @@ public partial class AppointmentModal : BasePage
         _patientsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        if (AppointmentId.HasValue && AppointmentId.Value > 0)
+            _appointmentDto = await _appointmentService.GetAppointmentByIdAsync(AppointmentId.Value) ?? new();
+
+        if (Role == UserRole.Doctor)
+        {
+            _appointmentDto.DoctorId = Doctors.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
+        }
+
+        if (Role == UserRole.Patient)
+        {
+            _appointmentDto.PatientId = Patients.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
+        }
+    }
+
     protected async Task GetAppSettings()
     {
         var keys = new[] { "AppointmentRequiresRoom", "NurseIsRequiredForAppointment" }.ToList();
@@ -115,45 +136,9 @@ public partial class AppointmentModal : BasePage
         _showRooms = requireRoomSetting?.GetBooleanValue() ?? false;
     }
 
-    public void Open()
-    {
-        _show = true;
-        _isEdit = false;
-        _appointmentDto = new();
-        _appointmentId = 0;
-        _appointmentDto.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
-        
-        if (Role == UserRole.Doctor)
-        {
-            _appointmentDto.DoctorId = Doctors.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
-        }
+    public void Open() => _show = true;
 
-        if (Role == UserRole.Patient)
-        {
-            _appointmentDto.PatientId = Patients.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
-        }
-    }
-
-    public void OpenForEdit(AppointmentDto appointment)
-    {
-        _show = true;
-        _isEdit = true;
-        _appointmentDto.DoctorId = appointment.DoctorId;
-        _appointmentDto.PatientId = appointment.PatientId;
-        _appointmentDto.RoomId = appointment.RoomId;
-        _appointmentDto.NurseId = appointment.NurseId;
-        _appointmentDto.Notes = appointment.Notes;
-        _appointmentDto.AppointmentDate = appointment.AppointmentDate;
-        _appointmentId = appointment.Id;
-        _appointmentDto.Status = appointment.Status;
-        _appointmentDto.AppointmentStartTime = appointment.AppointmentStartTime;
-        _appointmentDto.AppointmentEndTime = appointment.AppointmentEndTime;
-    }
-
-    public void Close()
-    {
-        _show = false;
-    }
+    public void Close() => _show = false;
 
     public async Task HandleSaveClick()
     {
@@ -169,7 +154,21 @@ public partial class AppointmentModal : BasePage
         }
         else
         {
-            await OnFormSubmit.InvokeAsync((_appointmentDto, _isEdit, _appointmentId));
+            await OnFormSubmit.InvokeAsync((_appointmentDto, AppointmentId));
         }
+    }
+
+    public static IEnumerable<SelectItem> GetReasons()
+    {
+        var appointmentReasons = Enum.GetValues(typeof(AppointmentReason))
+         .Cast<AppointmentReason>()
+         .Select(reason => new SelectItem
+         {
+             Value = (int)reason,
+             Text = reason.ToLocalizedString(),
+         })
+         .ToList();
+
+        return appointmentReasons;
     }
 }

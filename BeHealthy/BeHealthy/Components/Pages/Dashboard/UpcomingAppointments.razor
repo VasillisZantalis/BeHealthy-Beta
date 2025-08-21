@@ -22,7 +22,7 @@
                                     <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
                                     <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
                                 </div>
-                                <div><span class="badge @EnumExtensions.GetBadgeClass(appointment!.Status)">@appointment.Status</span></div>
+                                <div><span class="badge @Application.Extensions.EnumExtensions.GetBadgeClass(appointment!.Status)">@appointment.Status</span></div>
                                 <button class="btn" title="@(Resource.Delete)" @onclick="() => DeleteAppointment(appointment.Id)">
                                     <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                                 </button>

@@ -73,7 +73,7 @@ public class AppointmentService : IAppointmentService
             : ServiceResponse.Failed(Resource.SomethingWentWrong);
     }
 
-    public async Task<ServiceResponse> UpdateAppointmentAsync(int id, AppointmentUpdateDto appointmentDto)
+    public async Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateDto appointmentDto)
     {
         var appointment = appointmentDto.MapToDomain();
 

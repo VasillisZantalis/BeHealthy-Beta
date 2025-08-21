@@ -53,7 +53,7 @@ public static class AppointmentsEndpoints
             if (appointmentDto is null)
                 return TypedResults.BadRequest();
 
-            await appointmentService.UpdateAppointmentAsync(id, appointmentDto);
+            await appointmentService.UpdateAppointmentAsync(appointmentDto);
 
             return TypedResults.NoContent();
         });

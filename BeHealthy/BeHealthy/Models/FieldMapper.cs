@@ -45,20 +45,6 @@ public static class FieldMapper
         }
     }
 
-    public static IEnumerable<SelectItem> GetStatuses()
-    {
-       var appointmentStatuses = Enum.GetValues(typeof(AppointmentStatus))
-        .Cast<AppointmentStatus>()
-        .Select(status => new SelectItem
-        {
-            Value = (int)status,
-            Text = status.ToLocalizedString(),
-        })
-        .ToList();
-
-        return appointmentStatuses;
-    }
-
     public static IEnumerable<SelectItem> GetReasons()
     {
        var appointmentReasons = Enum.GetValues(typeof(AppointmentReason))
