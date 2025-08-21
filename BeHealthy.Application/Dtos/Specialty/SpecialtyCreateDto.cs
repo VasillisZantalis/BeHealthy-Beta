@@ -1,7 +1,6 @@
 ﻿namespace BeHealthy.Application.Dtos.Specialty;
 
-public class SpecialtyForUpdateDto
+public class SpecialtyCreateDto
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
 }

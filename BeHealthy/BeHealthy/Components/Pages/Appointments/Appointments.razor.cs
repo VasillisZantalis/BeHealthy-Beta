@@ -166,23 +166,23 @@ public partial class Appointments : BasePage
         return await _privilegeService.HasPrivilegeAsync(role, privilege);
     }
 
-    private async Task<ServiceResponse> CreateAppointmentAsync(AppointmentForCreationDto appointmentForCreationDto)
+    private async Task<ServiceResponse> CreateAppointmentAsync(AppointmentCreateDto AppointmentCreateDto)
     {
-        var result = await _appointmentService.AddAppointmentAsync(appointmentForCreationDto);
+        var result = await _appointmentService.AddAppointmentAsync(AppointmentCreateDto);
         return result;
     }
 
-    private async Task UpdateAppointmentAsync(int appointmentId, AppointmentForUpdateDto appointmentForUpdateDto)
+    private async Task UpdateAppointmentAsync(int appointmentId, AppointmentUpdateDto appointmentForUpdateDto)
     {
         var result = await _appointmentService.UpdateAppointmentAsync(appointmentId, appointmentForUpdateDto);
 
         await HandleServiceResponse(result);
     }
 
-    private async Task BulkCreateAppointments((List<AppointmentForCreationDto> appointmentForCreationDtos, bool UseValidation) result)
+    private async Task BulkCreateAppointments((List<AppointmentCreateDto> AppointmentCreateDtos, bool UseValidation) result)
     {
         var useValidation = result.UseValidation;
-        foreach (var appointment in result.appointmentForCreationDtos)
+        foreach (var appointment in result.AppointmentCreateDtos)
         {
             var response = await CreateAppointmentAsync(appointment);
             if (!response.Success)

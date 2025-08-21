@@ -27,7 +27,7 @@ public static class RoomMapper
         };
     }
 
-    public static Room MapToDomain(this RoomForCreationDto dto)
+    public static Room MapToDomain(this RoomCreateDto dto)
     {
         return new Room
         {
@@ -37,7 +37,7 @@ public static class RoomMapper
         };
     }
 
-    public static Room MapToDomain(this RoomForUpdateDto dto)
+    public static Room MapToDomain(this RoomUpdateDto dto)
     {
         return new Room
         {
@@ -48,9 +48,9 @@ public static class RoomMapper
         };
     }
 
-    public static RoomForUpdateDto MapToUpdateDto(this Room room)
+    public static RoomUpdateDto MapToUpdateDto(this Room room)
     {
-        return new RoomForUpdateDto
+        return new RoomUpdateDto
         {
             Id = room.Id,
             Name = room.Name,
@@ -70,9 +70,9 @@ public static class RoomMapper
         };
     }
 
-    public static RoomForUpdateDto MapDtoToUpdateDto(this RoomDto room)
+    public static RoomUpdateDto MapDtoToUpdateDto(this RoomDto room)
     {
-        return new RoomForUpdateDto
+        return new RoomUpdateDto
         {
             Id = room.Id,
             Name = room.Name,
@@ -81,9 +81,9 @@ public static class RoomMapper
         };
     }
 
-    public static RoomForCreationDto MapDtoToCreateDto(this RoomDto room)
+    public static RoomCreateDto MapDtoToCreateDto(this RoomDto room)
     {
-        return new RoomForCreationDto
+        return new RoomCreateDto
         {
             Name = room.Name,
             Number = room.Number,

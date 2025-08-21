@@ -48,7 +48,7 @@ public class AppointmentService : IAppointmentService
         return appointment?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddAppointmentAsync(AppointmentForCreationDto appointmentDto)
+    public async Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateDto appointmentDto)
     {
         var appointment = appointmentDto.MapToDomain();
 
@@ -73,7 +73,7 @@ public class AppointmentService : IAppointmentService
             : ServiceResponse.Failed(Resource.SomethingWentWrong);
     }
 
-    public async Task<ServiceResponse> UpdateAppointmentAsync(int id, AppointmentForUpdateDto appointmentDto)
+    public async Task<ServiceResponse> UpdateAppointmentAsync(int id, AppointmentUpdateDto appointmentDto)
     {
         var appointment = appointmentDto.MapToDomain();
 

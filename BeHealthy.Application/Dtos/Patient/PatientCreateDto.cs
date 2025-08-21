@@ -1,6 +1,6 @@
-﻿namespace BeHealthy.Application.Dtos.Nurse;
+﻿namespace BeHealthy.Application.Dtos.Patient;
 
-public class NurseForCreationDto
+public class PatientCreateDto
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;

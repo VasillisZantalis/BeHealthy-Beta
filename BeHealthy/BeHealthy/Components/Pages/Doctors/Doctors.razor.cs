@@ -84,14 +84,14 @@ public partial class Doctors : BasePage
         _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
-    private async Task BulkCreateDoctors((List<DoctorForCreationDto> doctorForCreationDtos, bool UseValidation) result)
+    private async Task BulkCreateDoctors((List<DoctorCreateDto> DoctorCreateDtos, bool UseValidation) result)
     {
         LoaderService.SetLoader(true);
 
         var useValidation = result.UseValidation;
-        var validator = new DoctorForCreationDtoValidator(false);
+        var validator = new DoctorCreateDtoValidator(false);
 
-        foreach (var doctor in result.doctorForCreationDtos)
+        foreach (var doctor in result.DoctorCreateDtos)
         {
             if (useValidation)
             {

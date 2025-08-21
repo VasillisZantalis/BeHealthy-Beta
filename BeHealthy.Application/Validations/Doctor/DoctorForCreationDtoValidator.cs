@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace BeHealthy.Application.Validations.Doctor;
 
-public class DoctorForCreationDtoValidator : AbstractValidator<DoctorForCreationDto>
+public class DoctorCreateDtoValidator : AbstractValidator<DoctorCreateDto>
 {
-    public DoctorForCreationDtoValidator(bool requiredSpecialty)
+    public DoctorCreateDtoValidator(bool requiredSpecialty)
     {
         RuleFor(x => x.FirstName)
             .NotEmpty()

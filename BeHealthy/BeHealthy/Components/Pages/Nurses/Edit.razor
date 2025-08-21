@@ -9,25 +9,25 @@
 <PageTitle>@Resource.Edit</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="_nurseForUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
+    <EditForm Model="_NurseUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
         <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
-                <img src="@(_nurseForUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+                <img src="@(_NurseUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_nurseForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="_NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => _nurseForUpdateDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => _NurseUpdateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_nurseForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="_NurseUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => _nurseForUpdateDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => _NurseUpdateDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
@@ -35,15 +35,15 @@
             <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="_nurseForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <InputText id="phoneNumber" @bind-Value="_NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => _nurseForUpdateDto.PhoneNumber" class="text-danger" />
+            <ValidationMessage For="() => _NurseUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 
         @if (_departments is not null && _departments.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_nurseForUpdateDto.DepartmentId" class="form-control">
+                <InputSelect id="Department" @bind-Value="_NurseUpdateDto.DepartmentId" class="form-control">
                     @foreach (var department in _departmentsSelect)
                     {
                         <option value="@department.Value">@department.Text</option>
@@ -69,7 +69,7 @@
     public int NurseId { get; set; }
 
     [SupplyParameterFromForm]
-    private NurseForUpdateDto _nurseForUpdateDto { get; set; } = new();
+    private NurseUpdateDto _NurseUpdateDto { get; set; } = new();
 
     private List<DepartmentDto>? _departments { get; set; }
 
@@ -95,7 +95,7 @@
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
-        _nurseForUpdateDto = nurse?.MapToUpdateDto() ?? new();
+        _NurseUpdateDto = nurse?.MapToUpdateDto() ?? new();
     }
 
     private void SetBreadcrumbs()
@@ -115,7 +115,7 @@
         var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
         var buffer = new byte[resizeImage.Size];
         await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _nurseForUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        _NurseUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 
     private async Task UpdateNurse()
@@ -128,7 +128,7 @@
             return;
         }
 
-        var result = await NurseService.UpdateNurseAsync(_nurseForUpdateDto);
+        var result = await NurseService.UpdateNurseAsync(_NurseUpdateDto);
 
         if (!result.Success)
         {

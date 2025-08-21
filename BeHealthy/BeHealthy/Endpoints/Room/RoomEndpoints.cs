@@ -34,7 +34,7 @@ public static class RoomEndpoints
 
         group.MapPost("", async Task<Results<Created, BadRequest, UnprocessableEntity>>
            ([FromServices] IRoomService roomService,
-            RoomForCreationDto roomDto) =>
+            RoomCreateDto roomDto) =>
         {
             if (roomDto is null)
                 return TypedResults.BadRequest();
@@ -42,12 +42,12 @@ public static class RoomEndpoints
             await roomService.AddRoomAsync(roomDto);
 
             return TypedResults.Created();
-        }).AddEndpointFilter<ValidationFilter<RoomForCreationDto>>();
+        }).AddEndpointFilter<ValidationFilter<RoomCreateDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
             ([FromServices] IRoomService roomService,
             int id,
-            RoomForUpdateDto roomDto) =>
+            RoomUpdateDto roomDto) =>
         {
             if (roomDto is null)
                 return TypedResults.BadRequest();

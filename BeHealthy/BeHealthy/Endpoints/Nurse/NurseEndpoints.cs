@@ -34,7 +34,7 @@ public static class NurseEndpoints
 
         group.MapPost("", async Task<Results<Created, BadRequest, UnprocessableEntity>>
            ([FromServices] INurseService nurseService,
-            NurseForCreationDto nurseDto) =>
+            NurseCreateDto nurseDto) =>
         {
             if (nurseDto is null)
                 return TypedResults.BadRequest();
@@ -42,11 +42,11 @@ public static class NurseEndpoints
             await nurseService.AddNurseAsync(nurseDto);
 
             return TypedResults.Created();
-        }).AddEndpointFilter<ValidationFilter<NurseForCreationDto>>();
+        }).AddEndpointFilter<ValidationFilter<NurseCreateDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
           ([FromServices] INurseService nurseService,
-           NurseForUpdateDto nurseDto) =>
+           NurseUpdateDto nurseDto) =>
         {
             if (nurseDto is null)
                 return TypedResults.BadRequest();

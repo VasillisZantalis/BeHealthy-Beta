@@ -29,7 +29,7 @@ public class DepartmentService : IDepartmentService
         return department.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentForCreationDto departmentDto)
+    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateDto departmentDto)
     {
         try
         {
@@ -43,7 +43,7 @@ public class DepartmentService : IDepartmentService
         }
     }
 
-    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentForUpdateDto departmentDto)
+    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateDto departmentDto)
     {
         try
         {

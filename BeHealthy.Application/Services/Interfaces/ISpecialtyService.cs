@@ -6,7 +6,7 @@ public interface ISpecialtyService
 {
     Task<IEnumerable<SpecialtyDto>> GetSpecialtiesAsync();
     Task<SpecialtyDto?> GetSpecialtyByIdAsync(int id);
-    Task AddSpecialtyAsync(SpecialtyForCreationDto specialtyForCreationDto);
-    Task UpdateSpecialtyAsync(int id, SpecialtyForUpdateDto specialtyForUpdateDto);
+    Task AddSpecialtyAsync(SpecialtyCreateDto specialtyForCreationDto);
+    Task UpdateSpecialtyAsync(int id, SpecialtyUpdateDto specialtyForUpdateDto);
     Task DeleteSpecialtyAsync(int id);
 }

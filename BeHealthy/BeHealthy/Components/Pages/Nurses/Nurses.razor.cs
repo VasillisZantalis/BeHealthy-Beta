@@ -83,7 +83,7 @@ public partial class Nurses : BasePage
         _navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/create");
     }
 
-    private async Task BulkCreateNurses((List<NurseForCreationDto> nurseForCreationDtos, bool UseValidation) result)
+    private async Task BulkCreateNurses((List<NurseCreateDto> nurseForCreationDtos, bool UseValidation) result)
     {
         LoaderService.SetLoader(true);
 

@@ -2,9 +2,9 @@
 
 public static class ProfileMapper
 {
-    public static DoctorForUpdateDto MapToDoctorForUpdateDto(this ProfileDto profile)
+    public static DoctorUpdateDto MapToDoctorForUpdateDto(this ProfileDto profile)
     {
-        return new DoctorForUpdateDto
+        return new DoctorUpdateDto
         {
             Id = profile.Id,
             FirstName = profile.FirstName,

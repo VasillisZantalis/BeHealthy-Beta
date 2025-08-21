@@ -34,7 +34,7 @@ public static class PrescriptionEndpoints
 
         group.MapPost("", async Task<Results<Created, BadRequest, UnprocessableEntity>>
            ([FromServices] IPrescriptionService prescriptionService,
-            PrescriptionForCreationDto prescriptionDto) =>
+            PrescriptionCreateDto prescriptionDto) =>
         {
             if (prescriptionDto is null)
                 return TypedResults.BadRequest();
@@ -42,11 +42,11 @@ public static class PrescriptionEndpoints
             await prescriptionService.AddPrescriptionAsync(prescriptionDto);
 
             return TypedResults.Created();
-        }).AddEndpointFilter<ValidationFilter<PrescriptionForCreationDto>>();
+        }).AddEndpointFilter<ValidationFilter<PrescriptionCreateDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
           ([FromServices] IPrescriptionService prescriptionService,
-           PrescriptionForUpdateDto prescriptionDto) =>
+           PrescriptionUpdateDto prescriptionDto) =>
         {
             if (prescriptionDto is null)
                 return TypedResults.BadRequest();

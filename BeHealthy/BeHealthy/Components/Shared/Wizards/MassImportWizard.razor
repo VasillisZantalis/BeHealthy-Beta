@@ -154,14 +154,14 @@
 
     private async Task ConvertToDoctors()
     {
-        var doctors = Rows.Select(row => new DoctorForCreationDto
+        var doctors = Rows.Select(row => new DoctorCreateDto
         {
-            FirstName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.FirstName)) ?? string.Empty,
-            LastName = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.LastName)) ?? string.Empty,
-            Email = row.GetValueOrDefault<string>(nameof(DoctorForCreationDto.Email)) ?? string.Empty,
-            Password = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
-            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
-            DepartmentId = row.GetValueOrDefault<int?>(nameof(DoctorForCreationDto.DepartmentId))
+            FirstName = row.GetValueOrDefault<string>(nameof(DoctorCreateDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(DoctorCreateDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(DoctorCreateDto.Email)) ?? string.Empty,
+            Password = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(DoctorCreateDto.DepartmentId))
         }).ToList();
 
         if (!doctors.Any() || doctors is null) return;
@@ -173,14 +173,14 @@
 
     private async Task ConvertToPatients()
     {
-        var patients = Rows.Select(row => new PatientForCreationDto
+        var patients = Rows.Select(row => new PatientCreateDto
         {
-            FirstName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.FirstName)) ?? string.Empty,
-            LastName = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.LastName)) ?? string.Empty,
-            Email = row.GetValueOrDefault<string>(nameof(PatientForCreationDto.Email)) ?? string.Empty,
-            Password = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
-            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
-            DepartmentId = row.GetValueOrDefault<int?>(nameof(PatientForCreationDto.DepartmentId))
+            FirstName = row.GetValueOrDefault<string>(nameof(PatientCreateDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(PatientCreateDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(PatientCreateDto.Email)) ?? string.Empty,
+            Password = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(PatientCreateDto.DepartmentId))
         }).ToList();
 
         if (!patients.Any() || patients is null) return;
@@ -192,14 +192,14 @@
 
     private async Task ConvertToNurses()
     {
-        var nurses = Rows.Select(row => new NurseForCreationDto
+        var nurses = Rows.Select(row => new NurseCreateDto
         {
-            FirstName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.FirstName)) ?? string.Empty,
-            LastName = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.LastName)) ?? string.Empty,
-            Email = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Email)) ?? string.Empty,
-            Password = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
-            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseForCreationDto.Password)) ?? string.Empty,
-            DepartmentId = row.GetValueOrDefault<int?>(nameof(NurseForCreationDto.DepartmentId))
+            FirstName = row.GetValueOrDefault<string>(nameof(NurseCreateDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(NurseCreateDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Email)) ?? string.Empty,
+            Password = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(NurseCreateDto.DepartmentId))
         }).ToList();
 
         if (!nurses.Any() || nurses is null) return;
@@ -211,16 +211,16 @@
 
     private async Task ConvertToAppointments()
     {
-        var appointments = Rows.Select(row => new AppointmentForCreationDto
+        var appointments = Rows.Select(row => new AppointmentCreateDto
         {
-            AppointmentDate = row.GetValueOrDefault<DateOnly>(nameof(AppointmentForCreationDto.AppointmentDate)),
-            Notes = row.GetValueOrDefault<string>(nameof(AppointmentForCreationDto.Notes)) ?? string.Empty,
-            PatientId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.PatientId)),
-            DoctorId = row.GetValueOrDefault<int>(nameof(AppointmentForCreationDto.DoctorId)),
-            RoomId = row.GetValueOrDefault<int?>(nameof(AppointmentForCreationDto.RoomId)),
-            AppointmentStartTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentStartTime)),
-            AppointmentEndTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentForCreationDto.AppointmentEndTime)),
-            Reason = row.GetValueOrDefault<AppointmentReason>(nameof(AppointmentForCreationDto.Reason)),
+            AppointmentDate = row.GetValueOrDefault<DateOnly>(nameof(AppointmentCreateDto.AppointmentDate)),
+            Notes = row.GetValueOrDefault<string>(nameof(AppointmentCreateDto.Notes)) ?? string.Empty,
+            PatientId = row.GetValueOrDefault<int>(nameof(AppointmentCreateDto.PatientId)),
+            DoctorId = row.GetValueOrDefault<int>(nameof(AppointmentCreateDto.DoctorId)),
+            RoomId = row.GetValueOrDefault<int?>(nameof(AppointmentCreateDto.RoomId)),
+            AppointmentStartTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentCreateDto.AppointmentStartTime)),
+            AppointmentEndTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentCreateDto.AppointmentEndTime)),
+            Reason = row.GetValueOrDefault<AppointmentReason>(nameof(AppointmentCreateDto.Reason)),
         }).ToList();
 
         if (!appointments.Any() || appointments is null) return;

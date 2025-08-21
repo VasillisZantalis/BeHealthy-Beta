@@ -12,7 +12,7 @@ public interface IAppointmentService
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByUserIdAsync(string userId);
     Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts();
     Task<AppointmentDto?> GetAppointmentByIdAsync(int id);
-    Task<ServiceResponse> AddAppointmentAsync(AppointmentForCreationDto appointment);
-    Task<ServiceResponse> UpdateAppointmentAsync(int id, AppointmentForUpdateDto appointment);
+    Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateDto appointment);
+    Task<ServiceResponse> UpdateAppointmentAsync(int id, AppointmentUpdateDto appointment);
     Task DeleteAppointmentAsync(int id);
 }

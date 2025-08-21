@@ -114,8 +114,8 @@
             }
             else 
             {
-                var roomForCreation = _roomDto.MapDtoToCreateDto();
-                await RoomService.AddRoomAsync(roomForCreation);
+                var roomForCreate = _roomDto.MapDtoToCreateDto();
+                await RoomService.AddRoomAsync(roomForCreate);
             }
             NavigationManager.Refresh(true);
         }

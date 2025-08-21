@@ -35,7 +35,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Nurse MapToDomain(this NurseForCreationDto dto)
+        public static Nurse MapToDomain(this NurseCreateDto dto)
         {
             return new Nurse
             {
@@ -47,7 +47,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Nurse MapToDomain(this NurseForUpdateDto dto)
+        public static Nurse MapToDomain(this NurseUpdateDto dto)
         {
             return new Nurse
             {
@@ -60,9 +60,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static NurseForUpdateDto MapToUpdateDto(this NurseDto dto)
+        public static NurseUpdateDto MapToUpdateDto(this NurseDto dto)
         {
-            return new NurseForUpdateDto
+            return new NurseUpdateDto
             {
                 Id = dto.Id,
                 FirstName = dto.FirstName,

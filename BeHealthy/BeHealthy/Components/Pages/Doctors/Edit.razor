@@ -12,26 +12,26 @@
 <PageTitle>@Resource.Edit</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="_doctorForUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
+    <EditForm Model="_DoctorUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
         <ValidationComponent @ref="_validationComponent"/>
 
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
-                <img src="@(_doctorForUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+                <img src="@(_DoctorUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_doctorForUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="_DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => _doctorForUpdateDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => _DoctorUpdateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_doctorForUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="_DoctorUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => _doctorForUpdateDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => _DoctorUpdateDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
@@ -39,15 +39,15 @@
             <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="_doctorForUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <InputText id="phoneNumber" @bind-Value="_DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => _doctorForUpdateDto.PhoneNumber" class="text-danger" />
+            <ValidationMessage For="() => _DoctorUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 
         @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="department" @bind-Value="_doctorForUpdateDto.DepartmentId" class="form-control">
+                <InputSelect id="department" @bind-Value="_DoctorUpdateDto.DepartmentId" class="form-control">
                     @foreach (var department in _departmentsSelect!)
                     {
                         <option value="@department.Value">@department.Text</option>
@@ -60,14 +60,14 @@
         @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="specialty" @bind-Value="_doctorForUpdateDto.SpecialtyId" class="form-control">
+                <InputSelect id="specialty" @bind-Value="_DoctorUpdateDto.SpecialtyId" class="form-control">
                     @foreach (var specialty in _specialtiesSelect)
                     {
                         <option value="@specialty.Value">@specialty.Text</option>
                     }
                 </InputSelect>
                 <label for="specialty" class="@(_doNotAllowDoctorWithoutSpecialty ? "required" : "")">@Resource.Specialty</label>
-                <ValidationMessage For="() => _doctorForUpdateDto.SpecialtyId" class="text-danger" />
+                <ValidationMessage For="() => _DoctorUpdateDto.SpecialtyId" class="text-danger" />
             </div>
         }
 
@@ -87,7 +87,7 @@
     public int DoctorId { get; set; }
 
     [SupplyParameterFromForm]
-    private DoctorForUpdateDto _doctorForUpdateDto { get; set; } = new();
+    private DoctorUpdateDto _DoctorUpdateDto { get; set; } = new();
 
     private bool _inProgress = false;
     private bool _doNotAllowDoctorWithoutSpecialty = false;
@@ -130,7 +130,7 @@
         }).ToList();
         _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
-        _doctorForUpdateDto = doctor?.MapToUpdateDto() ?? new();
+        _DoctorUpdateDto = doctor?.MapToUpdateDto() ?? new();
     }
 
     private void SetBreadcrumbs()
@@ -157,7 +157,7 @@
         var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
         var buffer = new byte[resizeImage.Size];
         await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _doctorForUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        _DoctorUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 
     private async Task UpdateDoctor()
@@ -167,7 +167,7 @@
         _validationComponent?.ClearErrors();
 
         var validator = new DoctorForUpdateDtoValidator(_doNotAllowDoctorWithoutSpecialty);
-        var validationResult = await validator.ValidateAsync(_doctorForUpdateDto);
+        var validationResult = await validator.ValidateAsync(_DoctorUpdateDto);
 
         if (!validationResult.IsValid)
         {
@@ -177,7 +177,7 @@
             return;
         }
 
-        var result = await DoctorService.UpdateDoctorAsync(_doctorForUpdateDto);
+        var result = await DoctorService.UpdateDoctorAsync(_DoctorUpdateDto);
         if (!result.Success)
         {
             _inProgress = false;

@@ -34,7 +34,7 @@ public static class DepartmentMapper
         };
     }
 
-    public static Department MapToDomain(this DepartmentForCreationDto dto)
+    public static Department MapToDomain(this DepartmentCreateDto dto)
     {
         return new Department
         {
@@ -45,7 +45,7 @@ public static class DepartmentMapper
         };
     }
 
-    public static Department MapToDomain(this DepartmentForUpdateDto dto)
+    public static Department MapToDomain(this DepartmentUpdateDto dto)
     {
         return new Department
         {
@@ -56,7 +56,7 @@ public static class DepartmentMapper
         };
     }
 
-    public static DepartmentForCreationDto MapToCreationDto(this DepartmentDto department) => new DepartmentForCreationDto
+    public static DepartmentCreateDto MapToCreationDto(this DepartmentDto department) => new DepartmentCreateDto
         {
             Name = department.Name,
             Location = department.Location,
@@ -67,7 +67,7 @@ public static class DepartmentMapper
             Rooms = department.Rooms
         };
 
-    public static DepartmentForUpdateDto MapToUpdateDto(this DepartmentDto department) => new DepartmentForUpdateDto
+    public static DepartmentUpdateDto MapToUpdateDto(this DepartmentDto department) => new DepartmentUpdateDto
         {
             Id = department.Id,
             Name = department.Name,

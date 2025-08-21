@@ -26,7 +26,7 @@ public class NurseService : INurseService
         return nurse?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddNurseAsync(NurseForCreationDto nurseDto)
+    public async Task<ServiceResponse> AddNurseAsync(NurseCreateDto nurseDto)
     {
         var user = new ApplicationUser
         {
@@ -60,7 +60,7 @@ public class NurseService : INurseService
         }
     }
 
-    public async Task<ServiceResponse> UpdateNurseAsync(NurseForUpdateDto nurseDto)
+    public async Task<ServiceResponse> UpdateNurseAsync(NurseUpdateDto nurseDto)
     {
         var existingUser = await _userService.GetUserByIdAsync(nurseDto.UserId);
         if (existingUser == null)

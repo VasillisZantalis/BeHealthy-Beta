@@ -26,13 +26,13 @@ public class RoomService : IRoomService
         return room?.MapToDto();
     }
 
-    public async Task AddRoomAsync(RoomForCreationDto roomDto)
+    public async Task AddRoomAsync(RoomCreateDto roomDto)
     {
         var room = roomDto.MapToDomain();
         await _unitOfWork.RoomRepository.AddAsync(room);
     }
 
-    public async Task UpdateRoomAsync(int id, RoomForUpdateDto roomDto)
+    public async Task UpdateRoomAsync(int id, RoomUpdateDto roomDto)
     {
         var room = roomDto.MapToDomain();
         await _unitOfWork.RoomRepository.UpdateAsync(room);

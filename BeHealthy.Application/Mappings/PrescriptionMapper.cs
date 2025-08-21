@@ -35,7 +35,7 @@ public static class PrescriptionMapper
         };
     }
 
-    public static Prescription MapToDomain(this PrescriptionForCreationDto dto)
+    public static Prescription MapToDomain(this PrescriptionCreateDto dto)
     {
         return new Prescription
         {
@@ -47,7 +47,7 @@ public static class PrescriptionMapper
         };
     }
 
-    public static Prescription MapToDomain(this PrescriptionForUpdateDto dto)
+    public static Prescription MapToDomain(this PrescriptionUpdateDto dto)
     {
         return new Prescription
         {
@@ -57,9 +57,9 @@ public static class PrescriptionMapper
         };
     }
 
-    public static PrescriptionForUpdateDto MapToUpdateDto(this Prescription prescription)
+    public static PrescriptionUpdateDto MapToUpdateDto(this Prescription prescription)
     {
-        return new PrescriptionForUpdateDto
+        return new PrescriptionUpdateDto
         {
             Id = prescription.Id,
             Medication = prescription.Medication,
@@ -67,9 +67,9 @@ public static class PrescriptionMapper
         };
     }
 
-    public static PrescriptionForCreationDto MapDtoToCreateDto(this PrescriptionDto prescription)
+    public static PrescriptionCreateDto MapDtoToCreateDto(this PrescriptionDto prescription)
     {
-        return new PrescriptionForCreationDto
+        return new PrescriptionCreateDto
         {
             Medication = prescription.Medication,
             Dosage = prescription.Dosage,
@@ -79,9 +79,9 @@ public static class PrescriptionMapper
         };
     }
 
-    public static PrescriptionForUpdateDto MapDtoToUpdateDto(this PrescriptionDto prescription)
+    public static PrescriptionUpdateDto MapDtoToUpdateDto(this PrescriptionDto prescription)
     {
-        return new PrescriptionForUpdateDto
+        return new PrescriptionUpdateDto
         {
             Id = prescription.Id,
             Medication = prescription.Medication,

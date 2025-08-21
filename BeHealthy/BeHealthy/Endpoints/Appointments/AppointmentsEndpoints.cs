@@ -35,7 +35,7 @@ public static class AppointmentsEndpoints
 
         group.MapPost("", async Task<Results<Created, BadRequest, UnprocessableEntity>>
            ([FromServices] IAppointmentService appointmentService,
-            AppointmentForCreationDto appointmentDto) =>
+            AppointmentCreateDto appointmentDto) =>
         {
             if (appointmentDto is null)
                 return TypedResults.BadRequest();
@@ -43,12 +43,12 @@ public static class AppointmentsEndpoints
             await appointmentService.AddAppointmentAsync(appointmentDto);
 
             return TypedResults.Created();
-        }).AddEndpointFilter<ValidationFilter<AppointmentForCreationDto>>();
+        }).AddEndpointFilter<ValidationFilter<AppointmentCreateDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
             ([FromServices] IAppointmentService appointmentService,
             int id,
-            AppointmentForUpdateDto appointmentDto) =>
+            AppointmentUpdateDto appointmentDto) =>
         {
             if (appointmentDto is null)
                 return TypedResults.BadRequest();

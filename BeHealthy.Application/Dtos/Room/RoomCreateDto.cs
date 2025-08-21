@@ -2,7 +2,7 @@
 
 namespace BeHealthy.Application.Dtos.Room;
 
-public class RoomForCreationDto
+public class RoomCreateDto
 {
     public required string Name { get; set; }
     public int Number { get; set; }

@@ -26,13 +26,13 @@ public class SpecialtyService : ISpecialtyService
         return specialty?.MapToDto();
     }
 
-    public async Task AddSpecialtyAsync(SpecialtyForCreationDto specialtyForCreationDto)
+    public async Task AddSpecialtyAsync(SpecialtyCreateDto specialtyForCreationDto)
     {
         var specialty = specialtyForCreationDto.MapToDomain();
         await _unitOfWork.SpecialtyRepository.AddAsync(specialty);
     }
 
-    public async Task UpdateSpecialtyAsync(int id, SpecialtyForUpdateDto specialtyForUpdateDto)
+    public async Task UpdateSpecialtyAsync(int id, SpecialtyUpdateDto specialtyForUpdateDto)
     {
         var specialty = specialtyForUpdateDto.MapToDomain();
 

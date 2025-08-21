@@ -46,7 +46,7 @@ public static class PatientEndpoints
 
         group.MapPost("", async Task<Results<Created, BadRequest, UnprocessableEntity>>
            ([FromServices] IPatientService patientService,
-            PatientForCreationDto patientDto) =>
+            PatientCreateDto patientDto) =>
         {
             if (patientDto is null)
                 return TypedResults.BadRequest();
@@ -54,12 +54,12 @@ public static class PatientEndpoints
             await patientService.AddPatientAsync(patientDto);
 
             return TypedResults.Created();
-        }).AddEndpointFilter<ValidationFilter<PatientForCreationDto>>();
+        }).AddEndpointFilter<ValidationFilter<PatientCreateDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
             ([FromServices] IPatientService patientService,
             int id,
-            PatientForUpdateDto patientDto) =>
+            PatientUpdateDto patientDto) =>
         {
             if (patientDto is null)
                 return TypedResults.BadRequest();

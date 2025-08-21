@@ -45,7 +45,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Appointment MapToDomain(this AppointmentForCreationDto dto)
+        public static Appointment MapToDomain(this AppointmentCreateDto dto)
         {
             return new Appointment
             {
@@ -62,7 +62,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Appointment MapToDomain(this AppointmentForUpdateDto dto)
+        public static Appointment MapToDomain(this AppointmentUpdateDto dto)
         {
             return new Appointment
             {
@@ -80,9 +80,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static AppointmentForCreationDto MapToCreationDto(this AppointmentDto dto)
+        public static AppointmentCreateDto MapToCreationDto(this AppointmentDto dto)
         {
-            return new AppointmentForCreationDto
+            return new AppointmentCreateDto
             {
                 DoctorId = dto.DoctorId,
                 PatientId = dto.PatientId,
@@ -97,9 +97,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static AppointmentForUpdateDto MapToUpdateDto(this AppointmentDto dto)
+        public static AppointmentUpdateDto MapToUpdateDto(this AppointmentDto dto)
         {
-            return new AppointmentForUpdateDto
+            return new AppointmentUpdateDto
             {
                 Id = dto.Id,
                 DoctorId = dto.DoctorId,

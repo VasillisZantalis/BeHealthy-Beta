@@ -38,7 +38,7 @@ public static class DoctorMapper
         };
     }
 
-    public static Doctor MapToDomain(this DoctorForCreationDto dto)
+    public static Doctor MapToDomain(this DoctorCreateDto dto)
     {
         return new Doctor
         {
@@ -51,7 +51,7 @@ public static class DoctorMapper
         };
     }
 
-    public static Doctor MapToDomain(this DoctorForUpdateDto dto)
+    public static Doctor MapToDomain(this DoctorUpdateDto dto)
     {
         return new Doctor
         {
@@ -76,9 +76,9 @@ public static class DoctorMapper
         };
     }
 
-    public static DoctorForUpdateDto MapToUpdateDto(this DoctorDto dto)
+    public static DoctorUpdateDto MapToUpdateDto(this DoctorDto dto)
     {
-        return new DoctorForUpdateDto
+        return new DoctorUpdateDto
         {
             Id = dto.Id,
             FirstName = dto.FirstName,
@@ -91,7 +91,7 @@ public static class DoctorMapper
         };
     }
 
-    public static DoctorDto MapToDto(this DoctorForUpdateDto dto)
+    public static DoctorDto MapToDto(this DoctorUpdateDto dto)
     {
         return new DoctorDto
         {

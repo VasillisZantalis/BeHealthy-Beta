@@ -24,7 +24,7 @@
 
 @if (showWizard)
 {
-    <MassImportWizard TEntity="NurseForCreationDto"
+    <MassImportWizard TEntity="NurseCreateDto"
                       OnSave="BulkCreateNurses"
                       Entity="@(ImportEntity.Nurse)"
                       OnClose="HideImportWizard" />

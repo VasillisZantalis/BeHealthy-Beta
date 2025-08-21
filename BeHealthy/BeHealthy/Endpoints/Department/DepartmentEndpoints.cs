@@ -34,7 +34,7 @@ public static class DepartmentEndpoints
 
         group.MapPost("", async Task<Results<Created, BadRequest, UnprocessableEntity>>
            ([FromServices] IDepartmentService departmentService,
-            DepartmentForCreationDto departmentDto) =>
+            DepartmentCreateDto departmentDto) =>
         {
             if (departmentDto is null)
                 return TypedResults.BadRequest();
@@ -42,11 +42,11 @@ public static class DepartmentEndpoints
             await departmentService.AddDepartmentAsync(departmentDto);
 
             return TypedResults.Created();
-        }).AddEndpointFilter<ValidationFilter<DepartmentForCreationDto>>();
+        }).AddEndpointFilter<ValidationFilter<DepartmentCreateDto>>();
 
         group.MapPut("{id:int}", async Task<Results<NoContent, BadRequest, UnprocessableEntity>>
           ([FromServices] IDepartmentService departmentService,
-           DepartmentForUpdateDto departmentDto) =>
+           DepartmentUpdateDto departmentDto) =>
         {
             if (departmentDto is null)
                 return TypedResults.BadRequest();

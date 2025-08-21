@@ -27,7 +27,7 @@ public class DoctorService : IDoctorService
         return doctor?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddDoctorAsync(DoctorForCreationDto doctorDto)
+    public async Task<ServiceResponse> AddDoctorAsync(DoctorCreateDto doctorDto)
     {
         var user = new ApplicationUser
         {
@@ -61,7 +61,7 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorForUpdateDto doctorDto)
+    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorUpdateDto doctorDto)
     {
         var existingUser = await _userService.GetUserByIdAsync(doctorDto.UserId);
         if (existingUser == null)

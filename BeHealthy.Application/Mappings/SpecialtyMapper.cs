@@ -23,7 +23,7 @@ public static class SpecialtyMapper
         };
     }
 
-    public static Specialty MapToDomain(this SpecialtyForCreationDto specialtyForCreationDto)
+    public static Specialty MapToDomain(this SpecialtyCreateDto specialtyForCreationDto)
     {
         return new Specialty
         {
@@ -31,7 +31,7 @@ public static class SpecialtyMapper
         };
     }
 
-    public static Specialty MapToDomain(this SpecialtyForUpdateDto specialtyForUpdateDto)
+    public static Specialty MapToDomain(this SpecialtyUpdateDto specialtyForUpdateDto)
     {
         return new Specialty
         {

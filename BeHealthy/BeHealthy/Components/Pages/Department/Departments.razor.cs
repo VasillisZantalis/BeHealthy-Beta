@@ -45,7 +45,7 @@ public partial class Departments : BasePage
 
     public void EditDepartment(int departmentId)
     {
-        _navigationManager.NavigateTo($"/departments/edit/{departmentId}");
+        _navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/edit/{departmentId}");
     }
 
     private void ConfirmDelete(int departmentId)
@@ -59,6 +59,6 @@ public partial class Departments : BasePage
 
     private void Create()
     {
-        _navigationManager.NavigateTo("/departments/create");
+        _navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/create");
     }
 }

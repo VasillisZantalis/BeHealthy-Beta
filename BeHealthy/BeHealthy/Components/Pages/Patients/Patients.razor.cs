@@ -114,7 +114,7 @@ public partial class Patients : BasePage
         _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
     }
 
-    private async Task BulkCreatePatients((List<PatientForCreationDto> patientForCreationDtos, bool UseValidation) result)
+    private async Task BulkCreatePatients((List<PatientCreateDto> patientForCreationDtos, bool UseValidation) result)
     {
         LoaderService.SetLoader(true);
 

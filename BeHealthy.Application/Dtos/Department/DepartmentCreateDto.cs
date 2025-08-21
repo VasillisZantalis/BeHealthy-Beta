@@ -5,7 +5,7 @@ using BeHealthy.Application.Dtos.Room;
 
 namespace BeHealthy.Application.Dtos.Department;
 
-public class DepartmentForCreationDto
+public class DepartmentCreateDto
 {
     public string Name { get; set; } = string.Empty;
     public string Location { get; set; } = string.Empty;

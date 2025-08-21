@@ -28,7 +28,7 @@ public class PrescriptionService : IPrescriptionService
         return prescription?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionForCreationDto prescriptionDto)
+    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateDto prescriptionDto)
     {
         try
         {
@@ -44,7 +44,7 @@ public class PrescriptionService : IPrescriptionService
         
     }
 
-    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionForUpdateDto prescriptionDto)
+    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateDto prescriptionDto)
     {
         try
         {

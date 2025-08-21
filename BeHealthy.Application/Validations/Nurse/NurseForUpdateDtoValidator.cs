@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BeHealthy.Application.Validations.Nurse;
 
-public class NurseForUpdateDtoValidator : AbstractValidator<NurseForUpdateDto>
+public class NurseForUpdateDtoValidator : AbstractValidator<NurseUpdateDto>
 {
     public NurseForUpdateDtoValidator()
     {

@@ -26,13 +26,13 @@ public class MedicalRecordService : IMedicalRecordService
         return medicalRecord?.MapToDto();
     }
 
-    public async Task AddMedicalRecordAsync(MedicalRecordForCreationDto medicalRecordDto)
+    public async Task AddMedicalRecordAsync(MedicalRecordCreateDto medicalRecordDto)
     {
         var medicalRecord = medicalRecordDto.MapToDomain();
         await _unitOfWork.MedicalRecordRepository.AddAsync(medicalRecord);
     }
 
-    public async Task UpdateMedicalRecordAsync(MedicalRecordForUpdateDto medicalRecordDto)
+    public async Task UpdateMedicalRecordAsync(MedicalRecordUpdateDto medicalRecordDto)
     {
         var medicalRecord = medicalRecordDto.MapToDomain();
         await _unitOfWork.MedicalRecordRepository.UpdateAsync(medicalRecord);

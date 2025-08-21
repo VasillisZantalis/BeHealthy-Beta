@@ -71,7 +71,7 @@
         {
             if (SpecialtyId.HasValue)
             {
-                var specialtyForUpdateDto = new SpecialtyForUpdateDto
+                var specialtyForUpdateDto = new SpecialtyUpdateDto
                 {
                     Id = SpecialtyId.Value,
                     Name = _specialtyDto.Name
@@ -80,7 +80,7 @@
             }
             else
             {
-                var specialtyForCreationDto = new SpecialtyForCreationDto
+                var specialtyForCreationDto = new SpecialtyCreateDto
                 {
                     Name = _specialtyDto.Name
                 };

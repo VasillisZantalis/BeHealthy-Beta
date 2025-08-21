@@ -163,9 +163,9 @@
         _inProgress = false;
     }
 
-    private DoctorForCreationDto ToDoctor()
+    private DoctorCreateDto ToDoctor()
     {
-        return new DoctorForCreationDto
+        return new DoctorCreateDto
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
@@ -177,9 +177,9 @@
         };
     }
 
-    private NurseForCreationDto ToNurse()
+    private NurseCreateDto ToNurse()
     {
-        return new NurseForCreationDto
+        return new NurseCreateDto
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
@@ -202,9 +202,9 @@
         };
     }
 
-    private PatientForCreationDto ToPatient()
+    private PatientCreateDto ToPatient()
     {
-        return new PatientForCreationDto
+        return new PatientCreateDto
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,

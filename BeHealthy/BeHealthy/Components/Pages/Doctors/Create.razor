@@ -14,26 +14,26 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="_doctorForCreationDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
+    <EditForm Model="_DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
         <ValidationComponent @ref="_validationComponent"/>
 
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
-                <img src="@(_doctorForCreationDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+                <img src="@(_DoctorCreateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_doctorForCreationDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="_DoctorCreateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => _doctorForCreationDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => _DoctorCreateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_doctorForCreationDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="_DoctorCreateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => _doctorForCreationDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => _DoctorCreateDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
@@ -41,30 +41,30 @@
             <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
-            <InputText @bind-Value="_doctorForCreationDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
+            <InputText @bind-Value="_DoctorCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
             <label for="email">@Resource.Email</label>
-            <ValidationMessage For="() => _doctorForCreationDto.Email" class="text-danger" />
+            <ValidationMessage For="() => _DoctorCreateDto.Email" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="_doctorForCreationDto.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
+            <InputText type="password" @bind-Value="_DoctorCreateDto.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
             <label for="password">@Resource.Password</label>
-            <ValidationMessage For="() => _doctorForCreationDto.Password" class="text-danger" />
+            <ValidationMessage For="() => _DoctorCreateDto.Password" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="_doctorForCreationDto.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
+            <InputText type="password" @bind-Value="_DoctorCreateDto.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
             <label for="confirmPassword">@Resource.ConfirmPassword</label>
-            <ValidationMessage For="() => _doctorForCreationDto.ConfirmPassword" class="text-danger" />
+            <ValidationMessage For="() => _DoctorCreateDto.ConfirmPassword" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="_doctorForCreationDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <InputText id="phoneNumber" @bind-Value="_DoctorCreateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => _doctorForCreationDto.PhoneNumber" class="text-danger" />
+            <ValidationMessage For="() => _DoctorCreateDto.PhoneNumber" class="text-danger" />
         </div>
 
         @if (_departmentsSelect is not null && _departmentsSelect.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_doctorForCreationDto.DepartmentId" class="form-control">
+                <InputSelect id="Department" @bind-Value="_DoctorCreateDto.DepartmentId" class="form-control">
                     @foreach (var department in _departmentsSelect)
                     {
                         <option value="@department.Value">@department.Text</option>
@@ -77,14 +77,14 @@
         @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="specialty" @bind-Value="_doctorForCreationDto.SpecialtyId" class="form-control">
+                <InputSelect id="specialty" @bind-Value="_DoctorCreateDto.SpecialtyId" class="form-control">
                     @foreach (var specialty in _specialtiesSelect)
                     {
                         <option value="@specialty.Value">@specialty.Text</option>
                     }
                 </InputSelect>
                 <label for="specialty" class="@(_doNotAllowDoctorWithoutSpecialty ? "required" : "")">@Resource.Specialty</label>
-                <ValidationMessage For="() => _doctorForCreationDto.SpecialtyId" class="text-danger" />
+                <ValidationMessage For="() => _DoctorCreateDto.SpecialtyId" class="text-danger" />
             </div>
         }
 
@@ -101,7 +101,7 @@
 @code {
 
     [SupplyParameterFromForm]
-    private DoctorForCreationDto _doctorForCreationDto { get; set; } = new();
+    private DoctorCreateDto _DoctorCreateDto { get; set; } = new();
 
     private ValidationComponent? _validationComponent;
 
@@ -160,8 +160,8 @@
 
         _validationComponent?.ClearErrors();
 
-        var validator = new DoctorForCreationDtoValidator(_doNotAllowDoctorWithoutSpecialty);
-        var validationResult = await validator.ValidateAsync(_doctorForCreationDto);
+        var validator = new DoctorCreateDtoValidator(_doNotAllowDoctorWithoutSpecialty);
+        var validationResult = await validator.ValidateAsync(_DoctorCreateDto);
 
         if (!validationResult.IsValid)
         {
@@ -171,7 +171,7 @@
             return;
         }
 
-        var doctorCreationResult = await DoctorService.AddDoctorAsync(_doctorForCreationDto);
+        var doctorCreationResult = await DoctorService.AddDoctorAsync(_DoctorCreateDto);
 
         if (!doctorCreationResult.Success)
         {
@@ -201,6 +201,6 @@
         var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
         var buffer = new byte[resizeImage.Size];
         await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _doctorForCreationDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        _DoctorCreateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 }

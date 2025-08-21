@@ -1,6 +1,6 @@
 ﻿namespace BeHealthy.Application.Dtos.MedicalRecord;
 
-public class MedicalRecordForCreationDto
+public class MedicalRecordCreateDto
 {
     public int PatientId { get; set; }
 

@@ -11,25 +11,25 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="_patientForCreation" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
+    <EditForm Model="_PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
         <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />
             <div class="text-center mb-3">
-                <img src="@(_patientForCreation.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+                <img src="@(_PatientCreateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_patientForCreation.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="_PatientCreateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => _patientForCreation.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => _PatientCreateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_patientForCreation.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="_PatientCreateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => _patientForCreation.LastName" class="text-danger" />
+                    <ValidationMessage For="() => _PatientCreateDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
@@ -37,30 +37,30 @@
             <InputFile class="form-control" OnChange="OnFileChange" />
         </div>
         <div class="form-floating mb-3">
-            <InputText @bind-Value="_patientForCreation.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
+            <InputText @bind-Value="_PatientCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
             <label for="email">@Resource.Email</label>
-            <ValidationMessage For="() => _patientForCreation.Email" class="text-danger" />
+            <ValidationMessage For="() => _PatientCreateDto.Email" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="_patientForCreation.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
+            <InputText type="password" @bind-Value="_PatientCreateDto.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
             <label for="password">@Resource.Password</label>
-            <ValidationMessage For="() => _patientForCreation.Password" class="text-danger" />
+            <ValidationMessage For="() => _PatientCreateDto.Password" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="_patientForCreation.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
+            <InputText type="password" @bind-Value="_PatientCreateDto.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
             <label for="confirmPassword">@Resource.ConfirmPassword</label>
-            <ValidationMessage For="() => _patientForCreation.ConfirmPassword" class="text-danger" />
+            <ValidationMessage For="() => _PatientCreateDto.ConfirmPassword" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="_patientForCreation.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <InputText id="phoneNumber" @bind-Value="_PatientCreateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => _patientForCreation.PhoneNumber" class="text-danger" />
+            <ValidationMessage For="() => _PatientCreateDto.PhoneNumber" class="text-danger" />
         </div>
 
         @if (_departments is not null && _departments.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_patientForCreation.DepartmentId" class="form-control">
+                <InputSelect id="Department" @bind-Value="_PatientCreateDto.DepartmentId" class="form-control">
                     @foreach (var department in _departmentsSelect)
                     {
                         <option value="@department.Value">@department.Text</option>
@@ -83,7 +83,7 @@
 @code {
 
     [SupplyParameterFromForm]
-    private PatientForCreationDto _patientForCreation { get; set; } = new();
+    private PatientCreateDto _PatientCreateDto { get; set; } = new();
     private bool _inProgress = false;
     private List<DepartmentDto>? _departments { get; set; }
 
@@ -125,7 +125,7 @@
             return;
         }
 
-        var patientCreationResult = await PatientService.AddPatientAsync(_patientForCreation);
+        var patientCreationResult = await PatientService.AddPatientAsync(_PatientCreateDto);
 
         if (!patientCreationResult.Success)
         {
@@ -155,6 +155,6 @@
         var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
         var buffer = new byte[resizeImage.Size];
         await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _patientForCreation.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        _PatientCreateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 }

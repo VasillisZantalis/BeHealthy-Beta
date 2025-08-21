@@ -6,7 +6,7 @@ public interface IMedicalRecordService
 {
     Task<IEnumerable<MedicalRecordDto>> GetAllMedicalRecordsAsync();
     Task<MedicalRecordDto?> GetMedicalRecordByIdAsync(int id);
-    Task AddMedicalRecordAsync(MedicalRecordForCreationDto medicalRecordDto);
-    Task UpdateMedicalRecordAsync(MedicalRecordForUpdateDto medicalRecordDto);
+    Task AddMedicalRecordAsync(MedicalRecordCreateDto medicalRecordDto);
+    Task UpdateMedicalRecordAsync(MedicalRecordUpdateDto medicalRecordDto);
     Task DeleteMedicalRecordAsync(int id);
 }

@@ -111,8 +111,7 @@ public partial class AppointmentModal : BasePage
         var nurseSetting = settings.FirstOrDefault(s => s.Key == "NurseIsRequiredForAppointment");
         var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "AppointmentRequiresRoom");
 
-        //_showNurses = nurseSetting?.GetBooleanValue() ?? false;
-        _showNurses = true;
+        _showNurses = nurseSetting?.GetBooleanValue() ?? false;
         _showRooms = requireRoomSetting?.GetBooleanValue() ?? false;
     }
 

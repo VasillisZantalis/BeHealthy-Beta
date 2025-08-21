@@ -35,7 +35,7 @@ public static class PatientMapper
         };
     }
 
-    public static Patient MapToDomain(this PatientForCreationDto dto)
+    public static Patient MapToDomain(this PatientCreateDto dto)
     {
         return new Patient
         {
@@ -47,7 +47,7 @@ public static class PatientMapper
         };
     }
 
-    public static Patient MapToDomain(this PatientForUpdateDto dto)
+    public static Patient MapToDomain(this PatientUpdateDto dto)
     {
         return new Patient
         {
@@ -60,9 +60,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientForUpdateDto MapToUpdateDto(this Patient patient)
+    public static PatientUpdateDto MapToUpdateDto(this Patient patient)
     {
-        return new PatientForUpdateDto
+        return new PatientUpdateDto
         {
             Id = patient.Id,
             FirstName = patient.FirstName,
@@ -74,9 +74,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientForUpdateDto MapToUpdateDto(this PatientDto dto)
+    public static PatientUpdateDto MapToUpdateDto(this PatientDto dto)
     {
-        return new PatientForUpdateDto
+        return new PatientUpdateDto
         {
             Id = dto.Id,
             FirstName = dto.FirstName,
@@ -88,9 +88,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientForUpdateDto MapToDtoForUpdate(this PatientDto dto)
+    public static PatientUpdateDto MapToDtoForUpdate(this PatientDto dto)
     {
-        return new PatientForUpdateDto
+        return new PatientUpdateDto
         {
             Id = dto.Id,
             FirstName = dto.FirstName,
@@ -102,7 +102,7 @@ public static class PatientMapper
         };
     }
 
-    public static PatientDto MapToDto(this PatientForUpdateDto dto)
+    public static PatientDto MapToDto(this PatientUpdateDto dto)
     {
         return new PatientDto
         {

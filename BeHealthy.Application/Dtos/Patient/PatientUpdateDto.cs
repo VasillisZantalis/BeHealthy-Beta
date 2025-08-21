@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BeHealthy.Application.Dtos.Patient;
 
-public class PatientForUpdateDto
+public class PatientUpdateDto
 {
     public int Id { get; set; }
     [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]

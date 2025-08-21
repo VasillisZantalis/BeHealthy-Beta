@@ -5,7 +5,7 @@ using BeHealthy.Application.Dtos.Room;
 
 namespace BeHealthy.Application.Dtos.Department;
 
-public class DepartmentForUpdateDto
+public class DepartmentUpdateDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

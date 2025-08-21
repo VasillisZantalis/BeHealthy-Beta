@@ -14,7 +14,7 @@
 
 @if (showWizard)
 {
-    <MassImportWizard TEntity="AppointmentForCreationDto"
+    <MassImportWizard TEntity="AppointmentCreateDto"
                       OnSave="BulkCreateAppointments"
                       Entity="@(ImportEntity.Appointment)"
                       OnClose="HideImportWizard" />

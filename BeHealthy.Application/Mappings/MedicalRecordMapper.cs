@@ -27,7 +27,7 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static MedicalRecord MapToDomain(this MedicalRecordForCreationDto dto)
+    public static MedicalRecord MapToDomain(this MedicalRecordCreateDto dto)
     {
         return new MedicalRecord
         {
@@ -37,7 +37,7 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static MedicalRecord MapToDomain(this MedicalRecordForUpdateDto dto)
+    public static MedicalRecord MapToDomain(this MedicalRecordUpdateDto dto)
     {
         return new MedicalRecord
         {
