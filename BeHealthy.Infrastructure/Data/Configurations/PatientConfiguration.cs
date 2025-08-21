@@ -29,5 +29,19 @@ public class PatientConfiguration : IEntityTypeConfiguration<Patient>
             .WithOne(a => a.Patient)
             .HasForeignKey(a => a.PatientId);
 
+        builder.HasMany(p => p.MedicalRecords)
+            .WithOne(mr => mr.Patient)
+            .HasForeignKey(mr => mr.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(p => p.Allergies)
+            .WithOne(a => a.Patient)
+            .HasForeignKey(a => a.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(p => p.Visits)
+            .WithOne(v => v.Patient)
+            .HasForeignKey(v => v.PatientId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
