@@ -47,4 +47,14 @@ public class VisitRepository : GenericRepository<Visit>, IVisitRepository
             .Where(lr => lr.VisitId == visitId)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Visit>> GetVisitsByPatientIdAsync(int patientId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Visits
+            .Where(v => v.PatientId == patientId)
+            .Include(v => v.Patient)
+            .Include(v => v.Doctor)
+            .ToListAsync();
+    }
 }

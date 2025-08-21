@@ -543,8 +543,14 @@
   <data name="UseValidation" xml:space="preserve">
     <value>Use Validation</value>
   </data>
+  <data name="Visit" xml:space="preserve">
+    <value>Visit</value>
+  </data>
   <data name="VisitDate" xml:space="preserve">
     <value>Visit Date</value>
+  </data>
+  <data name="Visits" xml:space="preserve">
+    <value>Visits</value>
   </data>
   <data name="YouAreNotAuthorizedToAccessPage" xml:space="preserve">
     <value>You are not authorized to access this page</value>

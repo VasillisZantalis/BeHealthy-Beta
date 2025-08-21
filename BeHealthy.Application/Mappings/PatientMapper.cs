@@ -121,6 +121,7 @@ public static class PatientMapper
     {
         return new PatientSimpleDto
         {
+            Id = patient.Id,
             FirstName = patient.FirstName,
             LastName = patient.LastName,
             Image = patient.Image

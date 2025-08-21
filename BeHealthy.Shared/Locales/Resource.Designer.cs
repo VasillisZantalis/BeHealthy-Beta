@@ -1339,11 +1339,29 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visit.
+        /// </summary>
+        public static string Visit {
+            get {
+                return ResourceManager.GetString("Visit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Visit Date.
         /// </summary>
         public static string VisitDate {
             get {
                 return ResourceManager.GetString("VisitDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visits.
+        /// </summary>
+        public static string Visits {
+            get {
+                return ResourceManager.GetString("Visits", resourceCulture);
             }
         }
         

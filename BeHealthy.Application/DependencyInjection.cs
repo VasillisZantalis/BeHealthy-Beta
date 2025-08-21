@@ -1,5 +1,4 @@
-﻿using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Application.Services;
+﻿using BeHealthy.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeHealthy.Application;

@@ -1,5 +1,6 @@
 using BeHealthy.Application.Dtos.Visit;
 using BeHealthy.Domain.Interfaces.Repositories;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -39,7 +40,7 @@ public class VisitService : IVisitService
 
     public async Task<ServiceResponse> AddVisitAsync(VisitCreateDto dto)
     {
-        var visit = dto.ToEntity();
+        var visit = dto.MapToDomain();
         await _visitRepository.AddAsync(visit);
         return ServiceResponse.Successful();
     }
@@ -48,7 +49,7 @@ public class VisitService : IVisitService
     {
         var visit = await _visitRepository.GetByIdAsync(dto.Id);
         if (visit == null)
-            return ServiceResponse.Failed("Visit not found.");
+            return ServiceResponse.Failed(Resource.NotFound);
 
         dto.MapToEntity(visit);
         await _visitRepository.UpdateAsync(visit);
@@ -59,5 +60,11 @@ public class VisitService : IVisitService
     {
         await _visitRepository.DeleteAsync(id);
         return ServiceResponse.Successful();
+    }
+
+    public async Task<IEnumerable<VisitDto>> GetVisitsByPatientIdAsync(int patientId)
+    {
+        var visits = await _visitRepository.GetVisitsByPatientIdAsync(patientId);
+        return visits.MapToDto();
     }
 }

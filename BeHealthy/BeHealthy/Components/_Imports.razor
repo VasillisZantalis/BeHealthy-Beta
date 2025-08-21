@@ -27,24 +27,27 @@
 @using BeHealthy
 @using BeHealthy.States
 @using Blazored.FluentValidation
-@using BeHealthy.Shared.Locales;
 @using BeHealthy.Extensions
 @using BeHealthy.Components.Pages
 @using BeHealthy.Components.Pages.Dashboard
+@using BeHealthy.Components.Pages.Patients.Components
+@using BeHealthy.Components.Pages.Patients.Components.Prescriptions
+@using BeHealthy.Components.Pages.Patients.Components.Visits
 @using BeHealthy.Components.Shared.Controls
 @using BeHealthy.Components.Shared
 @using BeHealthy.Components.Shared.Wizards
 @using BeHealthy.Components.Shared.Modals
 @using BeHealthy.Common
 @using BeHealthy.Application.Extensions
+@using BeHealthy.Application.Services
 @using BeHealthy.Application.Services.Interfaces
 @using BeHealthy.Application.Helpers;
+@using BeHealthy.Models
 @using BeHealthy.Models.Enums
 
 @using BeHealthy.Domain
-@using BeHealthy.Models
-
 @using BeHealthy.Domain.Entities
+
 @using BeHealthy.Application.Dtos.Appointment
 @using BeHealthy.Application.Dtos.Doctor
 @using BeHealthy.Application.Dtos.Patient
@@ -53,9 +56,12 @@
 @using BeHealthy.Application.Dtos.Department
 @using BeHealthy.Application.Dtos.Prescription
 @using BeHealthy.Application.Dtos.Specialty
+@using BeHealthy.Application.Dtos.Visit
 @using BeHealthy.Application.Mappings;
 
 @using BeHealthy.Shared.Parameters
+@using BeHealthy.Shared.Locales;
+
 
 
 

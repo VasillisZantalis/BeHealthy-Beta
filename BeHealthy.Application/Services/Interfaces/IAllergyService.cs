@@ -1,6 +1,6 @@
 using BeHealthy.Application.Dtos.Allergy;
 
-namespace BeHealthy.Application.Services;
+namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IAllergyService
 {

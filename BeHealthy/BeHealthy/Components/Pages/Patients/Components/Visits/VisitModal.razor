@@ -1,0 +1,46 @@
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+
+@if (_showModal)
+{
+    <div class="modal fade show" tabindex="-1" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">@ModalTitle</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                </div>
+                <div class="modal-body">
+                  @*   <EditForm>
+                        <div class="d-flex flex-row justify-content-end m-3 gap-2">
+                            <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
+                            <button type="submit" class="btn btn-success">@Resource.Save</button>
+                        </div>
+                    </EditForm> *@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+@code {
+
+    private int? _visitId { get; set; }
+    private bool _showModal { get; set; }
+    private bool _isEditMode => _visitId.HasValue;
+
+    private string ModalTitle => _isEditMode ? Resource.Edit : Resource.Create;
+
+    private void Close()
+    {
+        _showModal = false;
+        _visitId = null;
+        StateHasChanged();
+    }
+
+    public void Show(int? visitId = null)
+    {
+        _visitId = visitId;
+        _showModal = true;
+        StateHasChanged();
+    }
+}

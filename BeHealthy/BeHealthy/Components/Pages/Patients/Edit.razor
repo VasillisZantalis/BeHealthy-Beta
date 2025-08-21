@@ -1,5 +1,4 @@
 ﻿@page "/patients/edit/{PatientId:int}"
-@using BeHealthy.Components.Pages.Patients.Components
 @attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)}")]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -12,17 +11,30 @@
 <PageTitle>Edit</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
+
+    <button type="submit" class="btn btn-success px-5 d-flex flex-row mb-3 mt-0" disabled="@_inProgress">
+        @if (_inProgress)
+        {
+            <SmallLoader />
+        }
+        <span>@Resource.Save</span>
+    </button>
+
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Visits</a>
+        </li>
         @if (canSeePrecriptions)
         {
             <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Prescriptions</a>
+                <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Prescriptions</a>
             </li>
         }
     </ul>
+
     @if (activeTab == 0)
     {
         <div class="mt-3">
@@ -69,18 +81,14 @@
                         <label for="Department">@Resource.Department</label>
                     </div>
                 }
-
-                <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-                    @if (_inProgress)
-                    {
-                        <SmallLoader />
-                    }
-                    <span>@Resource.Save</span>
-                </button>
             </EditForm>
         </div>
     }
-    else if (activeTab == 1 && canSeePrecriptions)
+    else if (activeTab == 1)
+    {
+        <Visits PatientId="PatientId" />
+    }
+    else if (activeTab == 2 && canSeePrecriptions)
     {
         <Prescriptions PatientId="PatientId"
                        CanCreatePrescription="canCreatePrecriptions" />
@@ -106,6 +114,7 @@
     private int activeTab = 0;
     private void SelectTab(int tabName) => activeTab = tabName;
     private bool canSeePrecriptions;
+    private bool canSeeVisits;
     private bool canCreatePrecriptions;
 
     protected override async Task OnInitializedAsync()

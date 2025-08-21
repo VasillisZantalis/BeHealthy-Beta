@@ -1,6 +1,6 @@
 using BeHealthy.Application.Dtos.Visit;
 
-namespace BeHealthy.Application.Services;
+namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IVisitService
 {
@@ -9,6 +9,7 @@ public interface IVisitService
     Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId);
     Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId);
     Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId);
+    Task<IEnumerable<VisitDto>> GetVisitsByPatientIdAsync(int patientId);
     Task<ServiceResponse> AddVisitAsync(VisitCreateDto dto);
     Task<ServiceResponse> UpdateVisitAsync(VisitUpdateDto dto);
     Task<ServiceResponse> DeleteVisitAsync(int id);
