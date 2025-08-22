@@ -32,7 +32,7 @@
                     <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditVisit(context.Id))">
                         <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                     </button>
-                    <button class="btn" title="@(Resource.Delete)" @onclick="() => DeleteVisit(context.Id)">
+                    <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
                         <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                     </button>
                 </div>
@@ -66,17 +66,12 @@
 
     private void EditVisit(int visitId) => visitModal.Show(visitId);
 
-    private async Task DeleteVisit(int visitId)
+    private void ConfirmDelete(int doctorId)
     {
-        var response = await VisitService.DeleteVisitAsync(visitId);
-
-        if (response.Success)
+        ConfirmDeleteService.RequestDelete(async () =>
         {
+            await VisitService.DeleteVisitAsync(doctorId);
             NavigationManager.Refresh(true);
-        }
-        else
-        {
-            AlertModalStateService.Show(null, response.ErrorMessage);
-        }
+        });
     }
 }
