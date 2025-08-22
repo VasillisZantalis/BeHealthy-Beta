@@ -23,7 +23,7 @@
                             </td>
                             <td>@patient.FirstName</td>
                             <td>@patient.LastName</td>
-                            <td>@DateTimeExtensions.ToShortDateString(patient.CreatedAt)</td>
+                            <td>@patient.CreatedAt.ToShortDateString()</td>
                         </tr>
                     }
                 }

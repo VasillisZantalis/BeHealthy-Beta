@@ -97,7 +97,7 @@
     {
         _prescriptionDto = new();
 
-        var doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+        var doctors = (await _doctorService.GetAllDoctorsSimpleAsync()).ToList();
 
         _doctorsSelect = doctors.Select(s => new SelectItem
         {

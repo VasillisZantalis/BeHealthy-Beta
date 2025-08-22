@@ -44,4 +44,31 @@ public static class VisitMapper
 
     public static IEnumerable<VisitDto> MapToDto(this IEnumerable<Visit> visits) 
         => visits.Select(visit => visit.MapToDto());
+
+    public static VisitCreateDto MapToCreateDto(this VisitDto visit)
+    {
+        return new VisitCreateDto
+        {
+            VisitDate = visit.VisitDate,
+            Reason = visit.Reason,
+            Notes = visit.Notes,
+            PatientId = visit.Patient.Id,
+            DoctorId = visit.Doctor.Id,
+            MedicalRecordId = visit.MedicalRecordId
+        };
+    }
+
+    public static VisitUpdateDto MapToUpdateDto(this VisitDto visit)
+    {
+        return new VisitUpdateDto
+        {
+            Id = visit.Id,
+            VisitDate = visit.VisitDate,
+            Reason = visit.Reason,
+            Notes = visit.Notes,
+            PatientId = visit.Patient.Id,
+            DoctorId = visit.Doctor.Id,
+            MedicalRecordId = visit.MedicalRecordId
+        };
+    }
 }

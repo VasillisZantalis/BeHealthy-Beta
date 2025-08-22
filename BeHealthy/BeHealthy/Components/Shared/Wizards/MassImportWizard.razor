@@ -89,8 +89,8 @@
     {
         LoaderService.SetLoader(true);
 
-        var doctors = await DoctorService.GetAllDoctorsAsync();
-        var patients = await PatientService.GetAllPatientsAsync(new PatientSearchingParameters());
+        var doctors = await DoctorService.GetAllDoctorsSimpleAsync();
+        var patients = await PatientService.GetAllPatientsSimpleAsync();
         var departments = await DepartmentService.GetAllDepartmentsAsync();
 
         _doctorsSelect = doctors.Select(d => new SelectItem { Value = d.Id, Text = d.FullName }).ToList();

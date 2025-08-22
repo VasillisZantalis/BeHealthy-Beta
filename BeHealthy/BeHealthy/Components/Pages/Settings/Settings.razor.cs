@@ -38,7 +38,7 @@ public partial class Settings : BasePage
 
         if (_settings.Any(s => s.Key == "DefaultDepartmentSupervison"))
         {
-            var doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+            var doctors = (await _doctorService.GetAllDoctorsSimpleAsync()).ToList();
 
             _doctorsSelect = doctors.Select(s => new SelectItem
             {

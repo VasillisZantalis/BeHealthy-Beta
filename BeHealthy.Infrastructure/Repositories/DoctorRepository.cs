@@ -20,6 +20,12 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
                     .ToListAsync();
     }
 
+    public async Task<IEnumerable<Doctor>> GetAllDoctorsSimpleAsync()
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await context.Doctors.ToListAsync();
+    }
+
     public async Task DeleteDoctorAsync(int id)
     {
         using var context = await _contextFactory.CreateDbContextAsync();

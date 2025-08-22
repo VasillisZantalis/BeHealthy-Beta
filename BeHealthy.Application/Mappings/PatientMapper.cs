@@ -124,6 +124,7 @@ public static class PatientMapper
             Id = patient.Id,
             FirstName = patient.FirstName,
             LastName = patient.LastName,
+            UserId = patient.UserId,
             Image = patient.Image
         };
     }

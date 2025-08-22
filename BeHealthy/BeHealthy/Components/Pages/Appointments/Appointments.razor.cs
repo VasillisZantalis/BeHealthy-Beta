@@ -31,8 +31,8 @@ public partial class Appointments : BasePage
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
-    private List<DoctorDto>? _doctors { get; set; }
-    private List<PatientDto>? _patients { get; set; }
+    private List<DoctorSimpleDto>? _doctors { get; set; }
+    private List<PatientSimpleDto>? _patients { get; set; }
 
     private AppointmentModal _appointmentModal { get; set; } = new();
     private Alert _alert = new();
@@ -121,7 +121,7 @@ public partial class Appointments : BasePage
 
     private async Task LoadDoctors()
     {
-        _doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+        _doctors = (await _doctorService.GetAllDoctorsSimpleAsync()).ToList();
 
         if (userRole == UserRole.Doctor)
         {
@@ -131,7 +131,7 @@ public partial class Appointments : BasePage
 
     private async Task LoadPatients()
     {
-        _patients = (await _patientService.GetAllPatientsAsync(new PatientSearchingParameters())).ToList();
+        _patients = (await _patientService.GetAllPatientsSimpleAsync()).ToList();
     }
 
     private void EditAppointment(int appointmentId)

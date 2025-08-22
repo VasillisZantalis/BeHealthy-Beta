@@ -72,6 +72,7 @@ public static class DoctorMapper
             Id = doctor.Id,
             FirstName = doctor.FirstName,
             LastName = doctor.LastName,
+            UserId = doctor.UserId,
             Image = doctor.Image
         };
     }

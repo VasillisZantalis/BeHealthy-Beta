@@ -25,10 +25,10 @@ public partial class AppointmentModal : BasePage
     private AppointmentDto _appointmentDto { get; set; } = new();
 
     [Parameter]
-    public List<DoctorDto> Doctors { get; set; } = default!;
+    public List<DoctorSimpleDto> Doctors { get; set; } = default!;
 
     [Parameter]
-    public List<PatientDto> Patients { get; set; } = default!;
+    public List<PatientSimpleDto> Patients { get; set; } = default!;
 
     [Parameter]
     public string CurrentUserId { get; set; } = default!;

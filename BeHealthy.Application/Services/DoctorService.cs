@@ -1,6 +1,4 @@
-﻿using BeHealthy.Domain.Entities;
-using BeHealthy.Shared.Locales;
-using Microsoft.AspNetCore.Identity;
+﻿using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -166,6 +164,13 @@ public class DoctorService : IDoctorService
     public Task<int> GetDoctorCountAsync()
     {
         return _unitOfWork.DoctorRepository.GetCountAsync();
+    }
+
+    public async Task<IEnumerable<DoctorSimpleDto>> GetAllDoctorsSimpleAsync()
+    {
+        var doctors = await _unitOfWork.DoctorRepository.GetAllDoctorsSimpleAsync();
+
+        return doctors.MapToSimpleDto();
     }
 }
 

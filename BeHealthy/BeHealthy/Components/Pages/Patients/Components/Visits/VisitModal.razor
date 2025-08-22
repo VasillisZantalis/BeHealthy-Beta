@@ -1,4 +1,9 @@
 ﻿@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
+
+@inject IVisitService VisitService
+@inject IDoctorService DoctorService
+@inject IPatientService PatientService
 
 @if (_showModal)
 {
@@ -10,12 +15,13 @@
                     <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
                 </div>
                 <div class="modal-body">
-                  @*   <EditForm>
+                    <EditForm Model="_visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit">
+                        <ValidationComponent @ref="_validationComponent" />
                         <div class="d-flex flex-row justify-content-end m-3 gap-2">
                             <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
                             <button type="submit" class="btn btn-success">@Resource.Save</button>
                         </div>
-                    </EditForm> *@
+                    </EditForm>
                 </div>
             </div>
         </div>
@@ -23,12 +29,28 @@
     <div class="modal-backdrop fade show"></div>
 }
 @code {
+    [SupplyParameterFromForm]
+    private VisitDto _visitDto { get; set; } = new();
+    private ValidationComponent? _validationComponent;
 
     private int? _visitId { get; set; }
     private bool _showModal { get; set; }
     private bool _isEditMode => _visitId.HasValue;
+    private List<SelectItem> _doctorsSelect = new();
+    private List<SelectItem> _patientsSelect = new();
 
     private string ModalTitle => _isEditMode ? Resource.Edit : Resource.Create;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _doctorsSelect = (await DoctorService.GetAllDoctorsAsync())
+            .Select(d => new SelectItem { Value = d.Id, Text = d.FullName })
+            .ToList();
+
+        _patientsSelect = (await PatientService.GetAllPatientsSimpleAsync())
+            .Select(p => new SelectItem { Value = p.Id, Text = p.FullName })
+            .ToList();
+    }
 
     private void Close()
     {
@@ -43,4 +65,50 @@
         _showModal = true;
         StateHasChanged();
     }
+
+    private async Task SaveVisit()
+    {
+        _validationComponent?.ClearErrors();
+
+        if(_isEditMode)
+        {
+            var visitUpdateDto = _visitDto.MapToUpdateDto();
+
+            var validator = new VisitUpdateDtoValidator();
+            var validationResult = validator.Validate(visitUpdateDto);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.GetErrorsGroupedByProperty();
+                HandleValidationErrors(errors);
+                return;
+            }
+
+            var response = await VisitService.UpdateVisitAsync(visitUpdateDto);
+            if (!response.Success)
+            {
+                AlertModalStateService.Show(null, response.ErrorMessage);
+            }
+
+            // Decide what to do
+
+        }
+        else
+        {
+            var visitCreateDto = _visitDto.MapToCreateDto();
+
+            var validator = new VisitCreateDtoValidator();
+            var validationResult = validator.Validate(visitCreateDto);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.GetErrorsGroupedByProperty();
+                HandleValidationErrors(errors);
+                return;
+            }
+        }
+    }
+
+    private void HandleValidationErrors(Dictionary<string, List<string>> errors) 
+        => _validationComponent?.DisplayErrors(errors);
 }

@@ -1,6 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Nurse;
-using BeHealthy.Application.Dtos.Patient;
-using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
 
 namespace BeHealthy.Application.Services;
@@ -20,6 +18,12 @@ public class PatientService : IPatientService
     {
         var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync(patientSearchingParameters);
         return patients.MapToDto();
+    }
+
+    public async Task<IEnumerable<PatientSimpleDto>> GetAllPatientsSimpleAsync()
+    {
+        var patients = await _unitOfWork.PatientRepository.GetAllPatientsSimpleAsync();
+        return patients.MapToSimpleDto();
     }
 
     public async Task<PatientDto?> GetPatientByIdAsync(int id)

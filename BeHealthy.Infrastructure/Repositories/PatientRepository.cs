@@ -31,6 +31,12 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
         return await query.ToListAsync();
     }
 
+    public async Task<IEnumerable<Patient>> GetAllPatientsSimpleAsync()
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await context.Patients.ToListAsync();
+    }
+
     public async Task<IEnumerable<Appointment>> GetPatientAppointmentsByUserIdAsync(string userId)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
