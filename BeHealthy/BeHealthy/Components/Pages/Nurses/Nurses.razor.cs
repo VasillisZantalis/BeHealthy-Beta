@@ -104,15 +104,9 @@ public partial class Nurses : BasePage
             }
 
             var response = await _nurseService.AddNurseAsync(nurse);
-            if (!response.Success)
-            {
-                AlertModalStateService.Show(Resource.Error, response.ErrorMessage!);
-                LoaderService.SetLoader(false);
-                return;
-            }
+            if (HandleServiceResponse(response)) continue;
         }
         LoaderService.SetLoader(false);
-        _navigationManager.Refresh(true);
     }
 
     private void ConfirmDelete(int nurseId)

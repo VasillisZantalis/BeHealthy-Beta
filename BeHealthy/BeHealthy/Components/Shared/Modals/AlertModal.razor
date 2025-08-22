@@ -1,6 +1,7 @@
 ﻿@implements IDisposable
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject AlertModalStateService AlertService
+@inject NavigationManager NavivationManager
 
 @if (_showModal)
 {
@@ -48,6 +49,8 @@
     {
         _showModal = false;
         StateHasChanged();
+
+        NavivationManager.NavigateTo(NavivationManager.Uri, forceLoad: true);
     }
 
     public void Dispose()

@@ -135,15 +135,9 @@ public partial class Patients : BasePage
             }
 
             var response = await _patientService.AddPatientAsync(patient);
-            if (!response.Success)
-            {
-                AlertModalStateService.Show(Resource.Error, response.ErrorMessage!);
-                LoaderService.SetLoader(false);
-                return;
-            }
+            if (HandleServiceResponse(response)) continue;
         }
         LoaderService.SetLoader(false);
-        _navigationManager.Refresh(true);
     }
 
     private void ConfirmDelete(int patientId)

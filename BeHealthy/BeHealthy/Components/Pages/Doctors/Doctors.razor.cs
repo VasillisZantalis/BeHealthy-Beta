@@ -105,15 +105,9 @@ public partial class Doctors : BasePage
             }
 
             var response = await _doctorService.AddDoctorAsync(doctor);
-            if (!response.Success)
-            {
-                AlertModalStateService.Show(Resource.Error, response.ErrorMessage!);
-                LoaderService.SetLoader(false);
-                return;
-            }
+            if (HandleServiceResponse(response)) continue;
         }
         LoaderService.SetLoader(false);
-        _navigationManager.Refresh(true);
     }
 
     private void ConfirmDelete(int doctorId)

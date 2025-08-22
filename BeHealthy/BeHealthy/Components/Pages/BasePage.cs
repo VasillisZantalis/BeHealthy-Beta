@@ -1,4 +1,5 @@
-﻿using BeHealthy.States;
+﻿using BeHealthy.Application.Dtos.Common;
+using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Components.Pages;
@@ -28,4 +29,17 @@ public class BasePage : ComponentBase
 
         await base.OnInitializedAsync();
     }
+
+    protected bool HandleServiceResponse(ServiceResponse response)
+    {
+        LoaderService.SetLoader(false);
+
+        if (!response.Success)
+        {
+            AlertModalStateService.Show(null, response.ErrorMessage);
+            return false;
+        }
+        return true;
+    }
+
 }

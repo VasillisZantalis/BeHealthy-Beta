@@ -70,7 +70,9 @@
     {
         _validationComponent?.ClearErrors();
 
-        if(_isEditMode)
+        ServiceResponse response;
+
+        if (_isEditMode)
         {
             var visitUpdateDto = _visitDto.MapToUpdateDto();
 
@@ -84,14 +86,7 @@
                 return;
             }
 
-            var response = await VisitService.UpdateVisitAsync(visitUpdateDto);
-            if (!response.Success)
-            {
-                AlertModalStateService.Show(null, response.ErrorMessage);
-            }
-
-            // Decide what to do
-
+            response = await VisitService.UpdateVisitAsync(visitUpdateDto);
         }
         else
         {
@@ -106,7 +101,13 @@
                 HandleValidationErrors(errors);
                 return;
             }
+
+            response = await VisitService.AddVisitAsync(visitCreateDto);
         }
+
+        if (HandleServiceResponse(response)) return;
+
+        // Decide what to do after successful save
     }
 
     private void HandleValidationErrors(Dictionary<string, List<string>> errors) 
