@@ -13,7 +13,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace BeHealthy.Tests.Services;
+namespace BeHealthy.Tests.UnitTests.Services;
 
 public class DoctorServiceTests
 {
