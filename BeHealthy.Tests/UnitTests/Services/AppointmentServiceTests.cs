@@ -1,61 +1,119 @@
-﻿using BeHealthy.Application.Services;
-
-namespace BeHealthy.Tests.UnitTests.Services;
+﻿namespace BeHealthy.Tests.UnitTests.Services;
 
 public class AppointmentServiceTests
 {
-    private Mock<IAppointmentRepository> CreateAppointmentRepoMock() => new Mock<IAppointmentRepository>();
+    private readonly Mock<IUnitOfWork> _mockUnitOfWork;
+    private readonly Mock<IAppointmentRepository> _mockAppointmentRepository;
+    private readonly AppointmentService _sut;
+    private readonly IFixture _fixture;
 
-    private AppointmentService CreateService(Mock<IAppointmentRepository> repoMock)
+    public AppointmentServiceTests()
     {
-        var uowMock = new Mock<IUnitOfWork>();
-        uowMock.Setup(uow => uow.AppointmentRepository).Returns(repoMock.Object);
-        return new AppointmentService(uowMock.Object);
+        _fixture = new Fixture();
+        _fixture.Customize<Appointment>(c =>
+            c.With(a => a.AppointmentDate, DateOnly.FromDateTime(DateTime.Today))
+            );
+
+        _mockUnitOfWork = new Mock<IUnitOfWork>();
+        _mockAppointmentRepository = new Mock<IAppointmentRepository>();
+
+        _mockUnitOfWork.Setup(uow => uow.AppointmentRepository).Returns(_mockAppointmentRepository.Object);
+
+        _sut = new AppointmentService(_mockUnitOfWork.Object);
     }
+
+    #region GetAllAppointmentsByDoctorIdAsync
 
     [Fact]
     public async Task GetAllAppointmentsByDoctorIdAsync_WithValidDoctorId_ReturnsAppointments()
     {
-        //Arrange
-        var repoMock = CreateAppointmentRepoMock();
-        repoMock.Setup(r => r.GetAllAppointmentsByDoctorIdAsync(It.IsAny<int>()))
-            .ReturnsAsync(new List<Appointment>
-            {
-                new Appointment 
-                { 
-                    Id = 1, 
-                    DoctorId = 1, 
-                    PatientId = 1, 
-                    AppointmentDate = DateOnly.FromDateTime(DateTime.Now),
-                    AppointmentStartTime = TimeOnly.FromDateTime(DateTime.Now),
-                    AppointmentEndTime = TimeOnly.FromDateTime(DateTime.Now.AddHours(1)),
-                    Status = AppointmentStatus.Scheduled,
-                    Reason = AppointmentReason.GeneralCheckup}
-            });
+        var appointments = CreateAppointments(3);
+        _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsByDoctorIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(appointments);
 
-        var service = CreateService(repoMock);
+        var result = await _sut.GetAllAppointmentsByDoctorIdAsync(1);
 
-        //Act
-        var result = await service.GetAllAppointmentsByDoctorIdAsync(1);
-
-        //Assert
-        Assert.NotNull(result);
+        result.ShouldNotBeNull();
     }
 
     [Fact]
     public async Task GetAllAppointmentsByDoctorIdAsync_WithInvalidDoctorId_ReturnsEmptyList()
     {
-        //Arrange
-        var repoMock = CreateAppointmentRepoMock();
-        repoMock.Setup(r => r.GetAllAppointmentsByDoctorIdAsync(It.IsAny<int>()))
+        _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsByDoctorIdAsync(It.IsAny<int>()))
             .ReturnsAsync(new List<Appointment>());
 
-        var service = CreateService(repoMock);
+        var result = await _sut.GetAllAppointmentsByDoctorIdAsync(-1);
 
-        //Act
-        var result = await service.GetAllAppointmentsByDoctorIdAsync(-1);
-
-        //Assert
-        Assert.Empty(result);
+        result.ShouldBeEmpty();
     }
+
+    #endregion
+
+    #region GetAllAppointmentsAsync
+
+    [Fact]
+    public async Task GetAllAppointmentsAsync_ReturnsAppointments()
+    {
+        var appointments = _fixture.CreateMany<Appointment>(2).ToList();
+        _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsAsync())
+            .ReturnsAsync(appointments);
+
+        var result = await _sut.GetAllAppointmentsAsync();
+
+        result.ShouldNotBeNull();
+    }
+
+    #endregion
+
+    #region GetAllAppointmentsByPatientIdAsync
+
+    [Fact]
+    public async Task GetAllAppointmentsByPatientIdAsync_WithValidPatientId_ReturnsAppointments()
+    {
+        var appointments = _fixture.CreateMany<Appointment>(2).ToList();
+        _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsByPatientIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(appointments);
+
+        var result = await _sut.GetAllAppointmentsByPatientIdAsync(1);
+
+        result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task GetAllAppointmentsByPatientIdAsync_WithInvalidPatientId_ReturnsEmptyList()
+    {
+        _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsByPatientIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(new List<Appointment>());
+
+        var result = await _sut.GetAllAppointmentsByPatientIdAsync(-1);
+
+        result.ShouldBeEmpty();
+    }
+
+    #endregion
+
+    #region GetAppointmentByIdAsync
+
+    [Fact]
+    public async Task GetAppointmentByIdAsync_WithValidId_ReturnsAppointment()
+    {
+        var appointment = _fixture.Create<Appointment>();
+        _mockAppointmentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(appointment);
+
+        var result = await _sut.GetAppointmentByIdAsync(1);
+
+        result.ShouldNotBeNull();
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private Appointment CreateValidAppointment() => _fixture.Create<Appointment>();
+
+    private List<Appointment> CreateAppointments(int count) =>
+        _fixture.CreateMany<Appointment>(count).ToList();
+
+    #endregion
 }

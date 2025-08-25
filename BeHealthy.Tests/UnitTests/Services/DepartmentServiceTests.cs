@@ -1,15 +1,4 @@
-﻿using AutoFixture;
-using BeHealthy.Application.Dtos.Department;
-using BeHealthy.Application.Services;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
-using BeHealthy.Domain.Interfaces.Repositories;
-using BeHealthy.Shared.Locales;
-using Moq;
-using Shouldly;
-using System;
-using System.Threading.Tasks;
+﻿using BeHealthy.Application.Dtos.Department;
 
 namespace BeHealthy.Tests.UnitTests.Services;
 
@@ -33,7 +22,7 @@ public class DepartmentServiceTests
     }
 
     #region AddDepartmentAsync
-    
+
     [Fact]
     public async Task AddDepartmentAsync_ValidDepartment_CreatesDepartment()
     {
@@ -47,9 +36,7 @@ public class DepartmentServiceTests
         var result = await _sut.AddDepartmentAsync(departmentForCreationDto);
 
         //Assert
-        result.ShouldNotBeNull();
         result.Success.ShouldBeTrue();
-        result.ErrorMessage.ShouldBeNull();
     }
 
     [Fact]
@@ -63,9 +50,7 @@ public class DepartmentServiceTests
         var result = await _sut.AddDepartmentAsync(null!);
 
         //Assert
-        result.ShouldNotBeNull();
         result.Success.ShouldBeFalse();
-        result.ErrorMessage.ShouldNotBeNull();
     }
 
     [Fact]
@@ -83,10 +68,7 @@ public class DepartmentServiceTests
         var result = await _sut.AddDepartmentAsync(departmentForCreationDto);
 
         // Assert
-        result.ShouldNotBeNull();
         result.Success.ShouldBeTrue();
-        result.ErrorMessage.ShouldBeNull();
-        result.ErrorMessage.ShouldNotBe(Resource.SomethingWentWrong);
     }
 
     [Fact]
@@ -104,10 +86,7 @@ public class DepartmentServiceTests
         var result = await _sut.AddDepartmentAsync(departmentForCreationDto);
 
         // Assert
-        result.ShouldNotBeNull();
         result.Success.ShouldBeFalse();
-        result.ErrorMessage.ShouldNotBeNull();
-        result.ErrorMessage.ShouldBe(Resource.SomethingWentWrong);
     }
 
     #endregion

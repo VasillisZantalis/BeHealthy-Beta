@@ -1,9 +1,4 @@
-﻿using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Dtos.Department;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
-using BeHealthy.Application.Dtos.Common;
+﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;

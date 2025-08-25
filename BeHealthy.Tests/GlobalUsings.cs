@@ -6,3 +6,8 @@ global using Moq;
 global using System;
 global using System.Collections.Generic;
 global using System.Threading.Tasks;
+global using Shouldly;
+global using AutoFixture;
+global using System.Linq;
+global using BeHealthy.Application.Services;
+global using BeHealthy.Application.Services.Interfaces;
