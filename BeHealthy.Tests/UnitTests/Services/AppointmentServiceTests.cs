@@ -1,4 +1,4 @@
-﻿using System;
+﻿using AutoFixture;
 
 namespace BeHealthy.Tests.UnitTests.Services;
 
@@ -7,9 +7,18 @@ public class AppointmentServiceTests
     private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IAppointmentRepository> _mockAppointmentRepository;
     private readonly AppointmentService _sut;
+    private readonly IFixture _fixture;
 
     public AppointmentServiceTests()
     {
+        _fixture = new Fixture();
+        _fixture.Customize<DateOnly>(o => o.FromFactory((DateTime dt) => DateOnly.FromDateTime(dt)));
+        _fixture.Customize<TimeOnly>(o => o.FromFactory((DateTime dt) => TimeOnly.FromDateTime(dt)));
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior(1));
+        _fixture.Behaviors.OfType<ThrowingRecursionBehavior>()
+            .ToList()
+            .ForEach(b => _fixture.Behaviors.Remove(b));
+
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockAppointmentRepository = new Mock<IAppointmentRepository>();
 
@@ -24,10 +33,7 @@ public class AppointmentServiceTests
     public async Task GetAllAppointmentsByDoctorIdAsync_WithValidDoctorId_ReturnsAppointments()
     {
         //Arrange
-        IEnumerable<Appointment> appointments = [
-            CreateAppointment(),
-            CreateAppointment(id: 2)
-        ];
+        IEnumerable<Appointment> appointments = CreateAppointments(count: 2);
 
         _mockAppointmentRepository
             .Setup(r => r.GetAllAppointmentsByDoctorIdAsync(It.IsAny<int>()))
@@ -62,10 +68,7 @@ public class AppointmentServiceTests
     public async Task GetAllAppointmentsAsync_ReturnsAppointments()
     {
         //Arrange
-        IEnumerable<Appointment> appointments = [
-            CreateAppointment(),
-            CreateAppointment(id: 2)
-        ];
+        IEnumerable<Appointment> appointments = CreateAppointments(count: 2);
 
         _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsAsync())
             .ReturnsAsync(appointments);
@@ -85,10 +88,7 @@ public class AppointmentServiceTests
     public async Task GetAllAppointmentsByPatientIdAsync_WithValidPatientId_ReturnsAppointments()
     {
         //Arrange
-        IEnumerable<Appointment> appointments = [ 
-            CreateAppointment(),
-            CreateAppointment(id: 2)
-        ];
+        IEnumerable<Appointment> appointments =  CreateAppointments(count: 2);
 
         _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsByPatientIdAsync(It.IsAny<int>()))
             .ReturnsAsync(appointments);
@@ -123,6 +123,7 @@ public class AppointmentServiceTests
     {
         //Arrange
         var appointment = CreateAppointment();
+
         _mockAppointmentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(appointment);
 
@@ -140,17 +141,35 @@ public class AppointmentServiceTests
     private Appointment CreateAppointment(
         int id = 1,
         int doctorId = 1,
-        int patientId = 1) => new Appointment
-        {
-            Id = id,
-            DoctorId = doctorId,
-            PatientId = patientId,
-            AppointmentDate = DateOnly.FromDateTime(DateTime.Today),
-            AppointmentStartTime = TimeOnly.FromDateTime(DateTime.Today),
-            AppointmentEndTime = TimeOnly.FromDateTime(DateTime.Today.AddHours(1)),
-            Status = AppointmentStatus.Scheduled,
-            Reason = AppointmentReason.GeneralCheckup
-        };
+        int patientId = 1)
+    {
+        return _fixture
+            .Build<Appointment>()
+            .Without(a => a.Nurse)
+            .Without(a => a.Room)
+            .Without(a => a.Doctor)
+            .Without(a => a.Patient)
+            .With(a => a.AppointmentStartTime, TimeOnly.FromDateTime(DateTime.UtcNow))
+            .With(a => a.AppointmentEndTime, TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)))
+            .Create();
+    }
+
+    private IEnumerable<Appointment> CreateAppointments(
+        int id = 1,
+        int doctorId = 1,
+        int patientId = 1,
+        int count = 1)
+    {
+        return _fixture
+            .Build<Appointment>()
+            .Without(a => a.Nurse)
+            .Without(a => a.Room)
+            .Without(a => a.Doctor)
+            .Without(a => a.Patient)
+            .With(a => a.AppointmentStartTime, TimeOnly.FromDateTime(DateTime.UtcNow))
+            .With(a => a.AppointmentEndTime, TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1)))
+            .CreateMany(count);
+    }
 
     #endregion
 }
