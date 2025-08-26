@@ -781,6 +781,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} was not found.
+        /// </summary>
+        public static string NotFoundEntity {
+            get {
+                return ResourceManager.GetString("NotFoundEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No {0} Joined Lately.
         /// </summary>
         public static string NoUsersJoinedLately {

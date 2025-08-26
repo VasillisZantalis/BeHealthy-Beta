@@ -52,6 +52,25 @@ public class AppointmentService : IAppointmentService
     {
         var appointment = appointmentDto.MapToDomain();
 
+        var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
+        var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
+
+        if (!doctorExists)
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+        }
+
+        if (!patientExists)
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+        }
+
+        if (appointment.RoomId.HasValue 
+            && !await _unitOfWork.RoomRepository.ExistsAsync(appointment.RoomId.Value))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
+        }
+
         var conflictCheck = await CheckForConflictingAppointmentsAsync(
             appointmentDto.DoctorId,
             appointmentDto.PatientId,
@@ -76,6 +95,25 @@ public class AppointmentService : IAppointmentService
     public async Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateDto appointmentDto)
     {
         var appointment = appointmentDto.MapToDomain();
+
+        var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
+        var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
+
+        if (!doctorExists)
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+        }
+
+        if (!patientExists)
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+        }
+
+        if (appointment.RoomId.HasValue
+            && !await _unitOfWork.RoomRepository.ExistsAsync(appointment.RoomId.Value))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
+        }
 
         var conflictCheck = await CheckForConflictingAppointmentsAsync(
             appointmentDto.DoctorId,
