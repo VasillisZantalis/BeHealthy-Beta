@@ -178,10 +178,22 @@ public class AppointmentServiceTests
     public async Task AddAppointment_ValidAppointment_CreatesAppointment()
     {
         //Arrange
+        var appointment = new AppointmentCreateDtoBuilder(_fixture)
+            .WithRoomId(null)
+            .Build();
+
+        _mockUnitOfWork.Setup(uow => uow.AppointmentRepository.AddAsync(It.IsAny<Appointment>()))
+            .Returns(Task.CompletedTask);
+        _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsByDoctorIdAsync(It.IsAny<int>())).ReturnsAsync([]);
+        _mockAppointmentRepository.Setup(r => r.GetAllAppointmentsByPatientIdAsync(It.IsAny<int>())).ReturnsAsync([]);
+        _mockUnitOfWork.Setup(u => u.DoctorRepository.ExistsAsync(appointment.DoctorId)).ReturnsAsync(true);
+        _mockUnitOfWork.Setup(u => u.PatientRepository.ExistsAsync(appointment.PatientId)).ReturnsAsync(true);
 
         //Act
+        var result = await _sut.AddAppointmentAsync(appointment);
 
         //Assert
+        result.Success.ShouldBeTrue();
     }
 
     [Fact]
@@ -208,30 +220,60 @@ public class AppointmentServiceTests
     public async Task AddAppointment_InvalidDoctorId_ReturnsFailedResponse()
     {
         //Arrange
+        var appointment = new AppointmentCreateDtoBuilder(_fixture)
+            .WithDoctorId(-1)
+            .Build();
+
+        _mockAppointmentRepository.Setup(r => r.AddAsync(It.IsAny<Appointment>()))
+            .Returns(Task.CompletedTask);
+        _mockUnitOfWork.Setup(u => u.DoctorRepository.ExistsAsync(appointment.DoctorId)).ReturnsAsync(false);
 
         //Act
+        var result = await _sut.AddAppointmentAsync(appointment);
 
         //Assert
+        result.Success.ShouldBeFalse();
     }
 
     [Fact]
     public async Task AddAppointment_InvalidPatientId_ReturnsFailedResponse()
     {
         //Arrange
+        var appointment = new AppointmentCreateDtoBuilder(_fixture)
+            .WithPatientId(-1)
+            .Build();
+
+        _mockAppointmentRepository.Setup(r => r.AddAsync(It.IsAny<Appointment>()))
+            .Returns(Task.CompletedTask);
+        _mockUnitOfWork.Setup(u => u.DoctorRepository.ExistsAsync(appointment.DoctorId)).ReturnsAsync(true);
+        _mockUnitOfWork.Setup(u => u.PatientRepository.ExistsAsync(appointment.PatientId)).ReturnsAsync(false);
 
         //Act
+        var result = await _sut.AddAppointmentAsync(appointment);
 
         //Assert
+        result.Success.ShouldBeFalse();
     }
 
     [Fact]
     public async Task AddAppointment_InvalidRoomId_ReturnsFailedResponse()
     {
         //Arrange
+        var appointment = new AppointmentCreateDtoBuilder(_fixture)
+            .WithRoomId(-1)
+            .Build();
+
+        _mockAppointmentRepository.Setup(r => r.AddAsync(It.IsAny<Appointment>()))
+            .Returns(Task.CompletedTask);
+        _mockUnitOfWork.Setup(u => u.DoctorRepository.ExistsAsync(appointment.DoctorId)).ReturnsAsync(true);
+        _mockUnitOfWork.Setup(u => u.PatientRepository.ExistsAsync(appointment.PatientId)).ReturnsAsync(true);
+        _mockUnitOfWork.Setup(u => u.RoomRepository.ExistsAsync(appointment.RoomId!.Value)).ReturnsAsync(false);
 
         //Act
+        var result = await _sut.AddAppointmentAsync(appointment);
 
         //Assert
+        result.Success.ShouldBeFalse();
     }
 
     [Fact]

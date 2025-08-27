@@ -53,13 +53,12 @@ public class AppointmentService : IAppointmentService
         var appointment = appointmentDto.MapToDomain();
 
         var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
-        var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
-
         if (!doctorExists)
         {
             return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
         }
 
+        var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
         if (!patientExists)
         {
             return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));

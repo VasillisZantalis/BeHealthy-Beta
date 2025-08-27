@@ -25,7 +25,7 @@ public class AppointmentCreateDtoBuilder
 
     public AppointmentCreateDto Build()
     {
-        var dto = _fixture.Build<AppointmentCreateDto>()
+        return _fixture.Build<AppointmentCreateDto>()
             .With(a => a.DoctorId, _doctorId)
             .With(a => a.PatientId, _patientId)
             .With(a => a.RoomId, _roomId)
@@ -34,6 +34,5 @@ public class AppointmentCreateDtoBuilder
             .With(a => a.AppointmentStartTime, _startTime)
             .With(a => a.AppointmentEndTime, _endTime)
             .Create();
-        return dto;
     }
 }
