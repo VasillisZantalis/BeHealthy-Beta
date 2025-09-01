@@ -41,10 +41,6 @@ public class AppointmentBuilder
             .Create();
     }
 
-    public IEnumerable<Appointment> BuildMany(int count)
-    {
-        return Enumerable.Range(0, count)
-            .Select(_ => Build())
-            .ToList();
-    }
+    public IEnumerable<Appointment> BuildMany(int count) => 
+        Enumerable.Range(0, count).Select(_ => Build()).ToList();
 }

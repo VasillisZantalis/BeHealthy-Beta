@@ -1,8 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Application.Dtos.Common;
-using BeHealthy.Domain;
-
-namespace BeHealthy.Application.Services.Interfaces;
+﻿namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IAppointmentService
 {

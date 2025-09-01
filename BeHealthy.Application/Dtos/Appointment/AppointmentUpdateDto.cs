@@ -1,6 +1,4 @@
-﻿using BeHealthy.Domain;
-
-namespace BeHealthy.Application.Dtos.Appointment;
+﻿namespace BeHealthy.Application.Dtos.Appointment;
 
 public class AppointmentUpdateDto
 {

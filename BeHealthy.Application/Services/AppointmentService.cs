@@ -1,11 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Application.Dtos.Common;
-using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain;
-using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
-using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -50,94 +43,85 @@ public class AppointmentService : IAppointmentService
 
     public async Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateDto appointmentDto)
     {
-        var appointment = appointmentDto.MapToDomain();
-
-        var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
-        if (!doctorExists)
+        try
         {
-            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
-        }
+            var appointment = appointmentDto.MapToDomain();
 
-        var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
-        if (!patientExists)
+            var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
+            if (!doctorExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+
+            var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
+            if (!patientExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+
+            if (appointment.RoomId.HasValue
+                && !await _unitOfWork.RoomRepository.ExistsAsync(appointment.RoomId.Value))
+            {
+                return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
+            }
+
+            var conflictCheck = await CheckForConflictingAppointmentsAsync(
+                appointmentDto.DoctorId,
+                appointmentDto.PatientId,
+                appointmentDto.NurseId,
+                appointmentDto.RoomId,
+                appointmentDto.AppointmentDate,
+                appointmentDto.AppointmentStartTime,
+                appointmentDto.AppointmentEndTime);
+
+            if (!conflictCheck.Success) return conflictCheck;
+
+            await _unitOfWork.AppointmentRepository.AddAsync(appointment);
+
+            return ServiceResponse.Successful();
+        }
+        catch (Exception)
         {
-            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+            return ServiceResponse.Failed(Resource.SomethingWentWrong);
         }
-
-        if (appointment.RoomId.HasValue 
-            && !await _unitOfWork.RoomRepository.ExistsAsync(appointment.RoomId.Value))
-        {
-            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
-        }
-
-        var conflictCheck = await CheckForConflictingAppointmentsAsync(
-            appointmentDto.DoctorId,
-            appointmentDto.PatientId,
-            appointmentDto.NurseId,
-            appointmentDto.RoomId,
-            appointmentDto.AppointmentDate,
-            appointmentDto.AppointmentStartTime,
-            appointmentDto.AppointmentEndTime);
-
-        if (!conflictCheck.Success)
-        {
-            return conflictCheck;
-        }
-
-        await _unitOfWork.AppointmentRepository.AddAsync(appointment);
-
-        return appointment.Id > 0
-            ? ServiceResponse.Successful()
-            : ServiceResponse.Failed(Resource.SomethingWentWrong);
     }
 
     public async Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateDto appointmentDto)
     {
-        var appointment = appointmentDto.MapToDomain();
-
-        var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
-        var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
-
-        if (!doctorExists)
+        try
         {
-            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
-        }
+            var appointment = appointmentDto.MapToDomain();
 
-        if (!patientExists)
+            var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
+            if (!doctorExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+
+            var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
+            if (!patientExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+
+            if (appointment.RoomId.HasValue
+                && !await _unitOfWork.RoomRepository.ExistsAsync(appointment.RoomId.Value))
+            {
+                return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
+            }
+
+            var conflictCheck = await CheckForConflictingAppointmentsAsync(
+                appointmentDto.DoctorId,
+                appointmentDto.PatientId,
+                appointmentDto.NurseId,
+                appointmentDto.RoomId,
+                appointmentDto.AppointmentDate,
+                appointmentDto.AppointmentStartTime,
+                appointmentDto.AppointmentEndTime,
+                appointmentDto.Id);
+
+            if (!conflictCheck.Success) return conflictCheck;
+
+            await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
+
+            return ServiceResponse.Successful();
+        }
+        catch (Exception)
         {
-            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+            return ServiceResponse.Failed(Resource.SomethingWentWrong);
         }
-
-        if (appointment.RoomId.HasValue
-            && !await _unitOfWork.RoomRepository.ExistsAsync(appointment.RoomId.Value))
-        {
-            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
-        }
-
-        var conflictCheck = await CheckForConflictingAppointmentsAsync(
-            appointmentDto.DoctorId,
-            appointmentDto.PatientId,
-            appointmentDto.NurseId,
-            appointmentDto.RoomId,
-            appointmentDto.AppointmentDate,
-            appointmentDto.AppointmentStartTime,
-            appointmentDto.AppointmentEndTime,
-            appointmentDto.Id);
-
-        if (!conflictCheck.Success)
-        {
-            return conflictCheck;
-        }
-
-        await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
-
-        return ServiceResponse.Successful();
     }
 
-    public async Task DeleteAppointmentAsync(int id)
-    {
+    public async Task DeleteAppointmentAsync(int id) =>
         await _unitOfWork.AppointmentRepository.DeleteAsync(id);
-    }
 
     public async Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts()
     {
@@ -157,7 +141,7 @@ public class AppointmentService : IAppointmentService
 
     private async Task<ServiceResponse> CheckForConflictingAppointmentsAsync(
         int doctorId,
-        int patientId, 
+        int patientId,
         int? nurseId,
         int? roomId,
         DateOnly appointmentDate,
@@ -169,7 +153,7 @@ public class AppointmentService : IAppointmentService
         DateTime newEnd = appointmentDate.ToDateTime(appointmentEndTime);
 
         var doctorAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
-        var doctorConflict =  FindConflict(doctorAppointments, newStart, newEnd, appointmentId);
+        var doctorConflict = FindConflict(doctorAppointments, newStart, newEnd, appointmentId);
 
         if (doctorConflict != null)
         {
