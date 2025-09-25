@@ -17,7 +17,6 @@ public partial class Doctors : BasePage
 {
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] IPatientService _patientsService { get; set; } = default!;
-    [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 

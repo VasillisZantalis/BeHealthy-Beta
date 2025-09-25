@@ -139,7 +139,7 @@ public class DoctorService : IDoctorService
             var treatedPatients = await _unitOfWork.PatientRepository.FindWithIncludesAsync(
                 w => patientIds.Contains(w.Id),
                 false,
-                w => w.User);
+                w => w.User!);
             patients.AddRange(treatedPatients);
         }
 

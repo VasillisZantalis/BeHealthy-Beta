@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BeHealthy.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250821054647_MedicalRecords_Entities")]
-    partial class MedicalRecords_Entities
+    [Migration("20250925130532_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -553,9 +553,6 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.Property<int>("TreatmentId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TreatmentId1")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
@@ -564,78 +561,7 @@ namespace BeHealthy.Infrastructure.Migrations
 
                     b.HasIndex("TreatmentId");
 
-                    b.HasIndex("TreatmentId1");
-
                     b.ToTable("Prescriptions", (string)null);
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.Privilege", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Name")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Privileges");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = 3
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = 4
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = 5
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = 6
-                        });
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.Role", b =>
-                {
-                    b.Property<short>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
-
-                    b.Property<short>("Name")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>
@@ -719,24 +645,6 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasIndex("VisitId");
 
                     b.ToTable("Treatments", (string)null);
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.UserRolePrivilege", b =>
-                {
-                    b.Property<short>("Id")
-                        .HasColumnType("smallint");
-
-                    b.Property<int>("PrivilegeId")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("HasPrivilege")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id", "PrivilegeId");
-
-                    b.HasIndex("PrivilegeId");
-
-                    b.ToTable("UserRolePrivileges", (string)null);
                 });
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.Visit", b =>
@@ -1099,15 +1007,9 @@ namespace BeHealthy.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BeHealthy.Domain.Entities.Treatment", null)
+                    b.HasOne("BeHealthy.Domain.Entities.Treatment", "Treatment")
                         .WithMany("Prescriptions")
                         .HasForeignKey("TreatmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeHealthy.Domain.Entities.Treatment", "Treatment")
-                        .WithMany()
-                        .HasForeignKey("TreatmentId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1145,25 +1047,6 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.Navigation("Diagnosis");
 
                     b.Navigation("Visit");
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.UserRolePrivilege", b =>
-                {
-                    b.HasOne("BeHealthy.Domain.Entities.Role", "Role")
-                        .WithMany("UserRolePrivileges")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BeHealthy.Domain.Entities.Privilege", "Privilege")
-                        .WithMany("UserRolePrivileges")
-                        .HasForeignKey("PrivilegeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Privilege");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.Visit", b =>
@@ -1293,16 +1176,6 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.Navigation("MedicalRecords");
 
                     b.Navigation("Visits");
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.Privilege", b =>
-                {
-                    b.Navigation("UserRolePrivileges");
-                });
-
-            modelBuilder.Entity("BeHealthy.Domain.Entities.Role", b =>
-                {
-                    b.Navigation("UserRolePrivileges");
                 });
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.Room", b =>

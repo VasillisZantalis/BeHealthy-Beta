@@ -17,7 +17,6 @@ public static class DependencyInjection
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAppSettingsService, AppSettingsService>();
-        services.AddScoped<IPrivilegeService, PrivilegeService>();
         services.AddScoped<ISpecialtyService, SpecialtyService>();
         services.AddScoped<IVisitService, VisitService>();
         services.AddScoped<IAllergyService, AllergyService>();

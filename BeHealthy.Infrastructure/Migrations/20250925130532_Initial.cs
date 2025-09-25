@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BeHealthy.Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -72,32 +74,6 @@ namespace BeHealthy.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Privileges",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Privileges", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    Id = table.Column<short>(type: "smallint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<short>(type: "smallint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,28 +197,20 @@ namespace BeHealthy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRolePrivileges",
+                name: "Allergies",
                 columns: table => new
                 {
-                    Id = table.Column<short>(type: "smallint", nullable: false),
-                    PrivilegeId = table.Column<int>(type: "integer", nullable: false),
-                    HasPrivilege = table.Column<bool>(type: "boolean", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AllergyName = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Allergen = table.Column<string>(type: "text", nullable: true),
+                    Severity = table.Column<int>(type: "integer", nullable: false),
+                    Notes = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    PatientId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRolePrivileges", x => new { x.Id, x.PrivilegeId });
-                    table.ForeignKey(
-                        name: "FK_UserRolePrivileges_Privileges_PrivilegeId",
-                        column: x => x.PrivilegeId,
-                        principalTable: "Privileges",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserRolePrivileges_Roles_Id",
-                        column: x => x.Id,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Allergies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -403,6 +371,138 @@ namespace BeHealthy.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MedicalRecords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Notes = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    CreatedUserId = table.Column<string>(type: "text", nullable: true),
+                    RecordDate = table.Column<DateTime>(type: "timestamptz", nullable: false),
+                    PatientId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalRecords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MedicalRecords_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Visits",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    VisitDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Reason = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    Notes = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    PatientId = table.Column<int>(type: "integer", nullable: false),
+                    DoctorId = table.Column<int>(type: "integer", nullable: false),
+                    MedicalRecordId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Visits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Visits_Doctors_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "Doctors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Visits_MedicalRecords_MedicalRecordId",
+                        column: x => x.MedicalRecordId,
+                        principalTable: "MedicalRecords",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Visits_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Diagnoses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    Notes = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true),
+                    VisitId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Diagnoses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Diagnoses_Visits_VisitId",
+                        column: x => x.VisitId,
+                        principalTable: "Visits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LabResults",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TestName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    ResultValue = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Unit = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    ReferenceRange = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    ResultDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    VisitId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LabResults", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LabResults_Visits_VisitId",
+                        column: x => x.VisitId,
+                        principalTable: "Visits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Treatments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Description = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    VisitId = table.Column<int>(type: "integer", nullable: false),
+                    DiagnosisId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Treatments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Treatments_Diagnoses_DiagnosisId",
+                        column: x => x.DiagnosisId,
+                        principalTable: "Diagnoses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Treatments_Visits_VisitId",
+                        column: x => x.VisitId,
+                        principalTable: "Visits",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Prescriptions",
                 columns: table => new
                 {
@@ -411,6 +511,7 @@ namespace BeHealthy.Infrastructure.Migrations
                     Medication = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Dosage = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     DatePrescribed = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TreatmentId = table.Column<int>(type: "integer", nullable: false),
                     PatientId = table.Column<int>(type: "integer", nullable: false),
                     DoctorId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -429,7 +530,40 @@ namespace BeHealthy.Infrastructure.Migrations
                         principalTable: "Patients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Prescriptions_Treatments_TreatmentId",
+                        column: x => x.TreatmentId,
+                        principalTable: "Treatments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AppSettings",
+                columns: new[] { "Id", "Caption", "Description", "Group", "Key", "Type", "Value" },
+                values: new object[,]
+                {
+                    { 1, "Requires Room for Appointment", "Indicates if a room is required for an appointment.", 0, "AppointmentRequiresRoom", 0, "false" },
+                    { 2, "Do not allow doctors without a specialty", "Indicates if doctors without a specialty should be allowed.", 2, "DoNotAllowDoctorWithoutSpecialty", 0, "false" },
+                    { 3, "Department requires supervisor", "Indicates if a department requires a supervisor.", 1, "DepartmentRequiresSupervisor", 0, "false" },
+                    { 4, "Default Department Supervision", "The default supervisor selection for departments.", 1, "DefaultDepartmentSupervison", 1, "0" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "0", null, "Admin", "ADMIN" },
+                    { "2", null, "Doctor", "DOCTOR" },
+                    { "3", null, "Nurse", "NURSE" },
+                    { "4", null, "Patient", "PATIENT" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Allergies_PatientId",
+                table: "Allergies",
+                column: "PatientId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -494,6 +628,11 @@ namespace BeHealthy.Infrastructure.Migrations
                 column: "HeadOfDepartmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Diagnoses_VisitId",
+                table: "Diagnoses",
+                column: "VisitId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Doctors_DepartmentId",
                 table: "Doctors",
                 column: "DepartmentId");
@@ -508,6 +647,16 @@ namespace BeHealthy.Infrastructure.Migrations
                 table: "Doctors",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LabResults_VisitId",
+                table: "LabResults",
+                column: "VisitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedicalRecords_PatientId",
+                table: "MedicalRecords",
+                column: "PatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Nurses_DepartmentId",
@@ -542,14 +691,47 @@ namespace BeHealthy.Infrastructure.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Prescriptions_TreatmentId",
+                table: "Prescriptions",
+                column: "TreatmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rooms_DepartmentId",
                 table: "Rooms",
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRolePrivileges_PrivilegeId",
-                table: "UserRolePrivileges",
-                column: "PrivilegeId");
+                name: "IX_Treatments_DiagnosisId",
+                table: "Treatments",
+                column: "DiagnosisId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Treatments_VisitId",
+                table: "Treatments",
+                column: "VisitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Visits_DoctorId",
+                table: "Visits",
+                column: "DoctorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Visits_MedicalRecordId",
+                table: "Visits",
+                column: "MedicalRecordId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Visits_PatientId",
+                table: "Visits",
+                column: "PatientId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Allergies_Patients_PatientId",
+                table: "Allergies",
+                column: "PatientId",
+                principalTable: "Patients",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Appointments_Doctors_DoctorId",
@@ -600,6 +782,9 @@ namespace BeHealthy.Infrastructure.Migrations
                 table: "Departments");
 
             migrationBuilder.DropTable(
+                name: "Allergies");
+
+            migrationBuilder.DropTable(
                 name: "Appointments");
 
             migrationBuilder.DropTable(
@@ -621,10 +806,10 @@ namespace BeHealthy.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Prescriptions");
+                name: "LabResults");
 
             migrationBuilder.DropTable(
-                name: "UserRolePrivileges");
+                name: "Prescriptions");
 
             migrationBuilder.DropTable(
                 name: "Nurses");
@@ -636,13 +821,19 @@ namespace BeHealthy.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Treatments");
+
+            migrationBuilder.DropTable(
+                name: "Diagnoses");
+
+            migrationBuilder.DropTable(
+                name: "Visits");
+
+            migrationBuilder.DropTable(
+                name: "MedicalRecords");
+
+            migrationBuilder.DropTable(
                 name: "Patients");
-
-            migrationBuilder.DropTable(
-                name: "Privileges");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Doctors");

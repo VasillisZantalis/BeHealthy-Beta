@@ -5,7 +5,6 @@
 
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
-@inject IPrivilegeService PrivilegeService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Edit</PageTitle>
@@ -122,8 +121,8 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userRole = authState.User.GetUserRoleEnum();
 
-        canSeePrecriptions = await PrivilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.ViewPatientPrescriptions);
-        canCreatePrecriptions = await PrivilegeService.HasPrivilegeAsync(userRole.Value, PrivilegeName.PrescribeMedications);
+        canSeePrecriptions = true;
+        canCreatePrecriptions = true;
     }
 
     protected override void OnAfterRender(bool firstRender)
