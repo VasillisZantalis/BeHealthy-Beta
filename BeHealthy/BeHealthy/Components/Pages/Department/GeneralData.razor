@@ -2,6 +2,13 @@
 @inherits BasePage
 
 <div class="container-fluid my-3 p-3 border rounded">
+    <button type="submit" class="btn btn-success mb-3 px-4 text-end">
+        @if (_inProgress)
+        {
+            <span class="spinner-border spinner-border-sm"></span>
+        }
+        @Resource.Save
+    </button>
     <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
         <Alert @ref="_alert" />
         <ValidationComponent @ref="_validationComponent" />
@@ -25,13 +32,6 @@
                 <ValidationMessage For="@(() => DepartmentDto.HeadOfDepartmentId)" />
             </div>
         </div>
-        <button type="submit" class="btn btn-success mt-3 px-4 text-end">
-            @if (_inProgress)
-            {
-                <span class="spinner-border spinner-border-sm"></span>
-            }
-            @Resource.Save
-        </button>
     </EditForm>
 </div>
 

@@ -14,6 +14,15 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
+
+    <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+        @if (_inProgress)
+        {
+            <SmallLoader />
+        }
+        <span>@Resource.Save</span>
+    </button>
+
     <EditForm Model="_DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
         <ValidationComponent @ref="_validationComponent"/>
 
@@ -87,14 +96,6 @@
                 <ValidationMessage For="() => _DoctorCreateDto.SpecialtyId" class="text-danger" />
             </div>
         }
-
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-            @if (_inProgress)
-            {
-                <SmallLoader />
-            }
-            <span>@Resource.Save</span>
-        </button>
     </EditForm>
 </div>
 

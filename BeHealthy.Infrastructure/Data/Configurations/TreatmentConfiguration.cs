@@ -23,10 +23,5 @@ public class TreatmentConfiguration : IEntityTypeConfiguration<Treatment>
             .WithMany(d => d.Treatments)
             .HasForeignKey(t => t.DiagnosisId)
             .OnDelete(DeleteBehavior.SetNull);
-
-        builder.HasMany(t => t.Prescriptions)
-            .WithOne()
-            .HasForeignKey("TreatmentId")
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

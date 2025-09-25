@@ -1,16 +1,11 @@
 services:
   behealthy:
-    container_name: behealthywebapp
     image: ${DOCKER_REGISTRY-}behealthy
+    container_name: behealthyapp
     build:
       context: .
       dockerfile: BeHealthy/BeHealthy/Dockerfile
-    ports:
-      - "8000:8000"
-      - "8001:8001"
-    depends_on:
-      - behealthydb
-
+    
   behealthydb:
     image: postgres:latest
     container_name: behealthydb
@@ -18,7 +13,5 @@ services:
       - POSTGRES_DB=behealthy
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=7530
-    #volumes:
-    # - ./.containers/behealthy-db:/var/lib/postgresql/data
     ports:
       - "5432:5432"

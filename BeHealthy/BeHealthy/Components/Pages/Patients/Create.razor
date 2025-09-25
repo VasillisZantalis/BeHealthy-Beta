@@ -11,6 +11,14 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
+
+    <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+        @if (_inProgress)
+        {
+            <SmallLoader />
+        }
+        <span>@Resource.Save</span>
+    </button>
     <EditForm Model="_PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
         <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
@@ -69,14 +77,6 @@
                 <label for="Department">@Resource.Department</label>
             </div>
         }
-
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-            @if (_inProgress)
-            {
-                <SmallLoader />
-            }
-            <span>@Resource.Save</span>
-        </button>
     </EditForm>
 </div>
 

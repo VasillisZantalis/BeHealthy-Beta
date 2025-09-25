@@ -1,8 +1,8 @@
 ﻿<span class="@IconClass @TextClass @SizeClass" @attributes="GetStyleAttribute()"></span>
 
 @code {
-    [Parameter]
-    public required string IconClass { get; set; }
+    [Parameter, EditorRequired]
+    public string IconClass { get; set; }
 
     [Parameter]
     public string? SizeClass { get; set; }
