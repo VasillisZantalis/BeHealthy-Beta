@@ -17,7 +17,6 @@ public partial class Patients : BasePage
 {
     [Inject] IPatientService _patientService { get; set; } = default!;
     [Inject] IDoctorService _doctorService { get; set; } = default!;
-    [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -67,8 +66,8 @@ public partial class Patients : BasePage
 
         _paginationState.ItemsPerPage = _patients.Count();
 
-        hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole!.Value, PrivilegeName.EditPatient);
-        hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin || await _privilegeService.HasPrivilegeAsync(userRole!.Value, PrivilegeName.DeletePatient);
+        hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin;
+        hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin; 
         hasActionRights = hasEditRight || hasDeleteRight;
         LoaderService.SetLoader(false);
     }

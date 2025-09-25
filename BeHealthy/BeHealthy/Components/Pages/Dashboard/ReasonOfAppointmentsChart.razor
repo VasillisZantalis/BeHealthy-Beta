@@ -20,7 +20,7 @@
     private BarConfig? _config;
     private Dictionary<AppointmentReason, int> _appointmentsByReasonCount = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         try
         {
@@ -71,8 +71,6 @@
                     }
                 }
             };
-
-            
         }
         catch (Exception ex)
         {
@@ -83,7 +81,7 @@
             LoaderService.SetLoader(false);
         }
     }
-
+   
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         _appointmentsByReasonCount = await AppointmentService.GetAppointmentReasonCounts();

@@ -27,7 +27,6 @@ public partial class Appointments : BasePage
     [Inject] IDoctorService _doctorService { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
     [Inject] IPatientService _patientService { get; set; } = default!;
-    [Inject] IPrivilegeService _privilegeService { get; set; } = default!;
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
@@ -159,7 +158,8 @@ public partial class Appointments : BasePage
 
     private async Task<bool> GetPrivilege(UserRole role, PrivilegeName privilege)
     {
-        return await _privilegeService.HasPrivilegeAsync(role, privilege);
+        return false;
+        //return await _privilegeService.HasPrivilegeAsync(role, privilege);
     }
 
     private async Task CreateAppointmentAsync(AppointmentCreateDto AppointmentCreateDto, bool fromBulkCreation = false)

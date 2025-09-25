@@ -1,6 +1,7 @@
 using BeHealthy.Application;
 using BeHealthy.Components;
 using BeHealthy.Components.Account;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Endpoints.Culture;
 using BeHealthy.Infrastructure;
 using BeHealthy.Infrastructure.Data;
@@ -95,6 +96,25 @@ if (app.Environment.IsDevelopment())
         if (context.Database.GetPendingMigrations().Any())
         {
             context.Database.Migrate();
+        }
+
+        // Seed default admin user
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+        var adminEmail = "admin@gmail.com";
+        var admin = await userManager.FindByEmailAsync(adminEmail);
+        if (admin == null)
+        {
+            admin = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FirstName = "Admin",
+                LastName = "User"
+            };
+            await userManager.CreateAsync(admin, "123456aA@");
+            await userManager.AddToRoleAsync(admin, "Admin");
         }
     }
 }

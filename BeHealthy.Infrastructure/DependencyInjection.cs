@@ -37,10 +37,7 @@ public static class DependencyInjection
         services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
         services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
-        services.AddScoped<IPrivilegeRepository, PrivilegeRepository>();
         services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
-        services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IUserRolePrivilegeRepository, UserRolePrivilegeRepository>();
         services.AddScoped<IAllergyRepository, AllergyRepository>();
         services.AddScoped<IVisitRepository, VisitRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
