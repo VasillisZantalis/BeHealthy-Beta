@@ -10,15 +10,16 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-
-    <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-        @if (_inProgress)
-        {
-            <SmallLoader />
-        }
-        <span>@Resource.Save</span>
-    </button>
     <EditForm Model="_NurseCreateDto" method="post" OnValidSubmit="SaveNurse" FormName="RegisterForm" Enhance>
+
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+            @if (_inProgress)
+            {
+                <SmallLoader />
+            }
+            <span>@Resource.Save</span>
+        </button>
+
         <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />

@@ -15,15 +15,16 @@
 
 <div class="container-fluid p-5 border rounded shadow">
 
-    <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-        @if (_inProgress)
-        {
-            <SmallLoader />
-        }
-        <span>@Resource.Save</span>
-    </button>
-
     <EditForm Model="_DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
+
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+            @if (_inProgress)
+            {
+                <SmallLoader />
+            }
+            <span>@Resource.Save</span>
+        </button>
+
         <ValidationComponent @ref="_validationComponent"/>
 
         <div class="row">

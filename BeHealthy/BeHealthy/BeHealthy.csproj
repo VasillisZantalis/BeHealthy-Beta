@@ -11,9 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\Pages\Roles\**" />
     <Compile Remove="Validators\**" />
+    <Content Remove="Components\Pages\Roles\**" />
     <Content Remove="Validators\**" />
+    <EmbeddedResource Remove="Components\Pages\Roles\**" />
     <EmbeddedResource Remove="Validators\**" />
+    <None Remove="Components\Pages\Roles\**" />
     <None Remove="Validators\**" />
   </ItemGroup>
 
@@ -40,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\Roles\" />
     <Folder Include="log\" />
   </ItemGroup>
 
