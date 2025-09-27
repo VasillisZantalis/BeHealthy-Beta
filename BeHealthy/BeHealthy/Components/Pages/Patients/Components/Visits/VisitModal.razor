@@ -15,7 +15,7 @@
                     <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <EditForm Model="_visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit">
+                    <EditForm Model="_visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit" Enhance>
                         <ValidationComponent @ref="_validationComponent" />
                         <div class="d-flex flex-row justify-content-end m-3 gap-2">
                             <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>

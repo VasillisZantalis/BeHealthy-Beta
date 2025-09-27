@@ -32,6 +32,12 @@
                 <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Prescriptions</a>
             </li>
         }
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.MedicalRecords</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">@Resource.Appointments</a>
+        </li>
     </ul>
 
     @if (activeTab == 0)
@@ -91,6 +97,13 @@
     {
         <Prescriptions PatientId="PatientId"
                        CanCreatePrescription="canCreatePrecriptions" />
+    }
+    else if (activeTab == 3)
+    {
+        <MedicalRecords PatientId="PatientId" />
+    }
+    else if (activeTab == 4)
+    {
     }
 </div>
 

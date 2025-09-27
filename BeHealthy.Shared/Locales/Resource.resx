@@ -333,6 +333,9 @@
   <data name="MedicalRecord" xml:space="preserve">
     <value>Medical Record</value>
   </data>
+  <data name="MedicalRecords" xml:space="preserve">
+    <value>Medical Records</value>
+  </data>
   <data name="Medication" xml:space="preserve">
     <value>Medication</value>
   </data>

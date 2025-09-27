@@ -333,6 +333,9 @@
   <data name="MedicalRecord" xml:space="preserve">
     <value>Ιατρικός Φάκελος</value>
   </data>
+  <data name="MedicalRecords" xml:space="preserve">
+    <value>Ιατρικοί Φάκελοι</value>
+  </data>
   <data name="Medication" xml:space="preserve">
     <value>Φάρμακο</value>
   </data>

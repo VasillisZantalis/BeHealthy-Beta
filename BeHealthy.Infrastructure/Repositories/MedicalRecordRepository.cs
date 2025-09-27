@@ -10,4 +10,14 @@ public class MedicalRecordRepository : GenericRepository<MedicalRecord>, IMedica
     public MedicalRecordRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
     {
     }
+
+    public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsByPatientIdAsync(int patientId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        var records = await context.MedicalRecords
+                                   .Where(mr => mr.PatientId == patientId)
+                                   .ToListAsync();
+        return records;
+    }
 }

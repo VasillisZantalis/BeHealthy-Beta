@@ -709,6 +709,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Medical Records.
+        /// </summary>
+        public static string MedicalRecords {
+            get {
+                return ResourceManager.GetString("MedicalRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Medication.
         /// </summary>
         public static string Medication {

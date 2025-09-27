@@ -1,0 +1,60 @@
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
+
+@inject IMedicalRecordService MedicalRecordService
+
+<div class="py-3">
+    <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="() => {}">
+        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
+    </button>
+    @if (_medicalRecords.Any())
+    {
+        <QuickGrid Items="_medicalRecords.AsQueryable()"
+                   ItemKey="@(x => x.Id)"
+                   Class="table table-responsive">
+            <PropertyColumn Title="@Resource.Date"
+                            Property="@(x => x.RecordDate)"
+                            Format="dd MMM yyyy"
+                            IsDefaultSortColumn="true"
+                            InitialSortDirection="SortDirection.Descending" />
+            <PropertyColumn Title="@Resource.Created"
+                            Property="@(x => x.RecordDate.ToShortDateString())" />
+            <PropertyColumn Title="@Resource.Notes"
+                            Property="@(x => x.Notes)" />
+            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
+                <div class="d-flex justify-content-end">
+                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => {})">
+                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                    </button>
+                    <button class="btn" title="@(string.Join(" ", Resource.Create, Resource.Visit))" @onclick="() => {}">
+                        <Icon IconClass="@FAIcon.Plus" TextClass="text-info" />
+                    </button>
+                    <button class="btn" title="@(Resource.Delete)" @onclick="() => {}">
+                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                    </button>
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+    }
+    else
+    {
+        <p>@string.Format(Resource.NoAvailable, Resource.MedicalRecords)</p>
+    }
+)
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public int PatientId { get; set; }
+
+    private List<MedicalRecordDto> _medicalRecords { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
+
+        _medicalRecords = (await MedicalRecordService.GetMedicalRecordsByPatientIdAsync(PatientId)).ToList();
+
+        LoaderService.SetLoader(false);
+    }
+}
