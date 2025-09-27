@@ -5,6 +5,7 @@ public class MedicalRecord
     public int Id { get; set; }
     public string? Notes { get; set; }
     public string? CreatedUserId { get; set; }
+    public string? CreatedBy { get; set; }
     public DateTime RecordDate { get; set; }
 
     public int PatientId { get; set; }

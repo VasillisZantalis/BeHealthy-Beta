@@ -12,7 +12,8 @@ public static class MedicalRecordMapper
             Id = medicalRecord.Id,
             PatientId = medicalRecord.PatientId,
             RecordDate = medicalRecord.RecordDate,
-            Notes = medicalRecord.Notes
+            Notes = medicalRecord.Notes,
+            CreatedBy = medicalRecord.CreatedBy
         };
     }
 
@@ -23,7 +24,8 @@ public static class MedicalRecordMapper
             Id = dto.Id,
             PatientId = dto.PatientId,
             RecordDate = dto.RecordDate,
-            Notes = dto.Notes
+            Notes = dto.Notes,
+            CreatedBy = dto.CreatedBy
         };
     }
 
@@ -33,7 +35,8 @@ public static class MedicalRecordMapper
         {
             PatientId = dto.PatientId,
             RecordDate = dto.RecordDate,
-            Notes = dto.Notes
+            Notes = dto.Notes,
+            CreatedBy = dto.CreatedBy,
         };
     }
 
@@ -43,7 +46,8 @@ public static class MedicalRecordMapper
         {
             Id = dto.Id,
             RecordDate = dto.RecordDate,
-            Notes = dto.Notes
+            Notes = dto.Notes,
+            CreatedBy = dto.CreatedBy,
         };
     }
 

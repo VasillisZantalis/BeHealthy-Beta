@@ -17,8 +17,10 @@
                             Format="dd MMM yyyy"
                             IsDefaultSortColumn="true"
                             InitialSortDirection="SortDirection.Descending" />
-            <PropertyColumn Title="@Resource.Created"
+            <PropertyColumn Title="@Resource.Date"
                             Property="@(x => x.RecordDate.ToShortDateString())" />
+            <PropertyColumn Title="@Resource.Created"
+                            Property="@(x => x.CreatedBy)" />
             <PropertyColumn Title="@Resource.Notes"
                             Property="@(x => x.Notes)" />
             <TemplateColumn Title="@Resource.Actions" Align="Align.End">
