@@ -10,5 +10,5 @@ public class LabResult
     public DateTime ResultDate { get; set; }
 
     public int VisitId { get; set; }
-    public Visit Visit { get; set; } = new();
+    public Visit? Visit { get; set; }
 }

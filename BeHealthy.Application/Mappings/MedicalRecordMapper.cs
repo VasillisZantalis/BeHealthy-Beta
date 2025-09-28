@@ -45,9 +45,33 @@ public static class MedicalRecordMapper
         return new MedicalRecord
         {
             Id = dto.Id,
+            PatientId = dto.PatientId,
             RecordDate = dto.RecordDate,
             Notes = dto.Notes,
             CreatedBy = dto.CreatedBy,
+        };
+    }
+
+    public static MedicalRecordUpdateDto MapToMedicalRecordUpdateDto(this MedicalRecordDto medicalRecord)
+    {
+        return new MedicalRecordUpdateDto
+        {
+            Id = medicalRecord.Id,
+            PatientId = medicalRecord.PatientId,
+            RecordDate = medicalRecord.RecordDate,
+            Notes = medicalRecord.Notes,
+            CreatedBy = medicalRecord.CreatedBy
+        };
+    }
+
+    public static MedicalRecordCreateDto MapToMedicalRecordCreateDto(this MedicalRecordDto medicalRecord)
+    {
+        return new MedicalRecordCreateDto
+        {
+            PatientId = medicalRecord.PatientId,
+            RecordDate = medicalRecord.RecordDate,
+            Notes = medicalRecord.Notes,
+            CreatedBy = medicalRecord.CreatedBy
         };
     }
 

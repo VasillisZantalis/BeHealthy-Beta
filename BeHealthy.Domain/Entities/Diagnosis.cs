@@ -7,7 +7,7 @@ public class Diagnosis
     public string? Notes { get; set; }
 
     public int VisitId { get; set; }
-    public Visit Visit { get; set; } = new();
+    public Visit? Visit { get; set; }
 
     public ICollection<Treatment> Treatments { get; set; } = new List<Treatment>();
 }

@@ -9,7 +9,7 @@ public class MedicalRecord
     public DateTime RecordDate { get; set; }
 
     public int PatientId { get; set; }
-    public Patient Patient { get; set; } = new();
+    public Patient? Patient { get; set; }
 
     public ICollection<Visit> Visits { get; set; } = new List<Visit>();
 }
