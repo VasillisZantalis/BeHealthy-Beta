@@ -24,7 +24,7 @@
                             Property="@(x => x.Notes)" />
             <TemplateColumn Title="@Resource.Actions" Align="Align.End">
                 <div class="d-flex justify-content-end">
-                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditMedicalRecord(context.Id))">
+                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditRecord(context.Id))">
                         <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                     </button>
                     <button class="btn" title="@(string.Join(" ", Resource.Create, Resource.Visit))" @onclick="() => {}">
@@ -97,6 +97,11 @@
         }
 
         NavigationManager.Refresh(true);
+    }
+
+    private void EditRecord(int medicalRecordId)
+    {
+        NavigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/{PatientId}{RoutingEndpoints.MEDICALRECORDS_PAGE}/{medicalRecordId}");
     }
 
     private async Task EditMedicalRecord(int medicalRecordId)

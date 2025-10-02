@@ -1,0 +1,68 @@
+﻿@page "/patients/{PatientId:int}/medical-records/{MedicalRecordId:int}"
+@attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
+
+@inject IMedicalRecordService MedicalRecordService
+@inject NavigationManager NavigationManager
+
+<div class="container-fluid">
+    <div class="p-5 border rounded shadow">
+
+    </div>
+    <div class="p-5 border rounded shadow">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.Visits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Allergy</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+
+    [Parameter]
+    public int MedicalRecordId { get; set; }
+
+    private MedicalRecordDto? _medicalRecord;
+    private int activeTab = 0;
+    private void SelectTab(int tabName) => activeTab = tabName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
+
+        _medicalRecord = await MedicalRecordService.GetMedicalRecordByIdAsync(MedicalRecordId);
+
+        if (_medicalRecord is null)
+        {
+            NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
+        }
+
+
+        LoaderService.SetLoader(false);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            SetBreadCrumbs();
+    }
+
+    private void SetBreadCrumbs()
+    {
+        Breadcrumbs.ResetBreadcrumb();
+        Breadcrumbs.SetBreadcrumbs([
+            new() { Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new() { Text = Resource.Patients, Link = RoutingEndpoints.PATIENTS_PAGE, Active = false },
+            new() { Text = PatientId.ToString(), Link = $"{RoutingEndpoints.PATIENTS_PAGE}/edit/{PatientId}", Active = false },
+            new() { Text = Resource.MedicalRecords, Link = string.Empty, Active = true },
+            new() { Text = MedicalRecordId.ToString(), Link = string.Empty, Active = true },
+        ]);
+    }
+}

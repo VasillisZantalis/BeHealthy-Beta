@@ -9,5 +9,5 @@ public class Allergy
     public string? Notes { get; set; }
 
     public int PatientId { get; set; }
-    public Patient Patient { get; set; } = new();
+    public Patient? Patient { get; set; }
 }

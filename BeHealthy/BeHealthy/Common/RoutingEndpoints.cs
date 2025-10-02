@@ -13,4 +13,5 @@ public static class RoutingEndpoints
     public const string ACCESSDENIED_PAGE = "/accessdenied";
     public const string SPECIALTIES_PAGE = "/specialties";
     public const string ROLES_PRIVILEGES_PAGE = "/roles/privileges";
+    public const string MEDICALRECORDS_PAGE = "/medical-records";
 }
