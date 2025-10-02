@@ -2,9 +2,9 @@
 using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
 using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Shared.Locales;
+using BeHealthy.Application.Interfaces;
 
 namespace BeHealthy.Application.Services;
 

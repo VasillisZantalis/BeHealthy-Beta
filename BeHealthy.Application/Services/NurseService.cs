@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Doctor;
+using BeHealthy.Application.Interfaces;
 using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
@@ -103,7 +104,11 @@ public class NurseService : INurseService
 
         if (nurseIds.Any())
         {
-            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.FindAsync(w => nurseIds.Contains(w.Id));
+            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.QueryAsync(new QueryOptions<Nurse>
+            {
+                Predicate = w => nurseIds.Contains(w.Id)
+            });
+
             nurses.AddRange(nursesThatTreatPatient);
         }
 

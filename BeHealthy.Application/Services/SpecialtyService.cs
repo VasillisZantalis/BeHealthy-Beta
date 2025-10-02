@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Application.Dtos.Specialty;
+using BeHealthy.Application.Interfaces;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Interfaces;
 
 namespace BeHealthy.Application.Services;
 

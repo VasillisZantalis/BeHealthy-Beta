@@ -1,6 +1,6 @@
-﻿using BeHealthy.Application.Services.Interfaces;
+﻿using BeHealthy.Application.Interfaces;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
 
 namespace BeHealthy.Application.Services;
 

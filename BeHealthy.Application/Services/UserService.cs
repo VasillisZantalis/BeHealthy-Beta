@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Application.Interfaces;
+using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Identity;
 
 namespace BeHealthy.Application.Services;

@@ -1,10 +1,10 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
 using BeHealthy.Application.Dtos.Common;
+using BeHealthy.Application.Interfaces;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
 using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;

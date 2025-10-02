@@ -1,10 +1,10 @@
 ﻿using AutoFixture;
 using BeHealthy.Application.Dtos.Department;
+using BeHealthy.Application.Interfaces;
+using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
-using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Shared.Locales;
 using Moq;
 using Shouldly;

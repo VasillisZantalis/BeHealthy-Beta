@@ -1,6 +1,6 @@
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Application.Dtos.Allergy;
+using BeHealthy.Application.Interfaces.Repositories;
 
 namespace BeHealthy.Application.Services;
 

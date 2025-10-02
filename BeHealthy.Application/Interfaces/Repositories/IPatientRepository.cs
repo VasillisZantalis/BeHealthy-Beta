@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Domain.Entities;
 using BeHealthy.Shared.Parameters;
 
-namespace BeHealthy.Domain.Interfaces.Repositories;
+namespace BeHealthy.Application.Interfaces.Repositories;
 
 public interface IPatientRepository : IGenericRepository<Patient>
 {
