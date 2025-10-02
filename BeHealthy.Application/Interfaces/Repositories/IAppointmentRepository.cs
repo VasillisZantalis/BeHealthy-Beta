@@ -1,6 +1,6 @@
 ﻿using BeHealthy.Domain.Entities;
 
-namespace BeHealthy.Domain.Interfaces.Repositories;
+namespace BeHealthy.Application.Interfaces.Repositories;
 
 public interface IAppointmentRepository : IGenericRepository<Appointment>
 {

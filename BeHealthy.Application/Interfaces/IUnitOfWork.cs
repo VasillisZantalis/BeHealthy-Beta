@@ -1,6 +1,6 @@
-﻿using BeHealthy.Domain.Interfaces.Repositories;
+﻿using BeHealthy.Application.Interfaces.Repositories;
 
-namespace BeHealthy.Domain.Interfaces;
+namespace BeHealthy.Application.Interfaces;
 
 public interface IUnitOfWork
 {

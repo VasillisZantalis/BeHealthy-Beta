@@ -1,5 +1,5 @@
+using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,7 +1,7 @@
-﻿using BeHealthy.Application.Services.Interfaces;
+﻿using BeHealthy.Application.Interfaces;
+using BeHealthy.Application.Interfaces.Repositories;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
-using BeHealthy.Domain.Interfaces;
-using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Infrastructure.Data;
 using BeHealthy.Infrastructure.Localization;
 using BeHealthy.Infrastructure.Repositories;
