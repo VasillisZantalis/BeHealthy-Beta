@@ -20,4 +20,14 @@ public class MedicalRecordRepository : GenericRepository<MedicalRecord>, IMedica
                                    .ToListAsync();
         return records;
     }
+
+    public async Task UpdateMedicalRecordNotesAsync(int id, string notes)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        await context.MedicalRecords
+            .Where(context => context.Id == id)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(mr => mr.Notes, notes));
+    }
 }

@@ -10,4 +10,5 @@ public interface IMedicalRecordService
     Task AddMedicalRecordAsync(MedicalRecordCreateDto medicalRecordDto);
     Task UpdateMedicalRecordAsync(MedicalRecordUpdateDto medicalRecordDto);
     Task DeleteMedicalRecordAsync(int id);
+    Task UpdateMedicalRecordNotesAsync(int id, string notes);
 }

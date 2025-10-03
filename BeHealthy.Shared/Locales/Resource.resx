@@ -207,6 +207,9 @@
   <data name="Created" xml:space="preserve">
     <value>Created</value>
   </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Created By</value>
+  </data>
   <data name="CreateNewAccount" xml:space="preserve">
     <value>Create new account</value>
   </data>

@@ -45,4 +45,9 @@ public class MedicalRecordService : IMedicalRecordService
         var medicalRecords = await _unitOfWork.MedicalRecordRepository.GetMedicalRecordsByPatientIdAsync(patientId);
         return medicalRecords.MapToDto();
     }
+
+    public async Task UpdateMedicalRecordNotesAsync(int id, string notes)
+    {
+        await _unitOfWork.MedicalRecordRepository.UpdateMedicalRecordNotesAsync(id, notes);
+    }
 }

@@ -7,10 +7,48 @@
 @inject NavigationManager NavigationManager
 
 <div class="container-fluid">
-    <div class="p-5 border rounded shadow">
+    <div class="p-5 border rounded shadow-sm mb-3">
+        @if (_medicalRecord is null)
+        {
+            <h2 class="text-center">@Resource.NotAvailable</h2>
+        }
+        else
+        {
+            <div class="d-flex flex-column gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="fw-bold mb-0">@Resource.CreatedBy:</label>
+                    <span>@_medicalRecord.CreatedBy</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="fw-bold mb-0">@Resource.Created:</label>
+                    <span>@_medicalRecord.RecordDate.ToShortHumanizedDateString()</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="fw-bold mb-0">@Resource.Notes:</label>
+                    <InputText class="form-control form-control-sm d-inline-block w-50"
+                               @bind-value="_medicalRecord.Notes"
+                               disabled="@(!isEditing)" />
+                    @if (!isEditing)
+                    {
+                        <button class="btn" @onclick="EditNotes">
+                            <Icon IconClass="@FAIcon.Pencil" TextClass="text-warning" />
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm text-danger" @onclick="CancelEdit">
+                            <Icon IconClass="@FAIcon.CircleXmark" TextClass="text-danger" SizeClass="fs-5" />
+                        </button>
+                        <button class="btn btn-sm text-success" @onclick="SaveNotesAsync">
+                            <Icon IconClass="@FAIcon.CircleCheck" TextClass="text-success" SizeClass="fs-5"/>
+                        </button>
+                    }
+                </div>
+            </div>
 
+        }
     </div>
-    <div class="p-5 border rounded shadow">
+    <div class="p-5 border rounded shadow-sm">
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.Visits</a>
@@ -29,21 +67,18 @@
     [Parameter]
     public int MedicalRecordId { get; set; }
 
-    private MedicalRecordDto? _medicalRecord;
+    private MedicalRecordDto _medicalRecord { get; set; } = new();
     private int activeTab = 0;
     private void SelectTab(int tabName) => activeTab = tabName;
+
+    private bool isEditing = false;
+    private string? notesBackup; //store original notes in case of cancel 
 
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
 
-        _medicalRecord = await MedicalRecordService.GetMedicalRecordByIdAsync(MedicalRecordId);
-
-        if (_medicalRecord is null)
-        {
-            NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
-        }
-
+        _medicalRecord = await MedicalRecordService.GetMedicalRecordByIdAsync(MedicalRecordId) ?? new();
 
         LoaderService.SetLoader(false);
     }
@@ -63,6 +98,33 @@
             new() { Text = PatientId.ToString(), Link = $"{RoutingEndpoints.PATIENTS_PAGE}/edit/{PatientId}", Active = false },
             new() { Text = Resource.MedicalRecords, Link = string.Empty, Active = true },
             new() { Text = MedicalRecordId.ToString(), Link = string.Empty, Active = true },
-        ]);
+    ]);
+    }
+
+    private void EditNotes()
+    {
+        notesBackup = _medicalRecord.Notes;
+        isEditing = true;
+    }
+
+    private void CancelEdit()
+    {
+        isEditing = false;
+        _medicalRecord.Notes = notesBackup;
+    }
+
+    private async Task SaveNotesAsync()
+    {
+        LoaderService.SetLoader(true);
+
+        isEditing = false;
+
+        if (_medicalRecord.Notes != notesBackup && !string.IsNullOrWhiteSpace(_medicalRecord.Notes))
+        {
+            await MedicalRecordService.UpdateMedicalRecordNotesAsync(MedicalRecordId, _medicalRecord.Notes);
+            notesBackup = _medicalRecord.Notes;
+        }
+
+        LoaderService.SetLoader(false);
     }
 }
