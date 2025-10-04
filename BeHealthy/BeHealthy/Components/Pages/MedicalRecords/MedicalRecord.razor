@@ -1,4 +1,5 @@
 ﻿@page "/patients/{PatientId:int}/medical-records/{MedicalRecordId:int}"
+
 @attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -37,10 +38,10 @@
                     else
                     {
                         <button class="btn btn-sm text-danger" @onclick="CancelEdit">
-                            <Icon IconClass="@FAIcon.CircleXmark" TextClass="text-danger" SizeClass="fs-5" />
+                            <Icon IconClass="@FAIcon.XMark" TextClass="text-danger" SizeClass="fs-5" />
                         </button>
                         <button class="btn btn-sm text-success" @onclick="SaveNotesAsync">
-                            <Icon IconClass="@FAIcon.CircleCheck" TextClass="text-success" SizeClass="fs-5"/>
+                            <Icon IconClass="@FAIcon.Check" TextClass="text-success" SizeClass="fs-5"/>
                         </button>
                     }
                 </div>
@@ -48,16 +49,30 @@
 
         }
     </div>
-    <div class="p-5 border rounded shadow-sm">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.Visits</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Allergy</a>
-            </li>
-        </ul>
-    </div>
+
+    <CascadingValue Value="PatientId">
+        <CascadingValue Value="MedicalRecordId">
+            <div class="p-5 border rounded shadow-sm">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.Visits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Allergy</a>
+                    </li>
+                </ul>
+
+                @if (activeTab == 0)
+                {
+                    <VisitsGrid />
+                }
+                else
+                {
+                    <p>@Resource.NotAvailable</p>
+                }
+            </div>
+        </CascadingValue>
+    </CascadingValue>
 </div>
 
 @code {

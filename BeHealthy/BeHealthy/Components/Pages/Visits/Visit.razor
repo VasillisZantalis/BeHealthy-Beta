@@ -1,0 +1,15 @@
+﻿@page "/visits/{VisitId:int}"
+@attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
+
+<div class="container-fluid">
+
+</div>
+
+@code {
+    [Parameter]
+    public int VisitId { get; set; }
+
+    private VisitDto _visit { get; set; } = new();
+}

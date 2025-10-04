@@ -24,7 +24,7 @@
             <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Visits</a>
+            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.MedicalRecords</a>
         </li>
         @if (canSeePrecriptions)
         {
@@ -33,10 +33,7 @@
             </li>
         }
         <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.MedicalRecords</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">@Resource.Appointments</a>
+            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.Appointments</a>
         </li>
     </ul>
 
@@ -91,7 +88,7 @@
     }
     else if (activeTab == 1)
     {
-        <Visits PatientId="PatientId" />
+        <MedicalRecords PatientId="PatientId" />
     }
     else if (activeTab == 2 && canSeePrecriptions)
     {
@@ -99,10 +96,6 @@
                        CanCreatePrescription="canCreatePrecriptions" />
     }
     else if (activeTab == 3)
-    {
-        <MedicalRecords PatientId="PatientId" />
-    }
-    else if (activeTab == 4)
     {
     }
 </div>
