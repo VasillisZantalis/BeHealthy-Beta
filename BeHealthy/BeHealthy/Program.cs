@@ -1,6 +1,7 @@
 using BeHealthy.Application;
 using BeHealthy.Components;
 using BeHealthy.Components.Account;
+using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Endpoints.Culture;
 using BeHealthy.Infrastructure;
@@ -78,8 +79,8 @@ builder.Services.AddScoped<NavMenuState>();
 builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<ConfirmDeleteStateService>();
-builder.Services.AddScoped<ToastrStateService>();
 builder.Services.AddScoped<AlertModalStateService>();
+builder.Services.AddScoped<ToastService>();
 
 var app = builder.Build();
 

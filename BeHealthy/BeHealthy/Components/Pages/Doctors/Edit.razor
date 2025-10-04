@@ -8,6 +8,7 @@
 @inject IDepartmentService DepartmentService
 @inject ISpecialtyService SpecialtyService
 @inject IAppSettingsService AppSettingsService
+@inject NavigationManager NavigationManager
 
 <PageTitle>@Resource.Edit</PageTitle>
 
@@ -179,16 +180,16 @@
         }
 
         var result = await DoctorService.UpdateDoctorAsync(_DoctorUpdateDto);
+        _inProgress = false;
+
         if (!result.Success)
         {
-            _inProgress = false;
             _alert.ShowSuccess(result.ErrorMessage);
         }
         else
         {
-            _alert.ShowSuccess(Resource.Success);
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.Refresh(true);
         }
-
-        _inProgress = false;
     }
 }

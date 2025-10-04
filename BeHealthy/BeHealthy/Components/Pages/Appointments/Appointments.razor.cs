@@ -34,7 +34,6 @@ public partial class Appointments : BasePage
     private List<PatientSimpleDto>? _patients { get; set; }
 
     private AppointmentModal _appointmentModal { get; set; } = new();
-    private Alert _alert = new();
 
     private string? _currentUserId;
     private bool hasActionRights;

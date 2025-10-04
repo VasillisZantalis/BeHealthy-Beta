@@ -135,9 +135,11 @@
             response = await VisitService.AddVisitAsync(visitCreateDto);
         }
 
-        if (HandleServiceResponse(response)) return;
-
-        // Decide what to do after successful save
+        if (HandleServiceResponse(response))
+        {
+            ToastService.ShowToast(Resource.Success, "success");
+            Close();
+        }
     }
 
     private void HandleValidationErrors(Dictionary<string, List<string>> errors) 

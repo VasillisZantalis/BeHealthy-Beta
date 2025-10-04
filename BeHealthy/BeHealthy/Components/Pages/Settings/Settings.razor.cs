@@ -66,6 +66,6 @@ public partial class Settings : BasePage
         LoaderService.SetLoader(true);
         await AppSettingsService.UpdateSettingAsync(setting);
         LoaderService.SetLoader(false);
-        //await ToastrStateService.ShowSuccess(Resource.Success);
+        ToastService.ShowToast(Resource.Success, "success");
     }
 }

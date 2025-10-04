@@ -127,24 +127,24 @@
                 _prescriptions.Remove(deletedPrescription);
             }
 
-            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+            ToastService.ShowToast(Resource.Success, "success");
         }
         else
         {
-            await ToastrStateService.ShowFailed(Resource.SomethingWentWrong);
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
         }
     }
 
-    private async Task HandleResponse(bool successful)
+    private void HandleResponse(bool successful)
     {
         if (successful)
         {
-            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+            ToastService.ShowToast(Resource.Success, "success");
             NavigationManager.Refresh(true);
         }
         else
         {
-            await ToastrStateService.ShowFailed(Resource.SomethingWentWrong);
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
         }
     }
 }

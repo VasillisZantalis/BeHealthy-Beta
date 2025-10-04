@@ -127,6 +127,7 @@
         }
 
         var patientCreationResult = await PatientService.AddPatientAsync(_PatientCreateDto);
+        _inProgress = false;
 
         if (!patientCreationResult.Success)
         {
@@ -135,20 +136,9 @@
         }
         else
         {
-            await ToastrStateService.ShowSuccess(Resource.Success);
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
         }
-
-        _inProgress = false;
-    }
-
-    private void HandleModalClose(bool success)
-    {
-        _inProgress = false;
-
-        if (!success)
-            return;
-
-        NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
     }
 
     async Task OnFileChange(InputFileChangeEventArgs e)

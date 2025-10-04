@@ -96,9 +96,9 @@ else
         });
     }
 
-    private async Task HandleResponse()
+    private void HandleResponse()
     {
-        await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+        ToastService.ShowToast(Resource.Success, "success");
         NavigationManager.Refresh(true);
     }
 }

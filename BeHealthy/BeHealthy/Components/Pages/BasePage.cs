@@ -18,7 +18,7 @@ public class BasePage : ComponentBase
     protected ConfirmDeleteStateService ConfirmDeleteService { get; set; } = default!;
 
     [Inject]
-    protected ToastrStateService ToastrStateService { get; set; } = default!;
+    protected ToastService ToastService { get; set; } = default!;
 
     [Inject]
     protected AlertModalStateService AlertModalStateService { get; set; } = default!;

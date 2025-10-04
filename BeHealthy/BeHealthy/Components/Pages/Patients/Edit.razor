@@ -5,6 +5,7 @@
 
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Edit</PageTitle>
@@ -182,6 +183,7 @@
         }
 
         var result = await PatientService.UpdatePatientAsync(_PatientUpdateDto);
+        _inProgress = false;
 
         if (!result.Success)
         {
@@ -189,9 +191,8 @@
         }
         else
         {
-            await ToastrStateService.ShowSuccess(Resource.Success);
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.Refresh(true);
         }
-
-        _inProgress = false;
     }
 }

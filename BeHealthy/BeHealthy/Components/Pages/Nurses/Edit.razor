@@ -5,6 +5,7 @@
 
 @inject INurseService NurseService
 @inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
 
 <PageTitle>@Resource.Edit</PageTitle>
 
@@ -130,6 +131,7 @@
         }
 
         var result = await NurseService.UpdateNurseAsync(_NurseUpdateDto);
+        _inProgress = false;
 
         if (!result.Success)
         {
@@ -137,9 +139,8 @@
         }
         else
         {
-            _alert.ShowSuccess(Resource.Success);
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.Refresh(true);
         }
-
-        _inProgress = false;
     }
 }

@@ -113,6 +113,8 @@
         if (DepartmentDto.HeadOfDepartmentId == 0)
             DepartmentDto.HeadOfDepartmentId = null;
 
+        _inProgress = false;
+        
         if (errors.Any())
         {
             _validationComponent?.DisplayErrors(errors);
@@ -136,9 +138,9 @@
             }
             else
             {
+                ToastService.ShowToast(Resource.Success, "success");
                 _navigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
             }
         }
-        _inProgress = false;
     }
 }
