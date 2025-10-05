@@ -239,7 +239,7 @@
     <value>Departments</value>
   </data>
   <data name="DisabledValidationMessage" xml:space="preserve">
-    <value>DisabledValidationMessage</value>
+    <value>Disabling this may bypass certain validations when creating the entity, except for the fundamental checks enforced by the system.</value>
   </data>
   <data name="Doctor" xml:space="preserve">
     <value>Doctor</value>
@@ -339,15 +339,6 @@
   </data>
   <data name="Management" xml:space="preserve">
     <value>Management</value>
-  </data>
-  <data name="MassImport" xml:space="preserve">
-    <value>MassImport</value>
-  </data>
-  <data name="MedicalRecord" xml:space="preserve">
-    <value>MedicalRecord</value>
-  </data>
-  <data name="MedicalRecords" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
   <data name="Medication" xml:space="preserve">
     <value>Medication</value>
