@@ -222,6 +222,9 @@
   <data name="Departments" xml:space="preserve">
     <value>Departments</value>
   </data>
+  <data name="DisabledValidationMessage" xml:space="preserve">
+    <value>Disabling this may bypass certain validations when creating the entity, except for the fundamental checks enforced by the system.</value>
+  </data>
   <data name="Doctor" xml:space="preserve">
     <value>Doctor</value>
   </data>
@@ -308,6 +311,9 @@
   </data>
   <data name="Management" xml:space="preserve">
     <value>Management</value>
+  </data>
+  <data name="MassImport" xml:space="preserve">
+    <value>Mass Import</value>
   </data>
   <data name="Medication" xml:space="preserve">
     <value>Medication</value>
