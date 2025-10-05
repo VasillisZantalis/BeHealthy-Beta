@@ -1,4 +1,5 @@
 ﻿@page "/patients/edit/{PatientId:int}"
+@using BeHealthy.Components.Pages.Patients.Components.Allergies
 @attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)}")]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
@@ -27,12 +28,15 @@
         <li class="nav-item">
             <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.MedicalRecords</a>
         </li>
-        @if (canSeePrecriptions)
+        @* @if (canSeePrecriptions)
         {
             <li class="nav-item">
                 <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Prescriptions</a>
             </li>
-        }
+        } *@
+        <li class="nav-item">
+            <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Allergies</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.Appointments</a>
         </li>
@@ -91,10 +95,11 @@
     {
         <MedicalRecords PatientId="PatientId" />
     }
-    else if (activeTab == 2 && canSeePrecriptions)
+    else if (activeTab == 2)
     {
-        <Prescriptions PatientId="PatientId"
-                       CanCreatePrescription="canCreatePrecriptions" />
+        <AllergiesGrid PatientId="PatientId" />
+        @* <Prescriptions PatientId="PatientId"
+                       CanCreatePrescription="canCreatePrecriptions" /> *@
     }
     else if (activeTab == 3)
     {
@@ -118,10 +123,11 @@
     private List<SelectItem> _departmentsSelect = new List<SelectItem>();
 
     private int activeTab = 0;
-    private void SelectTab(int tabName) => activeTab = tabName;
     private bool canSeePrecriptions;
     private bool canSeeVisits;
     private bool canCreatePrecriptions;
+
+    private void SelectTab(int tabName) => activeTab = tabName;
 
     protected override async Task OnInitializedAsync()
     {

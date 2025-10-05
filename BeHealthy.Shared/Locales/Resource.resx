@@ -126,6 +126,12 @@
   <data name="AddRow" xml:space="preserve">
     <value>Add Row</value>
   </data>
+  <data name="Allergen" xml:space="preserve">
+    <value>Allergen</value>
+  </data>
+  <data name="Allergies" xml:space="preserve">
+    <value>Allergies</value>
+  </data>
   <data name="Allergy" xml:space="preserve">
     <value>Allergy</value>
   </data>
@@ -293,6 +299,9 @@
   </data>
   <data name="Hour" xml:space="preserve">
     <value>Hour</value>
+  </data>
+  <data name="InvalidData" xml:space="preserve">
+    <value>Invalid Data</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Invalid Email</value>

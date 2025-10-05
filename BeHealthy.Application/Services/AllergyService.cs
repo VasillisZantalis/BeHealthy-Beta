@@ -1,6 +1,7 @@
-using BeHealthy.Domain.Entities;
 using BeHealthy.Application.Dtos.Allergy;
 using BeHealthy.Application.Interfaces.Repositories;
+using BeHealthy.Application.Mappings;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -13,14 +14,15 @@ public class AllergyService : IAllergyService
         _allergyRepository = allergyRepository;
     }
 
-    public async Task<IEnumerable<Allergy>> GetAllergiesByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<AllergyDto>> GetAllergiesByPatientIdAsync(int patientId)
     {
-        return await _allergyRepository.GetAllergiesByPatientIdAsync(patientId);
+        var allergies = await _allergyRepository.GetAllergiesByPatientIdAsync(patientId);
+        return allergies.Select(a => a.MapToDto());
     }
 
     public async Task<ServiceResponse> AddAllergyAsync(AllergyCreateDto dto)
     {
-        var allergy = dto.ToEntity();
+        var allergy = dto.MapToDomain();
         await _allergyRepository.AddAsync(allergy);
         return ServiceResponse.Successful();
     }
@@ -29,9 +31,9 @@ public class AllergyService : IAllergyService
     {
         var allergy = await _allergyRepository.GetByIdAsync(dto.Id);
         if (allergy == null)
-            return ServiceResponse.Failed("Allergy not found.");
+            return ServiceResponse.Failed(Resource.NotFound);
 
-        dto.MapToEntity(allergy);
+        allergy = dto.MapToDomain();
         await _allergyRepository.UpdateAsync(allergy);
         return ServiceResponse.Successful();
     }
@@ -40,5 +42,11 @@ public class AllergyService : IAllergyService
     {
         await _allergyRepository.DeleteAsync(id);
         return ServiceResponse.Successful();
+    }
+
+    public async Task<AllergyDto?> GetAllergyByIdAsync(int id)
+    {
+        var allergy = await _allergyRepository.GetByIdAsync(id);
+        return allergy?.MapToDto();
     }
 }

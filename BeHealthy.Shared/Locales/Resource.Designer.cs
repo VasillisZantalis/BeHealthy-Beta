@@ -88,6 +88,24 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allergen.
+        /// </summary>
+        public static string Allergen {
+            get {
+                return ResourceManager.GetString("Allergen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allergies.
+        /// </summary>
+        public static string Allergies {
+            get {
+                return ResourceManager.GetString("Allergies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allergy.
         /// </summary>
         public static string Allergy {
@@ -588,6 +606,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Hour {
             get {
                 return ResourceManager.GetString("Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Data.
+        /// </summary>
+        public static string InvalidData {
+            get {
+                return ResourceManager.GetString("InvalidData", resourceCulture);
             }
         }
         

@@ -126,6 +126,12 @@
   <data name="AddRow" xml:space="preserve">
     <value>Προσθήκη γραμμής</value>
   </data>
+  <data name="Allergen" xml:space="preserve">
+    <value>Αλλεργιογόνο</value>
+  </data>
+  <data name="Allergies" xml:space="preserve">
+    <value>Αλλεργίες</value>
+  </data>
   <data name="Allergy" xml:space="preserve">
     <value>Αλλεργία</value>
   </data>
@@ -293,6 +299,9 @@
   </data>
   <data name="Hour" xml:space="preserve">
     <value>Ώρα</value>
+  </data>
+  <data name="InvalidData" xml:space="preserve">
+    <value>Μη έγκυρα δεδομένα</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Μη έγκυρο ηλεκτρονικό ταχυδρομείο</value>
