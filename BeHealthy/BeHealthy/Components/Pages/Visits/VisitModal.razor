@@ -4,6 +4,7 @@
 @inject IVisitService VisitService
 @inject IDoctorService DoctorService
 @inject IPatientService PatientService
+@inject NavigationManager NavigationManager
 
 @if (_showModal)
 {
@@ -18,22 +19,22 @@
                     <EditForm Model="_visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit" Enhance>
                         <ValidationComponent @ref="_validationComponent" />
                         <div class="d-flex flex-column gap-2">
-                            <div class="form-floating">
+                            <div class="form-group">
+                                <label for="reason" class="form-label fw-bold required">@Resource.Reason</label>
                                 <InputText id="reason" @bind-Value="_visitDto.Reason" class="form-control" />
-                                <label for="reason" class="form-label">@Resource.Reason</label>
                             </div>
-                            <div class="form-floating">
+                            <div class="form-group">
+                                <label for="notes" class="form-label fw-bold">@Resource.Notes</label>
                                 <InputText id="notes" @bind-Value="_visitDto.Notes" class="form-control" />
-                                <label for="notes" class="form-label">@Resource.Notes</label>
                             </div>
-                            <div class="form-floating">
+                            <div class="form-group">
+                                <label for="doctor" class="form-label fw-bold required">@Resource.Doctor</label>
                                 <InputSelect id="doctor" class="form-select" @bind-Value="_visitDto.Doctor.Id">
                                     @foreach (var doctor in _doctorsSelect)
                                     {
                                         <option value="@doctor.Value">@doctor.Text</option>
                                     }
                                 </InputSelect>
-                                <label for="doctor" class="form-label">@Resource.Doctor</label>
                             </div>
                         </div>
                         <div class="d-flex flex-row justify-content-end m-3 gap-2">
@@ -87,6 +88,7 @@
         _showModal = false;
         _visitId = null;
         StateHasChanged();
+        NavigationManager.Refresh(true);
     }
 
     public void Show(int? visitId = null)
@@ -138,7 +140,6 @@
         if (HandleServiceResponse(response))
         {
             ToastService.ShowToast(Resource.Success, "success");
-            Close();
         }
     }
 
