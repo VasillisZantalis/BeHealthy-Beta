@@ -27,9 +27,6 @@
                     <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditRecord(context.Id))">
                         <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                     </button>
-                    <button class="btn" title="@(string.Join(" ", Resource.Create, Resource.Visit))" @onclick="CreateVisit">
-                        <Icon IconClass="@FAIcon.Plus" TextClass="text-info" />
-                    </button>
                     <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
                         <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
                     </button>
@@ -65,7 +62,6 @@
     public int PatientId { get; set; }
 
     private GenericModal _genericModal { get; set; } = new();
-    private VisitModal visitModal { get; set; } = new();
 
     private List<MedicalRecordDto> _medicalRecords { get; set; } = new();
 
@@ -131,6 +127,4 @@
             NavigationManager.Refresh(true);
         });
     }
-
-    private void CreateVisit() => visitModal.Show();
 }

@@ -53,11 +53,11 @@
     <CascadingValue Value="PatientId">
         <CascadingValue Value="MedicalRecordId">
             <div class="p-5 border rounded shadow-sm">
-                <Tabs TTabKey="PatientTabs" @bind-ActiveTab="activeTab">
-                    <Tab TTabKey="PatientTabs" Title="@Resource.Visits" Key="PatientTabs.Visits">
+                <Tabs TTabKey="MedicalRecordTabs" @bind-ActiveTab="activeTab">
+                    <Tab TTabKey="MedicalRecordTabs" Title="@Resource.Visits" Key="MedicalRecordTabs.Visits">
                         <VisitsGrid />
                     </Tab>
-                    <Tab TTabKey="PatientTabs" Title="@Resource.Allergies" Key="PatientTabs.Allergies">
+                    <Tab TTabKey="MedicalRecordTabs" Title="@Resource.Allergies" Key="MedicalRecordTabs.Allergies">
                         <AllergiesGrid PatientId="PatientId" />
                     </Tab>
                 </Tabs>
@@ -74,7 +74,7 @@
     public int MedicalRecordId { get; set; }
 
     private MedicalRecordDto _medicalRecord { get; set; } = new();
-    private PatientTabs activeTab = PatientTabs.Visits;
+    private MedicalRecordTabs activeTab = MedicalRecordTabs.Visits;
 
     private bool isEditing = false;
     private string? notesBackup; //store original notes in case of cancel 

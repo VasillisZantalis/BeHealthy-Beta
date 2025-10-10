@@ -21,89 +21,64 @@
         <span>@Resource.Save</span>
     </button>
 
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.MedicalRecords</a>
-        </li>
-        @* @if (canSeePrecriptions)
-        {
-            <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Prescriptions</a>
-            </li>
-        } *@
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Allergies</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.Appointments</a>
-        </li>
-    </ul>
-
-    @if (activeTab == 0)
-    {
-        <div class="mt-3">
-            <EditForm Model="_PatientUpdateDto" method="post" OnValidSubmit="UpdatePatient" FormName="UpdateForm" Enhance>
-                <FluentValidationValidator @ref="_fluentValidationValidator" />
-                <div class="row">
-                    <Alert @ref="_alert" />
-                    <div class="text-center mb-3">
-                        <img src="@(_PatientUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle"/>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-floating mb-3">
-                            <InputText @bind-Value="_PatientUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                            <label for="firstName">@Resource.FirstName</label>
-                            <ValidationMessage For="() => _PatientUpdateDto.FirstName" class="text-danger" />
+    <Tabs TTabKey="PatientTabs" @bind-ActiveTab="activeTab">
+        <Tab TTabKey="PatientTabs" Title="@Resource.GeneralData" Key="PatientTabs.GeneralData">
+            <div class="mt-3">
+                <EditForm Model="_PatientUpdateDto" method="post" OnValidSubmit="UpdatePatient" FormName="UpdateForm" Enhance>
+                    <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    <div class="row">
+                        <Alert @ref="_alert" />
+                        <div class="text-center mb-3">
+                            <img src="@(_PatientUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-3">
+                                <InputText @bind-Value="_PatientUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                                <label for="firstName">@Resource.FirstName</label>
+                                <ValidationMessage For="() => _PatientUpdateDto.FirstName" class="text-danger" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-3">
+                                <InputText @bind-Value="_PatientUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                                <label for="lastName">@Resource.LastName</label>
+                                <ValidationMessage For="() => _PatientUpdateDto.LastName" class="text-danger" />
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-floating mb-3">
-                            <InputText @bind-Value="_PatientUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                            <label for="lastName">@Resource.LastName</label>
-                            <ValidationMessage For="() => _PatientUpdateDto.LastName" class="text-danger" />
-                        </div>
+                    <div class="form-control mb-3">
+                        <InputFile class="form-control" OnChange="OnFileChange" />
                     </div>
-                </div>
-                <div class="form-control mb-3">
-                    <InputFile class="form-control" OnChange="OnFileChange" />
-                </div>
-                <div class="form-floating mb-3">
-                    <InputText id="phoneNumber" @bind-Value="_PatientUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-                    <label for="phoneNumber">@Resource.PhoneNumber</label>
-                    <ValidationMessage For="() => _PatientUpdateDto.PhoneNumber" class="text-danger" />
-                </div>
-
-                @if (_departments is not null && _departments.Any())
-                {
                     <div class="form-floating mb-3">
-                        <InputSelect id="Department" @bind-Value="_PatientUpdateDto.DepartmentId" class="form-control">
-                            @foreach (var department in _departmentsSelect)
-                            {
-                                <option value="@department.Value">@department.Text</option>
-                            }
-                        </InputSelect>
-                        <label for="Department">@Resource.Department</label>
+                        <InputText id="phoneNumber" @bind-Value="_PatientUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                        <label for="phoneNumber">@Resource.PhoneNumber</label>
+                        <ValidationMessage For="() => _PatientUpdateDto.PhoneNumber" class="text-danger" />
                     </div>
-                }
-            </EditForm>
-        </div>
-    }
-    else if (activeTab == 1)
-    {
-        <MedicalRecords PatientId="PatientId" />
-    }
-    else if (activeTab == 2)
-    {
-        <AllergiesGrid PatientId="PatientId" />
-        @* <Prescriptions PatientId="PatientId"
-                       CanCreatePrescription="canCreatePrecriptions" /> *@
-    }
-    else if (activeTab == 3)
-    {
-    }
+
+                    @if (_departments is not null && _departments.Any())
+                    {
+                        <div class="form-floating mb-3">
+                            <InputSelect id="Department" @bind-Value="_PatientUpdateDto.DepartmentId" class="form-control">
+                                @foreach (var department in _departmentsSelect)
+                                {
+                                    <option value="@department.Value">@department.Text</option>
+                                }
+                            </InputSelect>
+                            <label for="Department">@Resource.Department</label>
+                        </div>
+                    }
+                </EditForm>
+            </div>
+        </Tab>
+        <Tab TTabKey="PatientTabs" Title="@Resource.MedicalRecords" Key="PatientTabs.MedicalRecords">
+            <MedicalRecords PatientId="PatientId" />
+        </Tab>
+        <Tab TTabKey="PatientTabs" Title="@Resource.Allergies" Key="PatientTabs.Allergies">
+            <AllergiesGrid PatientId="PatientId" />
+        </Tab>
+        <Tab TTabKey="PatientTabs" Title="@Resource.Appointments" Key="PatientTabs.Appointments">
+        </Tab>
+    </Tabs>
 </div>
 
 
@@ -122,12 +97,10 @@
 
     private List<SelectItem> _departmentsSelect = new List<SelectItem>();
 
-    private int activeTab = 0;
+    private PatientTabs activeTab = PatientTabs.GeneralData;
     private bool canSeePrecriptions;
     private bool canSeeVisits;
     private bool canCreatePrecriptions;
-
-    private void SelectTab(int tabName) => activeTab = tabName;
 
     protected override async Task OnInitializedAsync()
     {

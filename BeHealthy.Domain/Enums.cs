@@ -83,11 +83,19 @@ public enum AllergySeverity
     Severe = 2
 }
 
-public enum PatientTabs 
+public enum MedicalRecordTabs 
 { 
     Visits = 0, 
     Allergies = 1, 
     Medications = 2 
+}
+
+public enum PatientTabs
+{
+    GeneralData = 0,
+    MedicalRecords = 1,
+    Allergies = 2,
+    Appointments = 3,
 }
 
 public enum DepartmentTabs
