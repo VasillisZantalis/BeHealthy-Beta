@@ -139,6 +139,7 @@
 
         if (HandleServiceResponse(response))
         {
+            Close();
             ToastService.ShowToast(Resource.Success, "success");
         }
     }

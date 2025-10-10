@@ -1,0 +1,29 @@
+﻿@typeparam TTabKey
+@implements IDisposable
+
+@if (Parent is not null && EqualityComparer<TTabKey>.Default.Equals(Parent.ActiveTab, Key))
+{
+    <div role="tabpanel">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [CascadingParameter] private Tabs<TTabKey>? Parent { get; set; }
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public TTabKey Key { get; set; } = default!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private TabItem<TTabKey>? _item;
+
+    protected override void OnInitialized()
+    {
+        _item = new TabItem<TTabKey> { Title = Title, Key = Key };
+        Parent?.AddTab(_item);
+    }
+
+    public void Dispose()
+    {
+        if (_item is not null) Parent?.RemoveTab(_item);
+    }
+}

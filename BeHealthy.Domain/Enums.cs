@@ -82,3 +82,10 @@ public enum AllergySeverity
     Moderate = 1,
     Severe = 2
 }
+
+public enum PatientTabs 
+{ 
+    Visits = 0, 
+    Allergies = 1, 
+    Medications = 2 
+}

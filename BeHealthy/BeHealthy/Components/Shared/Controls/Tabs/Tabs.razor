@@ -1,0 +1,46 @@
+﻿@typeparam TTabKey
+
+<CascadingValue Value="this">
+    <ul class="nav nav-tabs" role="tablist">
+        @foreach (var tab in tabs)
+        {
+            var isActive = EqualityComparer<TTabKey>.Default.Equals(tab.Key, ActiveTab);
+            <li class="nav-item" role="presentation">
+                <a class="nav-link text-reset @(isActive ? "active fw-bold" : "")"
+                   role="tab"
+                   aria-selected="@isActive"
+                   @onclick="@(() => SelectTab(tab.Key))">
+                    @tab.Title
+                </a>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content mt-3">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    [Parameter] public TTabKey ActiveTab { get; set; } = default!;
+    [Parameter] public EventCallback<TTabKey> ActiveTabChanged { get; set; } // for bind-ActiveTab
+    [Parameter] public EventCallback<TTabKey> OnTabSelected { get; set; }    // optional callback
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    internal List<TabItem<TTabKey>> tabs { get; } = new();
+
+    internal void AddTab(TabItem<TTabKey> tab)
+    {
+        if (!tabs.Contains(tab)) tabs.Add(tab);
+    }
+
+    internal void RemoveTab(TabItem<TTabKey> tab) => tabs.Remove(tab);
+
+    private async Task SelectTab(TTabKey key)
+    {
+        ActiveTab = key;
+        if (ActiveTabChanged.HasDelegate) await ActiveTabChanged.InvokeAsync(key);
+        if (OnTabSelected.HasDelegate) await OnTabSelected.InvokeAsync(key);
+        StateHasChanged();
+    }
+}

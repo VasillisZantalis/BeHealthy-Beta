@@ -53,23 +53,14 @@
     <CascadingValue Value="PatientId">
         <CascadingValue Value="MedicalRecordId">
             <div class="p-5 border rounded shadow-sm">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.Visits</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Allergy</a>
-                    </li>
-                </ul>
-
-                @if (activeTab == 0)
-                {
-                    <VisitsGrid />
-                }
-                else
-                {
-                    <p>@Resource.NotAvailable</p>
-                }
+                <Tabs TTabKey="PatientTabs" @bind-ActiveTab="activeTab">
+                    <Tab TTabKey="PatientTabs" Title="@Resource.Visits" Key="PatientTabs.Visits">
+                        <VisitsGrid />
+                    </Tab>
+                    <Tab TTabKey="PatientTabs" Title="@Resource.Allergies" Key="PatientTabs.Allergies">
+                        <AllergiesGrid PatientId="PatientId" />
+                    </Tab>
+                </Tabs>
             </div>
         </CascadingValue>
     </CascadingValue>
@@ -83,8 +74,7 @@
     public int MedicalRecordId { get; set; }
 
     private MedicalRecordDto _medicalRecord { get; set; } = new();
-    private int activeTab = 0;
-    private void SelectTab(int tabName) => activeTab = tabName;
+    private PatientTabs activeTab = PatientTabs.Visits;
 
     private bool isEditing = false;
     private string? notesBackup; //store original notes in case of cancel 
