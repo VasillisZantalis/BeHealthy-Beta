@@ -11,7 +11,7 @@ public class CalendarItem
     [JsonPropertyName("start")]
     public string Start { get; set; } = string.Empty;
     [JsonPropertyName("end")]
-    public string? End { get; set; } = null;
+    public string End { get; set; } = string.Empty;
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;
     [JsonPropertyName("backgroundColor")]

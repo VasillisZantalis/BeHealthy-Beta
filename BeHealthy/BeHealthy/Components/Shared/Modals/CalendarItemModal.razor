@@ -1,6 +1,4 @@
-﻿@rendermode InteractiveServer
-
-@if (_showModal)
+﻿@if (_showModal)
 {
     <div class="modal fade show" tabindex="-1" style="display:block">
         <div class="modal-dialog">
@@ -12,7 +10,7 @@
                 <div class="modal-body text-center">
                     <div class="d-flex flex-column justify-content-center">
                         <span class="h5 fw-normal">@CalendarItem.Title</span>
-                        <small>@DateTime.Parse(CalendarItem.Start).ToString("HH:mm") - @DateTime.Parse(CalendarItem.End!).ToString("HH:mm")</small>
+                        <small>@DateTime.Parse(CalendarItem.Start).ToString("HH:mm") - @DateTime.Parse(CalendarItem.End).ToString("HH:mm")</small>
                     </div>
                 </div>
                 <div class="d-flex flex-row justify-content-end m-3">

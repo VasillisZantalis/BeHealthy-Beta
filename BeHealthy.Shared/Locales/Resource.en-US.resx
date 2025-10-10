@@ -263,7 +263,7 @@
     <value>Email is already used</value>
   </data>
   <data name="EndTime" xml:space="preserve">
-    <value>EndTime</value>
+    <value>End Time</value>
   </data>
   <data name="EndTimeCannotBeEarlierThanStartTime" xml:space="preserve">
     <value>End Time cannot be earlier than Start Time</value>
@@ -340,6 +340,15 @@
   <data name="Management" xml:space="preserve">
     <value>Management</value>
   </data>
+  <data name="MassImport" xml:space="preserve">
+    <value>Mass Import</value>
+  </data>
+  <data name="MedicalRecord" xml:space="preserve">
+    <value>Medical Record</value>
+  </data>
+  <data name="MedicalRecords" xml:space="preserve">
+    <value>Medical Records</value>
+  </data>
   <data name="Medication" xml:space="preserve">
     <value>Medication</value>
   </data>
@@ -401,7 +410,7 @@
     <value>Passwords do not match</value>
   </data>
   <data name="PasswordTooShort" xml:space="preserve">
-    <value> Password must be at least {0} characters</value>
+    <value>Password must be at least {0} characters</value>
   </data>
   <data name="Patient" xml:space="preserve">
     <value>Patient</value>
@@ -506,7 +515,7 @@
     <value>Specialty</value>
   </data>
   <data name="StartTime" xml:space="preserve">
-    <value>StartTime</value>
+    <value>Start Time</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status</value>
@@ -548,13 +557,13 @@
     <value>Patient</value>
   </data>
   <data name="UseValidation" xml:space="preserve">
-    <value>UseValidation</value>
+    <value>Use Validation</value>
   </data>
   <data name="Visit" xml:space="preserve">
     <value>Visit</value>
   </data>
   <data name="VisitDate" xml:space="preserve">
-    <value>VisitDate</value>
+    <value>Visit Date</value>
   </data>
   <data name="Visits" xml:space="preserve">
     <value>Visits</value>

@@ -283,7 +283,7 @@
     <value>Name</value>
   </data>
   <data name="GeneralData" xml:space="preserve">
-    <value>GeneralData</value>
+    <value>General Data</value>
   </data>
   <data name="Greek" xml:space="preserve">
     <value>Greek</value>
@@ -409,7 +409,7 @@
     <value>Passwords do not match</value>
   </data>
   <data name="PasswordTooShort" xml:space="preserve">
-    <value> Password must be at least {0} characters</value>
+    <value>Password must be at least {0} characters</value>
   </data>
   <data name="Patient" xml:space="preserve">
     <value>Patient</value>

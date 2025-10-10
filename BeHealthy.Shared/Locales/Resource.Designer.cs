@@ -556,7 +556,7 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GeneralData.
+        ///   Looks up a localized string similar to General Data.
         /// </summary>
         public static string GeneralData {
             get {
@@ -934,7 +934,7 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  Password must be at least {0} characters.
+        ///   Looks up a localized string similar to Password must be at least {0} characters.
         /// </summary>
         public static string PasswordTooShort {
             get {
