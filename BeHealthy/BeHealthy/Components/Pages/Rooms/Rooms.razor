@@ -77,10 +77,14 @@ else
     private int? _roomId;
     private UpsertModal _roomUpsertModal = new();
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-        SetBreadcrumbs();
 
         _rooms = await RoomService.GetAllRoomsAsync();
         _paginationState.ItemsPerPage = _rooms.Count();

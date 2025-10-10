@@ -1,17 +1,13 @@
 ﻿using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Application.Dtos.Common;
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Dtos.Patient;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
-using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
-using BeHealthy.Shared.Parameters;
-using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.QuickGrid;
@@ -49,11 +45,14 @@ public partial class Appointments : BasePage
     void ShowImportWizard() => showWizard = true;
     void HideImportWizard() => showWizard = false;
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-
-        SetBreadcrumbs();
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _currentUserId = authState.User.GetUserId();
@@ -176,7 +175,7 @@ public partial class Appointments : BasePage
         var response = await _appointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
 
         if (HandleServiceResponse(response))
-            _navigationManager.Refresh(true); 
+            _navigationManager.Refresh(true);
     }
 
     private async Task BulkCreateAppointments((List<AppointmentCreateDto> AppointmentCreateDtos, bool UseValidation) result)

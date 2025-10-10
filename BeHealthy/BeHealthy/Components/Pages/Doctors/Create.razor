@@ -115,9 +115,14 @@
     private List<SelectItem>? _departmentsSelect = new();
     private List<SelectItem>? _specialtiesSelect = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
 
         await GetSettings();
 
@@ -137,6 +142,8 @@
             Text = s.Name
         }).ToList();
         _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        LoaderService.SetLoader(false);
     }
 
     private async Task GetSettings()

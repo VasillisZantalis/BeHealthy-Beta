@@ -79,6 +79,11 @@
     private bool isEditing = false;
     private string? notesBackup; //store original notes in case of cancel 
 
+    protected override void OnInitialized()
+    {
+        SetBreadCrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
@@ -86,12 +91,6 @@
         _medicalRecord = await MedicalRecordService.GetMedicalRecordByIdAsync(MedicalRecordId) ?? new();
 
         LoaderService.SetLoader(false);
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-            SetBreadCrumbs();
     }
 
     private void SetBreadCrumbs()

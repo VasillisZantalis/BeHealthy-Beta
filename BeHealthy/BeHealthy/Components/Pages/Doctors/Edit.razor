@@ -104,12 +104,6 @@
         await GetSettings();
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-            SetBreadcrumbs();
-    }
-
     protected override async Task OnParametersSetAsync()
     {
         var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
@@ -133,6 +127,8 @@
         _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         _DoctorUpdateDto = doctor?.MapToUpdateDto() ?? new();
+
+        SetBreadcrumbs();
     }
 
     private void SetBreadcrumbs()

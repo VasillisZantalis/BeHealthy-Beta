@@ -24,11 +24,15 @@ public partial class Upsert : BasePage
     [Inject]
     private IDoctorService _doctorService { get; set; } = default!;
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
 
-        SetBreadcrumbs();
         Doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
 
         if (IsEditMode && id.HasValue)

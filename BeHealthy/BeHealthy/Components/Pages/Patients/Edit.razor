@@ -107,28 +107,24 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userRole = authState.User.GetUserRoleEnum();
 
-        canSeePrecriptions = true;
-        canCreatePrecriptions = true;
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-            SetBreadcrumbs();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
-        var patient = await PatientService.GetPatientByIdAsync(PatientId);
         _departmentsSelect = _departments.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        canSeePrecriptions = true;
+        canCreatePrecriptions = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var patient = await PatientService.GetPatientByIdAsync(PatientId);
         _PatientUpdateDto = patient?.MapToDtoForUpdate() ?? new();
+
+        SetBreadcrumbs();
     }
 
     async Task OnFileChange(InputFileChangeEventArgs e)

@@ -45,10 +45,14 @@
     private UserRole? _userRole;
     private string? _userId;
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-        SetBreadcrumbs();
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         _userId = authState.User.GetUserId() ?? string.Empty;

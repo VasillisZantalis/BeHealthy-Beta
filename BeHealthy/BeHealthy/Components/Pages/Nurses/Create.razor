@@ -92,9 +92,14 @@
 
     private List<SelectItem> _departmentsSelect = new List<SelectItem>();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
 
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         _departmentsSelect = _departments.Select(s => new SelectItem
@@ -103,6 +108,8 @@
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        LoaderService.SetLoader(false);
     }
 
     private void SetBreadcrumbs()

@@ -36,9 +36,6 @@ public class SpecialtyService : ISpecialtyService
     {
         var specialty = specialtyForUpdateDto.MapToDomain();
 
-        if (await _unitOfWork.SpecialtyRepository.ExistsAsync(specialtyForUpdateDto.Id))
-            return;
-
         await _unitOfWork.SpecialtyRepository.UpdateAsync(specialty);
     }
 

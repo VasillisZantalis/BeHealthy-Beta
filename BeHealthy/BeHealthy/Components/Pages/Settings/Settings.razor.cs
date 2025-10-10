@@ -18,18 +18,19 @@ public partial class Settings : BasePage
     [Inject]
     IAppSettingsService AppSettingsService { get; set; } = default!;
     [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
-    [Inject]
     private IDoctorService _doctorService { get; set; } = default!;
 
     private List<SelectItem> _doctorsSelect = new();
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
 
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
 
-        SetBreadcrumbs();
         _settings = (await AppSettingsService.GetAppSettingsAsync()).ToList();
         _settingsGroupedByArea = _settings
             .OrderBy(o => o.Group)

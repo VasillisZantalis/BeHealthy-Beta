@@ -21,11 +21,14 @@ public partial class Departments : BasePage
     private bool _hasActionRights;
     private PaginationState _paginationState = new();
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-
-        SetBreadcrumbs();
 
         _hasActionRights = true;
         _departments = (await _departmentService.GetAllDepartmentsAsync()).ToList();

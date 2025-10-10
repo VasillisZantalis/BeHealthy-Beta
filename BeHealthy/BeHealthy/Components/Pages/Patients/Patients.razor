@@ -90,7 +90,7 @@ else
                     <div class="card-body pb-2 px-0 m-0">
                         <QuickGrid @ref="_quickGrid"
                                    Class="table table-responsive"
-                                   Items="@_patients"
+                                   Items="@_patients.AsQueryable()"
                                    ItemKey="@(x => x.Id)"
                                    Pagination="_paginationState">
                             <TemplateColumn>

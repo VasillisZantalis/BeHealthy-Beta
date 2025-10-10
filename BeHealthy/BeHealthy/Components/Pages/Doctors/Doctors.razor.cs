@@ -32,11 +32,14 @@ public partial class Doctors : BasePage
     void ShowImportWizard() => showWizard = true;
     void HideImportWizard() => showWizard = false;
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-
-        SetBreadcrumbs();
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _userRole = authState.User.GetUserRoleEnum();
