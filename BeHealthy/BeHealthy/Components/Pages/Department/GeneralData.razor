@@ -1,41 +1,39 @@
 ﻿@using BeHealthy.Application.Dtos.Common
 @inherits BasePage
 
-<div class="container-fluid my-3 p-3 border rounded">
-    <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
+<EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
 
-        <button type="submit" class="btn btn-success mb-3 px-4 text-end">
-            @if (_inProgress)
-            {
-                <span class="spinner-border spinner-border-sm"></span>
-            }
-            @Resource.Save
-        </button>
+    <button type="submit" class="btn btn-success mb-3 px-4 text-end">
+        @if (_inProgress)
+        {
+            <span class="spinner-border spinner-border-sm"></span>
+        }
+        @Resource.Save
+    </button>
 
-        <Alert @ref="_alert" />
-        <ValidationComponent @ref="_validationComponent" />
-        <div class="d-flex flex-column gap-3">
-            <div class="form-group">
-                <label class="fw-bold" for="name">@Resource.Name</label>
-                <InputText id="name" class="form-control" @bind-Value="DepartmentDto.Name" />
-            </div>
-            <div class="form-group">
-                <label class="fw-bold" for="location">@Resource.Location</label>
-                <InputText id="location" class="form-control" @bind-Value="DepartmentDto.Location" />
-            </div>
-            <div class="form-group">
-                <label class="fw-bold @(_isRequiredHeadOfDepartment ? "required" : "")" for="headOfDepartment">@Resource.HeadΟfDepartment</label>
-                <InputSelect id="headOfDepartment" class="form-control" @bind-Value="DepartmentDto.HeadOfDepartmentId">
-                    @foreach (var doctor in _doctorsSelect)
-                    {
-                        <option value="@doctor.Value">@doctor.Text</option>
-                    }
-                </InputSelect>
-                <ValidationMessage For="@(() => DepartmentDto.HeadOfDepartmentId)" />
-            </div>
+    <Alert @ref="_alert" />
+    <ValidationComponent @ref="_validationComponent" />
+    <div class="d-flex flex-column gap-3">
+        <div class="form-group">
+            <label class="fw-bold" for="name">@Resource.Name</label>
+            <InputText id="name" class="form-control" @bind-Value="DepartmentDto.Name" />
         </div>
-    </EditForm>
-</div>
+        <div class="form-group">
+            <label class="fw-bold" for="location">@Resource.Location</label>
+            <InputText id="location" class="form-control" @bind-Value="DepartmentDto.Location" />
+        </div>
+        <div class="form-group">
+            <label class="fw-bold @(_isRequiredHeadOfDepartment ? "required" : "")" for="headOfDepartment">@Resource.HeadΟfDepartment</label>
+            <InputSelect id="headOfDepartment" class="form-control" @bind-Value="DepartmentDto.HeadOfDepartmentId">
+                @foreach (var doctor in _doctorsSelect)
+                {
+                    <option value="@doctor.Value">@doctor.Text</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => DepartmentDto.HeadOfDepartmentId)" />
+        </div>
+    </div>
+</EditForm>
 
 @code{
     [Parameter]

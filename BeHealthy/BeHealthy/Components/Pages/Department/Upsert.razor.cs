@@ -2,6 +2,7 @@
 using BeHealthy.Application.Dtos.Doctor;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
+using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
@@ -13,9 +14,7 @@ public partial class Upsert : BasePage
     [Parameter]
     public int? id { get; set; }
     private bool IsEditMode => id.HasValue;
-    private int activeTab = 0;
-    private void SelectTab(int tabName) => activeTab = tabName;
-
+    private DepartmentTabs activeTab = DepartmentTabs.GeneralData;
     private DepartmentDto DepartmentDto = new();
     private List<DoctorDto> Doctors = new();
 
