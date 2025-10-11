@@ -1,5 +1,6 @@
 ﻿@using System.Text.Json
 @rendermode @(new InteractiveServerRenderMode(false))
+@implements IDisposable
 
 @inject IJSRuntime JS
 @inject IAppointmentService AppointmentService
@@ -7,15 +8,17 @@
 @inject IPatientService PatientService
 @inject AuthenticationStateProvider ASP
 
+
 <div id="calendar"></div>
 
 <CalendarItemModal @ref="calendarItemModal" />
 
 @code {
     private List<CalendarItem> calendarItems = new();
-    private static CalendarItem calendarItem = new();
+    private CalendarItem calendarItem = new();
+    private CalendarItemModal calendarItemModal = new();
+    private DotNetObjectReference<Calendar>? dotNetRef;
 
-    private static CalendarItemModal calendarItemModal = new();
     List<AppointmentDto> appointments = new();
 
     protected override async Task OnInitializedAsync()
@@ -39,31 +42,43 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        calendarItems = appointments
-            .Select(a => new CalendarItem
+        if (firstRender)
+        {
+            calendarItems = appointments
+                .Select((a, index) => new CalendarItem
                 {
-                    Title = $"{a.Reason.ToLocalizedString()} - {a.Patient?.FullName ?? "Unknown Patient"}",
-                    Start = a.AppointmentDate
-                        .ToDateTime(a.AppointmentStartTime)
-                        .ToString("yyyy-MM-ddTHH:mm:ss"),
-                                End = a.AppointmentDate
-                        .ToDateTime(a.AppointmentEndTime)
-                        .ToString("yyyy-MM-ddTHH:mm:ss"),
+                    Id = index + 1,
+                    Title = $"{a.Reason.ToLocalizedString()} - {a.Patient?.FullName ?? "Unknown"}",
+                    Start = a.AppointmentDate.ToDateTime(a.AppointmentStartTime).ToString("yyyy-MM-ddTHH:mm:ss"),
+                    End = a.AppointmentDate.ToDateTime(a.AppointmentEndTime).ToString("yyyy-MM-ddTHH:mm:ss"),
                     Description = a.Notes,
                     BackgroundColor = a.Status.GetStatusColor(),
                     BorderColor = a.Status.GetStatusColor(),
                     Color = a.Status.GetStatusColor()
                 }).ToList();
 
-        await JS.InvokeVoidAsync("initializeCalendar", calendarItems);
+            dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("initializeCalendar", dotNetRef, calendarItems);
+        }
     }
 
     [JSInvokable]
-    public static void ConsoleEvent(string calendarEvent)
+    public void ConsoleEvent(string calendarEvent)
     {
         var calItem = JsonSerializer.Deserialize<CalendarItem>(calendarEvent);
         calendarItem = calItem ?? new();
 
         calendarItemModal.OpenModal(calendarItem);
+    }
+
+    [JSInvokable]
+    public void OpenEventModal(CalendarItem calendarItem)
+    {
+        calendarItemModal.OpenModal(calendarItem);
+    }
+
+    public void Dispose()
+    {
+        dotNetRef?.Dispose();
     }
 }
