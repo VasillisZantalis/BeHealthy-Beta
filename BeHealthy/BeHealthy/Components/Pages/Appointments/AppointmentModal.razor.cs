@@ -86,7 +86,14 @@ public partial class AppointmentModal : BasePage
         }).ToList();
         _nursesSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
-        _appointmentDto.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
+
+        // Even thought we set currect hours, still are converted to UTC
+        // Leave it like this for now
+
+        var now = DateTime.Now;
+        _appointmentDto.AppointmentDate = DateOnly.FromDateTime(now);
+        _appointmentDto.AppointmentStartTime = TimeOnly.FromDateTime(now);
+        _appointmentDto.AppointmentEndTime = TimeOnly.FromDateTime(now.AddHours(1));
 
         LoaderService.SetLoader(false);
     }
