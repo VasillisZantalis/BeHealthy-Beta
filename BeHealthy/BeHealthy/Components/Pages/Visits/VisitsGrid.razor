@@ -5,9 +5,8 @@
 @inject NavigationManager NavigationManager
 
 <div class="py-3">
-    <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreateVisit">
-        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-    </button>
+    <CreateButton OnClick="CreateVisit" />
+
     @if (_visits.Any())
     {
         <QuickGrid Items="_visits.AsQueryable()"

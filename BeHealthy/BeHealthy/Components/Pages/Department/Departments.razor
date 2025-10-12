@@ -6,9 +6,7 @@
 <PageTitle>@Resource.Departments</PageTitle>
 
 <div class="">
-    <button class="btn btn-outline-secondary rounded-pill px-4 mb-3" @onclick="Create">
-        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-    </button>
+    <CreateButton OnClick="Create" />
 </div>
 
 @if (_departments is null || !_departments.Any())

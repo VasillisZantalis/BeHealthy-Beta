@@ -8,9 +8,7 @@
 
 <PageTitle>@Resource.Rooms</PageTitle>
 
-<button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreateRoom">
-    <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-</button>
+<CreateButton OnClick="CreateRoom" />
 
 <UpsertModal @ref="_roomUpsertModal"
              RoomId="_roomId" />

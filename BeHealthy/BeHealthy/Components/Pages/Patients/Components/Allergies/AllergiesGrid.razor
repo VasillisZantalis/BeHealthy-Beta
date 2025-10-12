@@ -7,9 +7,7 @@
 @inject NavigationManager NavigationManager
 
 <div class="py-3">
-    <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreateAllergy">
-        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-    </button>
+    <CreateButton OnClick="CreateAllergy" />
     @if (_allergies.Any())
     {
         <QuickGrid Items="_allergies.AsQueryable()"

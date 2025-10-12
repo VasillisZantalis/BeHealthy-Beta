@@ -8,9 +8,7 @@
 @inject ISpecialtyService SpecialtyService
 
 <div class="">
-    <button class="btn btn-outline-secondary rounded-pill px-4 mb-3" @onclick="CreateSpecialty">
-        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-    </button>
+    <CreateButton OnClick="CreateSpecialty" />
 </div>
 
 <UpsertModal @ref="_upsertModal"

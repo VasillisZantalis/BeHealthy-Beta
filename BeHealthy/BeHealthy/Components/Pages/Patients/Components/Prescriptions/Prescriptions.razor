@@ -8,9 +8,7 @@
 <div class="py-3">
     @if (CanCreatePrescription)
     {
-        <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreatePrescription">
-            <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-        </button>
+        <CreateButton OnClick="CreatePrescription" />
     }
 
     <PrescriptionModal @ref="_prescriptionModal"
