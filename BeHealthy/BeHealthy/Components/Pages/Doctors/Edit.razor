@@ -27,9 +27,8 @@
 
         <div class="row">
             <Alert @ref="_alert" />
-            <div class="text-center mb-3">
-                <img src="@(_DoctorUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
-            </div>
+            <ImagePreview ImageUrl="@_DoctorUpdateDto.Image" />
+
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -45,9 +44,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-control mb-3">
-            <InputFile class="form-control" OnChange="OnFileChange" />
-        </div>
+
+        <ImageUpload OnImageChanged="image => _DoctorUpdateDto.Image = image" />
+
         <div class="form-floating mb-3">
             <InputText id="phoneNumber" @bind-Value="_DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
@@ -147,15 +146,6 @@
     {
         AppSetting? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
         _doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
-    }
-
-    async Task OnFileChange(InputFileChangeEventArgs e)
-    {
-        var format = e.File.ContentType;
-        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
-        var buffer = new byte[resizeImage.Size];
-        await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _DoctorUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 
     private async Task UpdateDoctor()

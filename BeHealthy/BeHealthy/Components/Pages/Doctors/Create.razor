@@ -45,7 +45,9 @@
                 </div>
             </div>
         </div>
+
         <ImageUpload OnImageChanged="image => _DoctorCreateDto.Image = image" />
+
         <div class="form-floating mb-3">
             <InputText @bind-Value="_DoctorCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
             <label for="email">@Resource.Email</label>
@@ -189,14 +191,5 @@
             NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
         }
 
-    }
-
-    async Task OnFileChange(InputFileChangeEventArgs e)
-    {
-        var format = e.File.ContentType;
-        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
-        var buffer = new byte[resizeImage.Size];
-        await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _DoctorCreateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 }

@@ -23,9 +23,7 @@
         <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />
-            <div class="text-center mb-3">
-                <img src="@(_NurseUpdateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
-            </div>
+            <ImagePreview ImageUrl="@_NurseUpdateDto.Image" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -41,9 +39,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-control mb-3">
-            <InputFile class="form-control" OnChange="OnFileChange" />
-        </div>
+
+        <ImageUpload OnImageChanged="image => _NurseUpdateDto.Image = image" />
+
         <div class="form-floating mb-3">
             <InputText id="phoneNumber" @bind-Value="_NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
