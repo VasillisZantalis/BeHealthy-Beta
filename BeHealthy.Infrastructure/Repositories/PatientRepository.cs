@@ -12,23 +12,11 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
     {
     }
 
-    public async Task<IEnumerable<Patient>> GetAllPatientsAsync(PatientSearchingParameters patientSearchingParameters)
+    public async Task<IEnumerable<Patient>> GetAllPatientsAsync()
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var query = context.Patients.Include(d => d.User).AsQueryable();
-
-        if (!string.IsNullOrEmpty(patientSearchingParameters.FirstName))
-        {
-            query = query.Where(x => x.FirstName.ToLower().Contains(patientSearchingParameters.FirstName.ToLower()));
-        }
-
-        if (!string.IsNullOrEmpty(patientSearchingParameters.LastName))
-        {
-            query = query.Where(x => x.LastName.ToLower().Contains(patientSearchingParameters.LastName.ToLower()));
-        }
-
-        return await query.ToListAsync();
+        return await context.Patients.Include(d => d.User).ToListAsync();
     }
 
     public async Task<IEnumerable<Patient>> GetAllPatientsSimpleAsync()

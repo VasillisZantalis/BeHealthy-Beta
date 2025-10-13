@@ -14,9 +14,9 @@ public class PatientService : IPatientService
         _userService = userService;
     }
 
-    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync(PatientSearchingParameters patientSearchingParameters)
+    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync()
     {
-        var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync(patientSearchingParameters);
+        var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync();
         return patients.MapToDto();
     }
 

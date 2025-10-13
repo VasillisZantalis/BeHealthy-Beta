@@ -30,7 +30,6 @@ public partial class Patients : BasePage
     private string? firstNameFilter;
 
     private PaginationState _paginationState = new();
-    private PatientSearchingParameters _filters = new();
 
     private QuickGrid<PatientDto>? _quickGrid;
 
@@ -51,7 +50,7 @@ public partial class Patients : BasePage
         var userRole = authState.User.GetUserRoleEnum();
         var doctorId = authState.User.GetUserId();
 
-        await LoadPatients(_filters, doctorId, userRole);
+        await LoadPatients(doctorId, userRole);
 
         _paginationState.ItemsPerPage = _patients.Count();
 
@@ -70,23 +69,14 @@ public partial class Patients : BasePage
         });
     }
 
-    private async Task HandleFilterApplied(PatientSearchingParameters filters)
-    {
-        _filters = filters;
-
-        await LoadPatients(_filters, null, null);
-
-        await _quickGrid!.RefreshDataAsync();
-    }
-
-    private async Task LoadPatients(PatientSearchingParameters filters, string? doctorId, UserRole? userRole = UserRole.Admin)
+    private async Task LoadPatients(string? doctorId, UserRole? userRole = UserRole.Admin)
     {
         LoaderService.SetLoader(true);
 
         _patients = userRole switch
         {
             UserRole.Doctor when doctorId is not null => (await _doctorService.GetMyPatientsAsync(doctorId)).ToList(),
-            _ => (await _patientService.GetAllPatientsAsync(filters)).ToList()
+            _ => (await _patientService.GetAllPatientsAsync()).ToList()
         };
 
         LoaderService.SetLoader(false);

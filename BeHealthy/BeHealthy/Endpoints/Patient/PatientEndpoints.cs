@@ -17,7 +17,7 @@ public static class PatientEndpoints
         group.MapGet("", async Task<Results<NotFound, Ok<IEnumerable<PatientDto>>>>
             ([FromServices] IPatientService patientService) =>
         {
-            var patients = await patientService.GetAllPatientsAsync(new PatientSearchingParameters());
+            var patients = await patientService.GetAllPatientsAsync();
 
             return patients is null
                 ? TypedResults.NotFound()

@@ -2,7 +2,9 @@
 global using Moq;
 global using System;
 global using System.Collections.Generic;
+global using System.Threading;
 global using System.Threading.Tasks;
+global using System.Linq.Expressions;
 global using Shouldly;
 global using AutoFixture;
 global using System.Linq;
@@ -14,3 +16,5 @@ global using BeHealthy.Application.Interfaces;
 global using BeHealthy.Application.Interfaces.Repositories;
 global using BeHealthy.Domain;
 global using BeHealthy.Shared.Locales;
+global using BeHealthy.Application.Common.Models;
+global using BeHealthy.Application.Dtos.Patient;

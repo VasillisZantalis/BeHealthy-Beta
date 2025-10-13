@@ -1,10 +1,8 @@
-﻿using BeHealthy.Shared.Parameters;
-
-namespace BeHealthy.Application.Services.Interfaces;
+﻿namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IPatientService
 {
-    Task<IEnumerable<PatientDto>> GetAllPatientsAsync(PatientSearchingParameters patientSearchingParameters);
+    Task<IEnumerable<PatientDto>> GetAllPatientsAsync();
     Task<PatientDto?> GetPatientByIdAsync(int id);
     Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsByUserIdAsync(string userId);
     Task<IEnumerable<PatientSimpleDto>> GetAllPatientsSimpleAsync();

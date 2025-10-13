@@ -43,7 +43,7 @@
     {
         var today = DateTime.Now.Date;
 
-        _patients = (await patientService.GetAllPatientsAsync(new PatientSearchingParameters()))
+        _patients = (await patientService.GetAllPatientsAsync())
             .Where(p => p.CreatedAt > today.AddDays(-10))
             .Take(5)
             .ToList();
