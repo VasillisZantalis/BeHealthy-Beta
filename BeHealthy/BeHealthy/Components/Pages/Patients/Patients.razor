@@ -7,12 +7,8 @@
 
 <div class="d-flex flex-row gap-3">
     <div class="">
-        <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreatePatient">
-            <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-        </button>
-        <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
-            <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
-        </button>
+        <CreateButton OnClick="CreatePatient" />
+        <MassImportButton OnClick="ShowImportWizard" />
     </div>
     <div class="">
         <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
@@ -90,7 +86,7 @@ else
                     <div class="card-body pb-2 px-0 m-0">
                         <QuickGrid @ref="_quickGrid"
                                    Class="table table-responsive"
-                                   Items="@_patients"
+                                   Items="@_patients.AsQueryable()"
                                    ItemKey="@(x => x.Id)"
                                    Pagination="_paginationState">
                             <TemplateColumn>

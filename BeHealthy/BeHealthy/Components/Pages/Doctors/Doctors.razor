@@ -8,12 +8,8 @@
     @if (_userRole == UserRole.Admin)
     {
         <div class="">
-            <button class="btn btn-outline-secondary rounded-pill px-3" @onclick="CreateDoctor">
-                <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-            </button>
-            <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
-                <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
-            </button>
+            <CreateButton OnClick="CreateDoctor" />
+            <MassImportButton OnClick="ShowImportWizard" />
         </div>
     }
     <div class="">

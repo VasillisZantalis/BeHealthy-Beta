@@ -8,13 +8,13 @@ public class Visit
     public string? Notes { get; set; }
 
     public int PatientId { get; set; }
-    public Patient Patient { get; set; } = new();
+    public Patient? Patient { get; set; }
 
     public int DoctorId { get; set; }
-    public Doctor Doctor { get; set; } = new();
+    public Doctor? Doctor { get; set; }
 
     public int MedicalRecordId { get; set; }
-    public MedicalRecord MedicalRecord { get; set; } = new();
+    public MedicalRecord? MedicalRecord { get; set; }
 
     public ICollection<Diagnosis> Diagnoses { get; set; } = new List<Diagnosis>();
     public ICollection<LabResult> LabResults { get; set; } = new List<LabResult>();

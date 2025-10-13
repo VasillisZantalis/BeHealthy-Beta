@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Application.Interfaces;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -136,10 +137,13 @@ public class DoctorService : IDoctorService
 
         if (patientIds.Any())
         {
-            var treatedPatients = await _unitOfWork.PatientRepository.FindWithIncludesAsync(
-                w => patientIds.Contains(w.Id),
-                false,
-                w => w.User!);
+            var queryOptions = new QueryOptions<Patient>
+            {
+                Predicate = w => patientIds.Contains(w.Id),
+                Includes = { w => w.User! }
+            };
+
+            var treatedPatients = await _unitOfWork.PatientRepository.QueryAsync(queryOptions);
             patients.AddRange(treatedPatients);
         }
 

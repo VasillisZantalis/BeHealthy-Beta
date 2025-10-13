@@ -126,6 +126,12 @@
   <data name="AddRow" xml:space="preserve">
     <value>Προσθήκη γραμμής</value>
   </data>
+  <data name="Allergen" xml:space="preserve">
+    <value>Αλλεργιογόνο</value>
+  </data>
+  <data name="Allergies" xml:space="preserve">
+    <value>Αλλεργίες</value>
+  </data>
   <data name="Allergy" xml:space="preserve">
     <value>Αλλεργία</value>
   </data>
@@ -206,6 +212,9 @@
   </data>
   <data name="Created" xml:space="preserve">
     <value>Δημιουργήθηκε</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Δημιουργήθηκε από</value>
   </data>
   <data name="CreateNewAccount" xml:space="preserve">
     <value>Φτιάξε νέο λογαριασμό</value>
@@ -291,6 +300,9 @@
   <data name="Hour" xml:space="preserve">
     <value>Ώρα</value>
   </data>
+  <data name="InvalidData" xml:space="preserve">
+    <value>Μη έγκυρα δεδομένα</value>
+  </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Μη έγκυρο ηλεκτρονικό ταχυδρομείο</value>
   </data>
@@ -333,6 +345,9 @@
   <data name="MedicalRecord" xml:space="preserve">
     <value>Ιατρικός Φάκελος</value>
   </data>
+  <data name="MedicalRecords" xml:space="preserve">
+    <value>Ιατρικοί Φάκελοι</value>
+  </data>
   <data name="Medication" xml:space="preserve">
     <value>Φάρμακο</value>
   </data>
@@ -356,6 +371,9 @@
   </data>
   <data name="NotFound" xml:space="preserve">
     <value>Δεν Βρέθηκε</value>
+  </data>
+  <data name="NotImplementedYet" xml:space="preserve">
+    <value>Δεν έχει υλοποιηθεί ακόμα</value>
   </data>
   <data name="NotFoundEntity" xml:space="preserve">
     <value>{0} δεν βρέθηκε</value>

@@ -1,8 +1,8 @@
 ﻿using BeHealthy.Infrastructure.Data;
-using BeHealthy.Domain.Interfaces.Repositories;
 using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using BeHealthy.Shared.Parameters;
+using BeHealthy.Application.Interfaces.Repositories;
 
 namespace BeHealthy.Infrastructure.Repositories;
 

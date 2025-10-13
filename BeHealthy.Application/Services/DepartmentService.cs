@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Shared.Locales;
+using BeHealthy.Application.Interfaces;
 
 namespace BeHealthy.Application.Services;
 

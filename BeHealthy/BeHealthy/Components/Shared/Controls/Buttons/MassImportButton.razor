@@ -1,0 +1,14 @@
+﻿<button class="btn btn-secondary rounded-pill px-3" @onclick="OnClick">
+    <Icon IconClass="@FAIcon.Import" /> @LabelText
+</button>
+
+@code {
+    [Inject] private IStringLocalizer<Resource> Localizer { get; set; } = default!;
+
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    [Parameter] public string LabelKey { get; set; } = nameof(Resource.MassImport);
+
+    private string LabelText => Localizer[LabelKey];
+
+}

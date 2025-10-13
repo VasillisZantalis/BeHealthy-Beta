@@ -8,7 +8,7 @@ public class Prescription
     public DateTime DatePrescribed { get; set; }
 
     public int TreatmentId { get; set; }
-    public Treatment Treatment { get; set; } = new();
+    public Treatment? Treatment { get; set; }
 
     public int PatientId { get; set; }
     public Patient? Patient { get; set; }

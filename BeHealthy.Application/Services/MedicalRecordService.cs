@@ -1,7 +1,4 @@
 ﻿using BeHealthy.Application.Dtos.MedicalRecord;
-using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain.Interfaces;
 
 namespace BeHealthy.Application.Services;
 
@@ -41,5 +38,16 @@ public class MedicalRecordService : IMedicalRecordService
     public async Task DeleteMedicalRecordAsync(int id)
     {
         await _unitOfWork.MedicalRecordRepository.DeleteAsync(id);
+    }
+
+    public async Task<IEnumerable<MedicalRecordDto>> GetMedicalRecordsByPatientIdAsync(int patientId)
+    {
+        var medicalRecords = await _unitOfWork.MedicalRecordRepository.GetMedicalRecordsByPatientIdAsync(patientId);
+        return medicalRecords.MapToDto();
+    }
+
+    public async Task UpdateMedicalRecordNotesAsync(int id, string notes)
+    {
+        await _unitOfWork.MedicalRecordRepository.UpdateMedicalRecordNotesAsync(id, notes);
     }
 }

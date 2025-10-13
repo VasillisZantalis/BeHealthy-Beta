@@ -1,5 +1,5 @@
 using BeHealthy.Application.Dtos.Visit;
-using BeHealthy.Domain.Interfaces.Repositories;
+using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;

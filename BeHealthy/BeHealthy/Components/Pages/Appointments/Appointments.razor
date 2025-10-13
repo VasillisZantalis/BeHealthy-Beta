@@ -4,12 +4,8 @@
 @inherits BasePage
 
 <div class="mb-3">
-    <button class="btn btn-outline-secondary rounded-pill px-4" @onclick="() => _appointmentModal.Open()">
-        <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-    </button>
-    <button class="btn btn-secondary rounded-pill px-3" @onclick="ShowImportWizard">
-        <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
-    </button>
+    <CreateButton OnClick="() => _appointmentModal.Open()" />
+    <MassImportButton OnClick="ShowImportWizard" />
 </div>
 
 @if (showWizard)
@@ -19,8 +15,6 @@
                       Entity="@(ImportEntity.Appointment)"
                       OnClose="HideImportWizard" />
 }
-
-<Alert @ref="_alert"/>
 
 @if (_appointments is null || !_appointments.Any())
 {

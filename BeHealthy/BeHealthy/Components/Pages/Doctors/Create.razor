@@ -15,22 +15,21 @@
 
 <div class="container-fluid p-5 border rounded shadow">
 
-    <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-        @if (_inProgress)
-        {
-            <SmallLoader />
-        }
-        <span>@Resource.Save</span>
-    </button>
-
     <EditForm Model="_DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
+
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+            @if (_inProgress)
+            {
+                <SmallLoader />
+            }
+            <span>@Resource.Save</span>
+        </button>
+
         <ValidationComponent @ref="_validationComponent"/>
 
         <div class="row">
             <Alert @ref="_alert" />
-            <div class="text-center mb-3">
-                <img src="@(_DoctorCreateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
-            </div>
+            <ImagePreview ImageUrl="@_DoctorCreateDto.Image" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_DoctorCreateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -46,9 +45,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-control mb-3">
-            <InputFile class="form-control" OnChange="OnFileChange" />
-        </div>
+
+        <ImageUpload OnImageChanged="image => _DoctorCreateDto.Image = image" />
+
         <div class="form-floating mb-3">
             <InputText @bind-Value="_DoctorCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
             <label for="email">@Resource.Email</label>
@@ -114,9 +113,14 @@
     private List<SelectItem>? _departmentsSelect = new();
     private List<SelectItem>? _specialtiesSelect = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
 
         await GetSettings();
 
@@ -136,6 +140,8 @@
             Text = s.Name
         }).ToList();
         _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        LoaderService.SetLoader(false);
     }
 
     private async Task GetSettings()
@@ -173,6 +179,7 @@
         }
 
         var doctorCreationResult = await DoctorService.AddDoctorAsync(_DoctorCreateDto);
+        _inProgress = false;
 
         if (!doctorCreationResult.Success)
         {
@@ -180,28 +187,9 @@
         }
         else
         {
-            _alert.ShowSuccess(Resource.Success);
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
         }
 
-        _inProgress = false;
-    }
-
-    private void HandleModalClose(bool success)
-    {
-        _inProgress = false;
-
-        if (!success)
-            return;
-
-        NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
-    }
-
-    async Task OnFileChange(InputFileChangeEventArgs e)
-    {
-        var format = e.File.ContentType;
-        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
-        var buffer = new byte[resizeImage.Size];
-        await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _DoctorCreateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 }

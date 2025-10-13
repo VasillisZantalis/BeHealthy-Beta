@@ -34,11 +34,15 @@ public partial class Nurses : BasePage
     void ShowImportWizard() => showWizard = true;
     void HideImportWizard() => showWizard = false;
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
 
-        SetBreadcrumbs();
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         var userRole = authState.User.GetUserRoleEnum();
 

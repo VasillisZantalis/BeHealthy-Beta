@@ -15,12 +15,8 @@
 <div id="profile-container" class="container-fluid p-5 border rounded shadow">
     <EditForm id="profileForm" Model="_profileDto" OnValidSubmit="UpdateProfile">
         <div class="row">
-            <div class="text-center mb-3">
-                <img src="@(_profileDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
-            </div>
-            <div class="form-control mb-3">
-                <InputFile class="form-control" OnChange="OnFileChange" />
-            </div>
+            <ImagePreview ImageUrl="@_profileDto.Image" />
+            <ImageUpload OnImageChanged="image => _profileDto.Image = image" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_profileDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -45,10 +41,14 @@
     private UserRole? _userRole;
     private string? _userId;
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-        SetBreadcrumbs();
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         _userId = authState.User.GetUserId() ?? string.Empty;
@@ -85,15 +85,6 @@
         });
     }
 
-    async Task OnFileChange(InputFileChangeEventArgs e)
-    {
-        var format = e.File.ContentType;
-        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
-        var buffer = new byte[resizeImage.Size];
-        await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _profileDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-    }
-
     private async Task<ProfileDto> GetDoctorProfileByUserId(string userId) => await DoctorService.GetDoctorProfileByUserIdAsync(userId) ?? new();
 
     private async Task UpdateProfile()
@@ -122,10 +113,13 @@
                         await DoctorService.UpdateDoctorAsync(doctorForUpdate);
                         break;
                     case UserRole.Nurse:
+                        AlertModalStateService.Show(null, "Not implemented yet", false);
                         break;
                     case UserRole.Patient:
+                        AlertModalStateService.Show(null, "Not implemented yet", false);
                         break;
                     default:
+                        AlertModalStateService.Show(null, "Not implemented yet", false);
                         break;
                 }
             }

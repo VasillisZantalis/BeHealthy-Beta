@@ -34,4 +34,7 @@ public static class FAIcon
     public static string Stethoscope => "fa-solid fa-stethoscope";
     public static string Fingerprint => "fa-solid fa-fingerprint";
     public static string Import => "fa-solid fa-file-import";
+    public static string SuitcaseMedical => "fa-solid fa-suitcase-medical";
+    public static string XMark => "fa-solid fa-xmark";
+    public static string Check => "fa-solid fa-check";
 }

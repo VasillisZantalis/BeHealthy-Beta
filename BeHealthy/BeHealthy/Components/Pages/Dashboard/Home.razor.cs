@@ -13,9 +13,13 @@ public partial class Home : BasePage
 
     private bool _isAdminUser = default;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _isAdminUser = authState.User.IsAdminUser();

@@ -34,15 +34,13 @@
 </div>
 
 @code {
-    [Parameter]
-    [EditorRequired]
+    [Parameter, EditorRequired]
     public AppSetting Setting { get; set; }
     
     [Parameter] 
     public EventCallback<AppSetting> OnSettingChanged { get; set; }
 
-    [Parameter] 
-    [EditorRequired]
+    [Parameter, EditorRequired] 
     public List<SelectItem> SelectItems { get; set; }
 
     private async Task UpdateSettingValue(ChangeEventArgs e)

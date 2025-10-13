@@ -7,7 +7,7 @@ public static class DateTimeExtensions
         return dateTime.ToString("dd MMM yyyy HH:mm");
     }
 
-    public static string ToShortDateString(this DateTime dateTime)
+    public static string ToShortHumanizedDateString(this DateTime dateTime)
     {
         return dateTime.ToString("dd MMM yyyy");
     }

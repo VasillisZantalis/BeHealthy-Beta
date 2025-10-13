@@ -1,60 +1,47 @@
 ﻿@implements IDisposable
 @rendermode @(new InteractiveServerRenderMode(false))
 
+@inject ToastService ToastService
+
 <div class="toaster-container" style="position: fixed; top: 60px; right: 20px; z-index: 9999; min-width: 300px">
-    @if (_showToastr)
+    @foreach (var toast in _toasts)
     {
-        <div class="alert alert-@_severity.ToString().ToLower() alert-dismissible fade show">
-            <span class="fs-5 @_icon text-@_severity.ToString().ToLower()"></span>
-            <span class="fw-bold">@Message</span>
-            <button @onclick="CloseToastr" type="button" class="btn-close" aria-label="Close"></button>
-            <div class="progress mt-2" role="progressbar" aria-label="Toastr progress bar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar bg-@_severity.ToString().ToLower()" style="width: @_progressWidth%"></div>
-            </div>
+        <div class="alert alert-@toast.Type alert-dismissible fade show">
+            <span class="fw-bold">@toast.Message</span>
         </div>
     }
 </div>
 
 @code {
-    [Inject] private ToastrStateService ToastrStateService { get; set; } = default!;
-    private bool _showToastr { get; set; } = false;
-    private string? Message { get; set; }
-    private Severity _severity { get; set; }
-    private string? _icon;
-    private int _progressWidth = 100;
+    private List<(string Message, string Type)> _toasts = new();
 
     protected override void OnInitialized()
     {
-        ToastrStateService.OnShow += ShowToastAsync;
+        ToastService.OnShow += AddToast;
     }
 
     public void Dispose()
     {
-        ToastrStateService.OnShow -= ShowToastAsync;
+        ToastService.OnShow -= AddToast;
     }
 
-    private async Task ShowToastAsync(ToastrNotification notification)
+    private void AddToast(string message, string type)
     {
-        Message = notification.Message;
-        _severity = notification.Severity;
-        _icon = notification.Icon;
-        _showToastr = true;
-        _progressWidth = 100;
+        _toasts.Add((message, type));
         StateHasChanged();
 
-        int duration = notification.Duration ?? 3000;
-        int steps = 100;
-        int delay = duration / steps;
-
-        for (int i = 0; i < steps; i++)
+        _ = Task.Delay(3000).ContinueWith(_ =>
         {
-            _progressWidth -= 100 / steps;
-            StateHasChanged();
-            await Task.Delay(delay);
-        }
-        _showToastr = false;
-        StateHasChanged();
+            _toasts.RemoveAt(0);
+            InvokeAsync(StateHasChanged);
+        });
     }
 
-    private void CloseToastr() => _showToastr = false;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ToastService.FlushToasts();
+        }
+    }
 }

@@ -11,21 +11,20 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-
-    <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-        @if (_inProgress)
-        {
-            <SmallLoader />
-        }
-        <span>@Resource.Save</span>
-    </button>
     <EditForm Model="_PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
+
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+            @if (_inProgress)
+            {
+                <SmallLoader />
+            }
+            <span>@Resource.Save</span>
+        </button>
+
         <FluentValidationValidator @ref="_fluentValidationValidator" />
         <div class="row">
             <Alert @ref="_alert" />
-            <div class="text-center mb-3">
-                <img src="@(_PatientCreateDto.Image ?? "images/generic.jpg")" class="image-fluid rounded-circle" />
-            </div>
+            <ImagePreview ImageUrl="@_PatientCreateDto.Image" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="_PatientCreateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
@@ -41,9 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-control mb-3">
-            <InputFile class="form-control" OnChange="OnFileChange" />
-        </div>
+        <ImageUpload OnImageChanged="image => _PatientCreateDto.Image = image" />
         <div class="form-floating mb-3">
             <InputText @bind-Value="_PatientCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
             <label for="email">@Resource.Email</label>
@@ -92,9 +89,14 @@
 
     private List<SelectItem> _departmentsSelect = new List<SelectItem>();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
 
         _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         _departmentsSelect = _departments.Select(s => new SelectItem
@@ -103,6 +105,8 @@
             Text = s.Name
         }).ToList();
         _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        LoaderService.SetLoader(false);
     }
 
     private void SetBreadcrumbs()
@@ -126,35 +130,17 @@
         }
 
         var patientCreationResult = await PatientService.AddPatientAsync(_PatientCreateDto);
+        _inProgress = false;
 
         if (!patientCreationResult.Success)
         {
             _alert.ShowFailed(patientCreationResult.ErrorMessage);
+            return;
         }
         else
         {
-            _alert.ShowSuccess(Resource.Success);
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
         }
-
-        _inProgress = false;
-    }
-
-    private void HandleModalClose(bool success)
-    {
-        _inProgress = false;
-
-        if (!success)
-            return;
-
-        NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
-    }
-
-    async Task OnFileChange(InputFileChangeEventArgs e)
-    {
-        var format = e.File.ContentType;
-        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
-        var buffer = new byte[resizeImage.Size];
-        await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _PatientCreateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 }

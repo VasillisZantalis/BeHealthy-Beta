@@ -8,9 +8,7 @@
 <div class="py-3">
     @if (CanCreatePrescription)
     {
-        <button class="btn btn-outline-secondary rounded-pill px-3 mb-3" @onclick="CreatePrescription">
-            <Icon IconClass="@FAIcon.Plus" /> @Resource.Create
-        </button>
+        <CreateButton OnClick="CreatePrescription" />
     }
 
     <PrescriptionModal @ref="_prescriptionModal"
@@ -127,24 +125,24 @@
                 _prescriptions.Remove(deletedPrescription);
             }
 
-            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+            ToastService.ShowToast(Resource.Success, "success");
         }
         else
         {
-            await ToastrStateService.ShowFailed(Resource.SomethingWentWrong);
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
         }
     }
 
-    private async Task HandleResponse(bool successful)
+    private void HandleResponse(bool successful)
     {
         if (successful)
         {
-            await ToastrStateService.ShowSuccess(Resource.Success, 1000);
+            ToastService.ShowToast(Resource.Success, "success");
             NavigationManager.Refresh(true);
         }
         else
         {
-            await ToastrStateService.ShowFailed(Resource.SomethingWentWrong);
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
         }
     }
 }

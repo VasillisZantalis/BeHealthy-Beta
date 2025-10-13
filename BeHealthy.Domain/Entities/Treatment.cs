@@ -9,10 +9,10 @@ public class Treatment
     public DateTime? EndDate { get; set; }
 
     public int VisitId { get; set; }
-    public Visit Visit { get; set; } = new();
+    public Visit? Visit { get; set; }
 
     public int? DiagnosisId { get; set; }
-    public Diagnosis Diagnosis { get; set; } = new();
+    public Diagnosis? Diagnosis { get; set; }
 
     public ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
 }

@@ -11,8 +11,10 @@ public class MedicalRecordConfiguration : IEntityTypeConfiguration<MedicalRecord
         builder.ToTable("MedicalRecords");
         builder.HasKey(mr => mr.Id);
 
-        // Relationships
         builder.Property(mr => mr.CreatedUserId)
+            .IsRequired(false);
+
+        builder.Property(mr => mr.CreatedBy)
             .IsRequired(false);
 
         builder.Property(p => p.RecordDate)

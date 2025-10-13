@@ -126,6 +126,12 @@
   <data name="AddRow" xml:space="preserve">
     <value>Add Row</value>
   </data>
+  <data name="Allergen" xml:space="preserve">
+    <value>Allergen</value>
+  </data>
+  <data name="Allergies" xml:space="preserve">
+    <value>Allergies</value>
+  </data>
   <data name="Allergy" xml:space="preserve">
     <value>Allergy</value>
   </data>
@@ -207,6 +213,9 @@
   <data name="Created" xml:space="preserve">
     <value>Created</value>
   </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Created By</value>
+  </data>
   <data name="CreateNewAccount" xml:space="preserve">
     <value>Create new account</value>
   </data>
@@ -274,7 +283,7 @@
     <value>Name</value>
   </data>
   <data name="GeneralData" xml:space="preserve">
-    <value>GeneralData</value>
+    <value>General Data</value>
   </data>
   <data name="Greek" xml:space="preserve">
     <value>Greek</value>
@@ -290,6 +299,9 @@
   </data>
   <data name="Hour" xml:space="preserve">
     <value>Hour</value>
+  </data>
+  <data name="InvalidData" xml:space="preserve">
+    <value>Invalid Data</value>
   </data>
   <data name="InvalidEmail" xml:space="preserve">
     <value>Invalid Email</value>
@@ -333,6 +345,9 @@
   <data name="MedicalRecord" xml:space="preserve">
     <value>Medical Record</value>
   </data>
+  <data name="MedicalRecords" xml:space="preserve">
+    <value>Medical Records</value>
+  </data>
   <data name="Medication" xml:space="preserve">
     <value>Medication</value>
   </data>
@@ -356,6 +371,9 @@
   </data>
   <data name="NotFound" xml:space="preserve">
     <value>Not Found</value>
+  </data>
+  <data name="NotImplementedYet" xml:space="preserve">
+    <value>Not Implemented yet</value>
   </data>
   <data name="NotFoundEntity" xml:space="preserve">
     <value>{0} was not found</value>
@@ -397,7 +415,7 @@
     <value>Passwords do not match</value>
   </data>
   <data name="PasswordTooShort" xml:space="preserve">
-    <value> Password must be at least {0} characters</value>
+    <value>Password must be at least {0} characters</value>
   </data>
   <data name="Patient" xml:space="preserve">
     <value>Patient</value>

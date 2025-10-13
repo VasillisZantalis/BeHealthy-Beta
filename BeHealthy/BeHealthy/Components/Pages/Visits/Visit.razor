@@ -1,0 +1,31 @@
+﻿@page "/visits/{VisitId:int}"
+@attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits BasePage
+
+<div class="container-fluid border rounded shadow h-50 d-flex flex-column align-items-center justify-content-center">
+    <Icon IconClass="@FAIcon.TriangleExclamation" TextClass="text-danger" SizeClass="fs-1" />
+    <span>@Resource.NotImplementedYet</span>
+</div>
+
+@code {
+    [Parameter]
+    public int VisitId { get; set; }
+
+    private VisitDto _visit { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Visits, Link = string.Empty, Active = true },
+            new Breadcrumb(){ Text = VisitId.ToString(), Link = string.Empty, Active = true }
+        });
+    }
+}

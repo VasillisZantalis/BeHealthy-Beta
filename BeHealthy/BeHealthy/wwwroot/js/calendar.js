@@ -14,7 +14,7 @@ function destroyCalendar() {
     }
 }
 
-async function initializeCalendar(events) {
+function initializeCalendar(dotNetRef, events) {
     var calendarEl = document.getElementById('calendar');
 
     destroyCalendar();
@@ -22,6 +22,7 @@ async function initializeCalendar(events) {
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: getLocale(),
+        timeZone: 'local',
         headerToolbar: {
             start: 'prev,next today',
             center: 'title',
@@ -29,18 +30,18 @@ async function initializeCalendar(events) {
         },
         events: events,
         eventClick: function (info) {
-
             const calendarItem = {
+                id: parseInt(info.event.id),
                 title: info.event.title,
                 description: info.event.extendedProps.description,
-                start: info.event.start,
-                end: info.event.end,
-                id: parseInt(info.event.id)
+                start: info.event.start.toISOString(),
+                end: info.event.end ? info.event.end.toISOString() : info.event.start.toISOString(),
+                backgroundColor: info.event.backgroundColor,
+                borderColor: info.event.borderColor,
+                color: info.event.color
             };
 
-            const calendarItemJson = JSON.stringify(calendarItem);
-
-            DotNet.invokeMethodAsync("BeHealthy", "ConsoleEvent", calendarItemJson);
+            dotNetRef.invokeMethodAsync('OpenEventModal', calendarItem);
         },
     });
 

@@ -88,6 +88,24 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allergen.
+        /// </summary>
+        public static string Allergen {
+            get {
+                return ResourceManager.GetString("Allergen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allergies.
+        /// </summary>
+        public static string Allergies {
+            get {
+                return ResourceManager.GetString("Allergies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allergy.
         /// </summary>
         public static string Allergy {
@@ -331,6 +349,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Created By.
+        /// </summary>
+        public static string CreatedBy {
+            get {
+                return ResourceManager.GetString("CreatedBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create new account.
         /// </summary>
         public static string CreateNewAccount {
@@ -529,7 +556,7 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GeneralData.
+        ///   Looks up a localized string similar to General Data.
         /// </summary>
         public static string GeneralData {
             get {
@@ -579,6 +606,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Hour {
             get {
                 return ResourceManager.GetString("Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Data.
+        /// </summary>
+        public static string InvalidData {
+            get {
+                return ResourceManager.GetString("InvalidData", resourceCulture);
             }
         }
         
@@ -709,6 +745,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Medical Records.
+        /// </summary>
+        public static string MedicalRecords {
+            get {
+                return ResourceManager.GetString("MedicalRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Medication.
         /// </summary>
         public static string Medication {
@@ -777,6 +822,15 @@ namespace BeHealthy.Shared.Locales {
         public static string NotFound {
             get {
                 return ResourceManager.GetString("NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Implemented yet.
+        /// </summary>
+        public static string NotImplementedYet {
+            get {
+                return ResourceManager.GetString("NotImplementedYet", resourceCulture);
             }
         }
         
@@ -898,7 +952,7 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  Password must be at least {0} characters.
+        ///   Looks up a localized string similar to Password must be at least {0} characters.
         /// </summary>
         public static string PasswordTooShort {
             get {

@@ -1,59 +1,33 @@
 ﻿@page "/departments/create"
 @page "/departments/edit/{id:int}"
+
 @attribute [Authorize(Roles = nameof(UserRole.Admin))]
-@using BeHealthy.Components.Pages.Department.Components
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
+@using BeHealthy.Components.Pages.Department.Components
+
 <PageTitle>@(IsEditMode ? Resource.Edit : Resource.Create)</PageTitle>
 
-<div class="container-fluid">
-
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link text-reset @(activeTab == 0 ? "active fw-bold" : "")" @onclick="() => SelectTab(0)">@Resource.GeneralData</a>
-        </li>
-        @if (IsEditMode)
+<div class="container-fluid my-3 p-3 border rounded">
+    <Tabs TTabKey="DepartmentTabs" @bind-ActiveTab="activeTab">
+        <Tab TTabKey="DepartmentTabs" Title="@Resource.GeneralData" Key="DepartmentTabs.GeneralData">
+            <GeneralData IsEditMode="IsEditMode" DepartmentDto="DepartmentDto" Doctors="Doctors" />
+        </Tab>
+         @if (IsEditMode)
         {
-            <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 1 ? "active fw-bold" : "")" @onclick="() => SelectTab(1)">@Resource.Doctors</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 2 ? "active fw-bold" : "")" @onclick="() => SelectTab(2)">@Resource.Patients</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 3 ? "active fw-bold" : "")" @onclick="() => SelectTab(3)">@Resource.Nurses</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-reset @(activeTab == 4 ? "active fw-bold" : "")" @onclick="() => SelectTab(4)">@Resource.Rooms</a>
-            </li>
+            <Tab TTabKey="DepartmentTabs" Title="@Resource.Doctors" Key="DepartmentTabs.Doctors">
+                <DepartmentDoctors Doctors="DepartmentDto.Doctors.ToList()" />
+            </Tab>
+            <Tab TTabKey="DepartmentTabs" Title="@Resource.Patients" Key="DepartmentTabs.Patients">
+                <DepartmentPatients Patients="DepartmentDto.Patients.ToList()" />
+            </Tab>
+            <Tab TTabKey="DepartmentTabs" Title="@Resource.Nurses" Key="DepartmentTabs.Nurses">
+                <DepartmentNurses Nurses="DepartmentDto.Nurses.ToList()" />
+            </Tab>
+            <Tab TTabKey="DepartmentTabs" Title="@Resource.Rooms" Key="DepartmentTabs.Rooms">
+                <DepartmentRooms Rooms="DepartmentDto.Rooms.ToList()" />
+            </Tab>
         }
-    </ul>
-
-    <div class="tab-content mt-3">
-        @if (activeTab == 0)
-        {
-            <div>
-                <GeneralData IsEditMode="IsEditMode" DepartmentDto="DepartmentDto" Doctors="Doctors" />
-            </div>
-        }
-        else if (activeTab == 1)
-        {
-            <DepartmentDoctors Doctors="DepartmentDto.Doctors.ToList()"/>
-        }
-        else if (activeTab == 2)
-        {
-            <DepartmentPatients Patients="DepartmentDto.Patients.ToList()" />
-        }
-        else if (activeTab == 3)
-        {
-            <DepartmentNurses Nurses="DepartmentDto.Nurses.ToList()" />
-        }
-        else if (activeTab == 4)
-        {
-            <DepartmentRooms Rooms="DepartmentDto.Rooms.ToList()" />
-        }
-    </div>
-
-
+    </Tabs>
 </div>

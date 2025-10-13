@@ -20,21 +20,7 @@ public partial class Patients : BasePage
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
-    private IQueryable<PatientDto> _patients { get; set; } = default!;
-    IQueryable<PatientDto> _filteredPatients
-    {
-        get
-        {
-            var result = _patients;
-
-            if (!string.IsNullOrEmpty(firstNameFilter))
-            {
-                result = result.Where(w => w.FirstName.Contains(firstNameFilter));
-            }
-
-            return result;
-        }
-    }
+    private List<PatientDto> _patients { get; set; } = new();
 
     private string _selectedView = "Card";
     private bool hasActionRights;
@@ -52,6 +38,11 @@ public partial class Patients : BasePage
     void ShowImportWizard() => showWizard = true;
     void HideImportWizard() => showWizard = false;
 
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
@@ -61,8 +52,6 @@ public partial class Patients : BasePage
         var doctorId = authState.User.GetUserId();
 
         await LoadPatients(_filters, doctorId, userRole);
-
-        SetBreadcrumbs();
 
         _paginationState.ItemsPerPage = _patients.Count();
 
@@ -96,8 +85,8 @@ public partial class Patients : BasePage
 
         _patients = userRole switch
         {
-            UserRole.Doctor when doctorId is not null => (await _doctorService.GetMyPatientsAsync(doctorId)).AsQueryable(),
-            _ => (await _patientService.GetAllPatientsAsync(filters)).AsQueryable()
+            UserRole.Doctor when doctorId is not null => (await _doctorService.GetMyPatientsAsync(doctorId)).ToList(),
+            _ => (await _patientService.GetAllPatientsAsync(filters)).ToList()
         };
 
         LoaderService.SetLoader(false);
