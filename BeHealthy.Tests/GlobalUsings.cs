@@ -1,7 +1,4 @@
-﻿global using BeHealthy.Domain;
-global using BeHealthy.Domain.Entities;
-global using BeHealthy.Domain.Interfaces;
-global using BeHealthy.Domain.Interfaces.Repositories;
+﻿global using BeHealthy.Domain.Entities;
 global using Moq;
 global using System;
 global using System.Collections.Generic;
@@ -11,3 +8,9 @@ global using AutoFixture;
 global using System.Linq;
 global using BeHealthy.Application.Services;
 global using BeHealthy.Application.Services.Interfaces;
+global using BeHealthy.Application.Dtos.Common;
+global using BeHealthy.Application.Dtos.Doctor;
+global using BeHealthy.Application.Interfaces;
+global using BeHealthy.Application.Interfaces.Repositories;
+global using BeHealthy.Domain;
+global using BeHealthy.Shared.Locales;

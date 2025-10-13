@@ -1,8 +1,6 @@
-﻿using AutoFixture;
-using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Components.Pages.Appointments;
+﻿using BeHealthy.Application.Interfaces;
+using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Tests.UnitTests.Services.Builders;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BeHealthy.Tests.UnitTests.Services;
 
@@ -108,7 +106,7 @@ public class AppointmentServiceTests
     public async Task GetAllAppointmentsByPatientIdAsync_WithValidPatientId_ReturnsAppointments()
     {
         //Arrange
-        IEnumerable<Appointment> appointments =  new AppointmentBuilder(_fixture)
+        IEnumerable<Appointment> appointments = new AppointmentBuilder(_fixture)
             .WithPatientId(1)
             .BuildMany(2);
 
@@ -285,8 +283,8 @@ public class AppointmentServiceTests
             .WithDate(appointmentDate)
             .WithStartTime(startTime)
             .WithEndTime(endTime)
-            .Build();            
-            
+            .Build();
+
         var existingAppointments = new AppointmentBuilder(_fixture)
             .WithDate(appointmentDate)
             .WithStartTime(startTime)
@@ -610,7 +608,7 @@ public class AppointmentServiceTests
     #endregion
 
     #region GetAllAppointmentsByUserIdAsync
-    
+
     [Fact]
     public async Task GetAllAppointmentsByUserIdAsync_WithValidUserId_ReturnsAppointments()
     {

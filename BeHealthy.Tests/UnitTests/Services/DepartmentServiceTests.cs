@@ -1,4 +1,6 @@
 ﻿using BeHealthy.Application.Dtos.Department;
+using BeHealthy.Application.Interfaces;
+using BeHealthy.Application.Interfaces.Repositories;
 
 namespace BeHealthy.Tests.UnitTests.Services;
 
