@@ -49,21 +49,14 @@ Port is the PostgreSQL port (default 5432).
 Database is the database name (behealthy).
 Username and Password are the database credentials.
 
-### 3. Start Docker Compose
-
-From the root of the project:
-```bash
-docker-compose up -d
-```
-
-### 4. Start the app
+### 3. Setup docker-compose as the Startup project and run the app
 
 <img width="1134" height="346" alt="image" src="https://github.com/user-attachments/assets/5b22d312-3b8b-44e3-9eaf-209e25155c8d" />
 
 
 ## Alternative: Running without Docker Compose
 
-If you prefer not to use Docker Compose or encounter an error, you can run the PostgreSQL database manually and then start the Blazor application directly from Visual Studio.
+If you prefer not to use Docker Compose or encountered an error, you can run the PostgreSQL database manually and then start the Blazor application directly from Visual Studio.
 
 ### 1. Run PostgreSQL manually
 
