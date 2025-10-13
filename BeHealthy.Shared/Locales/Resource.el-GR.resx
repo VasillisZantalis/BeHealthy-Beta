@@ -372,6 +372,9 @@
   <data name="NotFound" xml:space="preserve">
     <value>Δεν Βρέθηκε</value>
   </data>
+  <data name="NotImplementedYet" xml:space="preserve">
+    <value>Δεν έχει υλοποιηθεί ακόμα</value>
+  </data>
   <data name="NoUsersJoinedLately" xml:space="preserve">
     <value>Δεν υπάρχουν {0} που προσχώρησαν πρόσφατα</value>
   </data>

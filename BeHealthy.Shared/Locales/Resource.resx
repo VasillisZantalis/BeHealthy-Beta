@@ -372,6 +372,9 @@
   <data name="NotFound" xml:space="preserve">
     <value>Not Found</value>
   </data>
+  <data name="NotImplementedYet" xml:space="preserve">
+    <value>Not Implemented yet</value>
+  </data>
   <data name="NoUsersJoinedLately" xml:space="preserve">
     <value>No {0} Joined Lately</value>
   </data>

@@ -826,6 +826,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not Implemented yet.
+        /// </summary>
+        public static string NotImplementedYet {
+            get {
+                return ResourceManager.GetString("NotImplementedYet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No {0} Joined Lately.
         /// </summary>
         public static string NoUsersJoinedLately {
