@@ -61,6 +61,29 @@ docker-compose up -d
 <img width="1134" height="346" alt="image" src="https://github.com/user-attachments/assets/5b22d312-3b8b-44e3-9eaf-209e25155c8d" />
 
 
+## Alternative: Running without Docker Compose
+
+If you prefer not to use Docker Compose or encounter an error, you can run the PostgreSQL database manually and then start the Blazor application directly from Visual Studio.
+
+### 1. Run PostgreSQL manually
+
+You can Use Docker manually:
+
+**a) Run the following command to create the container**
+```bash
+docker run -d \
+  --name behealthydb \
+  -e POSTGRES_DB=behealthy \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=7530 \
+  -p 5432:5432 \
+  postgres:latest
+```
+
+**b) Set the blazor project as a Startup and run it**
+<img width="1300" height="350" alt="image" src="https://github.com/user-attachments/assets/7908fc20-12ff-46de-9578-f21ac0200fb7" />
+
+
 ### 5. Admin User
 
 An admin user is automatically seeded for testing:
