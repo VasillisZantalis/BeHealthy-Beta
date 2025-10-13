@@ -49,7 +49,7 @@ Port is the PostgreSQL port (default 5432).
 Database is the database name (behealthy).
 Username and Password are the database credentials.
 
-### 3. Setup docker-compose as the Startup project and run the app
+### 3. Set docker-compose as the Startup project and run the app
 
 <img width="1134" height="346" alt="image" src="https://github.com/user-attachments/assets/5b22d312-3b8b-44e3-9eaf-209e25155c8d" />
 
