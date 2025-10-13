@@ -60,3 +60,14 @@ docker-compose up -d
 
 <img width="1134" height="346" alt="image" src="https://github.com/user-attachments/assets/5b22d312-3b8b-44e3-9eaf-209e25155c8d" />
 
+
+### 5. Admin User
+
+An admin user is automatically seeded for testing:
+
+Email: admin@gmail.com
+Password: 123456aA@
+
+You can log in with this user, or create a new admin account via the Register form.
+
+> ⚠️ Note: Although other users exist, their pages are not fully implemented. It is recommended to browse the application as an admin to test products, navigation, and management features.
