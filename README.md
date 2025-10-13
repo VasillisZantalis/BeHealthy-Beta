@@ -79,6 +79,8 @@ docker run -d \
   -p 5432:5432 \
   postgres:latest
 ```
+> ⚠️ Note: If we follow this approach then we should change the Host of the connection string to localhost
+<img width="1701" height="205" alt="image" src="https://github.com/user-attachments/assets/67151a1a-9ca2-4d12-ae01-5a2a76e0b5d0" />
 
 **b) Set the blazor project as a Startup and run it**
 <img width="1300" height="350" alt="image" src="https://github.com/user-attachments/assets/7908fc20-12ff-46de-9578-f21ac0200fb7" />
