@@ -21,22 +21,27 @@ It has been configured to run with **Docker Compose** and uses **user-secrets** 
 ```bash
 git clone https://github.com/VasillisZantalis/BeHealthy-Beta.git
 cd BeHealthy-Beta
+```
 
 ### 2. Set up the Database Connection String with User-Secrets
 The project uses user-secrets in the Infrastructure project to store the database connection string securely.
 
 Navigate to the Infrastructure project folder:
 
+```bash
 cd src/BeHealthy.Infrastructure
+```
 
 Initialize user-secrets (if not already initialized):
 
+```bash
 dotnet user-secrets init
-
+```
 
 Set the connection string:
+```bash
 dotnet user-secrets set "ConnectionStrings:Default" "Host=behealthydb;Port=5432;Database=behealthy;Username=admin;Password=7530"
-
+```
 
 Explanation:
 Host should match the service name in docker-compose.yml if using Docker (behealthydb).
@@ -47,5 +52,6 @@ Username and Password are the database credentials.
 3. Start Docker Compose
 
 From the root of the project:
-
+```bash
 docker-compose up -d
+```
