@@ -14,6 +14,41 @@ It has been configured to run with **Docker Compose** and uses **user-secrets** 
 
 ---
 
+## Overview
+BeHealthy is a modern healthcare management solution designed to streamline patient, doctor, and medical record workflows. Built as a Blazor Server application, it provides an interactive, responsive user experience.
+
+## Technologies Used
+- **.NET 9**: Latest .NET platform for performance and security.
+- **Blazor Server**: Rich, interactive UI with real-time updates.
+- **Entity Framework Core (Npgsql)**: PostgreSQL database integration.
+- **ASP.NET Core Identity**: Secure authentication and user management.
+- **Serilog**: Structured logging to console and file.
+- **ChartJs.Blazor**: Data visualization and charting.
+- **FluentValidation**: Robust form validation.
+
+## Key Features
+- **User Authentication**: Secure login, registration, and role management.
+- **Patient Management**: Create, view, and edit patient profiles.
+- **Medical Records**: Add, update, and list medical records per patient.
+- **Doctor Management**: Assign and manage doctors.
+- **Appointments Managmenet**: Create appointments between doctor and patient
+- **Localization**: Multi-language support (English, Greek).
+
+## 🚀 Upcoming Features (Planned)
+- Complete pages for all user types to view their relevant data  
+- Connected user profile page for managing personal information  
+- Internal notification system to alert users about relevant actions  
+- Patient-specific features including diagnoses, treatments, and lab result
+  
+## Architecture & Patterns
+- **Layered Architecture**: Separation of concerns via Application, Infrastructure, and Domain layers.
+- **Dependency Injection**: Decoupled service registration and resolution.
+- **Repository Pattern**: Abstracted data access for maintainability.
+- **Component-Based UI**: Reusable Blazor components for modularity.
+- **State Management**: Scoped services for UI state (modals, navigation, loaders).
+
+---
+
 ## Getting Started
 
 ### 1. Clone the repository
