@@ -59,20 +59,7 @@ public partial class Appointments : BasePage
 
         userRole = authState.User.GetUserRoleEnum();
 
-        switch (userRole, _currentUserId)
-        {
-            case (UserRole.Doctor, not null):
-                _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(_currentUserId)).ToList();
-                break;
-
-            case (UserRole.Patient, not null):
-                _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(_currentUserId)).ToList();
-                break;
-
-            default:
-                _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
-                break;
-        }
+        LoadAppointments()
 
         await GetUserPrivilege(userRole!.Value);
 
@@ -85,6 +72,26 @@ public partial class Appointments : BasePage
 
         LoaderService.SetLoader(false);
     }
+
+    private async Task LoadAppointments()
+{
+    switch (userRole, _currentUserId)
+    {
+        case (UserRole.Doctor, not null):
+            _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(_currentUserId)).ToList();
+            break;
+
+        case (UserRole.Patient, not null):
+            _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(_currentUserId)).ToList();
+            break;
+
+        default:
+            _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
+            break;
+    }
+    _paginationState.ItemsPerPage = _appointments.Count;
+    StateHasChanged();
+}
 
     private void SetBreadcrumbs()
     {
@@ -185,5 +192,6 @@ public partial class Appointments : BasePage
         {
             await CreateAppointmentAsync(appointment, true);
         }
+        await LoadAppointments();
     }
 }
