@@ -29,6 +29,9 @@ public partial class Patients : BasePage
 
     private string? firstNameFilter;
 
+    private UserRole? _userRole;
+    private string? _currentUserId;
+
     private PaginationState _paginationState = new();
 
     private QuickGrid<PatientDto>? _quickGrid;
@@ -47,10 +50,10 @@ public partial class Patients : BasePage
         LoaderService.SetLoader(true);
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        var userRole = authState.User.GetUserRoleEnum();
-        var doctorId = authState.User.GetUserId();
+        _userRole = authState.User.GetUserRoleEnum();
+        _currentUserId = authState.User.GetUserId();
 
-        await LoadPatients(doctorId, userRole);
+        await LoadPatients(_currentUserId, _userRole);
 
         _paginationState.ItemsPerPage = _patients.Count();
 
@@ -115,6 +118,7 @@ public partial class Patients : BasePage
             var response = await _patientService.AddPatientAsync(patient);
             if (HandleServiceResponse(response)) continue;
         }
+        await LoadPatients(_currentUserId, _userRole);
         LoaderService.SetLoader(false);
     }
 
