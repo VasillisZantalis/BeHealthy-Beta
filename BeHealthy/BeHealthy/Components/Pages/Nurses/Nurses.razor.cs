@@ -27,6 +27,8 @@ public partial class Nurses : BasePage
 
     private string _selectedView = "Card";
     private bool hasActionRights;
+    private UserRole? _userRole;
+    private string? _currentUserId;
 
     private PaginationState _paginationState = new();
 
@@ -44,9 +46,10 @@ public partial class Nurses : BasePage
         LoaderService.SetLoader(true);
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        var userRole = authState.User.GetUserRoleEnum();
+        _userRole = authState.User.GetUserRoleEnum();
+        _currentUserId = authState.User.GetUserId();
 
-        await LoadNurses(authState.User.GetUserId(), userRole);
+        await LoadNurses(_currentUserId, _userRole);
 
         _paginationState.ItemsPerPage = _nurses.Count;
         hasActionRights = userRole == UserRole.Admin;
@@ -110,6 +113,7 @@ public partial class Nurses : BasePage
             var response = await _nurseService.AddNurseAsync(nurse);
             if (HandleServiceResponse(response)) continue;
         }
+        await LoadNurses(_currentUserId, _userRole);
         LoaderService.SetLoader(false);
     }
 
