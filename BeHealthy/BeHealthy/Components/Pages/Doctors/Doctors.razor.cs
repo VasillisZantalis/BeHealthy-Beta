@@ -25,6 +25,7 @@ public partial class Doctors : BasePage
     private string _selectedView = "Card";
     private bool hasActionRights;
     private UserRole? _userRole;
+    private string? _currentUserId;
 
     private PaginationState _paginationState = new();
 
@@ -43,9 +44,9 @@ public partial class Doctors : BasePage
 
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         _userRole = authState.User.GetUserRoleEnum();
-        var userId = authState.User.GetUserId();
+        _currentUserId = authState.User.GetUserId();
 
-        await LoadDoctors(userId, _userRole);
+        await LoadDoctors(_currentUserId, _userRole);
 
         _paginationState.ItemsPerPage = _doctors.Count;
         hasActionRights = _userRole == UserRole.Admin;
@@ -109,6 +110,7 @@ public partial class Doctors : BasePage
             var response = await _doctorService.AddDoctorAsync(doctor);
             if (HandleServiceResponse(response)) continue;
         }
+        await LoadDoctors(_currentUserId, _userRole);
         LoaderService.SetLoader(false);
     }
 
