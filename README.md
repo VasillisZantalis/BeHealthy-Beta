@@ -10,7 +10,7 @@ It has been configured to run with **Docker Compose** and uses **user-secrets** 
 ## Prerequisites
 
 - [Docker](https://www.docker.com/get-started)  
-- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 ---
 
