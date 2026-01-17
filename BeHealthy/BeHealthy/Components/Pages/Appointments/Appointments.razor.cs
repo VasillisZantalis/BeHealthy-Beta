@@ -59,7 +59,7 @@ public partial class Appointments : BasePage
 
         userRole = authState.User.GetUserRoleEnum();
 
-        LoadAppointments()
+        await LoadAppointments();
 
         await GetUserPrivilege(userRole!.Value);
 

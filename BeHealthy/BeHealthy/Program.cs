@@ -6,6 +6,8 @@ using BeHealthy.Domain.Entities;
 using BeHealthy.Endpoints.Culture;
 using BeHealthy.Infrastructure;
 using BeHealthy.Infrastructure.Data;
+using BeHealthy.Services;
+using BeHealthy.Services.Interfaces;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -72,6 +74,8 @@ builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
+
+builder.Services.AddScoped<IModalService, ModalService>();
 
 // States
 builder.Services.AddScoped<ModalStateService>();

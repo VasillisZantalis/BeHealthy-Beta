@@ -52,7 +52,7 @@ public partial class Nurses : BasePage
         await LoadNurses(_currentUserId, _userRole);
 
         _paginationState.ItemsPerPage = _nurses.Count;
-        hasActionRights = userRole == UserRole.Admin;
+        hasActionRights = _userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
     }

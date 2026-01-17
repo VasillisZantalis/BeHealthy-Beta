@@ -1,73 +1,37 @@
-﻿@implements IDisposable
-@rendermode @(new InteractiveServerRenderMode(false))
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+@inherits ModalBase
 
-@inject ConfirmDeleteStateService ConfirmDeleteService
-
-@if (IsVisible)
-{
-    <div class="modal" tabindex="-1" role="dialog" style="display:block;">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">@Resource.ConfirmDeletion</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="HandleCancel"></button>
-                </div>
-                <div class="modal-body text-center row">
-                    <Icon IconClass="@FAIcon.TriangleExclamation" TextClass="text-danger" SizeClass="fs-1" />
-                    <span class="fw-bold">@Resource.ThisActionCannotBeUndone</span>
-                    <span class="text-muted">@Resource.AreYouSureYouWantToContinue</span>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="HandleCancel">@Resource.Cancel</button>
-                    <button type="button" class="btn btn-danger rounded-pill px-4" @onclick="HandleConfirm">@Resource.Delete</button>
-                </div>
+<div class="modal" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">@Resource.ConfirmDeletion</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="HandleCancel"></button>
+            </div>
+            <div class="modal-body text-center row">
+                <Icon IconClass="@FAIcon.TriangleExclamation" TextClass="text-danger" SizeClass="fs-1" />
+                <span class="fw-bold">@Resource.ThisActionCannotBeUndone</span>
+                <span class="text-muted">@Resource.AreYouSureYouWantToContinue</span>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="HandleCancel">@Resource.Cancel</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" @onclick="HandleConfirm">@Resource.Delete</button>
             </div>
         </div>
     </div>
-    <div class="modal-backdrop fade show"></div>
-}
+</div>
+<div class="modal-backdrop fade show"></div>
 
 @code {
-    private bool IsVisible { get; set; }
-    private Func<Task>? OnConfirmCallback { get; set; }
-
-    protected override void OnInitialized()
-    {
-        ConfirmDeleteService.OnRequestDelete += ShowModal;
-        ConfirmDeleteService.OnCancel += HideModal;
-    }
-
-    private void ShowModal(Func<Task> onConfirm)
-    {
-        OnConfirmCallback = onConfirm;
-        IsVisible = true;
-        StateHasChanged();
-    }
-
-    private void HideModal()
-    {
-        IsVisible = false;
-        StateHasChanged();
-    }
+    [Parameter] public Func<Task>? OnConfirm { get; set; }
 
     private async Task HandleConfirm()
     {
-        if (OnConfirmCallback is not null)
-        {
-            await OnConfirmCallback.Invoke();
-        }
+        if (OnConfirm != null)
+            await OnConfirm();
 
-        HideModal();
+        Close();
     }
 
-    private void HandleCancel()
-    {
-        ConfirmDeleteService.Cancel();
-    }
-
-    public void Dispose()
-    {
-        ConfirmDeleteService.OnRequestDelete -= ShowModal;
-        ConfirmDeleteService.OnCancel -= HideModal;
-    }
+    private void HandleCancel() => Close();
 }
