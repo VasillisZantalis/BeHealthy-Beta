@@ -5,7 +5,9 @@ using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Nurse;
 using BeHealthy.Common;
+using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using BeHealthy.States;
@@ -119,10 +121,16 @@ public partial class Nurses : BasePage
 
     private void ConfirmDelete(int nurseId)
     {
-        ConfirmDeleteService.RequestDelete(async () =>
-        {
-            await _nurseService.DeleteNurseAsync(nurseId);
-            _navigationManager.Refresh(forceReload: true);
-        });
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(nurseId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int nurseId)
+    {
+        await _nurseService.DeleteNurseAsync(nurseId);
+        await LoadNurses(_currentUserId, _userRole);
     }
 }

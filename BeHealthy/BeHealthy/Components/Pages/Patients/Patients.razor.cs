@@ -3,7 +3,10 @@ using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Patient;
 using BeHealthy.Common;
+using BeHealthy.Components.Pages.Doctors;
+using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
@@ -81,7 +84,7 @@ public partial class Patients : BasePage
             UserRole.Doctor when doctorId is not null => (await _doctorService.GetMyPatientsAsync(doctorId)).ToList(),
             _ => (await _patientService.GetAllPatientsAsync()).ToList()
         };
-
+        await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
     }
 
@@ -124,10 +127,16 @@ public partial class Patients : BasePage
 
     private void ConfirmDelete(int patientId)
     {
-        ConfirmDeleteService.RequestDelete(async () =>
-        {
-            await _patientService.DeletePatientAsync(patientId);
-            _navigationManager.Refresh(forceReload: true);
-        });
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(patientId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int patientId)
+    {
+        await _patientService.DeletePatientAsync(patientId);
+        await LoadPatients(_currentUserId, _userRole);
     }
 }

@@ -12,7 +12,7 @@
 </div>
 
 <UpsertModal @ref="_upsertModal"
-             HandleResponse="HandleResponse"
+             HandleResponse="(async () => await HandleResponse())"
              SpecialtyId="_specialtyId" />
 
 @if (_specialties is null || !_specialties.Any())
@@ -56,11 +56,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
 
         SetBreadcrumbs();
-        _specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
+        await LoadSpecialties();
+    }
 
+    private async Task LoadSpecialties()
+    {
+        LoaderService.SetLoader(true);
+        _specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
         LoaderService.SetLoader(false);
     }
 
@@ -87,16 +91,22 @@ else
 
     private void ConfirmDelete(int specialtyId)
     {
-        ConfirmDeleteService.RequestDelete(async () =>
-        {
-            await SpecialtyService.DeleteSpecialtyAsync(specialtyId);
-            NavigationManager.Refresh(forceReload: true);
-        });
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(specialtyId) }
+           });
     }
 
-    private void HandleResponse()
+    private async Task OnConfirmDeleteAsync(int specialtyId)
+    {
+        await SpecialtyService.DeleteSpecialtyAsync(specialtyId);
+        await LoadSpecialties();
+    }
+
+    private async Task HandleResponse()
     {
         ToastService.ShowToast(Resource.Success, "success");
-        NavigationManager.Refresh(true);
+        await LoadSpecialties();
     }
 }

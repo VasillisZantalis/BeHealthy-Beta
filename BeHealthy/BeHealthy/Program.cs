@@ -82,7 +82,6 @@ builder.Services.AddScoped<ModalStateService>();
 builder.Services.AddScoped<NavMenuState>();
 builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
-builder.Services.AddScoped<ConfirmDeleteStateService>();
 builder.Services.AddScoped<AlertModalStateService>();
 builder.Services.AddScoped<ToastService>();
 

@@ -132,7 +132,13 @@
     }
 
     private void ConfirmDelete(int allergyId)
-        => ConfirmDeleteService.RequestDelete(() => ExecuteDeleteAllergyAsync(allergyId));
+    {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => ExecuteDeleteAllergyAsync(allergyId) }
+           });
+    }
 
     private async Task ExecuteDeleteAllergyAsync(int allergyId)
     {

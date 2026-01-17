@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Common;
+using BeHealthy.Services.Interfaces;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 
@@ -15,7 +16,7 @@ public class BasePage : ComponentBase
     protected BreadcrumbServiceState Breadcrumbs { get; set; } = default!;
 
     [Inject]
-    protected ConfirmDeleteStateService ConfirmDeleteService { get; set; } = default!;
+    protected IModalService ModalService { get; set; } = default!;
 
     [Inject]
     protected ToastService ToastService { get; set; } = default!;

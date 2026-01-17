@@ -66,10 +66,16 @@
 
     private void ConfirmDelete(int doctorId)
     {
-        ConfirmDeleteService.RequestDelete(async () =>
-        {
-            await VisitService.DeleteVisitAsync(doctorId);
-            NavigationManager.Refresh(true);
-        });
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(doctorId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int doctorId)
+    {
+        await VisitService.DeleteVisitAsync(doctorId);
+        NavigationManager.Refresh(true);
     }
 }

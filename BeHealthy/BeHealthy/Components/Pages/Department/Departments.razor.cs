@@ -1,7 +1,10 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
+using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Domain;
 using BeHealthy.Models;
+using BeHealthy.Services;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
@@ -30,11 +33,17 @@ public partial class Departments : BasePage
     {
         LoaderService.SetLoader(true);
 
+        await LoadDepartments();
         _hasActionRights = true;
-        _departments = (await _departmentService.GetAllDepartmentsAsync()).ToList();
         _paginationState.ItemsPerPage = _departments.Count;
 
         LoaderService.SetLoader(false);
+    }
+
+    private async Task LoadDepartments()
+    {
+        _departments = (await _departmentService.GetAllDepartmentsAsync()).ToList();
+        await InvokeAsync(StateHasChanged);
     }
 
     private void SetBreadcrumbs()
@@ -53,11 +62,17 @@ public partial class Departments : BasePage
 
     private void ConfirmDelete(int departmentId)
     {
-        ConfirmDeleteService.RequestDelete(async () =>
-        {
-            await _departmentService.DeleteDepartmentAsync(departmentId);
-            _navigationManager.Refresh(forceReload: true);
-        });
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(departmentId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int departmentId)
+    {
+        await _departmentService.DeleteDepartmentAsync(departmentId);
+        await LoadDepartments();
     }
 
     private void Create()

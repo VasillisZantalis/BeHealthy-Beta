@@ -72,10 +72,17 @@
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
-
-        _medicalRecords = (await MedicalRecordService.GetMedicalRecordsByPatientIdAsync(PatientId)).ToList();
+        await LoadMedicalRecords();
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
+        LoaderService.SetLoader(false);
+    }
+
+    private async Task LoadMedicalRecords()
+    {
+        LoaderService.SetLoader(true);
+        _medicalRecords = (await MedicalRecordService.GetMedicalRecordsByPatientIdAsync(PatientId)).ToList();
+        await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
     }
 
@@ -120,10 +127,16 @@
 
     private void ConfirmDelete(int medicalRecordId)
     {
-        ConfirmDeleteService.RequestDelete(async () =>
-        {
-            await MedicalRecordService.DeleteMedicalRecordAsync(medicalRecordId);
-            NavigationManager.Refresh(true);
-        });
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(medicalRecordId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int medicalRecordId)
+    {
+        await MedicalRecordService.DeleteMedicalRecordAsync(medicalRecordId);
+        await LoadMedicalRecords();
     }
 }

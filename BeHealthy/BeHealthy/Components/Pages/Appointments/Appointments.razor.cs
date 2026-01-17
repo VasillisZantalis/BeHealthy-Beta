@@ -5,8 +5,10 @@ using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Common;
+using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Domain;
 using BeHealthy.Models;
+using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -74,24 +76,24 @@ public partial class Appointments : BasePage
     }
 
     private async Task LoadAppointments()
-{
-    switch (userRole, _currentUserId)
     {
-        case (UserRole.Doctor, not null):
-            _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(_currentUserId)).ToList();
-            break;
+        switch (userRole, _currentUserId)
+        {
+            case (UserRole.Doctor, not null):
+                _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(_currentUserId)).ToList();
+                break;
 
-        case (UserRole.Patient, not null):
-            _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(_currentUserId)).ToList();
-            break;
+            case (UserRole.Patient, not null):
+                _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(_currentUserId)).ToList();
+                break;
 
-        default:
-            _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
-            break;
+            default:
+                _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
+                break;
+        }
+        _paginationState.ItemsPerPage = _appointments.Count;
+        await InvokeAsync(StateHasChanged);
     }
-    _paginationState.ItemsPerPage = _appointments.Count;
-    StateHasChanged();
-}
 
     private void SetBreadcrumbs()
     {
@@ -144,11 +146,17 @@ public partial class Appointments : BasePage
 
     private void ConfirmDelete(int appointmentId)
     {
-        ConfirmDeleteService.RequestDelete(async () =>
-        {
-            await _appointmentService.DeleteAppointmentAsync(appointmentId);
-            _navigationManager.Refresh(forceReload: true);
-        });
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(appointmentId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int appointmentId)
+    {
+        await _appointmentService.DeleteAppointmentAsync(appointmentId);
+        await LoadAppointments();
     }
 
     private async Task GetUserPrivilege(UserRole userRole)
