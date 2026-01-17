@@ -1,7 +1,7 @@
 ﻿using BeHealthy.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
-namespace BeHealthy.Components.Shared.Modals;
+namespace BeHealthy.Components.Shared.Modals.Base;
 
 public abstract class ModalBase : ComponentBase
 {

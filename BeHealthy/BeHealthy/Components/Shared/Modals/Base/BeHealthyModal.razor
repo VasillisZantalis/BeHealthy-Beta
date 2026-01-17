@@ -1,0 +1,46 @@
+﻿@inherits ModalBase
+<div class="modal fade show custom-modal-overlay"
+     tabindex="-1"
+     style="display: block;"
+     @onmousedown="HandleBackdropClick">
+
+    <div class="modal-dialog modal-dialog-centered"
+         @onmousedown:stopPropagation="true">
+
+        <div class="modal-content">
+
+            @if (Header is not null)
+            {
+                <div class="modal-header border-0">
+                    @Header
+                </div>
+            }
+
+            @if (Body is not null)
+            {
+                <div class="modal-body text-center d-flex flex-column">
+                    @Body
+                </div>
+            }
+
+            @if (Footer is not null)
+            {
+                <div class="modal-footer border-0">
+                    @Footer
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? Header { get; set; }
+    [Parameter] public RenderFragment? Body { get; set; }
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    private void HandleBackdropClick()
+    {
+        Close();
+    }
+}
