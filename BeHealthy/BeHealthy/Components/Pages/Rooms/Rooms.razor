@@ -113,6 +113,15 @@ else
 
     public async Task DeleteRoom(int roomId)
     {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(roomId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int roomId)
+    {
         await RoomService.DeleteRoomAsync(roomId);
         NavigationManager.Refresh(true);
     }

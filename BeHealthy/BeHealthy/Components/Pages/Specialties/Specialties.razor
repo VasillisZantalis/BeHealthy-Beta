@@ -65,6 +65,7 @@ else
     {
         LoaderService.SetLoader(true);
         _specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
+        await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
     }
 

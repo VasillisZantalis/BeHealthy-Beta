@@ -78,7 +78,7 @@ public partial class Nurses : BasePage
             _ => (await _nurseService.GetAllNursesAsync()).ToList()
         };
 
-
+        await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
     }
 
