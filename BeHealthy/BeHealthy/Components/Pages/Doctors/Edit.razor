@@ -25,60 +25,52 @@
 
         <ValidationComponent @ref="_validationComponent"/>
 
-        <div class="row">
+        <div class="d-flex flex-column gap-3">
             <Alert @ref="_alert" />
             <ImagePreview ImageUrl="@_DoctorUpdateDto.Image" />
 
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="_DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                    <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => _DoctorUpdateDto.FirstName" class="text-danger" />
-                </div>
-            </div>
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="_DoctorUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                    <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => _DoctorUpdateDto.LastName" class="text-danger" />
-                </div>
-            </div>
+            <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
+                <InputText @bind-Value="_DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                <ValidationMessage For="() => _DoctorUpdateDto.FirstName" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                <InputText @bind-Value="_DoctorUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                <ValidationMessage For="() => _DoctorUpdateDto.LastName" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            <ImageUpload OnImageChanged="image => _DoctorUpdateDto.Image = image" />
+
+            <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
+                <InputText id="phoneNumber" @bind-Value="_DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                <ValidationMessage For="() => _DoctorUpdateDto.PhoneNumber" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+            {
+                <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
+                    <InputSelect id="department" @bind-Value="_DoctorUpdateDto.DepartmentId" class="form-control">
+                        @foreach (var department in _departmentsSelect!)
+                        {
+                            <option value="@department.Value">@department.Text</option>
+                        }
+                    </InputSelect>
+                </BeHealthyFormGroup>
+            }
+
+            @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+            {
+                <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="_doNotAllowDoctorWithoutSpecialty">
+                    <InputSelect id="specialty" @bind-Value="_DoctorUpdateDto.SpecialtyId" class="form-control">
+                        @foreach (var specialty in _specialtiesSelect)
+                        {
+                            <option value="@specialty.Value">@specialty.Text</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => _DoctorUpdateDto.SpecialtyId" class="text-danger" />
+                </BeHealthyFormGroup>
+            }
         </div>
-
-        <ImageUpload OnImageChanged="image => _DoctorUpdateDto.Image = image" />
-
-        <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="_DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => _DoctorUpdateDto.PhoneNumber" class="text-danger" />
-        </div>
-
-        @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
-        {
-            <div class="form-floating mb-3">
-                <InputSelect id="department" @bind-Value="_DoctorUpdateDto.DepartmentId" class="form-control">
-                    @foreach (var department in _departmentsSelect!)
-                    {
-                        <option value="@department.Value">@department.Text</option>
-                    }
-                </InputSelect>
-                <label for="department">@Resource.Department</label>
-            </div>
-        }
-
-        @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
-        {
-            <div class="form-floating mb-3">
-                <InputSelect id="specialty" @bind-Value="_DoctorUpdateDto.SpecialtyId" class="form-control">
-                    @foreach (var specialty in _specialtiesSelect)
-                    {
-                        <option value="@specialty.Value">@specialty.Text</option>
-                    }
-                </InputSelect>
-                <label for="specialty" class="@(_doNotAllowDoctorWithoutSpecialty ? "required" : "")">@Resource.Specialty</label>
-                <ValidationMessage For="() => _DoctorUpdateDto.SpecialtyId" class="text-danger" />
-            </div>
-        }
     </EditForm>
 </div>
 
