@@ -14,6 +14,9 @@
 
 <div id="profile-container" class="container-fluid p-5 border rounded shadow">
     <EditForm id="profileForm" Model="_profileDto" OnValidSubmit="UpdateProfile">
+        <div>
+            <button type="submit" class="btn btn-success px-5">@Resource.Save</button>
+        </div>
         <div class="row">
             <ImagePreview ImageUrl="@_profileDto.Image" />
             <ImageUpload OnImageChanged="image => _profileDto.Image = image" />
@@ -28,9 +31,6 @@
                     <InputText @bind-Value="_profileDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
                 </div>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-success px-5">@Resource.Save</button>
             </div>
         </div>
     </EditForm>
