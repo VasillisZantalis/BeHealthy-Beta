@@ -101,11 +101,6 @@
     protected override async Task OnInitializedAsync()
     {
         await GetSettings();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
 
         var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
 
@@ -124,6 +119,11 @@
             Text = s.Name
         }).ToList();
         _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
 
         _DoctorUpdateDto = doctor?.MapToUpdateDto() ?? new();
 

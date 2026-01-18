@@ -22,7 +22,7 @@ public class DoctorService : IDoctorService
 
     public async Task<DoctorDto?> GetDoctorByIdAsync(int id)
     {
-        var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(id);
+        var doctor = await _unitOfWork.DoctorRepository.GetByIdWithIncludes(id, d => d.User!);
         return doctor?.MapToDto();
     }
 
