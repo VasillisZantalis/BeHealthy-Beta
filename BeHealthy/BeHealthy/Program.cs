@@ -1,7 +1,6 @@
 using BeHealthy.Application;
 using BeHealthy.Components;
 using BeHealthy.Components.Account;
-using BeHealthy.Components.Shared.Controls;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Endpoints.Culture;
 using BeHealthy.Infrastructure;
@@ -14,7 +13,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,13 +41,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
 });
 
-Log.Logger = new LoggerConfiguration()
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .WriteTo.File("log/log.txt", rollingInterval: RollingInterval.Day)
-    .CreateBootstrapLogger();
-
-builder.Host.UseSerilog();
 
 builder.Services.AddLocalization();
 
@@ -86,8 +77,6 @@ builder.Services.AddScoped<AlertModalStateService>();
 builder.Services.AddScoped<ToastService>();
 
 var app = builder.Build();
-
-app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
