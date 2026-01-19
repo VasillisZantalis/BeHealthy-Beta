@@ -105,3 +105,14 @@ h1:focus {
 .fc .fc-daygrid-day.fc-day-today {
     background-color: var(--primary-color);
 }
+
+/* Remove Bootstrap blue focus styles globally */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus,
+.btn:focus,
+.btn:focus-visible {
+    border-color: #ced4da; /* default bootstrap border */
+    box-shadow: none !important;
+    outline: none;
+}
