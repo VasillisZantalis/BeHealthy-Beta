@@ -1,0 +1,234 @@
+@inherits ModalBase
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<BeHealthyModal>
+    <Header>
+        <h5 class="modal-title">@Title</h5>
+    </Header>
+    <Body>
+        <div @ref="_dropzoneElement" 
+             class="dropzone @GetDropzoneClass()"
+             @ondragenter="HandleDragEnter"
+             @ondragleave="HandleDragLeave"
+             @ondragover:preventDefault="true"
+             @ondrop="HandleDrop"
+             @ondrop:preventDefault="true">
+            
+            @if (string.IsNullOrEmpty(_previewUrl))
+            {
+                <div class="dropzone-content">
+                    <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-muted"></i>
+                    <p class="mb-2">@DropzoneText</p>
+                    <p class="text-muted small">or</p>
+                    <label for="@_instanceId" class="btn btn-primary btn-sm">
+                        Browse Files
+                    </label>
+                    <InputFile id="@_instanceId"
+                               OnChange="HandleFileSelected"
+                               accept="@AcceptedFormats"
+                               class="d-none" />
+                </div>
+            }
+            else
+            {
+                <div class="preview-container">
+                    @if (IsImage)
+                    {
+                        <img src="@_previewUrl" alt="Preview" class="preview-image" />
+                    }
+                    else
+                    {
+                        <div class="file-info">
+                            <i class="fas fa-file fa-3x text-primary mb-2"></i>
+                            <p class="mb-0">@_fileName</p>
+                            <p class="text-muted small">@_fileSizeFormatted</p>
+                        </div>
+                    }
+                    <button type="button" class="btn btn-danger btn-sm mt-3" @onclick="ClearFile">
+                        <i class="fas fa-times"></i> Remove
+                    </button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert alert-danger mt-3 mb-0" role="alert">
+                    @_errorMessage
+                </div>
+            }
+        </div>
+
+        @if (!string.IsNullOrEmpty(_successMessage))
+        {
+            <div class="alert alert-success mt-3" role="alert">
+                @_successMessage
+            </div>
+        }
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-secondary" @onclick="Close">
+            Cancel
+        </button>
+        <button type="button" 
+                class="btn btn-success" 
+                @onclick="ConfirmUpload" 
+                disabled="@(string.IsNullOrEmpty(_previewUrl))">
+            <i class="fas fa-check"></i> Confirm
+        </button>
+    </Footer>
+</BeHealthyModal>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Upload File";
+    [Parameter] public string DropzoneText { get; set; } = "Drag and drop your file here";
+    [Parameter] public bool IsImage { get; set; } = true;
+    [Parameter] public int MaxFileSizeInKB { get; set; } = 1024;
+    [Parameter] public string[] AllowedFormats { get; set; } = new[] { "image/jpeg", "image/png", "image/jpg" };
+    [Parameter] public int? ResizeWidth { get; set; } = 200;
+    [Parameter] public int? ResizeHeight { get; set; } = 200;
+    [Parameter] public EventCallback<string> OnFileUploaded { get; set; }
+
+    private bool _isDragging = false;
+    private string? _previewUrl;
+    private string? _errorMessage;
+    private string? _successMessage;
+    private string? _fileName;
+    private string? _fileSizeFormatted;
+    private string _instanceId = Guid.NewGuid().ToString();
+    private ElementReference _dropzoneElement;
+    private IJSObjectReference? _jsModule;
+
+    private string AcceptedFormats => string.Join(",", AllowedFormats.Select(f => 
+        f.StartsWith(".") ? f : $".{f.Split('/').Last()}"));
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                _jsModule = await JS.InvokeAsync<IJSObjectReference>(
+                    "import", "./Components/Shared/Modals/FileUploadModal.razor.js");
+                
+                await _jsModule.InvokeVoidAsync("initializeDropzone", _dropzoneElement, DotNetObjectReference.Create(this));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing dropzone: {ex.Message}");
+            }
+        }
+    }
+
+    private string GetDropzoneClass()
+    {
+        var classes = new List<string>();
+        if (_isDragging) classes.Add("dragging");
+        if (!string.IsNullOrEmpty(_previewUrl)) classes.Add("has-file");
+        return string.Join(" ", classes);
+    }
+
+    private void HandleDragEnter()
+    {
+        _isDragging = true;
+    }
+
+    private void HandleDragLeave()
+    {
+        _isDragging = false;
+    }
+
+    private async Task HandleDrop(DragEventArgs e)
+    {
+        _isDragging = false;
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        await ProcessFile(e.File);
+    }
+
+    private async Task ProcessFile(IBrowserFile file)
+    {
+        _errorMessage = null;
+        _successMessage = null;
+
+        // Validate file size
+        if (file.Size > MaxFileSizeInKB * 1024)
+        {
+            _errorMessage = $"File size cannot exceed {MaxFileSizeInKB} KB.";
+            return;
+        }
+
+        // Validate file type
+        if (!AllowedFormats.Contains(file.ContentType))
+        {
+            _errorMessage = $"Only {string.Join(", ", AllowedFormats.Select(f => f.Split('/')[1]))} files are allowed.";
+            return;
+        }
+
+        try
+        {
+            IBrowserFile processedFile = file;
+
+            // Resize if it's an image and resize dimensions are specified
+            if (IsImage && ResizeWidth.HasValue && ResizeHeight.HasValue)
+            {
+                processedFile = await file.RequestImageFileAsync(file.ContentType, ResizeWidth.Value, ResizeHeight.Value);
+            }
+
+            var buffer = new byte[processedFile.Size];
+            await processedFile.OpenReadStream(MaxFileSizeInKB * 1024).ReadAsync(buffer);
+
+            _previewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+            _fileName = file.Name;
+            _fileSizeFormatted = FormatFileSize(file.Size);
+            _successMessage = "File loaded successfully!";
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Error processing file: {ex.Message}";
+        }
+
+        StateHasChanged();
+    }
+
+    private void ClearFile()
+    {
+        _previewUrl = null;
+        _fileName = null;
+        _fileSizeFormatted = null;
+        _errorMessage = null;
+        _successMessage = null;
+    }
+
+    private async Task ConfirmUpload()
+    {
+        if (!string.IsNullOrEmpty(_previewUrl))
+        {
+            await OnFileUploaded.InvokeAsync(_previewUrl);
+            Close();
+        }
+    }
+
+    private string FormatFileSize(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len = len / 1024;
+        }
+        return $"{len:0.##} {sizes[order]}";
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_jsModule is not null)
+        {
+            await _jsModule.DisposeAsync();
+        }
+    }
+}

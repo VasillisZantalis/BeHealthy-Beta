@@ -10,6 +10,7 @@
 @inject ISpecialtyService SpecialtyService
 @inject IAppSettingsService AppSettingsService
 @inject NavigationManager NavigationManager
+@inject IModalService ModalService
 
 <PageTitle>@Resource.Create</PageTitle>
 
@@ -49,7 +50,17 @@
                 <ValidationMessage For="() => _DoctorCreateDto.LastName" class="text-danger" />
             </BeHealthyFormGroup>
 
-            <ImageUpload OnImageChanged="image => _DoctorCreateDto.Image = image" />
+            <div class="mb-3">
+                <button type="button" class="btn btn-outline-primary" @onclick="OpenImageUploadModal">
+                    <i class="fas fa-upload"></i> Upload Image
+                </button>
+                @if (!string.IsNullOrEmpty(_DoctorCreateDto.Image))
+                {
+                    <span class="text-success ms-2">
+                        <i class="fas fa-check-circle"></i> Image uploaded
+                    </span>
+                }
+            </div>
 
             <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
                     <InputText id="email"
@@ -174,6 +185,25 @@
             new Breadcrumb(){Text = Resource.Doctors, Link = RoutingEndpoints.DOCTORS_PAGE, Active = false},
             new Breadcrumb(){Text = Resource.Create, Link = RoutingEndpoints.DOCTORS_PAGE, Active = true}
         });
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.Title), "Upload Doctor Image" },
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        _DoctorCreateDto.Image = imageData;
+        StateHasChanged();
     }
 
     public async Task RegisterDoctor(EditContext editContext)
