@@ -28,125 +28,126 @@
                       OnClose="HideImportWizard" />
 }
 
-@if (_doctors is null || !_doctors.Any())
+@if (_selectedView == "Card")
 {
-    <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
-}
-else
-{
-    @if (_selectedView == "Card")
+    if (_doctors is null || !_doctors.Any())
     {
+        <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
+    }
+    else
+    {
+            
         <div class="row">
             <Virtualize Items="@_doctors" Context="doctor" ItemSize="100">
                 <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                     <div class="mb-3">
                         <UserCard Id="@doctor.Id"
-                                  Image="@doctor.Image"
-                                  FullName="@doctor.FullName"
-                                  Email="@doctor.Email"
-                                  Role="@UserRole.Doctor"
-                                  Phone="@doctor.PhoneNumber"
-                                  Specialty="@doctor.Specialty?.Name"
-                                  CanEdit="hasActionRights"
-                                  CanDelete="hasActionRights"
-                                  Edit="() => EditDoctor(doctor.Id)"
-                                  Delete="() => ConfirmDelete(doctor.Id)" />
+                                    Image="@doctor.Image"
+                                    FullName="@doctor.FullName"
+                                    Email="@doctor.Email"
+                                    Role="@UserRole.Doctor"
+                                    Phone="@doctor.PhoneNumber"
+                                    Specialty="@doctor.Specialty?.Name"
+                                    CanEdit="hasActionRights"
+                                    CanDelete="hasActionRights"
+                                    Edit="() => EditDoctor(doctor.Id)"
+                                    Delete="() => ConfirmDelete(doctor.Id)" />
                     </div>
                 </div>
             </Virtualize>
         </div>
     }
-    else if (_selectedView == "Grid")
-    {
-        <div class="doctorsTableDiv mt-3">
-            <div class="card">
-                <div class="card-header d-flex flex-row justify-content-end">
-                    <div class="px-1">
-                        <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </InputSelect>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <div class="card-body pb-2 px-0 m-0">
-                        <div class="card-body pb-2 px-0 m-0">
-                            <BeHealthyTable TItem="DoctorDto"
-                                            Items="@_doctors"
-                                            TableClass="table table-responsive"
-                                            WrapperClass="table-wrapper"
-                                            EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)">
-
-                                <BeHealthyColumn TItem="DoctorDto"
-                                                 Title="">
-                                    <Template>
-                                        <img class="rounded-circle"
-                                             src="@(context.Image ?? "images/generic.jpg")"
-                                             alt="@context.FullName"
-                                             width="25"
-                                             height="25" />
-                                    </Template>
-                                </BeHealthyColumn>
-
-                                <BeHealthyColumn TItem="DoctorDto"
-                                                 Title="@Resource.FirstName"
-                                                 Property="@(x => x.FirstName)" />
-
-                                <BeHealthyColumn TItem="DoctorDto"
-                                                 Title="@Resource.LastName"
-                                                 Property="@(x => x.LastName)" />
-
-                                <BeHealthyColumn TItem="DoctorDto"
-                                                 Title="@Resource.Specialty"
-                                                 Property="@(x => x.Specialty != null ? x.Specialty.Name : string.Empty)" />
-
-                                <BeHealthyColumn TItem="DoctorDto"
-                                                 Title="@Resource.Created"
-                                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())" />
-
-                                <BeHealthyColumn TItem="DoctorDto"
-                                                 Title="@Resource.Email"
-                                                 Property="@(x => x.Email)" />
-
-                                <BeHealthyColumn TItem="DoctorDto"
-                                                 Title="@Resource.PhoneNumber"
-                                                 Property="@(x => x.PhoneNumber)" />
-
-                                @if (hasActionRights)
-                                {
-                                    <BeHealthyActionsColumn TItem="DoctorDto"
-                                                            Title="@Resource.Actions"
-                                                            CellClass="text-end">
-                                        <Template>
-                                            <div class="d-flex justify-content-end">
-                                                <button class="btn"
-                                                        title="@(Resource.Edit)"
-                                                        @onclick="@(() => EditDoctor(context.Id))"
-                                                        @onclick:stopPropagation="true">
-                                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                                                </button>
-                                                <button class="btn"
-                                                        title="@(Resource.Delete)"
-                                                        @onclick="() => ConfirmDelete(context.Id)"
-                                                        @onclick:stopPropagation="true">
-                                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                                </button>
-                                            </div>
-                                        </Template>
-                                    </BeHealthyActionsColumn>
-                                }
-
-                            </BeHealthyTable>
-                        </div>
-                    </div>
-                </div>
-                <div id="paginatorDiv" class="px-3">
-                    <Paginator State="_paginationState" />
+}
+else if (_selectedView == "Grid")
+{
+    <div class="doctorsTableDiv mt-3">
+        <div class="card">
+            <div class="card-header d-flex flex-row justify-content-end">
+                <div class="px-1">
+                    <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </InputSelect>
                 </div>
             </div>
+            <div class="table-responsive">
+                <div class="card-body pb-2 px-0 m-0">
+                    <div class="card-body pb-2 px-0 m-0">
+                        <BeHealthyTable TItem="DoctorDto"
+                                        Items="@_doctors"
+                                        TableClass="table table-responsive"
+                                        WrapperClass="table-wrapper"
+                                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)">
+
+                            <BeHealthyColumn TItem="DoctorDto"
+                                                Title="">
+                                <Template>
+                                    <img class="rounded-circle"
+                                            src="@(context.Image ?? "images/generic.jpg")"
+                                            alt="@context.FullName"
+                                            width="25"
+                                            height="25" />
+                                </Template>
+                            </BeHealthyColumn>
+
+                            <BeHealthyColumn TItem="DoctorDto"
+                                                Title="@Resource.FirstName"
+                                                Property="@(x => x.FirstName)" />
+
+                            <BeHealthyColumn TItem="DoctorDto"
+                                                Title="@Resource.LastName"
+                                                Property="@(x => x.LastName)" />
+
+                            <BeHealthyColumn TItem="DoctorDto"
+                                                Title="@Resource.Specialty"
+                                                Property="@(x => x.Specialty != null ? x.Specialty.Name : string.Empty)" />
+
+                            <BeHealthyColumn TItem="DoctorDto"
+                                                Title="@Resource.Created"
+                                                Property="@(x => x.CreatedAt.ToFullDateTimeString())" />
+
+                            <BeHealthyColumn TItem="DoctorDto"
+                                                Title="@Resource.Email"
+                                                Property="@(x => x.Email)" />
+
+                            <BeHealthyColumn TItem="DoctorDto"
+                                                Title="@Resource.PhoneNumber"
+                                                Property="@(x => x.PhoneNumber)" />
+
+                            @if (hasActionRights)
+                            {
+                                <BeHealthyActionsColumn TItem="DoctorDto"
+                                                        Title="@Resource.Actions"
+                                                        CellClass="text-end">
+                                    <Template>
+                                        <div class="d-flex justify-content-end">
+                                            <button class="btn"
+                                                    title="@(Resource.Edit)"
+                                                    @onclick="@(() => EditDoctor(context.Id))"
+                                                    @onclick:stopPropagation="true">
+                                                <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                                            </button>
+                                            <button class="btn"
+                                                    title="@(Resource.Delete)"
+                                                    @onclick="() => ConfirmDelete(context.Id)"
+                                                    @onclick:stopPropagation="true">
+                                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                            </button>
+                                        </div>
+                                    </Template>
+                                </BeHealthyActionsColumn>
+                            }
+
+                        </BeHealthyTable>
+                    </div>
+                </div>
+            </div>
+            <div id="paginatorDiv" class="px-3">
+                <Paginator State="_paginationState" />
+            </div>
         </div>
-    }
+    </div>
 }
