@@ -1,0 +1,35 @@
+﻿@typeparam TItem
+@implements IDisposable
+
+@code {
+    [CascadingParameter] private BeHealthyTable<TItem>? Table { get; set; }
+    
+    [Parameter] public string Title { get; set; } = "Actions";
+    [Parameter] public RenderFragment<TItem>? Template { get; set; }
+    
+    // Styling parameters
+    [Parameter] public string HeaderClass { get; set; } = "";
+    [Parameter] public string HeaderStyle { get; set; } = "";
+    [Parameter] public string CellClass { get; set; } = "";
+    [Parameter] public string CellStyle { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        if (Table == null)
+        {
+            throw new InvalidOperationException($"{nameof(BeHealthyActionsColumn<TItem>)} must be used inside a {nameof(BeHealthyTable<TItem>)}");
+        }
+        
+        if (Template == null)
+        {
+            throw new InvalidOperationException($"{nameof(BeHealthyActionsColumn<TItem>)} requires a Template parameter");
+        }
+        
+        Table.SetActionsColumn(this);
+    }
+
+    public void Dispose()
+    {
+        Table?.RemoveActionsColumn();
+    }
+}
