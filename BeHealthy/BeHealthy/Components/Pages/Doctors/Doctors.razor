@@ -4,19 +4,41 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-<div class="d-flex flex-row gap-3">
-    @if (_userRole == UserRole.Admin)
-    {
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+    <div class="d-flex gap-3">
+        @if (_userRole == UserRole.Admin)
+        {
+            <div class="">
+                <CreateButton OnClick="CreateDoctor" />
+                <MassImportButton OnClick="ShowImportWizard" />
+            </div>
+        }
         <div class="">
-            <CreateButton OnClick="CreateDoctor" />
-            <MassImportButton OnClick="ShowImportWizard" />
+            <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
+                <option value="Card">@Resource.Card</option>
+                <option value="Grid">@Resource.Grid</option>
+            </InputSelect>
         </div>
-    }
-    <div class="">
-        <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
-            <option value="Card">@Resource.Card</option>
-            <option value="Grid">@Resource.Grid</option>
-        </InputSelect>
+    </div>
+    <div>
+        <BeHealthySearch OnSearch="HandleSearch"
+                         OnClear="HandleClearFilters"
+                         DebounceMilliseconds="300">
+
+            <Filters>
+                <!-- Specialty Filter -->
+                <InputSelect class="form-select"
+                             style="min-width: 200px;"
+                             @bind-Value="selectedSpecialtyId"
+                             @bind-Value:after="ApplyFilters">
+                    <option value="">All Specialties</option>
+                    @foreach (var specialty in specialties)
+                    {
+                        <option value="@specialty.Value">@specialty.Text</option>
+                    }
+                </InputSelect>
+            </Filters>
+        </BeHealthySearch>
     </div>
 </div>
 
@@ -38,7 +60,7 @@
     {
             
         <div class="row">
-            <Virtualize Items="@_doctors" Context="doctor" ItemSize="100">
+            <Virtualize Items="@filteredDoctors" Context="doctor" ItemSize="100">
                 <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                     <div class="mb-3">
                         <UserCard Id="@doctor.Id"
@@ -63,24 +85,7 @@ else if (_selectedView == "Grid")
     <BeHealthyCard>
         <Header>
             <div class="px-1">
-                <BeHealthySearch OnSearch="HandleSearch"
-                                 OnClear="HandleClearFilters"
-                                 DebounceMilliseconds="300">
-
-                    <Filters>
-                        <!-- Specialty Filter -->
-                        <InputSelect class="form-select"
-                                     style="min-width: 200px;"
-                                     @bind-Value="selectedSpecialtyId"
-                                     @bind-Value:after="ApplyFilters">
-                            <option value="">All Specialties</option>
-                            @foreach (var specialty in specialties)
-                            {
-                                <option value="@specialty.Value">@specialty.Text</option>
-                            }
-                        </InputSelect>
-                    </Filters>
-                </BeHealthySearch>
+               
             </div>
         </Header>
 
