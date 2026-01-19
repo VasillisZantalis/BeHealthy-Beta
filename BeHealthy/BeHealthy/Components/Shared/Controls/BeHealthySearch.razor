@@ -12,7 +12,7 @@
                     </span>
                     <input type="text"
                            class="form-control @SearchInputClass"
-                           placeholder="Search..."
+                           placeholder="@Resource.Search"
                            @bind="searchValue"
                            @bind:event="oninput"
                            @bind:after="OnSearchChanged" />
@@ -67,7 +67,7 @@
 
     // Clear button
     [Parameter] public bool ShowClearButton { get; set; } = true;
-    [Parameter] public string ClearButtonText { get; set; } = "Clear Filters";
+    [Parameter] public string ClearButtonText { get; set; } = Resource.ClearFilters;
     [Parameter] public string ClearButtonClass { get; set; } = "";
     [Parameter] public EventCallback OnClear { get; set; }
 

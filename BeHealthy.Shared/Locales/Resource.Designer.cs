@@ -19,7 +19,7 @@ namespace BeHealthy.Shared.Locales {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource {
@@ -295,6 +295,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Filters.
+        /// </summary>
+        public static string ClearFilters {
+            get {
+                return ResourceManager.GetString("ClearFilters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Close {
@@ -372,6 +381,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Dashboard {
             get {
                 return ResourceManager.GetString("Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string DataNotFound {
+            get {
+                return ResourceManager.GetString("DataNotFound", resourceCulture);
             }
         }
         
@@ -826,20 +844,20 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not Implemented yet.
-        /// </summary>
-        public static string NotImplementedYet {
-            get {
-                return ResourceManager.GetString("NotImplementedYet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} was not found.
         /// </summary>
         public static string NotFoundEntity {
             get {
                 return ResourceManager.GetString("NotFoundEntity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Implemented yet.
+        /// </summary>
+        public static string NotImplementedYet {
+            get {
+                return ResourceManager.GetString("NotImplementedYet", resourceCulture);
             }
         }
         

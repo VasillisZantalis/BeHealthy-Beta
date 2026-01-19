@@ -86,7 +86,7 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public RenderFragment? EmptyContent { get; set; }
     [Parameter] public RenderFragment? FooterContent { get; set; }
-    [Parameter] public string EmptyMessage { get; set; } = "No data available";
+    [Parameter] public string EmptyMessage { get; set; } = Resource.DataNotFound;
 
     // Styling parameters
     [Parameter] public string WrapperClass { get; set; } = "";

@@ -361,7 +361,7 @@
     <value>Όνομα</value>
   </data>
   <data name="NoAvailable" xml:space="preserve">
-    <value>Μη διαθέσημα {0}</value>
+    <value>Μη διαθέσημοι {0}</value>
   </data>
   <data name="NotAvailable" xml:space="preserve">
     <value>Μη διαθέσιμο</value>
@@ -575,5 +575,8 @@
   </data>
   <data name="YouAreNotAuthorizedToAccessPage" xml:space="preserve">
     <value>Δεν έχεις πρόσβαση σε αυτή την σελίδα</value>
+  </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Καθάρισμα φίλτρων</value>
   </data>
 </root>

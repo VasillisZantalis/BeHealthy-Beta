@@ -576,4 +576,10 @@
   <data name="YouAreNotAuthorizedToAccessPage" xml:space="preserve">
     <value>You are not authorized to access this page</value>
   </data>
+  <data name="ClearFilters" xml:space="preserve">
+    <value>Clear Filters</value>
+  </data>
+  <data name="DataNotFound" xml:space="preserve">
+    <value />
+  </data>
 </root>

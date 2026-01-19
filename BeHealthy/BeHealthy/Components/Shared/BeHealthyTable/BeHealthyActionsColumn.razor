@@ -4,7 +4,7 @@
 @code {
     [CascadingParameter] private BeHealthyTable<TItem>? Table { get; set; }
     
-    [Parameter] public string Title { get; set; } = "Actions";
+    [Parameter] public string Title { get; set; } = Resource.Actions;
     [Parameter] public RenderFragment<TItem>? Template { get; set; }
     
     // Styling parameters

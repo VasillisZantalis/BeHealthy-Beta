@@ -31,7 +31,7 @@ public partial class Doctors : BasePage
     // Specialty list for dropdown
     private List<SelectItem> specialties = new();
 
-    private string _selectedView = "Card";
+    private string _selectedView = "Grid";
     private bool hasActionRights;
     private UserRole? _userRole;
     private string? _currentUserId;
