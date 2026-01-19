@@ -30,7 +30,13 @@
 
         <div class="d-flex flex-column gap-3">
             <Alert @ref="_alert" />
-            <ImagePreview ImageUrl="@_DoctorCreateDto.Image" />
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <ImagePreview ImageUrl="@_DoctorCreateDto.Image" />
+
+                <button type="button" class="btn btn-outline-primary" @onclick="OpenImageUploadModal">
+                    <i class="fas fa-upload"></i> Upload Image
+                </button>
+            </div>
 
             <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
 
@@ -49,18 +55,6 @@
                            aria-required="true" />
                 <ValidationMessage For="() => _DoctorCreateDto.LastName" class="text-danger" />
             </BeHealthyFormGroup>
-
-            <div class="mb-3">
-                <button type="button" class="btn btn-outline-primary" @onclick="OpenImageUploadModal">
-                    <i class="fas fa-upload"></i> Upload Image
-                </button>
-                @if (!string.IsNullOrEmpty(_DoctorCreateDto.Image))
-                {
-                    <span class="text-success ms-2">
-                        <i class="fas fa-check-circle"></i> Image uploaded
-                    </span>
-                }
-            </div>
 
             <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
                     <InputText id="email"

@@ -11,9 +11,7 @@
              class="dropzone @GetDropzoneClass()"
              @ondragenter="HandleDragEnter"
              @ondragleave="HandleDragLeave"
-             @ondragover:preventDefault="true"
-             @ondrop="HandleDrop"
-             @ondrop:preventDefault="true">
+             @ondragover:preventDefault="true">
             
             @if (string.IsNullOrEmpty(_previewUrl))
             {
@@ -24,7 +22,8 @@
                     <label for="@_instanceId" class="btn btn-primary btn-sm">
                         Browse Files
                     </label>
-                    <InputFile id="@_instanceId"
+                    <InputFile @ref="_fileInput"
+                               id="@_instanceId"
                                OnChange="HandleFileSelected"
                                accept="@AcceptedFormats"
                                class="d-none" />
@@ -97,6 +96,7 @@
     private string? _fileSizeFormatted;
     private string _instanceId = Guid.NewGuid().ToString();
     private ElementReference _dropzoneElement;
+    private InputFile? _fileInput;
     private IJSObjectReference? _jsModule;
 
     private string AcceptedFormats => string.Join(",", AllowedFormats.Select(f => 
@@ -111,7 +111,8 @@
                 _jsModule = await JS.InvokeAsync<IJSObjectReference>(
                     "import", "./Components/Shared/Modals/FileUploadModal.razor.js");
                 
-                await _jsModule.InvokeVoidAsync("initializeDropzone", _dropzoneElement, DotNetObjectReference.Create(this));
+                var dotNetRef = DotNetObjectReference.Create(this);
+                await _jsModule.InvokeVoidAsync("initializeDropzone", _dropzoneElement, dotNetRef);
             }
             catch (Exception ex)
             {
@@ -138,9 +139,43 @@
         _isDragging = false;
     }
 
-    private async Task HandleDrop(DragEventArgs e)
+    [JSInvokable]
+    public async Task HandleDroppedFile(string fileName, string contentType, long fileSize, string base64Data)
     {
         _isDragging = false;
+        _errorMessage = null;
+        _successMessage = null;
+
+        // Validate file size
+        if (fileSize > MaxFileSizeInKB * 1024)
+        {
+            _errorMessage = $"File size cannot exceed {MaxFileSizeInKB} KB.";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate file type
+        if (!AllowedFormats.Contains(contentType))
+        {
+            _errorMessage = $"Only {string.Join(", ", AllowedFormats.Select(f => f.Split('/')[1]))} files are allowed.";
+            StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            // For images, we can resize using JS Canvas API if needed, or just use as-is
+            _previewUrl = base64Data;
+            _fileName = fileName;
+            _fileSizeFormatted = FormatFileSize(fileSize);
+            _successMessage = "File loaded successfully!";
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Error processing file: {ex.Message}";
+        }
+
+        StateHasChanged();
     }
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
