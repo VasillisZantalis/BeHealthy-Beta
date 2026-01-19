@@ -582,4 +582,10 @@
   <data name="DataNotFound" xml:space="preserve">
     <value />
   </data>
+  <data name="UploadFile" xml:space="preserve">
+    <value>Upload file</value>
+  </data>
+  <data name="DragAndDropFile" xml:space="preserve">
+    <value>Drag and drop your file here</value>
+  </data>
 </root>

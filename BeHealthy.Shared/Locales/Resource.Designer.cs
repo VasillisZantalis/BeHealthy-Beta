@@ -475,6 +475,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drag and drop your file here.
+        /// </summary>
+        public static string DragAndDropFile {
+            get {
+                return ResourceManager.GetString("DragAndDropFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Duration.
         /// </summary>
         public static string Duration {
@@ -1362,6 +1371,15 @@ namespace BeHealthy.Shared.Locales {
         public static string UpcomingAppointments {
             get {
                 return ResourceManager.GetString("UpcomingAppointments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload file.
+        /// </summary>
+        public static string UploadFile {
+            get {
+                return ResourceManager.GetString("UploadFile", resourceCulture);
             }
         }
         

@@ -66,7 +66,7 @@
         }
     </Body>
     <Footer>
-        <button type="button" class="btn btn-secondary" @onclick="Close">
+        <button type="button" class="btn btn-outline-secondary" @onclick="Close">
             Cancel
         </button>
         <button type="button" 
@@ -79,8 +79,8 @@
 </BeHealthyModal>
 
 @code {
-    [Parameter] public string Title { get; set; } = "Upload File";
-    [Parameter] public string DropzoneText { get; set; } = "Drag and drop your file here";
+    [Parameter] public string Title { get; set; } = Resource.UploadFile;
+    [Parameter] public string DropzoneText { get; set; } = Resource.DragAndDropFile;
     [Parameter] public bool IsImage { get; set; } = true;
     [Parameter] public int MaxFileSizeInKB { get; set; } = 1024;
     [Parameter] public string[] AllowedFormats { get; set; } = new[] { "image/jpeg", "image/png", "image/jpg" };

@@ -10,7 +10,6 @@
 @inject ISpecialtyService SpecialtyService
 @inject IAppSettingsService AppSettingsService
 @inject NavigationManager NavigationManager
-@inject IModalService ModalService
 
 <PageTitle>@Resource.Create</PageTitle>
 
@@ -30,11 +29,12 @@
 
         <div class="d-flex flex-column gap-3">
             <Alert @ref="_alert" />
+
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <ImagePreview ImageUrl="@_DoctorCreateDto.Image" />
 
                 <button type="button" class="btn btn-outline-primary" @onclick="OpenImageUploadModal">
-                    <i class="fas fa-upload"></i> Upload Image
+                    <i class="fas fa-upload"></i> @Resource.UploadFile
                 </button>
             </div>
 
@@ -185,7 +185,6 @@
     {
         ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
         {
-            { nameof(FileUploadModal.Title), "Upload Doctor Image" },
             { nameof(FileUploadModal.IsImage), true },
             { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
             { nameof(FileUploadModal.ResizeWidth), 200 },

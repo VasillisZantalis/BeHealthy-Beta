@@ -579,4 +579,10 @@
   <data name="ClearFilters" xml:space="preserve">
     <value>Καθάρισμα φίλτρων</value>
   </data>
+  <data name="UploadFile" xml:space="preserve">
+    <value>Ανέβασμα αρχείου</value>
+  </data>
+  <data name="DragAndDropFile" xml:space="preserve">
+    <value>Σύρετε και αφήστε το αρχείο σας εδώ</value>
+  </data>
 </root>
