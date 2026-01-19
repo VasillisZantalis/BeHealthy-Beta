@@ -1,78 +1,73 @@
 ﻿@using BeHealthy.Models.Enums
-@inherits BasePage
+@inherits ModalBase
 @typeparam TEntity
 
 @inject IDoctorService DoctorService
 @inject IPatientService PatientService
 @inject IDepartmentService DepartmentService
 
-<div class="modal" tabindex="-1" role="dialog" style="display:block;">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title">Mass Import</h5>
-                <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
-            </div>
-            <div class="modal-body">
-                <button class="btn main-color text-white rounded-pill px-3" @onclick="Save">
-                    @Resource.Save
-                </button>
-                <button class="btn btn-outline-secondary rounded-pill" @onclick="AddRow">
-                    <Icon IconClass="@FAIcon.Plus" /> @Resource.AddRow
-                </button>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            @foreach (var field in FieldDefinitions)
-                            {
-                                <th>@field.DisplayName</th>
-                            }
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Rows.Count; i++)
-                        {
-                            var idx = i; // Capture the current index for the lambda expression
-                            <tr>
-                                @foreach (var field in FieldDefinitions)
-                                {
-                                    <td>
-                                        @RenderCell(field, Rows[idx])
-                                    </td>
-                                }
-                                <td>
-                                    <button class="btn" @onclick="@(() => RemoveRow(idx))">
-                                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                @if (Entity != ImportEntity.Appointment)
-                {
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="_useValidation" class="form-check-input" id="useValidation" />
-                        @Resource.UseValidation
-                    </label>
+<BeHealthyModal BodyClass="@string.Empty" Size="ModalSize.ExtraLarge">
+    <Header>
+        <h5 class="modal-title">Mass Import</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
 
-                    @if (_useValidation)
+    <Body>
+        <button class="btn main-color text-white rounded-pill px-3" @onclick="Save">
+            @Resource.Save
+        </button>
+        <button class="btn btn-outline-secondary rounded-pill" @onclick="AddRow">
+            <Icon IconClass="@FAIcon.Plus" /> @Resource.AddRow
+        </button>
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach (var field in FieldDefinitions)
                     {
-                        <div class="alert alert-warning" role="alert">
-                            @Resource.DisabledValidationMessage
-                        </div>
+                        <th>@field.DisplayName</th>
                     }
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Rows.Count; i++)
+                {
+                    var idx = i; // Capture the current index for the lambda expression
+                                 <tr>
+                        @foreach (var field in FieldDefinitions)
+                        {
+                            <td>
+                                @RenderCell(field, Rows[idx])
+                            </td>
+                        }
+                        <td>
+                            <button class="btn" @onclick="@(() => RemoveRow(idx))">
+                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                            </button>
+                        </td>
+                    </tr>
                 }
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal-backdrop fade show"></div>
+            </tbody>
+        </table>
+        @if (Entity != ImportEntity.Appointment)
+        {
+            <label class="form-label">
+                <InputCheckbox @bind-Value="_useValidation" class="form-check-input" id="useValidation" />
+                @Resource.UseValidation
+            </label>
+
+            @if (_useValidation)
+            {
+                <div class="alert alert-warning" role="alert">
+                    @Resource.DisabledValidationMessage
+                </div>
+            }
+        }
+    </Body>
+</BeHealthyModal>
 
 @code {
     [Parameter] public ImportEntity Entity { get; set; }
-    [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public EventCallback<(List<TEntity> Items, bool UseValidation)> OnSave { get; set; }
 
     private List<FieldDefinition> FieldDefinitions = [];
@@ -83,15 +78,17 @@
     private List<SelectItem> _departmentsSelect = new();
     private bool _useValidation;
 
-    private void Close() => OnClose.InvokeAsync();
-
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        var doctorsTask = DoctorService.GetAllDoctorsSimpleAsync();
+        var patientsTask = PatientService.GetAllPatientsSimpleAsync();
+        var departmentsTask = DepartmentService.GetAllDepartmentsAsync();
 
-        var doctors = await DoctorService.GetAllDoctorsSimpleAsync();
-        var patients = await PatientService.GetAllPatientsSimpleAsync();
-        var departments = await DepartmentService.GetAllDepartmentsAsync();
+        await Task.WhenAll(doctorsTask, patientsTask, departmentsTask);
+
+        var doctors = await doctorsTask;
+        var patients = await patientsTask;
+        var departments = await departmentsTask;
 
         _doctorsSelect = doctors.Select(d => new SelectItem { Value = d.Id, Text = d.FullName }).ToList();
         _doctorsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
@@ -104,8 +101,6 @@
 
         FieldDefinitions = FieldMapper.GetFields(Entity, _doctorsSelect, _departmentsSelect, _patientsSelect);
         AddRow();
-
-        LoaderService.SetLoader(false);
     }
 
     private void AddRow()

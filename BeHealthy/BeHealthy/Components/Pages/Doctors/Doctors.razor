@@ -4,7 +4,6 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-
 <BeHealthyCard>
     <Header>
         <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -43,13 +42,6 @@
         </div>
     </Header>
     <Body>
-        @if (showWizard)
-        {
-            <MassImportWizard TEntity="DoctorCreateDto"
-                              OnSave="BulkCreateDoctors"
-                              Entity="@(ImportEntity.Doctor)"
-                              OnClose="HideImportWizard" />
-        }
 
         @if (_selectedView == "Card")
         {

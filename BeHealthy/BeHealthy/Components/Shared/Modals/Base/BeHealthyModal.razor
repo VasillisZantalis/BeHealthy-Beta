@@ -4,7 +4,7 @@
      style="display: block;"
      @onmousedown="HandleBackdropClick">
 
-    <div class="modal-dialog modal-dialog-centered"
+    <div class="modal-dialog @ModalSizeToClass[Size]"
          @onmousedown:stopPropagation="true">
 
         <div class="modal-content">
@@ -18,7 +18,7 @@
 
             @if (Body is not null)
             {
-                <div class="modal-body text-center d-flex flex-column">
+                <div class="modal-body @BodyClass">
                     @Body
                 </div>
             }
@@ -38,6 +38,16 @@
     [Parameter] public RenderFragment? Header { get; set; }
     [Parameter] public RenderFragment? Body { get; set; }
     [Parameter] public RenderFragment? Footer { get; set; }
+    [Parameter] public string? BodyClass { get; set; } = "text-center d-flex flex-column";
+    [Parameter] public ModalSize Size { get; set; } = ModalSize.Normal;
+
+    private static readonly IDictionary<ModalSize, string> ModalSizeToClass = new Dictionary<ModalSize, string>
+    {
+        { ModalSize.Small, "modal-sm" },
+        { ModalSize.Normal, string.Empty },
+        { ModalSize.Large, "modal-lg" },
+        { ModalSize.ExtraLarge, "modal-xl" },
+    };
 
     private void HandleBackdropClick()
     {

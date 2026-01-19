@@ -4,8 +4,10 @@ using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Doctor;
 using BeHealthy.Common;
 using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Components.Shared.Wizards;
 using BeHealthy.Domain;
 using BeHealthy.Models;
+using BeHealthy.Models.Enums;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -37,10 +39,6 @@ public partial class Doctors : BasePage
     private string? _currentUserId;
 
     private PaginationState _paginationState = new();
-
-    private bool showWizard = false;
-    void ShowImportWizard() => showWizard = true;
-    void HideImportWizard() => showWizard = false;
 
     protected override void OnInitialized()
     {
@@ -127,13 +125,16 @@ public partial class Doctors : BasePage
     {
         LoaderService.SetLoader(true);
 
+        StateHasChanged();
+
         _doctors = userRole switch
         {
             UserRole.Patient when userId is not null => (await _patientsService.GetMyDoctorsAsync(userId)).ToList(),
             _ => (await _doctorService.GetAllDoctorsAsync()).ToList()
         };
         
-        await InvokeAsync(StateHasChanged);
+        StateHasChanged();
+
         LoaderService.SetLoader(false);
     }
 
@@ -147,14 +148,14 @@ public partial class Doctors : BasePage
         _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
-    private async Task BulkCreateDoctors((List<DoctorCreateDto> DoctorCreateDtos, bool UseValidation) result)
+    private async Task BulkCreateDoctors((List<DoctorCreateDto> doctorCreateDtos, bool UseValidation) result)
     {
         LoaderService.SetLoader(true);
 
         var useValidation = result.UseValidation;
         var validator = new DoctorCreateDtoValidator(false);
 
-        foreach (var doctor in result.DoctorCreateDtos)
+        foreach (var doctor in result.doctorCreateDtos)
         {
             if (useValidation)
             {
@@ -172,6 +173,16 @@ public partial class Doctors : BasePage
         }
         await LoadDoctors(_currentUserId, _userRole);
         LoaderService.SetLoader(false);
+    }
+
+    void ShowImportWizard()
+    {
+        ModalService.Show<MassImportWizard<DoctorCreateDto>>(
+            new Dictionary<string, object?>
+            {
+                { nameof(MassImportWizard<DoctorCreateDto>.Entity), ImportEntity.Doctor },
+                { nameof(MassImportWizard<DoctorCreateDto>.OnSave), EventCallback.Factory.Create<(List<DoctorCreateDto> doctorCreateDtos, bool UseValidation)>(this, BulkCreateDoctors) },
+            });
     }
 
     private void ConfirmDelete(int doctorId)
