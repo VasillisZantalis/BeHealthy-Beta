@@ -56,7 +56,6 @@ public partial class Doctors : BasePage
         await LoadDoctors(_currentUserId, _userRole);
         await LoadSpecialties();
 
-        filteredDoctors = _doctors;
         _paginationState.ItemsPerPage = _doctors.Count;
         hasActionRights = _userRole == UserRole.Admin;
 
@@ -125,16 +124,15 @@ public partial class Doctors : BasePage
     {
         LoaderService.SetLoader(true);
 
-        StateHasChanged();
-
         _doctors = userRole switch
         {
             UserRole.Patient when userId is not null => (await _patientsService.GetMyDoctorsAsync(userId)).ToList(),
             _ => (await _doctorService.GetAllDoctorsAsync()).ToList()
         };
+
+        filteredDoctors = _doctors;
         
         StateHasChanged();
-
         LoaderService.SetLoader(false);
     }
 
