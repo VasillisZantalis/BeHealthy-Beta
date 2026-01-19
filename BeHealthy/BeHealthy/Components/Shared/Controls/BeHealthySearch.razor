@@ -31,8 +31,7 @@
         @if (Filters != null)
         {
             <div class="d-flex gap-2">
-
-            @Filters
+                @Filters
             </div>
         }
 
@@ -76,7 +75,7 @@
     [Parameter] public string WrapperClass { get; set; } = "p-3";
 
     // Debouncing
-    [Parameter] public int DebounceMilliseconds { get; set; } = 300;
+    [Parameter] public int DebounceMilliseconds { get; set; } = 500;
 
     private string searchValue = "";
     private System.Threading.Timer? debounceTimer;
