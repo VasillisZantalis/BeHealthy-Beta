@@ -1,0 +1,34 @@
+﻿<select id="@Id"
+        class="form-select"
+        value="@Value"
+        @onchange="OnChange">
+    <option value="Card">@CardText</option>
+    <option value="Grid">@GridText</option>
+</select>
+
+@code {
+    [Parameter] public string Id { get; set; } = "viewSelect";
+
+    [Parameter, EditorRequired]
+    public string Value { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public Expression<Func<string>>? ValueExpression { get; set; }
+
+    private string CardText { get; set; } = Resource.Card;
+    private string GridText { get; set; } = Resource.Grid;
+
+    private async Task OnChange(ChangeEventArgs e)
+    {
+        var newValue = e.Value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(newValue) || newValue == Value)
+            return;
+
+        Value = newValue;
+        await ValueChanged.InvokeAsync(newValue);
+    }
+}

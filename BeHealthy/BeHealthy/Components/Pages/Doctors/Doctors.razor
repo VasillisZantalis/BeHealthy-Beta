@@ -4,132 +4,124 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-<div class="d-flex justify-content-between align-items-center flex-wrap">
-    <div class="d-flex gap-3">
-        @if (_userRole == UserRole.Admin)
-        {
-            <div class="">
-                <CreateButton OnClick="CreateDoctor" />
-                <MassImportButton OnClick="ShowImportWizard" />
-            </div>
-        }
-        <div class="">
-            <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
-                <option value="Card">@Resource.Card</option>
-                <option value="Grid">@Resource.Grid</option>
-            </InputSelect>
-        </div>
-    </div>
-    <div>
-        <BeHealthySearch OnSearch="HandleSearch"
-                         OnClear="HandleClearFilters"
-                         DebounceMilliseconds="300">
 
-            <Filters>
-                <!-- Specialty Filter -->
-                <InputSelect class="form-select"
-                             style="min-width: 200px;"
-                             @bind-Value="selectedSpecialtyId"
-                             @bind-Value:after="ApplyFilters">
-                    <option value="">All Specialties</option>
-                    @foreach (var specialty in specialties)
-                    {
-                        <option value="@specialty.Value">@specialty.Text</option>
-                    }
-                </InputSelect>
-            </Filters>
-        </BeHealthySearch>
-    </div>
-</div>
-
-@if (showWizard)
-{
-    <MassImportWizard TEntity="DoctorCreateDto"
-                      OnSave="BulkCreateDoctors"
-                      Entity="@(ImportEntity.Doctor)"
-                      OnClose="HideImportWizard" />
-}
-
-@if (_selectedView == "Card")
-{
-    if (_doctors is null || !_doctors.Any())
-    {
-        <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
-    }
-    else
-    {
-            
-        <div class="row">
-            <Virtualize Items="@filteredDoctors" Context="doctor" ItemSize="100">
-                <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
-                    <div class="mb-3">
-                        <UserCard Id="@doctor.Id"
-                                    Image="@doctor.Image"
-                                    FullName="@doctor.FullName"
-                                    Email="@doctor.Email"
-                                    Role="@UserRole.Doctor"
-                                    Phone="@doctor.PhoneNumber"
-                                    Specialty="@doctor.Specialty?.Name"
-                                    CanEdit="hasActionRights"
-                                    CanDelete="hasActionRights"
-                                    Edit="() => EditDoctor(doctor.Id)"
-                                    Delete="() => ConfirmDelete(doctor.Id)" />
+<BeHealthyCard>
+    <Header>
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex gap-3">
+                @if (_userRole == UserRole.Admin)
+                {
+                    <div class="">
+                        <CreateButton OnClick="CreateDoctor" />
+                        <MassImportButton OnClick="ShowImportWizard" />
                     </div>
+                }
+                <div>
+                    <ViewSelect @bind-Value="_selectedView" />
                 </div>
-            </Virtualize>
-        </div>
-    }
-}
-else if (_selectedView == "Grid")
-{
-    <BeHealthyCard>
-        <Header>
-            <div class="px-1">
-               
             </div>
-        </Header>
 
-        <Body>
+            <div>
+                <BeHealthySearch OnSearch="HandleSearch"
+                                 OnClear="HandleClearFilters"
+                                 DebounceMilliseconds="500">
+
+                    <Filters>
+                        <!-- Specialty Filter -->
+                        <InputSelect class="form-select"
+                                     @bind-Value="selectedSpecialtyId"
+                                     @bind-Value:after="ApplyFilters">
+                            <option value="">All Specialties</option>
+                            @foreach (var specialty in specialties)
+                            {
+                                <option value="@specialty.Value">@specialty.Text</option>
+                            }
+                        </InputSelect>
+                    </Filters>
+                </BeHealthySearch>
+            </div>
+        </div>
+    </Header>
+    <Body>
+        @if (showWizard)
+        {
+            <MassImportWizard TEntity="DoctorCreateDto"
+                              OnSave="BulkCreateDoctors"
+                              Entity="@(ImportEntity.Doctor)"
+                              OnClose="HideImportWizard" />
+        }
+
+        @if (_selectedView == "Card")
+        {
+            if (filteredDoctors is null || !filteredDoctors.Any())
+            {
+                <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
+            }
+            else
+            {
+            
+                <div class="row">
+                    <Virtualize Items="@filteredDoctors" Context="doctor" ItemSize="100">
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
+                            <div class="mb-3">
+                                <UserCard Id="@doctor.Id"
+                                            Image="@doctor.Image"
+                                            FullName="@doctor.FullName"
+                                            Email="@doctor.Email"
+                                            Role="@UserRole.Doctor"
+                                            Phone="@doctor.PhoneNumber"
+                                            Specialty="@doctor.Specialty?.Name"
+                                            CanEdit="hasActionRights"
+                                            CanDelete="hasActionRights"
+                                            Edit="() => EditDoctor(doctor.Id)"
+                                            Delete="() => ConfirmDelete(doctor.Id)" />
+                            </div>
+                        </div>
+                    </Virtualize>
+                </div>
+            }
+        }
+        else if (_selectedView == "Grid")
+        {
             <BeHealthyTable TItem="DoctorDto"
                             Items="@filteredDoctors"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
                             EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)">
 
-                <BeHealthyColumn TItem="DoctorDto"
-                                 Title="">
+                <BeHealthyColumn TItem="DoctorDto">
                     <Template>
                         <img class="rounded-circle"
-                             src="@(context.Image ?? "images/generic.jpg")"
-                             alt="@context.FullName"
-                             width="25"
-                             height="25" />
+                                src="@(context.Image ?? "images/generic.jpg")"
+                                alt="@context.FullName"
+                                width="25"
+                                height="25" />
                     </Template>
                 </BeHealthyColumn>
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                 Title="@Resource.FirstName"
-                                 Property="@(x => x.FirstName)" />
+                                    Title="@Resource.FirstName"
+                                    Property="@(x => x.FirstName)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                 Title="@Resource.LastName"
-                                 Property="@(x => x.LastName)" />
+                                    Title="@Resource.LastName"
+                                    Property="@(x => x.LastName)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                 Title="@Resource.Specialty"
-                                 Property="@(x => x.Specialty != null ? x.Specialty.Name : string.Empty)" />
+                                    Title="@Resource.Specialty"
+                                    Property="@(x => x.Specialty != null ? x.Specialty.Name : string.Empty)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                 Title="@Resource.Created"
-                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())" />
+                                    Title="@Resource.Created"
+                                    Property="@(x => x.CreatedAt.ToFullDateTimeString())" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                 Title="@Resource.Email"
-                                 Property="@(x => x.Email)" />
+                                    Title="@Resource.Email"
+                                    Property="@(x => x.Email)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                 Title="@Resource.PhoneNumber"
-                                 Property="@(x => x.PhoneNumber)" />
+                                    Title="@Resource.PhoneNumber"
+                                    Property="@(x => x.PhoneNumber)" />
 
                 @if (hasActionRights)
                 {
@@ -156,6 +148,6 @@ else if (_selectedView == "Grid")
                 }
 
             </BeHealthyTable>
-        </Body>
-    </BeHealthyCard>
-}
+        }
+    </Body>
+</BeHealthyCard>
