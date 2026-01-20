@@ -9,9 +9,9 @@ using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Models.Enums;
 using BeHealthy.Shared.Locales;
+using BeHealthy.Shared.Parameters;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Components.Pages.Doctors;
 
@@ -24,21 +24,13 @@ public partial class Doctors : BasePage
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
     private List<DoctorDto> _doctors = new();
-    private List<DoctorDto> filteredDoctors = new();
-
-    // Filter state
-    private string searchTerm = "";
-    private string selectedSpecialtyId = "";
-
-    // Specialty list for dropdown
+    private DoctorQueryParameters QueryParameters { get; set; } = new();
     private List<SelectItem> specialties = new();
 
     private string _selectedView = "Grid";
     private bool hasActionRights;
     private UserRole? _userRole;
     private string? _currentUserId;
-
-    private PaginationState _paginationState = new();
 
     protected override void OnInitialized()
     {
@@ -56,7 +48,6 @@ public partial class Doctors : BasePage
         await LoadDoctors(_currentUserId, _userRole);
         await LoadSpecialties();
 
-        _paginationState.ItemsPerPage = _doctors.Count;
         hasActionRights = _userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
@@ -73,42 +64,23 @@ public partial class Doctors : BasePage
         }).ToList();
     }
 
-    private void HandleSearch(string term)
+    private async Task HandleSearch(string term)
     {
-        searchTerm = term;
-        ApplyFilters();
+        QueryParameters.SearchTerm = term;
+        await LoadDoctors(_currentUserId, _userRole);
     }
 
-    private void ApplyFilters()
+    private async Task HandleSpecialtyFilter(int? specialtyId)
     {
-        filteredDoctors = _doctors;
-
-        // Search filter
-        if (!string.IsNullOrWhiteSpace(searchTerm))
-        {
-            filteredDoctors = filteredDoctors.Where(d =>
-                d.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                d.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                (d.Email != null && d.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-            ).ToList();
-        }
-
-        // Specialty filter
-        if (!string.IsNullOrEmpty(selectedSpecialtyId))
-        {
-            var specialtyId = int.Parse(selectedSpecialtyId);
-            filteredDoctors = filteredDoctors.Where(d => d.Specialty?.Id == specialtyId).ToList();
-        }
-
-        StateHasChanged();
+        QueryParameters.SpecialtyId = specialtyId;
+        await LoadDoctors(_currentUserId, _userRole);
     }
 
-    private void HandleClearFilters()
+    private async Task HandleClearFilters()
     {
-        searchTerm = "";
-        selectedSpecialtyId = "";
-        filteredDoctors = _doctors;
-        StateHasChanged();
+        QueryParameters.SearchTerm = "";
+        QueryParameters.SpecialtyId = null;
+        await LoadDoctors(_currentUserId, _userRole);
     }
 
     private void SetBreadcrumbs()
@@ -127,12 +99,10 @@ public partial class Doctors : BasePage
         _doctors = userRole switch
         {
             UserRole.Patient when userId is not null => (await _patientsService.GetMyDoctorsAsync(userId)).ToList(),
-            _ => (await _doctorService.GetAllDoctorsAsync()).ToList()
+            _ => (await _doctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
         };
 
-        filteredDoctors = _doctors;
-        
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
     }
 

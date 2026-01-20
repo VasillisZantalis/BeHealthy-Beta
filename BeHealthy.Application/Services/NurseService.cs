@@ -93,7 +93,7 @@ public class NurseService : INurseService
         await _unitOfWork.NurseRepository.DeleteNurseAsync(id);
     }
 
-    public async Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId, QueryParameters? parameters = null)
+    public async Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId)
     {
         List<Nurse> nurses = new();
 
@@ -111,15 +111,10 @@ public class NurseService : INurseService
 
         if (nurseIds.Any())
         {
-            parameters ??= new();
-            var queryOptions = new QueryOptions<Nurse>
+            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.QueryAsync(new QueryOptions<Nurse>
             {
-                Predicate = n => (string.IsNullOrEmpty(parameters.SearchTerm) ||
-                                 n.FirstName.Contains(parameters.SearchTerm) ||
-                                 n.LastName.Contains(parameters.SearchTerm)) &&
-                                 nurseIds.Contains(n.Id)
-            };
-            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.QueryAsync(queryOptions);
+                Predicate = w => nurseIds.Contains(w.Id)
+            });
 
             nurses.AddRange(nursesThatTreatPatient);
         }

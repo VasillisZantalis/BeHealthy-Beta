@@ -80,7 +80,7 @@ public partial class Nurses : BasePage
 
         _nurses = userRole switch
         {
-            UserRole.Patient when userId is not null => (await _nurseService.GetNursesOfPatientByUserId(userId, QueryParameters)).ToList(),
+            UserRole.Patient when userId is not null => (await _nurseService.GetNursesOfPatientByUserId(userId)).ToList(),
             _ => (await _nurseService.GetAllNursesAsync(QueryParameters)).ToList()
         };
 

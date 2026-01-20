@@ -1,8 +1,9 @@
 ﻿@page "/doctors"
 @rendermode @(new InteractiveServerRenderMode(false))
-
 @attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
 @inherits BasePage
+
+<PageTitle>@Resource.Doctors</PageTitle>
 
 <BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
     <Header>
@@ -27,8 +28,8 @@
                 <Filters>
                     <!-- Specialty Filter -->
                     <InputSelect class="form-select"
-                                    @bind-Value="selectedSpecialtyId"
-                                    @bind-Value:after="ApplyFilters">
+                                 @bind-Value="QueryParameters.SpecialtyId"
+                                 @bind-Value:after="@(() => HandleSpecialtyFilter(QueryParameters.SpecialtyId))">
                         <option value="">All Specialties</option>
                         @foreach (var specialty in specialties)
                         {
@@ -43,28 +44,27 @@
 
         @if (_selectedView == "Card")
         {
-            if (filteredDoctors is null || !filteredDoctors.Any())
+            @if (_doctors is null || !_doctors.Any())
             {
                 <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
             }
             else
             {
-            
                 <div class="row">
-                    <Virtualize Items="@filteredDoctors" Context="doctor" ItemSize="100">
+                    <Virtualize Items="@_doctors" Context="doctor" ItemSize="100">
                         <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                             <div class="mb-3">
                                 <UserCard Id="@doctor.Id"
-                                            Image="@doctor.Image"
-                                            FullName="@doctor.FullName"
-                                            Email="@doctor.Email"
-                                            Role="@UserRole.Doctor"
-                                            Phone="@doctor.PhoneNumber"
-                                            Specialty="@doctor.Specialty?.Name"
-                                            CanEdit="hasActionRights"
-                                            CanDelete="hasActionRights"
-                                            Edit="() => EditDoctor(doctor.Id)"
-                                            Delete="() => ConfirmDelete(doctor.Id)" />
+                                          Image="@doctor.Image"
+                                          FullName="@doctor.FullName"
+                                          Email="@doctor.Email"
+                                          Role="@UserRole.Doctor"
+                                          Phone="@doctor.PhoneNumber"
+                                          Specialty="@doctor.Specialty?.Name"
+                                          CanEdit="hasActionRights"
+                                          CanDelete="hasActionRights"
+                                          Edit="() => EditDoctor(doctor.Id)"
+                                          Delete="() => ConfirmDelete(doctor.Id)" />
                             </div>
                         </div>
                     </Virtualize>
@@ -74,7 +74,7 @@
         else if (_selectedView == "Grid")
         {
             <BeHealthyTable TItem="DoctorDto"
-                            Items="@filteredDoctors"
+                            Items="@_doctors"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
                             EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)">
@@ -82,36 +82,36 @@
                 <BeHealthyColumn TItem="DoctorDto">
                     <Template>
                         <img class="rounded-circle"
-                                src="@(context.Image ?? "images/generic.jpg")"
-                                alt="@context.FullName"
-                                width="25"
-                                height="25" />
+                             src="@(context.Image ?? "images/generic.jpg")"
+                             alt="@context.FullName"
+                             width="25"
+                             height="25" />
                     </Template>
                 </BeHealthyColumn>
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                    Title="@Resource.FirstName"
-                                    Property="@(x => x.FirstName)" />
+                                 Title="@Resource.FirstName"
+                                 Property="@(x => x.FirstName)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                    Title="@Resource.LastName"
-                                    Property="@(x => x.LastName)" />
+                                 Title="@Resource.LastName"
+                                 Property="@(x => x.LastName)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                    Title="@Resource.Specialty"
-                                    Property="@(x => x.Specialty != null ? x.Specialty.Name : string.Empty)" />
+                                 Title="@Resource.Specialty"
+                                 Property="@(x => x.Specialty != null ? x.Specialty.Name : string.Empty)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                    Title="@Resource.Created"
-                                    Property="@(x => x.CreatedAt.ToFullDateTimeString())" />
+                                 Title="@Resource.Created"
+                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                    Title="@Resource.Email"
-                                    Property="@(x => x.Email)" />
+                                 Title="@Resource.Email"
+                                 Property="@(x => x.Email)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
-                                    Title="@Resource.PhoneNumber"
-                                    Property="@(x => x.PhoneNumber)" />
+                                 Title="@Resource.PhoneNumber"
+                                 Property="@(x => x.PhoneNumber)" />
 
                 @if (hasActionRights)
                 {
