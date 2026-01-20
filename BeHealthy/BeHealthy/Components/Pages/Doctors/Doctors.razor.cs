@@ -79,6 +79,9 @@ public partial class Doctors : BasePage
 
     private async Task HandleClearFilters()
     {
+        if (string.IsNullOrEmpty(QueryParameters.SearchTerm) && QueryParameters.SpecialtyId is null)
+            return;
+
         QueryParameters.SearchTerm = "";
         QueryParameters.SpecialtyId = null;
         await LoadDoctors(_currentUserId, _userRole);

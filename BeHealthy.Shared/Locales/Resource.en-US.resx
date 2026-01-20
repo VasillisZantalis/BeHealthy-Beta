@@ -589,4 +589,19 @@
   <data name="DragAndDropFile" xml:space="preserve">
     <value>Drag and drop your file here</value>
   </data>
+  <data name="Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="SeedData" xml:space="preserve">
+    <value>Seed Data</value>
+  </data>
+  <data name="BulkDeleteNumber" xml:space="preserve">
+    <value>Bulk delete {0} selected</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Browse files</value>
+  </data>
+  <data name="RequiresDoctorsAndPatients" xml:space="preserve">
+    <value>Requires doctors and patients</value>
+  </data>
 </root>

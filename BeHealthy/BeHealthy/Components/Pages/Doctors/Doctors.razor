@@ -17,7 +17,7 @@
                     {
                         <button class="btn btn-danger rounded-pill mx-1" @onclick="ConfirmBulkDelete">
                             <Icon IconClass="@FAIcon.TrashCan" />
-                            Bulk Delete (@_selectedDoctorIds.Count selected)
+                            @string.Format(Resource.BulkDeleteNumber, _selectedDoctorIds.Count)
                         </button>
                     }
                 </div>

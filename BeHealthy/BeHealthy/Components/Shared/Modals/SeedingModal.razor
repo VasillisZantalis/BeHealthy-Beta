@@ -8,12 +8,10 @@
 
 <BeHealthyModal Size="ModalSize.Large" BodyClass="@string.Empty">
     <Header>
-        <h5 class="modal-title">SeedData</h5>
+        <h5 class="modal-title">@Resource.SeedData</h5>
         <button type="button" class="btn-close" @onclick="Close" aria-label="Close"></button>
     </Header>
     <Body>
-        <p class="text-muted mb-3">SeedDataDescription</p>
-
         @if (_isSeeding)
         {
             <SmallLoader />
@@ -34,7 +32,7 @@
                             </label>
                         </div>
                         <div class="input-group">
-                            <span class="input-group-text">Count</span>
+                            <span class="input-group-text">@Resource.Count</span>
                             <InputNumber class="form-control" @bind-Value="_seedingOptions.DoctorCount" min="1" max="10" disabled="@(!_seedingOptions.SeedDoctors)" />
                         </div>
                     </div>
@@ -53,7 +51,7 @@
                             </label>
                         </div>
                         <div class="input-group">
-                            <span class="input-group-text">Count</span>
+                            <span class="input-group-text">@Resource.Count</span>
                             <InputNumber class="form-control" @bind-Value="_seedingOptions.PatientCount" min="1" max="10" disabled="@(!_seedingOptions.SeedPatients)" />
                         </div>
                     </div>
@@ -69,7 +67,7 @@
                             </label>
                         </div>
                         <div class="input-group">
-                            <span class="input-group-text">Count</span>
+                            <span class="input-group-text">@Resource.Count</span>
                             <InputNumber class="form-control" @bind-Value="_seedingOptions.NurseCount" min="1" max="10" disabled="@(!_seedingOptions.SeedNurses)" />
                         </div>
                     </div>
@@ -85,11 +83,11 @@
                             </label>
                             @if (_disableAppointments)
                             {
-                                <small class="text-muted d-block">RequiresDoctorsAndPatients</small>
+                                <small class="text-muted d-block">@Resource.RequiresDoctorsAndPatients</small>
                             }
                         </div>
                         <div class="input-group">
-                            <span class="input-group-text">Count</span>
+                            <span class="input-group-text">@Resource.Count</span>
                             <InputNumber class="form-control" @bind-Value="_seedingOptions.AppointmentCount" min="1" max="10" disabled="@(!_seedingOptions.SeedAppointments || _disableAppointments)" />
                         </div>
                     </div>
@@ -98,8 +96,8 @@
         }
     </Body>
     <Footer>
-        <button type="button" class="btn btn-secondary rounded-pill px-4" @onclick="Close">@Resource.Cancel</button>
-        <button type="button" class="btn btn-primary rounded-pill px-4" @onclick="HandleSeed" disabled="@(!HasAnySelection() || _isSeeding)">SeedData</button>
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-3" @onclick="Close">@Resource.Cancel</button>
+        <button type="button" class="btn btn-success rounded-pill px-3" @onclick="HandleSeed" disabled="@(!HasAnySelection() || _isSeeding)">@Resource.Save</button>
     </Footer>
 </BeHealthyModal>
 

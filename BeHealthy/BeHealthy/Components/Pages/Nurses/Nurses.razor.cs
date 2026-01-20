@@ -133,6 +133,8 @@ public partial class Nurses : BasePage
 
     private async Task HandleClearFilters()
     {
+        if (string.IsNullOrEmpty(QueryParameters.SearchTerm)) return;
+
         QueryParameters.SearchTerm = "";
         await LoadNurses(_currentUserId, _userRole);
     }

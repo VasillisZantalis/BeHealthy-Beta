@@ -579,10 +579,28 @@
   <data name="ClearFilters" xml:space="preserve">
     <value>Καθάρισμα φίλτρων</value>
   </data>
+  <data name="DataNotFound" xml:space="preserve">
+    <value>Δεν βρέθηκαν δεδομένα</value>
+  </data>
   <data name="UploadFile" xml:space="preserve">
     <value>Ανέβασμα αρχείου</value>
   </data>
   <data name="DragAndDropFile" xml:space="preserve">
     <value>Σύρετε και αφήστε το αρχείο σας εδώ</value>
+  </data>
+  <data name="Count" xml:space="preserve">
+    <value>Αριθμός</value>
+  </data>
+  <data name="SeedData" xml:space="preserve">
+    <value>Εισαγωγή δεδομένων</value>
+  </data>
+  <data name="BulkDeleteNumber" xml:space="preserve">
+    <value>Μαζική διαγραφή {0} επιλέχθηκαν</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Αναζήτηση αρχείων</value>
+  </data>
+  <data name="RequiresDoctorsAndPatients" xml:space="preserve">
+    <value>Απαιτεί γιατρούς και ασθενείς</value>
   </data>
 </root>

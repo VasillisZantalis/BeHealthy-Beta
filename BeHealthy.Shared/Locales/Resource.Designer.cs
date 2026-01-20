@@ -277,6 +277,24 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Browse files.
+        /// </summary>
+        public static string BrowseFiles {
+            get {
+                return ResourceManager.GetString("BrowseFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bulk delete {0} selected.
+        /// </summary>
+        public static string BulkDeleteNumber {
+            get {
+                return ResourceManager.GetString("BulkDeleteNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
@@ -340,6 +358,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string Count {
+            get {
+                return ResourceManager.GetString("Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create.
         /// </summary>
         public static string Create {
@@ -385,7 +412,7 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Data not found.
         /// </summary>
         public static string DataNotFound {
             get {
@@ -1204,6 +1231,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Requires doctors and patients.
+        /// </summary>
+        public static string RequiresDoctorsAndPatients {
+            get {
+                return ResourceManager.GetString("RequiresDoctorsAndPatients", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Role.
         /// </summary>
         public static string Role {
@@ -1254,6 +1290,15 @@ namespace BeHealthy.Shared.Locales {
         public static string Search {
             get {
                 return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seed Data.
+        /// </summary>
+        public static string SeedData {
+            get {
+                return ResourceManager.GetString("SeedData", resourceCulture);
             }
         }
         
