@@ -13,6 +13,7 @@ public partial class Home : BasePage
 {
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     [Inject] ISeedingService _seedingService { get; set; } = default!;
+    [Inject] NavigationManager navigationManager { get; set; } = default!;
 
     private bool _isAdminUser = default;
 
@@ -47,9 +48,9 @@ public partial class Home : BasePage
         LoaderService.SetLoader(false);
     }
 
-    private async Task OnSeedingCompleted()
+    private void OnSeedingCompleted()
     {
-        StateHasChanged();
+        navigationManager.Refresh(true);
     }
 
     private void SetBreadcrumbs()
