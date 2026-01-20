@@ -5,11 +5,15 @@ using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Nurse;
 using BeHealthy.Common;
+using BeHealthy.Components.Pages.Doctors;
 using BeHealthy.Components.Shared.Modals;
+using BeHealthy.Components.Shared.Wizards;
 using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
+using BeHealthy.Models.Enums;
 using BeHealthy.Shared.Locales;
+using BeHealthy.Shared.Parameters;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -19,24 +23,28 @@ namespace BeHealthy.Components.Pages.Nurses;
 
 public partial class Nurses : BasePage
 {
-    private string _createUserHref { get; set; } = default!;
     [Inject] INurseService _nurseService { get; set; } = default!;
 
     [Inject] NavigationManager _navigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
-    private List<NurseDto> _nurses { get; set; } = default!;
+    private List<NurseDto> _nurses { get; set; } = new();
+    private QueryParameters QueryParameters { get; set; } = new();
 
-    private string _selectedView = "Card";
+    private string _selectedView = "Grid";
     private bool hasActionRights;
     private UserRole? _userRole;
     private string? _currentUserId;
 
-    private PaginationState _paginationState = new();
-
-    private bool showWizard = false;
-    void ShowImportWizard() => showWizard = true;
-    void HideImportWizard() => showWizard = false;
+    void ShowImportWizard()
+    {
+        ModalService.Show<MassImportWizard<NurseCreateDto>>(
+            new Dictionary<string, object?>
+            {
+                { nameof(MassImportWizard<NurseCreateDto>.Entity), ImportEntity.Doctor },
+                { nameof(MassImportWizard<NurseCreateDto>.OnSave), EventCallback.Factory.Create<(List<NurseCreateDto> nurseCreateDtos, bool UseValidation)>(this, BulkCreateNurses) },
+            });
+    }
 
     protected override void OnInitialized()
     {
@@ -53,7 +61,6 @@ public partial class Nurses : BasePage
 
         await LoadNurses(_currentUserId, _userRole);
 
-        _paginationState.ItemsPerPage = _nurses.Count;
         hasActionRights = _userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
@@ -74,8 +81,8 @@ public partial class Nurses : BasePage
 
         _nurses = userRole switch
         {
-            UserRole.Patient when userId is not null => (await _nurseService.GetNursesOfPatientByUserId(userId)).ToList(),
-            _ => (await _nurseService.GetAllNursesAsync()).ToList()
+            UserRole.Patient when userId is not null => (await _nurseService.GetNursesOfPatientByUserId(userId, QueryParameters)).ToList(),
+            _ => (await _nurseService.GetAllNursesAsync(QueryParameters)).ToList()
         };
 
         await InvokeAsync(StateHasChanged);
@@ -117,6 +124,18 @@ public partial class Nurses : BasePage
         }
         await LoadNurses(_currentUserId, _userRole);
         LoaderService.SetLoader(false);
+    }
+
+    private async Task HandleSearch(string term)
+    {
+        QueryParameters.SearchTerm = term;
+        await LoadNurses(_currentUserId, _userRole);
+    }
+
+    private void HandleClearFilters()
+    {
+        QueryParameters.SearchTerm = "";
+        StateHasChanged();
     }
 
     private void ConfirmDelete(int nurseId)

@@ -5,113 +5,117 @@
 
 <PageTitle>@Resource.Nurses</PageTitle>
 
-<div class="d-flex flex-row gap-3">
-    <div class="">
-        <CreateButton OnClick="CreateNurse" />
-        <MassImportButton OnClick="ShowImportWizard" />
-    </div>
-    <div class="">
-        <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
-            <option value="Card">@Resource.Card</option>
-            <option value="Grid">@Resource.Grid</option>
-        </InputSelect>
-    </div>
-</div>
-
-@if (showWizard)
-{
-    <MassImportWizard TEntity="NurseCreateDto"
-                      OnSave="BulkCreateNurses"
-                      Entity="@(ImportEntity.Nurse)"
-                      OnClose="HideImportWizard" />
-}
-
-@if (_nurses is null || !_nurses.Any())
-{
-    <p>@string.Format(Resource.NoAvailable, Resource.Nurses)</p>
-}
-else
-{
-    @if (_selectedView == "Card")
-    {
-        <div class="row">
-            <Virtualize Items="@_nurses" Context="nurse" ItemSize="100">
-                <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
-                    <div class="mb-3">
-                        <UserCard Id="@nurse.Id"
-                                  Image="@nurse.Image"
-                                  FullName="@nurse.FullName"
-                                  Email="@nurse.Email"
-                                  Phone="@nurse.PhoneNumber"
-                                  CanEdit="hasActionRights"
-                                  CanDelete="hasActionRights"
-                                  Edit="() => EditNurse(nurse.Id)"
-                                  Delete="() => ConfirmDelete(nurse.Id)" />
-                    </div>
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Header>
+        <div class="d-flex gap-3">
+            @if (_userRole == UserRole.Admin)
+            {
+                <div class="">
+                    <CreateButton OnClick="CreateNurse" />
+                    <MassImportButton OnClick="ShowImportWizard" />
                 </div>
-            </Virtualize>
-        </div>
-    }
-    else if (_selectedView == "Grid")
-    {
-        <div class="patientsTableDiv mt-3">
-            <div class="card">
-                <div class="card-header d-flex flex-row justify-content-end">
-                    <div class="px-1">
-                        <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </InputSelect>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <div class="card-body pb-2 px-0 m-0">
-                    <QuickGrid Class="table table-responsive"
-                               Items="@_nurses.AsQueryable()"
-                               ItemKey="@(x => x.Id)"
-                               Pagination="_paginationState">
-                        <TemplateColumn>
-                            <img class="rounded-circle" src="@(context.Image ?? "images/generic.jpg")" alt="@context.FullName" width="25" height="25" />
-                        </TemplateColumn>
-                        <PropertyColumn Title="@Resource.FirstName"
-                                        Property="@(x => x.FirstName)"
-                                        Sortable="true" />
-                        <PropertyColumn Title="@Resource.LastName"
-                                        Property="@(x => x.LastName)"
-                                        Sortable="true" />
-                        <PropertyColumn Title="@Resource.Created"
-                                        Property="@(x => x.CreatedAt)"
-                                        Format="dd MMM yyyy HH:mm"
-                                        Sortable="true"
-                                        IsDefaultSortColumn="true"
-                                        InitialSortDirection="SortDirection.Descending" />
-                        <PropertyColumn Title="@Resource.Email"
-                                        Property="@(x => x.Email)" />
-                        <PropertyColumn Title="@Resource.PhoneNumber"
-                                        Property="@(x => x.PhoneNumber)" />
-                        @if (hasActionRights)
-                        {
-                            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                                <div class="d-flex justify-content-end">
-                                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditNurse(context.Id))">
-                                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                                    </button>
-                                    <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
-                                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                    </button>
-                                </div>
-                            </TemplateColumn>
-                        }
-                    </QuickGrid>
-                </div>
-                </div>
-                <div id="paginatorDiv" class="px-3">
-                    <Paginator State="_paginationState" />
-                </div>
+            }
+            <div>
+                <ViewSelect @bind-Value="_selectedView" />
             </div>
         </div>
-    }
-}
+        <div>
+            <BeHealthySearch OnSearch="HandleSearch"
+                            OnClear="HandleClearFilters" />
+        </div>
+    </Header>
+
+    <Body>
+        @if (_selectedView == "Card")
+        {
+            @if (_nurses is null || !_nurses.Any())
+            {
+                <p>@string.Format(Resource.NoAvailable, Resource.Nurses)</p>
+            }
+            else
+            {
+                <div class="row">
+                    <Virtualize Items="@_nurses" Context="nurse" ItemSize="100">
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
+                            <div class="mb-3">
+                                <UserCard Id="@nurse.Id"
+                                          Image="@nurse.Image"
+                                          FullName="@nurse.FullName"
+                                          Email="@nurse.Email"
+                                          Phone="@nurse.PhoneNumber"
+                                          CanEdit="hasActionRights"
+                                          CanDelete="hasActionRights"
+                                          Edit="() => EditNurse(nurse.Id)"
+                                          Delete="() => ConfirmDelete(nurse.Id)" />
+                            </div>
+                        </div>
+                    </Virtualize>
+                </div>
+            }
+        }
+        else if (_selectedView == "Grid")
+        {
+            <BeHealthyTable TItem="NurseDto"
+                            Items="@_nurses"
+                            TableClass="table table-responsive"
+                            WrapperClass="table-wrapper"
+                            EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Nurses)">
+
+                <BeHealthyColumn TItem="NurseDto">
+                    <Template>
+                        <img class="rounded-circle"
+                             src="@(context.Image ?? "images/generic.jpg")"
+                             alt="@context.FullName"
+                             width="25"
+                             height="25" />
+                    </Template>
+                </BeHealthyColumn>
+
+                <BeHealthyColumn TItem="NurseDto"
+                                 Title="@Resource.FirstName"
+                                 Property="@(x => x.FirstName)"/>
+
+                <BeHealthyColumn TItem="NurseDto"
+                                 Title="@Resource.LastName"
+                                 Property="@(x => x.LastName)"/>
+
+                <BeHealthyColumn TItem="NurseDto"
+                                 Title="@Resource.Created"
+                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())"/>
+
+                <BeHealthyColumn TItem="NurseDto"
+                                 Title="@Resource.Email"
+                                 Property="@(x => x.Email)"/>
+
+                <BeHealthyColumn TItem="NurseDto"
+                                 Title="@Resource.PhoneNumber"
+                                 Property="@(x => x.PhoneNumber)"/>
+            
+                @if (hasActionRights)
+                {
+                    <BeHealthyActionsColumn TItem="NurseDto"
+                                            Title="@Resource.Actions"
+                                            CellClass="text-end">
+                        <Template>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn"
+                                        title="@(Resource.Edit)"
+                                    @onclick="@(() => EditNurse(context.Id))"
+                                        @onclick:stopPropagation="true">
+                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                                </button>
+                                <button class="btn"
+                                        title="@(Resource.Delete)"
+                                        @onclick="() => ConfirmDelete(context.Id)"
+                                        @onclick:stopPropagation="true">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                </button>
+                            </div>
+                        </Template>
+                    </BeHealthyActionsColumn>
+                }
+            </BeHealthyTable>
+        }
+    </Body>
+</BeHealthyCard>
+    

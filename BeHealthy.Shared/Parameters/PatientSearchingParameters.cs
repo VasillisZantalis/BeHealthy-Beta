@@ -1,6 +1,6 @@
 ﻿namespace BeHealthy.Shared.Parameters;
 
-public class PatientSearchingParameters : SearchingParameters
+public class PatientSearchingParameters : QueryParameters
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
