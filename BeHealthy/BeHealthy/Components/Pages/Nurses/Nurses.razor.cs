@@ -17,7 +17,6 @@ using BeHealthy.Shared.Parameters;
 using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.QuickGrid;
 
 namespace BeHealthy.Components.Pages.Nurses;
 
@@ -132,10 +131,10 @@ public partial class Nurses : BasePage
         await LoadNurses(_currentUserId, _userRole);
     }
 
-    private void HandleClearFilters()
+    private async Task HandleClearFilters()
     {
         QueryParameters.SearchTerm = "";
-        StateHasChanged();
+        await LoadNurses(_currentUserId, _userRole);
     }
 
     private void ConfirmDelete(int nurseId)

@@ -107,8 +107,11 @@
 
     private async Task ClearAll()
     {
-        searchValue = "";
-        await OnClear.InvokeAsync();
+        searchValue = ""; 
+        if (OnClear.HasDelegate)
+        {
+            await OnClear.InvokeAsync();
+        }
     }
 
     private bool HasActiveFilters()
