@@ -7,16 +7,13 @@
 @inject IDoctorService DoctorService
 @inject IPatientService PatientService
 @inject AuthenticationStateProvider ASP
+@inject IModalService ModalService
 
 
 <div id="calendar"></div>
 
-<CalendarItemModal @ref="calendarItemModal" />
-
 @code {
     private List<CalendarItem> calendarItems = new();
-    private CalendarItem calendarItem = new();
-    private CalendarItemModal calendarItemModal = new();
     private DotNetObjectReference<Calendar>? dotNetRef;
 
     List<AppointmentDto> appointments = new();
@@ -63,22 +60,19 @@
     }
 
     [JSInvokable]
-    public void ConsoleEvent(string calendarEvent)
-    {
-        var calItem = JsonSerializer.Deserialize<CalendarItem>(calendarEvent);
-        calendarItem = calItem ?? new();
-
-        calendarItemModal.OpenModal(calendarItem);
-    }
-
-    [JSInvokable]
     public void OpenEventModal(CalendarItem calendarItem)
     {
-        calendarItemModal.OpenModal(calendarItem);
+        var parameters = new Dictionary<string, object?>
+        {
+            { nameof(CalendarItem), calendarItem }
+        };
+
+        ModalService.Show<CalendarItemModal>(parameters);
     }
 
     public void Dispose()
     {
+        JS.InvokeVoidAsync("destroyCalendar");
         dotNetRef?.Dispose();
     }
 }
