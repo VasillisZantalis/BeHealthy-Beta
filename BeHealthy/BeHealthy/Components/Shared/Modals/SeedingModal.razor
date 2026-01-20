@@ -1,0 +1,161 @@
+@using BeHealthy.Application.Dtos.Common
+@using BeHealthy.Application.Services.Interfaces
+@using BeHealthy.Shared.Locales
+@rendermode @(new InteractiveServerRenderMode(false))
+@inherits ModalBase
+
+@inject ISeedingService SeedingService
+
+<BeHealthyModal Size="ModalSize.Large" BodyClass="@string.Empty">
+    <Header>
+        <h5 class="modal-title">SeedData</h5>
+        <button type="button" class="btn-close" @onclick="Close" aria-label="Close"></button>
+    </Header>
+    <Body>
+        <p class="text-muted mb-3">SeedDataDescription</p>
+
+        @if (_isSeeding)
+        {
+            <SmallLoader />
+        }
+        else
+        {
+            <EditForm Model="_seedingOptions" OnValidSubmit="HandleSeed">
+                <!-- Doctors -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            <InputCheckbox class="form-check-input"
+                                           id="seedDoctors"
+                                           @bind-Value="_seedingOptions.SeedDoctors"
+                                           @bind-Value:after="UpdateAppointmentAvailability" />
+                            <label class="form-check-label fw-bold" for="seedDoctors">
+                                @Resource.Doctors
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">Count</span>
+                            <InputNumber class="form-control" @bind-Value="_seedingOptions.DoctorCount" min="1" max="10" disabled="@(!_seedingOptions.SeedDoctors)" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patients -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            <InputCheckbox class="form-check-input"
+                                           id="seedPatients"
+                                           @bind-Value="_seedingOptions.SeedPatients"
+                                           @bind-Value:after="UpdateAppointmentAvailability" />
+                            <label class="form-check-label fw-bold" for="seedPatients">
+                                @Resource.Patients
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">Count</span>
+                            <InputNumber class="form-control" @bind-Value="_seedingOptions.PatientCount" min="1" max="10" disabled="@(!_seedingOptions.SeedPatients)" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nurses -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            <InputCheckbox class="form-check-input" id="seedNurses" @bind-Value="_seedingOptions.SeedNurses" />
+                            <label class="form-check-label fw-bold" for="seedNurses">
+                                @Resource.Nurses
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">Count</span>
+                            <InputNumber class="form-control" @bind-Value="_seedingOptions.NurseCount" min="1" max="10" disabled="@(!_seedingOptions.SeedNurses)" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appointments -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-check mb-2">
+                            <InputCheckbox class="form-check-input" id="seedAppointments" @bind-Value="_seedingOptions.SeedAppointments" disabled="@_disableAppointments" />
+                            <label class="form-check-label fw-bold" for="seedAppointments">
+                                @Resource.Appointments
+                            </label>
+                            @if (_disableAppointments)
+                            {
+                                <small class="text-muted d-block">RequiresDoctorsAndPatients</small>
+                            }
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">Count</span>
+                            <InputNumber class="form-control" @bind-Value="_seedingOptions.AppointmentCount" min="1" max="10" disabled="@(!_seedingOptions.SeedAppointments || _disableAppointments)" />
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        }
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-secondary rounded-pill px-4" @onclick="Close">@Resource.Cancel</button>
+        <button type="button" class="btn btn-primary rounded-pill px-4" @onclick="HandleSeed" disabled="@(!HasAnySelection() || _isSeeding)">SeedData</button>
+    </Footer>
+</BeHealthyModal>
+
+@code {
+    [Parameter]
+    public EventCallback OnSeedingCompleted { get; set; }
+
+    private bool _isSeeding;
+    private SeedingOptionsDto _seedingOptions = new();
+    private bool _disableAppointments = true;
+
+    private void OnDoctorCheckChanged()
+    {
+        UpdateAppointmentAvailability();
+    }
+
+    private void OnPatientCheckChanged()
+    {
+        UpdateAppointmentAvailability();
+    }
+
+    private void UpdateAppointmentAvailability()
+    {
+        _disableAppointments = !(_seedingOptions.SeedDoctors && _seedingOptions.SeedPatients);
+        if (_disableAppointments)
+        {
+            _seedingOptions.SeedAppointments = false;
+        }
+    }
+
+    private bool HasAnySelection()
+    {
+        return _seedingOptions.SeedDoctors || _seedingOptions.SeedPatients || 
+               _seedingOptions.SeedNurses || _seedingOptions.SeedAppointments;
+    }
+
+    private async Task HandleSeed()
+    {
+        _isSeeding = true;
+
+        var result = await SeedingService.SeedAllAsync(_seedingOptions);
+
+        _isSeeding = false;
+
+        if (!result.Success)
+        {
+            return;
+        }
+
+        await Task.Delay(1500);
+        
+        if (OnSeedingCompleted.HasDelegate)
+        {
+            await OnSeedingCompleted.InvokeAsync();
+        }
+        
+        Close();
+    }
+}

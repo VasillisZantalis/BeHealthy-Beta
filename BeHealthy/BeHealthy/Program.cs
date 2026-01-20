@@ -1,4 +1,6 @@
 using BeHealthy.Application;
+using BeHealthy.Application.Services;
+using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components;
 using BeHealthy.Components.Account;
 using BeHealthy.Domain.Entities;
@@ -68,13 +70,13 @@ builder.Services.Configure<JsonOptions>(options =>
 
 builder.Services.AddScoped<IModalService, ModalService>();
 
-// States
 builder.Services.AddScoped<ModalStateService>();
 builder.Services.AddScoped<NavMenuState>();
 builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<AlertModalStateService>();
 builder.Services.AddScoped<ToastService>();
+builder.Services.AddScoped<ISeedingService, SeedingService>();
 
 var app = builder.Build();
 
