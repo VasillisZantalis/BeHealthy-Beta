@@ -12,67 +12,71 @@
 
 <PageTitle>@Resource.Edit</PageTitle>
 
-<div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="_DoctorUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
+<BeHealthyCard BodyClass="p-3">
+    <Body>
+        <EditForm Model="_DoctorUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
 
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-            @if (_inProgress)
-            {
-                <SmallLoader />
-            }
-            <span>@Resource.Save</span>
-        </button>
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+                @if (_inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
 
-        <ValidationComponent @ref="_validationComponent"/>
+            <ValidationComponent @ref="_validationComponent"/>
 
-        <div class="d-flex flex-column gap-3">
             <Alert @ref="_alert" />
-            <ImagePreview ImageUrl="@_DoctorUpdateDto.Image" />
 
-            <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
-                <InputText @bind-Value="_DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                <ValidationMessage For="() => _DoctorUpdateDto.FirstName" class="text-danger" />
-            </BeHealthyFormGroup>
+            <div class="d-flex flex-column gap-3 p-3">
 
-            <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
-                <InputText @bind-Value="_DoctorUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                <ValidationMessage For="() => _DoctorUpdateDto.LastName" class="text-danger" />
-            </BeHealthyFormGroup>
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal">
+                    <ImagePreview ImageUrl="@_DoctorUpdateDto.Image" />
+                </ImageUploadContainer>
 
-            <ImageUpload OnImageChanged="image => _DoctorUpdateDto.Image = image" />
-
-            <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
-                <InputText id="phoneNumber" @bind-Value="_DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-                <ValidationMessage For="() => _DoctorUpdateDto.PhoneNumber" class="text-danger" />
-            </BeHealthyFormGroup>
-
-            @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
-            {
-                <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
-                    <InputSelect id="department" @bind-Value="_DoctorUpdateDto.DepartmentId" class="form-control">
-                        @foreach (var department in _departmentsSelect!)
-                        {
-                            <option value="@department.Value">@department.Text</option>
-                        }
-                    </InputSelect>
+                <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
+                    <InputText @bind-Value="_DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <ValidationMessage For="() => _DoctorUpdateDto.FirstName" class="text-danger" />
                 </BeHealthyFormGroup>
-            }
 
-            @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
-            {
-                <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="_doNotAllowDoctorWithoutSpecialty">
-                    <InputSelect id="specialty" @bind-Value="_DoctorUpdateDto.SpecialtyId" class="form-control">
-                        @foreach (var specialty in _specialtiesSelect)
-                        {
-                            <option value="@specialty.Value">@specialty.Text</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="() => _DoctorUpdateDto.SpecialtyId" class="text-danger" />
+                <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                    <InputText @bind-Value="_DoctorUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <ValidationMessage For="() => _DoctorUpdateDto.LastName" class="text-danger" />
                 </BeHealthyFormGroup>
-            }
-        </div>
-    </EditForm>
-</div>
+
+                <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
+                    <InputText id="phoneNumber" @bind-Value="_DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                    <ValidationMessage For="() => _DoctorUpdateDto.PhoneNumber" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
+                        <InputSelect id="department" @bind-Value="_DoctorUpdateDto.DepartmentId" class="form-control">
+                            @foreach (var department in _departmentsSelect!)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </InputSelect>
+                    </BeHealthyFormGroup>
+                }
+
+                @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="_doNotAllowDoctorWithoutSpecialty">
+                        <InputSelect id="specialty" @bind-Value="_DoctorUpdateDto.SpecialtyId" class="form-control">
+                            @foreach (var specialty in _specialtiesSelect)
+                            {
+                                <option value="@specialty.Value">@specialty.Text</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => _DoctorUpdateDto.SpecialtyId" class="text-danger" />
+                    </BeHealthyFormGroup>
+                }
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
 
 
 @code {
@@ -138,6 +142,24 @@
     {
         AppSetting? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
         _doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        _DoctorUpdateDto.Image = imageData;
+        StateHasChanged();
     }
 
     private async Task UpdateDoctor()

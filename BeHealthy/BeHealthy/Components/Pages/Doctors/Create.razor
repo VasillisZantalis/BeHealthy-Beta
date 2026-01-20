@@ -13,111 +13,107 @@
 
 <PageTitle>@Resource.Create</PageTitle>
 
-<div class="container-fluid p-5 border rounded shadow">
+<BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
+    <Body>
+        <EditForm Model="_DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
 
-    <EditForm Model="_DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
+                @if (_inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
 
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-            @if (_inProgress)
-            {
-                <SmallLoader />
-            }
-            <span>@Resource.Save</span>
-        </button>
+            <ValidationComponent @ref="_validationComponent"/>
 
-        <ValidationComponent @ref="_validationComponent"/>
-
-        <div class="d-flex flex-column gap-3">
             <Alert @ref="_alert" />
 
-            <div class="d-flex flex-column justify-content-center align-items-center">
-                <ImagePreview ImageUrl="@_DoctorCreateDto.Image" />
+            <div class="d-flex flex-column gap-3 p-3">
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal">
+                    <ImagePreview ImageUrl="@_DoctorCreateDto.Image" />
+                </ImageUploadContainer>
 
-                <button type="button" class="btn btn-outline-primary" @onclick="OpenImageUploadModal">
-                    <i class="fas fa-upload"></i> @Resource.UploadFile
-                </button>
-            </div>
+                <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
 
-            <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
+                    <InputText id="firstName" 
+                                @bind-Value="_DoctorCreateDto.FirstName" 
+                                class="form-control"
+                                aria-required="true" />
 
-                <InputText id="firstName" 
-                           @bind-Value="_DoctorCreateDto.FirstName" 
-                           class="form-control"
-                           aria-required="true" />
+                    <ValidationMessage For="() => _DoctorCreateDto.FirstName" class="text-danger" />
+                </BeHealthyFormGroup>
 
-                <ValidationMessage For="() => _DoctorCreateDto.FirstName" class="text-danger" />
-            </BeHealthyFormGroup>
+                <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                    <InputText id="lastName"
+                                class="form-control"
+                                @bind-Value="_DoctorCreateDto.LastName"
+                                aria-required="true" />
+                    <ValidationMessage For="() => _DoctorCreateDto.LastName" class="text-danger" />
+                </BeHealthyFormGroup>
 
-            <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
-                <InputText id="lastName"
-                           class="form-control"
-                           @bind-Value="_DoctorCreateDto.LastName"
-                           aria-required="true" />
-                <ValidationMessage For="() => _DoctorCreateDto.LastName" class="text-danger" />
-            </BeHealthyFormGroup>
+                <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
+                        <InputText id="email"
+                                    class="form-control"
+                                    @bind-Value="_DoctorCreateDto.Email"
+                                    aria-required="true" />
+                        <ValidationMessage For="() => _DoctorCreateDto.Email" class="text-danger" />
+                </BeHealthyFormGroup>
 
-            <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
-                    <InputText id="email"
-                               class="form-control"
-                               @bind-Value="_DoctorCreateDto.Email"
-                               aria-required="true" />
-                    <ValidationMessage For="() => _DoctorCreateDto.Email" class="text-danger" />
-            </BeHealthyFormGroup>
+                <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
+                    <InputText id="password"
+                                type="password"
+                                class="form-control"
+                                @bind-Value="_DoctorCreateDto.Password"
+                                aria-required="true" />
+                    <ValidationMessage For="() => _DoctorCreateDto.Password" class="text-danger" />
+                </BeHealthyFormGroup>
 
-            <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
-                <InputText id="password"
-                           type="password"
-                           class="form-control"
-                           @bind-Value="_DoctorCreateDto.Password"
-                           aria-required="true" />
-                <ValidationMessage For="() => _DoctorCreateDto.Password" class="text-danger" />
-            </BeHealthyFormGroup>
+                <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
+                    <InputText id="confirmPassword"
+                                type="password"
+                                class="form-control"
+                                @bind-Value="_DoctorCreateDto.ConfirmPassword"
+                                aria-required="true" />
+                    <ValidationMessage For="() => _DoctorCreateDto.ConfirmPassword" class="text-danger" />
+                </BeHealthyFormGroup>
 
-            <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
-                <InputText id="confirmPassword"
-                           type="password"
-                           class="form-control"
-                           @bind-Value="_DoctorCreateDto.ConfirmPassword"
-                           aria-required="true" />
-                <ValidationMessage For="() => _DoctorCreateDto.ConfirmPassword" class="text-danger" />
-            </BeHealthyFormGroup>
-
-            <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
-                <InputText id="phoneNumber"
-                           class="form-control"
-                           @bind-Value="_DoctorCreateDto.PhoneNumber"
-                           aria-required="true" />
-                <ValidationMessage For="() => _DoctorCreateDto.PhoneNumber" class="text-danger" />
-            </BeHealthyFormGroup>
+                <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
+                    <InputText id="phoneNumber"
+                                class="form-control"
+                                @bind-Value="_DoctorCreateDto.PhoneNumber"
+                                aria-required="true" />
+                    <ValidationMessage For="() => _DoctorCreateDto.PhoneNumber" class="text-danger" />
+                </BeHealthyFormGroup>
              
-            @if (_departmentsSelect is not null && _departmentsSelect.Any())
-            {
-                <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
-                    <InputSelect id="department" @bind-Value="_DoctorCreateDto.DepartmentId" class="form-control">
-                        @foreach (var department in _departmentsSelect)
-                        {
-                            <option value="@department.Value">@department.Text</option>
-                        }
-                    </InputSelect>
-                </BeHealthyFormGroup>
-            }
+                @if (_departmentsSelect is not null && _departmentsSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
+                        <InputSelect id="department" @bind-Value="_DoctorCreateDto.DepartmentId" class="form-control">
+                            @foreach (var department in _departmentsSelect)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </InputSelect>
+                    </BeHealthyFormGroup>
+                }
 
-            @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
-            {
-                <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="_doNotAllowDoctorWithoutSpecialty">
-                    <InputSelect id="specialty" @bind-Value="_DoctorCreateDto.SpecialtyId" class="form-control">
-                        @foreach (var specialty in _specialtiesSelect)
-                        {
-                            <option value="@specialty.Value">@specialty.Text</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="() => _DoctorCreateDto.SpecialtyId" class="text-danger" />
-                </BeHealthyFormGroup>
-            }
-        </div>
-    </EditForm>
-</div>
-
+                @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="_doNotAllowDoctorWithoutSpecialty">
+                        <InputSelect id="specialty" @bind-Value="_DoctorCreateDto.SpecialtyId" class="form-control">
+                            @foreach (var specialty in _specialtiesSelect)
+                            {
+                                <option value="@specialty.Value">@specialty.Text</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => _DoctorCreateDto.SpecialtyId" class="text-danger" />
+                    </BeHealthyFormGroup>
+                }
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
 @code {
 
     [SupplyParameterFromForm]
