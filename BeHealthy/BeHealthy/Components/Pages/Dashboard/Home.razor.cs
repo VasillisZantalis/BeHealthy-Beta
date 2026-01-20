@@ -37,8 +37,6 @@ public partial class Home : BasePage
         
         if (needsSeeding)
         {
-            await Task.Delay(500); // Small delay for better UX
-            
             ModalService.Show<SeedingModal>(
                 new Dictionary<string, object?>
                 {

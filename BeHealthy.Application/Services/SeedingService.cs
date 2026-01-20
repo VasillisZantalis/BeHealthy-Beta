@@ -44,7 +44,7 @@ public class SeedingService : ISeedingService
     public async Task<bool> NeedsSeedingAsync()
     {
         var counts = await CheckEntityCountsAsync();
-        return counts.Values.Any(count => count == 0);
+        return counts.Values.All(count => count == 0);
     }
 
     public async Task<ServiceResponse> SeedDoctorsAsync(int count)
