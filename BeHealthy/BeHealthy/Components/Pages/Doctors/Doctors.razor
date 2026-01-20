@@ -4,41 +4,39 @@
 @attribute [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Doctor)},{nameof(UserRole.Nurse)}")]
 @inherits BasePage
 
-<BeHealthyCard>
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
     <Header>
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <div class="d-flex gap-3">
-                @if (_userRole == UserRole.Admin)
-                {
-                    <div class="">
-                        <CreateButton OnClick="CreateDoctor" />
-                        <MassImportButton OnClick="ShowImportWizard" />
-                    </div>
-                }
-                <div>
-                    <ViewSelect @bind-Value="_selectedView" />
+        <div class="d-flex gap-3">
+            @if (_userRole == UserRole.Admin)
+            {
+                <div class="">
+                    <CreateButton OnClick="CreateDoctor" />
+                    <MassImportButton OnClick="ShowImportWizard" />
                 </div>
-            </div>
-
+            }
             <div>
-                <BeHealthySearch OnSearch="HandleSearch"
-                                 OnClear="HandleClearFilters"
-                                 DebounceMilliseconds="500">
-
-                    <Filters>
-                        <!-- Specialty Filter -->
-                        <InputSelect class="form-select"
-                                     @bind-Value="selectedSpecialtyId"
-                                     @bind-Value:after="ApplyFilters">
-                            <option value="">All Specialties</option>
-                            @foreach (var specialty in specialties)
-                            {
-                                <option value="@specialty.Value">@specialty.Text</option>
-                            }
-                        </InputSelect>
-                    </Filters>
-                </BeHealthySearch>
+                <ViewSelect @bind-Value="_selectedView" />
             </div>
+        </div>
+
+        <div>
+            <BeHealthySearch OnSearch="HandleSearch"
+                            OnClear="HandleClearFilters"
+                            DebounceMilliseconds="500">
+
+                <Filters>
+                    <!-- Specialty Filter -->
+                    <InputSelect class="form-select"
+                                    @bind-Value="selectedSpecialtyId"
+                                    @bind-Value:after="ApplyFilters">
+                        <option value="">All Specialties</option>
+                        @foreach (var specialty in specialties)
+                        {
+                            <option value="@specialty.Value">@specialty.Text</option>
+                        }
+                    </InputSelect>
+                </Filters>
+            </BeHealthySearch>
         </div>
     </Header>
     <Body>
