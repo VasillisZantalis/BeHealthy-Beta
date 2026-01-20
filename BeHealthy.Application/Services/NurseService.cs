@@ -1,6 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Interfaces;
-using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
 
 namespace BeHealthy.Application.Services;
@@ -95,7 +93,7 @@ public class NurseService : INurseService
         await _unitOfWork.NurseRepository.DeleteNurseAsync(id);
     }
 
-    public async Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId, QueryParameters parameters)
+    public async Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId, QueryParameters? parameters = null)
     {
         List<Nurse> nurses = new();
 
@@ -113,10 +111,15 @@ public class NurseService : INurseService
 
         if (nurseIds.Any())
         {
-            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.QueryAsync(new QueryOptions<Nurse>
+            parameters ??= new();
+            var queryOptions = new QueryOptions<Nurse>
             {
-                Predicate = w => nurseIds.Contains(w.Id)
-            });
+                Predicate = n => (string.IsNullOrEmpty(parameters.SearchTerm) ||
+                                 n.FirstName.Contains(parameters.SearchTerm) ||
+                                 n.LastName.Contains(parameters.SearchTerm)) &&
+                                 nurseIds.Contains(n.Id)
+            };
+            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.QueryAsync(queryOptions);
 
             nurses.AddRange(nursesThatTreatPatient);
         }
