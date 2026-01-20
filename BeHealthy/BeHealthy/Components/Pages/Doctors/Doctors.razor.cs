@@ -26,6 +26,7 @@ public partial class Doctors : BasePage
     private List<DoctorDto> _doctors = new();
     private DoctorQueryParameters QueryParameters { get; set; } = new();
     private List<SelectItem> specialties = new();
+    private HashSet<int> _selectedDoctorIds = new();
 
     private string _selectedView = "Grid";
     private bool hasActionRights;
@@ -102,8 +103,23 @@ public partial class Doctors : BasePage
             _ => (await _doctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
         };
 
+        // Clear selection if doctors were reloaded
+        _selectedDoctorIds.Clear();
+
         await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
+    }
+
+    private void ToggleDoctorSelection(int doctorId)
+    {
+        if (_selectedDoctorIds.Contains(doctorId))
+        {
+            _selectedDoctorIds.Remove(doctorId);
+        }
+        else
+        {
+            _selectedDoctorIds.Add(doctorId);
+        }
     }
 
     private void EditDoctor(int id)
@@ -166,5 +182,29 @@ public partial class Doctors : BasePage
     {
         await _doctorService.DeleteDoctorAsync(doctorId);
         await LoadDoctors(_currentUserId, _userRole);
+    }
+
+    private void ConfirmBulkDelete()
+    {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmBulkDeleteAsync(_selectedDoctorIds) },
+           });
+    }
+
+    private async Task OnConfirmBulkDeleteAsync(HashSet<int> selectedDoctorIds)
+    {
+        LoaderService.SetLoader(true);
+
+        foreach (var doctorId in selectedDoctorIds.ToList())
+        {
+            await _doctorService.DeleteDoctorAsync(doctorId);
+        }
+
+        _selectedDoctorIds.Clear();
+        await LoadDoctors(_currentUserId, _userRole);
+
+        LoaderService.SetLoader(false);
     }
 }
