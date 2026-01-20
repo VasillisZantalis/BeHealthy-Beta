@@ -171,33 +171,30 @@ public partial class Doctors : BasePage
 
     private void ConfirmDelete(int doctorId)
     {
-        ModalService.Show<ConfirmDeleteModal>(
-           new Dictionary<string, object?>
-           {
-               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(doctorId) }
-           });
-    }
-
-    private async Task OnConfirmDeleteAsync(int doctorId)
-    {
-        await _doctorService.DeleteDoctorAsync(doctorId);
-        await LoadDoctors(_currentUserId, _userRole);
+        ConfirmDelete([doctorId]);
     }
 
     private void ConfirmBulkDelete()
     {
+        ConfirmDelete(_selectedDoctorIds.ToList());
+    }
+
+    private void ConfirmDelete(IEnumerable<int> doctorIds)
+    {
+        var doctorIdsList = doctorIds.ToList();
+
         ModalService.Show<ConfirmDeleteModal>(
            new Dictionary<string, object?>
            {
-               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmBulkDeleteAsync(_selectedDoctorIds) },
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(doctorIdsList) },
            });
     }
 
-    private async Task OnConfirmBulkDeleteAsync(HashSet<int> selectedDoctorIds)
+    private async Task OnConfirmDeleteAsync(IEnumerable<int> doctorIds)
     {
         LoaderService.SetLoader(true);
 
-        foreach (var doctorId in selectedDoctorIds.ToList())
+        foreach (var doctorId in doctorIds)
         {
             await _doctorService.DeleteDoctorAsync(doctorId);
         }
