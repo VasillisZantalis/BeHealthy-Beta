@@ -1,4 +1,4 @@
-﻿@inject IPatientService patientService
+﻿@inject IPatientService PatientService
 
 <div id="recentlyAddedPatientsDiv" class="overflow-auto rounded shadow p-3">
     <h5>@Resource.RecentlyAddedPatients</h5>
@@ -43,7 +43,7 @@
     {
         var today = DateTime.Now.Date;
 
-        patients = (await patientService.GetAllPatientsAsync())
+        patients = (await PatientService.GetAllPatientsAsync())
             .Where(p => p.CreatedAt > today.AddDays(-10))
             .Take(5)
             .ToList();

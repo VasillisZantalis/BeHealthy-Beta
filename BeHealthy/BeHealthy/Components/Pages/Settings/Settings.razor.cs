@@ -18,7 +18,7 @@ public partial class Settings : BasePage
     [Inject]
     IAppSettingsService AppSettingsService { get; set; } = default!;
     [Inject]
-    private IDoctorService doctorService { get; set; } = default!;
+    private IDoctorService DoctorService { get; set; } = default!;
 
     private List<SelectItem> doctorsSelect = new();
 
@@ -39,7 +39,7 @@ public partial class Settings : BasePage
 
         if (settings.Any(s => s.Key == "DefaultDepartmentSupervison"))
         {
-            var doctors = (await doctorService.GetAllDoctorsSimpleAsync()).ToList();
+            var doctors = (await DoctorService.GetAllDoctorsSimpleAsync()).ToList();
 
             doctorsSelect = doctors.Select(s => new SelectItem
             {

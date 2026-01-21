@@ -1,4 +1,4 @@
-﻿@inject INurseService nurseService
+﻿@inject INurseService NurseService
 @inject NavigationManager NavigationManager
 
 <div id="totalNursesDiv" class="clickable" @onclick="() => NavigationManager.NavigateTo(RoutingEndpoints.NURSES_PAGE)">
@@ -27,7 +27,7 @@
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
-        totalNursesCount = await nurseService.GetNurseCountAsync();
+        totalNursesCount = await NurseService.GetNurseCountAsync();
         isLoading = false;
     }
 }

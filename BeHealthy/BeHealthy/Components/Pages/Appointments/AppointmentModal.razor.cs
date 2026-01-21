@@ -43,10 +43,10 @@ public partial class AppointmentModal : BasePage
     private IAppSettingsService appSettingsService { get; set; } = default!;
 
     [Inject]
-    private INurseService nurseService { get; set; } = default!;
+    private INurseService NurseService { get; set; } = default!;
 
     [Inject]
-    private IAppointmentService appointmentService { get; set; } = default!;
+    private IAppointmentService AppointmentService { get; set; } = default!;
 
     private List<SelectItem> doctorsSelect = new();
     private List<SelectItem> patientsSelect = new();
@@ -68,7 +68,7 @@ public partial class AppointmentModal : BasePage
         LoaderService.SetLoader(true);
 
         var rooms = (await roomService.GetAllRoomsAsync()).ToList();
-        var nurses = (await nurseService.GetAllNursesAsync()).ToList();
+        var nurses = (await NurseService.GetAllNursesAsync()).ToList();
 
         await GetAppSettings();
        
@@ -118,7 +118,7 @@ public partial class AppointmentModal : BasePage
     protected override async Task OnParametersSetAsync()
     {
         if (AppointmentId.HasValue && AppointmentId.Value > 0)
-            appointmentDto = await appointmentService.GetAppointmentByIdAsync(AppointmentId.Value) ?? new();
+            appointmentDto = await AppointmentService.GetAppointmentByIdAsync(AppointmentId.Value) ?? new();
 
         if (Role == UserRole.Doctor)
         {

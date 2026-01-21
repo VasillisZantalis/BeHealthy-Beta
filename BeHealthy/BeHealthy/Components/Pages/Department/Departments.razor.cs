@@ -14,10 +14,10 @@ namespace BeHealthy.Components.Pages.Department;
 public partial class Departments : BasePage
 {
     [Inject] IDepartmentService departmentService { get; set; } = default!;
-    [Inject] IPatientService patientService { get; set; } = default!;
-    [Inject] IDoctorService doctorService { get; set; } = default!;
-    [Inject] INurseService nurseService { get; set; } = default!;
-    [Inject] NavigationManager navigationManager { get; set; } = default!;
+    [Inject] IPatientService PatientService { get; set; } = default!;
+    [Inject] IDoctorService DoctorService { get; set; } = default!;
+    [Inject] INurseService NurseService { get; set; } = default!;
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
 
     private List<DepartmentDto> departments = new();
 
@@ -57,7 +57,7 @@ public partial class Departments : BasePage
 
     public void EditDepartment(int departmentId)
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/edit/{departmentId}");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/edit/{departmentId}");
     }
 
     private void ConfirmDelete(int departmentId)
@@ -77,6 +77,6 @@ public partial class Departments : BasePage
 
     private void Create()
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/create");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/create");
     }
 }

@@ -19,10 +19,10 @@ namespace BeHealthy.Components.Pages.Nurses;
 
 public partial class Nurses : BasePage
 {
-    [Inject] INurseService nurseService { get; set; } = default!;
+    [Inject] INurseService NurseService { get; set; } = default!;
 
-    [Inject] NavigationManager navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
     private List<NurseDto> nurses { get; set; } = new();
     private QueryParameters QueryParameters { get; set; } = new();
@@ -52,7 +52,7 @@ public partial class Nurses : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userRole = authState.User.GetUserRoleEnum();
         currentUserId = authState.User.GetUserId();
 
@@ -78,8 +78,8 @@ public partial class Nurses : BasePage
 
         nurses = userRole switch
         {
-            UserRole.Patient when userId is not null => (await nurseService.GetNursesOfPatientByUserId(userId)).ToList(),
-            _ => (await nurseService.GetAllNursesAsync(QueryParameters)).ToList()
+            UserRole.Patient when userId is not null => (await NurseService.GetNursesOfPatientByUserId(userId)).ToList(),
+            _ => (await NurseService.GetAllNursesAsync(QueryParameters)).ToList()
         };
 
         selectedNurseIds.Clear();
@@ -102,12 +102,12 @@ public partial class Nurses : BasePage
 
     private void EditNurse(int id)
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/edit/{id}");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/edit/{id}");
     }
 
     private void CreateNurse()
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/create");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/create");
     }
 
     private async Task BulkCreateNurses((List<NurseCreateDto> nurseForCreationDtos, bool UseValidation) result)
@@ -130,7 +130,7 @@ public partial class Nurses : BasePage
                 }
             }
 
-            var response = await nurseService.AddNurseAsync(nurse);
+            var response = await NurseService.AddNurseAsync(nurse);
             if (HandleServiceResponse(response)) continue;
         }
         await LoadNurses(currentUserId, userRole);
@@ -178,7 +178,7 @@ public partial class Nurses : BasePage
 
         foreach (var nurseId in nurseIds)
         {
-            await nurseService.DeleteNurseAsync(nurseId);
+            await NurseService.DeleteNurseAsync(nurseId);
         }
 
         selectedNurseIds.Clear();

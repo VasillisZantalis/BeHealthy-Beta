@@ -52,7 +52,7 @@
     private IAppSettingsService appSettingsService { get; set; } = default!;
 
     [Inject]
-    private NavigationManager navigationManager { get; set; } = default!;
+    private NavigationManager NavigationManager { get; set; } = default!;
 
     private bool inProgress = false;
     private Alert alert = new();
@@ -137,7 +137,7 @@
             else
             {
                 ToastService.ShowToast(Resource.Success, "success");
-                navigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
+                NavigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
             }
         }
     }

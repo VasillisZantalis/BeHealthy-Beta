@@ -1,4 +1,4 @@
-﻿@inject IDoctorService doctorService
+﻿@inject IDoctorService DoctorService
 @inject NavigationManager NavigationManager
 
 <div id="totalDoctorsDiv" class="clickable" @onclick="() => NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE)">
@@ -27,7 +27,7 @@
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
-        totalDoctorsCount = await doctorService.GetDoctorCountAsync();
+        totalDoctorsCount = await DoctorService.GetDoctorCountAsync();
         isLoading = false;
     }
 }

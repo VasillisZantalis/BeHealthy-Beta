@@ -66,7 +66,7 @@
     [Parameter, EditorRequired]
     public int? PrescriptionId { get; set; }
 
-    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+    [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
     private bool showModal { get; set; }
     private bool isEditMode => PrescriptionId.HasValue;
@@ -84,11 +84,11 @@
 
 
     [Inject]
-    private IDoctorService doctorService { get; set; } = default!;
+    private IDoctorService DoctorService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userId = authState.User.GetUserId();
         userRole = authState.User.GetUserRoleEnum();
     }
@@ -97,7 +97,7 @@
     {
         prescriptionDto = new();
 
-        var doctors = (await doctorService.GetAllDoctorsSimpleAsync()).ToList();
+        var doctors = (await DoctorService.GetAllDoctorsSimpleAsync()).ToList();
 
         doctorsSelect = doctors.Select(s => new SelectItem
         {

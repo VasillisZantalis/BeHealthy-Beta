@@ -22,7 +22,7 @@ public partial class Upsert : BasePage
     private IDepartmentService departmentService { get; set; } = default!;
 
     [Inject]
-    private IDoctorService doctorService { get; set; } = default!;
+    private IDoctorService DoctorService { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -33,7 +33,7 @@ public partial class Upsert : BasePage
     {
         LoaderService.SetLoader(true);
 
-        Doctors = (await doctorService.GetAllDoctorsAsync()).ToList();
+        Doctors = (await DoctorService.GetAllDoctorsAsync()).ToList();
 
         if (IsEditMode && id.HasValue)
         {

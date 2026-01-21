@@ -21,12 +21,12 @@ public partial class Appointments : BasePage
 {
     private List<AppointmentDto> appointments = default!;
 
-    [Inject] IAppointmentService appointmentService { get; set; } = default!;
-    [Inject] IDoctorService doctorService { get; set; } = default!;
-    [Inject] INurseService nurseService { get; set; } = default!;
-    [Inject] IPatientService patientService { get; set; } = default!;
-    [Inject] NavigationManager navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+    [Inject] IAppointmentService AppointmentService { get; set; } = default!;
+    [Inject] IDoctorService DoctorService { get; set; } = default!;
+    [Inject] INurseService NurseService { get; set; } = default!;
+    [Inject] IPatientService PatientService { get; set; } = default!;
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
     private List<DoctorSimpleDto>? doctors { get; set; }
     private List<PatientSimpleDto>? patients { get; set; }
@@ -56,7 +56,7 @@ public partial class Appointments : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         currentUserId = authState.User.GetUserId();
 
         userRole = authState.User.GetUserRoleEnum();
@@ -80,15 +80,15 @@ public partial class Appointments : BasePage
         switch (userRole, currentUserId)
         {
             case (UserRole.Doctor, not null):
-                appointments = (await doctorService.GetDoctorAppointmentsByUserIdAsync(currentUserId)).ToList();
+                appointments = (await DoctorService.GetDoctorAppointmentsByUserIdAsync(currentUserId)).ToList();
                 break;
 
             case (UserRole.Patient, not null):
-                appointments = (await patientService.GetPatientAppointmentsByUserIdAsync(currentUserId)).ToList();
+                appointments = (await PatientService.GetPatientAppointmentsByUserIdAsync(currentUserId)).ToList();
                 break;
 
             default:
-                appointments = (await appointmentService.GetAllAppointmentsAsync()).ToList();
+                appointments = (await AppointmentService.GetAllAppointmentsAsync()).ToList();
                 break;
         }
         paginationState.ItemsPerPage = appointments.Count;
@@ -125,7 +125,7 @@ public partial class Appointments : BasePage
 
     private async Task LoadDoctors()
     {
-        doctors = (await doctorService.GetAllDoctorsSimpleAsync()).ToList();
+        doctors = (await DoctorService.GetAllDoctorsSimpleAsync()).ToList();
 
         if (userRole == UserRole.Doctor)
         {
@@ -135,7 +135,7 @@ public partial class Appointments : BasePage
 
     private async Task LoadPatients()
     {
-        patients = (await patientService.GetAllPatientsSimpleAsync()).ToList();
+        patients = (await PatientService.GetAllPatientsSimpleAsync()).ToList();
     }
 
     private void EditAppointment(int appointmentId)
@@ -155,7 +155,7 @@ public partial class Appointments : BasePage
 
     private async Task OnConfirmDeleteAsync(int appointmentId)
     {
-        await appointmentService.DeleteAppointmentAsync(appointmentId);
+        await AppointmentService.DeleteAppointmentAsync(appointmentId);
         await LoadAppointments();
     }
 
@@ -177,20 +177,20 @@ public partial class Appointments : BasePage
 
     private async Task CreateAppointmentAsync(AppointmentCreateDto AppointmentCreateDto, bool fromBulkCreation = false)
     {
-        var response = await appointmentService.AddAppointmentAsync(AppointmentCreateDto);
+        var response = await AppointmentService.AddAppointmentAsync(AppointmentCreateDto);
         if (HandleServiceResponse(response))
         {
             if (!fromBulkCreation)
-                navigationManager.Refresh(true);
+                NavigationManager.Refresh(true);
         }
     }
 
     private async Task UpdateAppointmentAsync(AppointmentUpdateDto appointmentForUpdateDto)
     {
-        var response = await appointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
+        var response = await AppointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
 
         if (HandleServiceResponse(response))
-            navigationManager.Refresh(true);
+            NavigationManager.Refresh(true);
     }
 
     private async Task BulkCreateAppointments((List<AppointmentCreateDto> AppointmentCreateDtos, bool UseValidation) result)

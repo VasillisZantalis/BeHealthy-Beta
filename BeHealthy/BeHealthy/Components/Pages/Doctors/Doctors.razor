@@ -119,7 +119,7 @@
 
                 <BeHealthyColumn TItem="DoctorDto"
                                  Title="@Resource.Specialty"
-                                 Property="@(x => x.Specialty != null ? x.Specialty.Name : string.Empty)" />
+                                 Property="@(x => x.Specialty?.Name ?? string.Empty)" />
 
                 <BeHealthyColumn TItem="DoctorDto"
                                  Title="@Resource.Created"

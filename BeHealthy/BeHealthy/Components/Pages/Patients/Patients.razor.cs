@@ -18,10 +18,10 @@ namespace BeHealthy.Components.Pages.Patients;
 
 public partial class Patients : BasePage
 {
-    [Inject] IPatientService patientService { get; set; } = default!;
-    [Inject] IDoctorService doctorService { get; set; } = default!;
-    [Inject] NavigationManager navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+    [Inject] IPatientService PatientService { get; set; } = default!;
+    [Inject] IDoctorService DoctorService { get; set; } = default!;
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
     private List<PatientDto> patients { get; set; } = new();
 
@@ -52,7 +52,7 @@ public partial class Patients : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userRole = authState.User.GetUserRoleEnum();
         currentUserId = authState.User.GetUserId();
 
@@ -81,8 +81,8 @@ public partial class Patients : BasePage
 
         patients = userRole switch
         {
-            UserRole.Doctor when doctorId is not null => (await doctorService.GetMyPatientsAsync(doctorId)).ToList(),
-            _ => (await patientService.GetAllPatientsAsync()).ToList()
+            UserRole.Doctor when doctorId is not null => (await DoctorService.GetMyPatientsAsync(doctorId)).ToList(),
+            _ => (await PatientService.GetAllPatientsAsync()).ToList()
         };
         await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
@@ -90,12 +90,12 @@ public partial class Patients : BasePage
 
     private void EditPatient(int id)
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/edit/{id}");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/edit/{id}");
     }
 
     private void CreatePatient()
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
     }
 
     private async Task BulkCreatePatients((List<PatientCreateDto> patientForCreationDtos, bool UseValidation) result)
@@ -118,7 +118,7 @@ public partial class Patients : BasePage
                 }
             }
 
-            var response = await patientService.AddPatientAsync(patient);
+            var response = await PatientService.AddPatientAsync(patient);
             if (HandleServiceResponse(response)) continue;
         }
         await LoadPatients(currentUserId, userRole);
@@ -136,7 +136,7 @@ public partial class Patients : BasePage
 
     private async Task OnConfirmDeleteAsync(int patientId)
     {
-        await patientService.DeletePatientAsync(patientId);
+        await PatientService.DeletePatientAsync(patientId);
         await LoadPatients(currentUserId, userRole);
     }
 }

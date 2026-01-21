@@ -11,9 +11,9 @@ namespace BeHealthy.Components.Pages.Dashboard;
 
 public partial class Home : BasePage
 {
-    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+    [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     [Inject] ISeedingService seedingService { get; set; } = default!;
-    [Inject] NavigationManager navigationManager { get; set; } = default!;
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
 
     private bool isAdminUser = default;
 
@@ -24,7 +24,7 @@ public partial class Home : BasePage
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         isAdminUser = authState.User.IsAdminUser();
 
         await CheckAndPromptSeeding();
@@ -50,7 +50,7 @@ public partial class Home : BasePage
 
     private void OnSeedingCompleted()
     {
-        navigationManager.Refresh(true);
+        NavigationManager.Refresh(true);
     }
 
     private void SetBreadcrumbs()

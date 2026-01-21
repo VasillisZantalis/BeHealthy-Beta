@@ -17,11 +17,11 @@ namespace BeHealthy.Components.Pages.Doctors;
 
 public partial class Doctors : BasePage
 {
-    [Inject] IDoctorService doctorService { get; set; } = default!;
-    [Inject] IPatientService patientsService { get; set; } = default!;
-    [Inject] ISpecialtyService specialtyService { get; set; } = default!;
-    [Inject] NavigationManager navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+    [Inject] IDoctorService DoctorService { get; set; } = default!;
+    [Inject] IPatientService PatientsService { get; set; } = default!;
+    [Inject] ISpecialtyService SpecialtyService { get; set; } = default!;
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
     private List<DoctorDto> doctors = new();
     private DoctorQueryParameters QueryParameters { get; set; } = new();
@@ -42,7 +42,7 @@ public partial class Doctors : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userRole = authState.User.GetUserRoleEnum();
         currentUserId = authState.User.GetUserId();
 
@@ -56,7 +56,7 @@ public partial class Doctors : BasePage
 
     private async Task LoadSpecialties()
     {
-        var data = await specialtyService.GetSpecialtiesAsync();
+        var data = await SpecialtyService.GetSpecialtiesAsync();
 
         specialties = data.Select(s => new SelectItem
         {
@@ -102,8 +102,8 @@ public partial class Doctors : BasePage
 
         doctors = userRole switch
         {
-            UserRole.Patient when userId is not null => (await patientsService.GetMyDoctorsAsync(userId)).ToList(),
-            _ => (await doctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
+            UserRole.Patient when userId is not null => (await PatientsService.GetMyDoctorsAsync(userId)).ToList(),
+            _ => (await DoctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
         };
 
         // Clear selection if doctors were reloaded
@@ -127,24 +127,23 @@ public partial class Doctors : BasePage
 
     private void EditDoctor(int id)
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{id}");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{id}");
     }
 
     private void CreateDoctor()
     {
-        navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
     private async Task BulkCreateDoctors((List<DoctorCreateDto> doctorCreateDtos, bool UseValidation) result)
     {
         LoaderService.SetLoader(true);
 
-        var useValidation = result.UseValidation;
-        var validator = new DoctorCreateDtoValidator(false);
+        var validator = result.UseValidation ? new DoctorCreateDtoValidator(false) : null;
 
         foreach (var doctor in result.doctorCreateDtos)
         {
-            if (useValidation)
+            if (validator != null)
             {
                 var validationResult = await validator.ValidateAsync(doctor);
                 if (!validationResult.IsValid)
@@ -155,9 +154,14 @@ public partial class Doctors : BasePage
                 }
             }
 
-            var response = await doctorService.AddDoctorAsync(doctor);
-            if (HandleServiceResponse(response)) continue;
+            var response = await DoctorService.AddDoctorAsync(doctor);
+            if (!HandleServiceResponse(response))
+            {
+                LoaderService.SetLoader(false);
+                return;
+            }
         }
+        
         await LoadDoctors(currentUserId, userRole);
         LoaderService.SetLoader(false);
     }
@@ -199,7 +203,7 @@ public partial class Doctors : BasePage
 
         foreach (var doctorId in doctorIds)
         {
-            await doctorService.DeleteDoctorAsync(doctorId);
+            await DoctorService.DeleteDoctorAsync(doctorId);
         }
 
         selectedDoctorIds.Clear();
