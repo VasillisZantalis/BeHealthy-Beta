@@ -13,6 +13,13 @@
                 <div class="">
                     <CreateButton OnClick="CreateNurse" />
                     <MassImportButton OnClick="ShowImportWizard" />
+                    @if (selectedNurseIds.Any())
+                    {
+                        <button class="btn btn-danger rounded-pill mx-1" @onclick="ConfirmBulkDelete">
+                            <Icon IconClass="@FAIcon.TrashCan" />
+                            @string.Format(Resource.BulkDeleteNumber, selectedNurseIds.Count)
+                        </button>
+                    }
                 </div>
             }
             <div>
@@ -61,6 +68,19 @@
                             WrapperClass="table-wrapper"
                             EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Nurses)">
 
+                <BeHealthyColumn TItem="NurseDto">
+                    <Template>
+                        @if (hasActionRights)
+                        {
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   checked="@selectedNurseIds.Contains(context.Id)"
+                                   @onchange="@(() => ToggleNurseSelection(context.Id))"
+                                   @onclick:stopPropagation="true" />
+                        }
+                    </Template>
+                </BeHealthyColumn>
+                                
                 <BeHealthyColumn TItem="NurseDto">
                     <Template>
                         <img class="rounded-circle"

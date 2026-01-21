@@ -1,15 +1,12 @@
-﻿using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Dtos.Nurse;
+﻿using BeHealthy.Application.Dtos.Nurse;
 using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Nurse;
 using BeHealthy.Common;
-using BeHealthy.Components.Pages.Doctors;
 using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Components.Shared.Wizards;
 using BeHealthy.Domain;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Models;
 using BeHealthy.Models.Enums;
 using BeHealthy.Shared.Locales;
@@ -29,6 +26,7 @@ public partial class Nurses : BasePage
 
     private List<NurseDto> _nurses { get; set; } = new();
     private QueryParameters QueryParameters { get; set; } = new();
+    private HashSet<int> selectedNurseIds = new();
 
     private string _selectedView = "Grid";
     private bool hasActionRights;
@@ -84,8 +82,22 @@ public partial class Nurses : BasePage
             _ => (await _nurseService.GetAllNursesAsync(QueryParameters)).ToList()
         };
 
+        selectedNurseIds.Clear();
+
         await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
+    }
+
+    private void ToggleNurseSelection(int nurseId)
+    {
+        if (selectedNurseIds.Contains(nurseId))
+        {
+            selectedNurseIds.Remove(nurseId);
+        }
+        else
+        {
+            selectedNurseIds.Add(nurseId);
+        }
     }
 
     private void EditNurse(int id)
@@ -141,16 +153,37 @@ public partial class Nurses : BasePage
 
     private void ConfirmDelete(int nurseId)
     {
+        ConfirmDelete([nurseId]);
+    }
+
+    private void ConfirmBulkDelete()
+    {
+        ConfirmDelete(selectedNurseIds.ToList());
+    }
+
+    private void ConfirmDelete(IEnumerable<int> nurseIds)
+    {
+        var nurseIdsList = nurseIds.ToList();
+
         ModalService.Show<ConfirmDeleteModal>(
            new Dictionary<string, object?>
            {
-               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(nurseId) }
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(nurseIdsList) },
            });
     }
 
-    private async Task OnConfirmDeleteAsync(int nurseId)
+    private async Task OnConfirmDeleteAsync(IEnumerable<int> nurseIds)
     {
-        await _nurseService.DeleteNurseAsync(nurseId);
+        LoaderService.SetLoader(true);
+
+        foreach (var nurseId in nurseIds)
+        {
+            await _nurseService.DeleteNurseAsync(nurseId);
+        }
+
+        selectedNurseIds.Clear();
         await LoadNurses(_currentUserId, _userRole);
+
+        LoaderService.SetLoader(false);
     }
 }
