@@ -9,7 +9,7 @@
     <CreateButton OnClick="Create" />
 </div>
 
-@if (_departments is null || !_departments.Any())
+@if (departments is null || !departments.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Departments)</p>
 }
@@ -19,7 +19,7 @@ else
         <div class="card">
             <div class="card-header d-flex flex-row justify-content-end">
                 <div class="px-1">
-                    <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                    <InputSelect class="form-select form-select-sm" @bind-Value="paginationState.ItemsPerPage">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="25">25</option>
@@ -31,9 +31,9 @@ else
             <div class="table-responsive">
                 <div class="card-body pb-2 px-0 m-0">
                     <QuickGrid Class="table rounded"
-                               Items="@_departments.AsQueryable()"
+                               Items="@departments.AsQueryable()"
                                ItemKey="@(x => x.Id)"
-                               Pagination="_paginationState">
+                               Pagination="paginationState">
                         <PropertyColumn Title="@Resource.Name"
                                         Property="@(x => x.Name)" />
                         <PropertyColumn Title="@Resource.Location"
@@ -56,7 +56,7 @@ else
 
             </div>
             <div id="paginatorDiv" class="px-3">
-                <Paginator State="_paginationState" />
+                <Paginator State="paginationState" />
             </div>
         </div>
     </div>    

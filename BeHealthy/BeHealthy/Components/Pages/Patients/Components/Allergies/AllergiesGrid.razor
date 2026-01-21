@@ -8,9 +8,9 @@
 
 <div class="py-3">
     <CreateButton OnClick="CreateAllergy" />
-    @if (_allergies.Any())
+    @if (allergies.Any())
     {
-        <QuickGrid Items="_allergies.AsQueryable()"
+        <QuickGrid Items="allergies.AsQueryable()"
                    ItemKey="@(x => x.Id)"
                    Class="table table-responsive">
             <PropertyColumn Title="@Resource.Allergy"
@@ -37,31 +37,31 @@
     }
 </div>
 
-<GenericModal @ref="_genericModal"
+<GenericModal @ref="genericModal"
               Title="@Resource.Allergy"
               OnSave="SaveAllergy">
-    <EditForm Model="_allergyDto" FormName="AllergyForm">
+    <EditForm Model="allergyDto" FormName="AllergyForm">
         <div class="form-group">
             <label for="notes" class="form-label fw-bold required">@Resource.Allergy</label>
-            <InputText id="notes" @bind-Value="_allergyDto.AllergyName" class="form-control" />
+            <InputText id="notes" @bind-Value="allergyDto.AllergyName" class="form-control" />
         </div>
         <div class="form-group">
             <label for="notes" class="form-label fw-bold">@Resource.Allergen</label>
-            <InputText id="notes" @bind-Value="_allergyDto.Allergen" class="form-control" />
+            <InputText id="notes" @bind-Value="allergyDto.Allergen" class="form-control" />
         </div>
     </EditForm>
 </GenericModal>
 
 @code {
-    private List<AllergyDto> _allergies = new();
+    private List<AllergyDto> allergies = new();
 
     [SupplyParameterFromForm]
-    private AllergyDto _allergyDto { get; set; } = new();
+    private AllergyDto allergyDto { get; set; } = new();
 
     [Parameter, EditorRequired]
     public int PatientId { get; set; }
 
-    private GenericModal _genericModal { get; set; } = new();
+    private GenericModal genericModal { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,25 +70,25 @@
 
     private void CreateAllergy()
     {
-        _allergyDto = new();
-        _genericModal.OpenModal();
+        allergyDto = new();
+        genericModal.OpenModal();
     }
 
     private async Task EditAllergy(int id)
     {
-        _allergyDto = await AllergyService.GetAllergyByIdAsync(id) ?? new();
-        _genericModal.OpenModal();
+        allergyDto = await AllergyService.GetAllergyByIdAsync(id) ?? new();
+        genericModal.OpenModal();
     }
 
     private async Task SaveAllergy()
     {
-        _allergyDto.PatientId = PatientId;
+        allergyDto.PatientId = PatientId;
 
         ServiceResponse serviceResponse;
 
-        if (_allergyDto.Id == 0)
+        if (allergyDto.Id == 0)
         {
-            var allergyCreateDto = _allergyDto.MapToCreateDto();
+            var allergyCreateDto = allergyDto.MapToCreateDto();
 
             var validator = new AllergyCreateDtoValidator();
             var validationResult = await validator.ValidateAsync(allergyCreateDto);
@@ -102,7 +102,7 @@
         }
         else
         {
-            var allergyUpdateDto = _allergyDto.MapToUpdateDto();
+            var allergyUpdateDto = allergyDto.MapToUpdateDto();
 
             var validator = new AllergyUpdateDtoValidator();
             var validationResult = await validator.ValidateAsync(allergyUpdateDto);
@@ -119,7 +119,7 @@
         {
             ToastService.ShowToast(Resource.Success, "success");
             await LoadAllergies();
-            _genericModal.CloseModal();
+            genericModal.CloseModal();
             StateHasChanged();
         }
     }
@@ -127,7 +127,7 @@
     private async Task LoadAllergies()
     {
         LoaderService.SetLoader(true);
-        _allergies = (await AllergyService.GetAllergiesByPatientIdAsync(PatientId)).ToList();
+        allergies = (await AllergyService.GetAllergiesByPatientIdAsync(PatientId)).ToList();
         LoaderService.SetLoader(false);
     }
 

@@ -8,22 +8,22 @@
 <BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
     <Header>
         <div class="d-flex gap-3">
-            @if (_userRole == UserRole.Admin)
+            @if (userRole == UserRole.Admin)
             {
                 <div class="">
                     <CreateButton OnClick="CreateDoctor" />
                     <MassImportButton OnClick="ShowImportWizard" />
-                    @if (_selectedDoctorIds.Any())
+                    @if (selectedDoctorIds.Any())
                     {
                         <button class="btn btn-danger rounded-pill mx-1" @onclick="ConfirmBulkDelete">
                             <Icon IconClass="@FAIcon.TrashCan" />
-                            @string.Format(Resource.BulkDeleteNumber, _selectedDoctorIds.Count)
+                            @string.Format(Resource.BulkDeleteNumber, selectedDoctorIds.Count)
                         </button>
                     }
                 </div>
             }
             <div>
-                <ViewSelect @bind-Value="_selectedView" />
+                <ViewSelect @bind-Value="selectedView" />
             </div>
         </div>
 
@@ -49,16 +49,16 @@
     </Header>
     <Body>
 
-        @if (_selectedView == "Card")
+        @if (selectedView == "Card")
         {
-            @if (_doctors is null || !_doctors.Any())
+            @if (doctors is null || !doctors.Any())
             {
                 <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
             }
             else
             {
                 <div class="row">
-                    <Virtualize Items="@_doctors" Context="doctor" ItemSize="100">
+                    <Virtualize Items="@doctors" Context="doctor" ItemSize="100">
                         <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                             <div class="mb-3">
                                 <UserCard Id="@doctor.Id"
@@ -78,10 +78,10 @@
                 </div>
             }
         }
-        else if (_selectedView == "Grid")
+        else if (selectedView == "Grid")
         {
             <BeHealthyTable TItem="DoctorDto"
-                            Items="@_doctors"
+                            Items="@doctors"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
                             EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)">
@@ -92,7 +92,7 @@
                         {
                             <input type="checkbox"
                                    class="form-check-input"
-                                   checked="@_selectedDoctorIds.Contains(context.Id)"
+                                   checked="@selectedDoctorIds.Contains(context.Id)"
                                    @onchange="@(() => ToggleDoctorSelection(context.Id))"
                                    @onclick:stopPropagation="true" />
                         }

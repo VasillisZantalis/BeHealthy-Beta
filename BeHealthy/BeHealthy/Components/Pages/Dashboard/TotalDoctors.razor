@@ -8,7 +8,7 @@
                 <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-4"/>
                 <h5 class="align-self-center">@Resource.Doctors</h5>
             </div>
-            @if (_isLoading)
+            @if (isLoading)
             {
                 <SmallLoader />
             }
@@ -22,12 +22,12 @@
 
 @code {
     private int totalDoctorsCount;
-    private bool _isLoading;
+    private bool isLoading;
 
     protected override async Task OnInitializedAsync()
     {
-        _isLoading = true;
+        isLoading = true;
         totalDoctorsCount = await doctorService.GetDoctorCountAsync();
-        _isLoading = false;
+        isLoading = false;
     }
 }

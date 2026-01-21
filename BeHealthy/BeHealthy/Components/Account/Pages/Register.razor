@@ -22,7 +22,7 @@
             <h2>@Resource.CreateNewAccount</h2>
             <hr />
             <div class="row">
-                <Alert @ref="_alert" />
+                <Alert @ref="alert" />
                 @* <ValidationSummary class="text-danger" role="alert" /> *@
                 <div class="col-12 col-sm-6">
                     <div class="form-floating mb-3">
@@ -68,11 +68,11 @@
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
 
-            @if (_departments is not null && _departments.Any())
+            @if (departments is not null && departments.Any())
             {
                 <div class="form-floating mb-3">
-                    <InputSelect id="Department" @bind-Value="_departmentId" class="form-control">
-                        @foreach (var department in _departmentsSelect)
+                    <InputSelect id="Department" @bind-Value="departmentId" class="form-control">
+                        @foreach (var department in departmentsSelect)
                         {
                             <option value="@department.Value">@department.Text</option>
                         }
@@ -82,7 +82,7 @@
             }
 
             <div class="form-floating mb-3">
-                <InputSelect id="role" @bind-Value="Input.Role" class="form-control" disabled="@_isDisabled">
+                <InputSelect id="role" @bind-Value="Input.Role" class="form-control" disabled="@isDisabled">
                     @foreach (var role in Enum.GetNames(typeof(UserRole)))
                     {
                         <option value="@role">@role</option>
@@ -99,8 +99,8 @@
             </div>
             <div class="d-flex flex-lg-row flex-column justify-content-between gap-2">
                 <a class="btn btn-outline-dark w-100" href="/login">Cancel</a>
-                <button type="submit" class="btn btn-success d-flex flex-row w-100 justify-content-center" disabled="@_inProgress">
-                    @if (_inProgress)
+                <button type="submit" class="btn btn-success d-flex flex-row w-100 justify-content-center" disabled="@inProgress">
+                    @if (inProgress)
                     {
                         <SmallLoader />
                     }
@@ -114,31 +114,31 @@
 @code {
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
-    private bool _inProgress = false;
-    private bool _isDisabled = false;
-    private List<DepartmentDto>? _departments { get; set; }
-    private int? _departmentId;
+    private bool inProgress = false;
+    private bool isDisabled = false;
+    private List<DepartmentDto>? departments { get; set; }
+    private int? departmentId;
 
-    private Alert _alert = new();
+    private Alert alert = new();
 
-    private List<SelectItem> _departmentsSelect = new List<SelectItem>();
+    private List<SelectItem> departmentsSelect = new List<SelectItem>();
 
     protected override async Task OnInitializedAsync()
     {
-        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
 
-        _departmentsSelect = _departments.Select(s => new SelectItem
+        departmentsSelect = departments.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
 
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     public async Task RegisterUser(EditContext editContext)
     {
-        _inProgress = true;
+        inProgress = true;
 
         var task = Input.Role switch
         {
@@ -153,14 +153,14 @@
 
         if (!result.Success)
         {
-            _alert.ShowFailed(result.ErrorMessage);
+            alert.ShowFailed(result.ErrorMessage);
         }
         else
         {
-            _alert.ShowSuccess(Resource.Success);
+            alert.ShowSuccess(Resource.Success);
         }
 
-        _inProgress = false;
+        inProgress = false;
     }
 
     private DoctorCreateDto ToDoctor()
@@ -170,7 +170,7 @@
             FirstName = Input.FirstName,
             LastName = Input.LastName,
             SpecialtyId = Input.SpecialtyId > 0 ? Input.SpecialtyId : null,
-            DepartmentId = _departmentId,
+            DepartmentId = departmentId,
             Password = Input.Password,
             ConfirmPassword = Input.ConfirmPassword,
             Email = Input.Email
@@ -183,7 +183,7 @@
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
-            DepartmentId = _departmentId,
+            DepartmentId = departmentId,
             Password = Input.Password,
             ConfirmPassword = Input.ConfirmPassword,
             Email = Input.Email
@@ -208,7 +208,7 @@
         {
             FirstName = Input.FirstName,
             LastName = Input.LastName,
-            DepartmentId = _departmentId,
+            DepartmentId = departmentId,
             Password = Input.Password,
             ConfirmPassword = Input.ConfirmPassword,
             Email = Input.Email

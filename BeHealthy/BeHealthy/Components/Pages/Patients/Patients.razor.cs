@@ -18,26 +18,26 @@ namespace BeHealthy.Components.Pages.Patients;
 
 public partial class Patients : BasePage
 {
-    [Inject] IPatientService _patientService { get; set; } = default!;
-    [Inject] IDoctorService _doctorService { get; set; } = default!;
-    [Inject] NavigationManager _navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    [Inject] IPatientService patientService { get; set; } = default!;
+    [Inject] IDoctorService doctorService { get; set; } = default!;
+    [Inject] NavigationManager navigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
-    private List<PatientDto> _patients { get; set; } = new();
+    private List<PatientDto> patients { get; set; } = new();
 
-    private string _selectedView = "Card";
+    private string selectedView = "Card";
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
 
     private string? firstNameFilter;
 
-    private UserRole? _userRole;
-    private string? _currentUserId;
+    private UserRole? userRole;
+    private string? currentUserId;
 
-    private PaginationState _paginationState = new();
+    private PaginationState paginationState = new();
 
-    private QuickGrid<PatientDto>? _quickGrid;
+    private QuickGrid<PatientDto>? quickGrid;
 
     private bool showWizard = false;
     void ShowImportWizard() => showWizard = true;
@@ -52,13 +52,13 @@ public partial class Patients : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _userRole = authState.User.GetUserRoleEnum();
-        _currentUserId = authState.User.GetUserId();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        userRole = authState.User.GetUserRoleEnum();
+        currentUserId = authState.User.GetUserId();
 
-        await LoadPatients(_currentUserId, _userRole);
+        await LoadPatients(currentUserId, userRole);
 
-        _paginationState.ItemsPerPage = _patients.Count();
+        paginationState.ItemsPerPage = patients.Count();
 
         hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin;
         hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin; 
@@ -79,10 +79,10 @@ public partial class Patients : BasePage
     {
         LoaderService.SetLoader(true);
 
-        _patients = userRole switch
+        patients = userRole switch
         {
-            UserRole.Doctor when doctorId is not null => (await _doctorService.GetMyPatientsAsync(doctorId)).ToList(),
-            _ => (await _patientService.GetAllPatientsAsync()).ToList()
+            UserRole.Doctor when doctorId is not null => (await doctorService.GetMyPatientsAsync(doctorId)).ToList(),
+            _ => (await patientService.GetAllPatientsAsync()).ToList()
         };
         await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
@@ -90,12 +90,12 @@ public partial class Patients : BasePage
 
     private void EditPatient(int id)
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/edit/{id}");
+        navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/edit/{id}");
     }
 
     private void CreatePatient()
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
+        navigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/create");
     }
 
     private async Task BulkCreatePatients((List<PatientCreateDto> patientForCreationDtos, bool UseValidation) result)
@@ -118,10 +118,10 @@ public partial class Patients : BasePage
                 }
             }
 
-            var response = await _patientService.AddPatientAsync(patient);
+            var response = await patientService.AddPatientAsync(patient);
             if (HandleServiceResponse(response)) continue;
         }
-        await LoadPatients(_currentUserId, _userRole);
+        await LoadPatients(currentUserId, userRole);
         LoaderService.SetLoader(false);
     }
 
@@ -136,7 +136,7 @@ public partial class Patients : BasePage
 
     private async Task OnConfirmDeleteAsync(int patientId)
     {
-        await _patientService.DeletePatientAsync(patientId);
-        await LoadPatients(_currentUserId, _userRole);
+        await patientService.DeletePatientAsync(patientId);
+        await LoadPatients(currentUserId, userRole);
     }
 }

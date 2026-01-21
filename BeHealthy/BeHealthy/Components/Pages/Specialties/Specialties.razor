@@ -11,11 +11,11 @@
     <CreateButton OnClick="CreateSpecialty" />
 </div>
 
-<UpsertModal @ref="_upsertModal"
+<UpsertModal @ref="upsertModal"
              HandleResponse="(async () => await HandleResponse())"
-             SpecialtyId="_specialtyId" />
+             SpecialtyId="specialtyId" />
 
-@if (_specialties is null || !_specialties.Any())
+@if (specialties is null || !specialties.Any())
 {
     <p>@string.Format(Resource.NotAvailable, Resource.Specialties)</p>
 }
@@ -26,10 +26,10 @@ else
             <div class="table-responsive">
                 <div class="card-body pb-2 px-0 m-0">
                     <QuickGrid Class="table rounded"
-                               Items="@_specialties.AsQueryable()"
+                               Items="@specialties.AsQueryable()"
                                ItemKey="@(x => x.Id)">
                         <PropertyColumn Title="#"
-                                        Property="@(x => _specialties.IndexOf(x))" />
+                                        Property="@(x => specialties.IndexOf(x))" />
                         <PropertyColumn Title="@Resource.Name"
                                         Property="@(x => x.Name)" />
                         <TemplateColumn Title="@Resource.Actions" Align="Align.End">
@@ -50,9 +50,9 @@ else
 }
 
 @code {
-    private List<SpecialtyDto> _specialties { get; set; } = default!;
-    private UpsertModal _upsertModal { get; set; } = new();
-    private int? _specialtyId;
+    private List<SpecialtyDto> specialties { get; set; } = default!;
+    private UpsertModal upsertModal { get; set; } = new();
+    private int? specialtyId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,7 +64,7 @@ else
     private async Task LoadSpecialties()
     {
         LoaderService.SetLoader(true);
-        _specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
+        specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
         await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
     }
@@ -80,14 +80,14 @@ else
 
     private void CreateSpecialty()
     {
-        _specialtyId = null;
-        _upsertModal.OpenModal();
+        specialtyId = null;
+        upsertModal.OpenModal();
     }
 
     private void EditSpecialty(int specialtyId)
     {
-        _specialtyId = specialtyId;
-        _upsertModal.OpenModal();
+        specialtyId = specialtyId;
+        upsertModal.OpenModal();
     }
 
     private void ConfirmDelete(int specialtyId)

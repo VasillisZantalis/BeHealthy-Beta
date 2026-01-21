@@ -19,29 +19,29 @@ namespace BeHealthy.Components.Pages.Appointments;
 
 public partial class Appointments : BasePage
 {
-    private List<AppointmentDto> _appointments = default!;
+    private List<AppointmentDto> appointments = default!;
 
-    [Inject] IAppointmentService _appointmentService { get; set; } = default!;
-    [Inject] IDoctorService _doctorService { get; set; } = default!;
-    [Inject] INurseService _nurseService { get; set; } = default!;
-    [Inject] IPatientService _patientService { get; set; } = default!;
-    [Inject] NavigationManager _navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    [Inject] IAppointmentService appointmentService { get; set; } = default!;
+    [Inject] IDoctorService doctorService { get; set; } = default!;
+    [Inject] INurseService nurseService { get; set; } = default!;
+    [Inject] IPatientService patientService { get; set; } = default!;
+    [Inject] NavigationManager navigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
-    private List<DoctorSimpleDto>? _doctors { get; set; }
-    private List<PatientSimpleDto>? _patients { get; set; }
+    private List<DoctorSimpleDto>? doctors { get; set; }
+    private List<PatientSimpleDto>? patients { get; set; }
 
-    private AppointmentModal _appointmentModal { get; set; } = new();
+    private AppointmentModal appointmentModal { get; set; } = new();
 
-    private string? _currentUserId;
+    private string? currentUserId;
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
-    private int? _appointmentId;
+    private int? appointmentId;
 
     private UserRole? userRole;
 
-    private PaginationState _paginationState = new();
+    private PaginationState paginationState = new();
 
     private bool showWizard = false;
     void ShowImportWizard() => showWizard = true;
@@ -56,8 +56,8 @@ public partial class Appointments : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _currentUserId = authState.User.GetUserId();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        currentUserId = authState.User.GetUserId();
 
         userRole = authState.User.GetUserRoleEnum();
 
@@ -70,28 +70,28 @@ public partial class Appointments : BasePage
         await LoadDoctors();
         await LoadPatients();
 
-        _paginationState.ItemsPerPage = _appointments.Count;
+        paginationState.ItemsPerPage = appointments.Count;
 
         LoaderService.SetLoader(false);
     }
 
     private async Task LoadAppointments()
     {
-        switch (userRole, _currentUserId)
+        switch (userRole, currentUserId)
         {
             case (UserRole.Doctor, not null):
-                _appointments = (await _doctorService.GetDoctorAppointmentsByUserIdAsync(_currentUserId)).ToList();
+                appointments = (await doctorService.GetDoctorAppointmentsByUserIdAsync(currentUserId)).ToList();
                 break;
 
             case (UserRole.Patient, not null):
-                _appointments = (await _patientService.GetPatientAppointmentsByUserIdAsync(_currentUserId)).ToList();
+                appointments = (await patientService.GetPatientAppointmentsByUserIdAsync(currentUserId)).ToList();
                 break;
 
             default:
-                _appointments = (await _appointmentService.GetAllAppointmentsAsync()).ToList();
+                appointments = (await appointmentService.GetAllAppointmentsAsync()).ToList();
                 break;
         }
-        _paginationState.ItemsPerPage = _appointments.Count;
+        paginationState.ItemsPerPage = appointments.Count;
         await InvokeAsync(StateHasChanged);
     }
 
@@ -107,7 +107,7 @@ public partial class Appointments : BasePage
     private async Task HandleAppointmentFormSubmission((AppointmentDto, int?) submission)
     {
         var (appointmentDto, appointmentId) = submission;
-        _appointmentModal.Close();
+        appointmentModal.Close();
 
         if (appointmentId is not null)
         {
@@ -125,23 +125,23 @@ public partial class Appointments : BasePage
 
     private async Task LoadDoctors()
     {
-        _doctors = (await _doctorService.GetAllDoctorsSimpleAsync()).ToList();
+        doctors = (await doctorService.GetAllDoctorsSimpleAsync()).ToList();
 
         if (userRole == UserRole.Doctor)
         {
-            _doctors = _doctors.Where(d => d.UserId.ToString() == _currentUserId).ToList();
+            doctors = doctors.Where(d => d.UserId.ToString() == currentUserId).ToList();
         }
     }
 
     private async Task LoadPatients()
     {
-        _patients = (await _patientService.GetAllPatientsSimpleAsync()).ToList();
+        patients = (await patientService.GetAllPatientsSimpleAsync()).ToList();
     }
 
     private void EditAppointment(int appointmentId)
     {
-        _appointmentId = appointmentId;
-        _appointmentModal.Open();
+        appointmentId = appointmentId;
+        appointmentModal.Open();
     }
 
     private void ConfirmDelete(int appointmentId)
@@ -155,7 +155,7 @@ public partial class Appointments : BasePage
 
     private async Task OnConfirmDeleteAsync(int appointmentId)
     {
-        await _appointmentService.DeleteAppointmentAsync(appointmentId);
+        await appointmentService.DeleteAppointmentAsync(appointmentId);
         await LoadAppointments();
     }
 
@@ -172,25 +172,25 @@ public partial class Appointments : BasePage
     private async Task<bool> GetPrivilege(UserRole role, PrivilegeName privilege)
     {
         return false;
-        //return await _privilegeService.HasPrivilegeAsync(role, privilege);
+        //return await privilegeService.HasPrivilegeAsync(role, privilege);
     }
 
     private async Task CreateAppointmentAsync(AppointmentCreateDto AppointmentCreateDto, bool fromBulkCreation = false)
     {
-        var response = await _appointmentService.AddAppointmentAsync(AppointmentCreateDto);
+        var response = await appointmentService.AddAppointmentAsync(AppointmentCreateDto);
         if (HandleServiceResponse(response))
         {
             if (!fromBulkCreation)
-                _navigationManager.Refresh(true);
+                navigationManager.Refresh(true);
         }
     }
 
     private async Task UpdateAppointmentAsync(AppointmentUpdateDto appointmentForUpdateDto)
     {
-        var response = await _appointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
+        var response = await appointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
 
         if (HandleServiceResponse(response))
-            _navigationManager.Refresh(true);
+            navigationManager.Refresh(true);
     }
 
     private async Task BulkCreateAppointments((List<AppointmentCreateDto> AppointmentCreateDtos, bool UseValidation) result)

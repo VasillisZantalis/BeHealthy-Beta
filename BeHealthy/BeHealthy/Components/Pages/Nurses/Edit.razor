@@ -10,49 +10,49 @@
 <PageTitle>@Resource.Edit</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="_NurseUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
+    <EditForm Model="NurseUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
 
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-            @if (_inProgress)
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+            @if (inProgress)
             {
                 <SmallLoader />
             }
             <span>@Resource.Save</span>
         </button>
 
-        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <FluentValidationValidator @ref="fluentValidationValidator" />
         <div class="row">
-            <Alert @ref="_alert" />
-            <ImagePreview ImageUrl="@_NurseUpdateDto.Image" />
+            <Alert @ref="alert" />
+            <ImagePreview ImageUrl="@NurseUpdateDto.Image" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => _NurseUpdateDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => NurseUpdateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_NurseUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="NurseUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => _NurseUpdateDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => NurseUpdateDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
 
-        <ImageUpload OnImageChanged="image => _NurseUpdateDto.Image = image" />
+        <ImageUpload OnImageChanged="image => NurseUpdateDto.Image = image" />
 
         <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="_NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <InputText id="phoneNumber" @bind-Value="NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => _NurseUpdateDto.PhoneNumber" class="text-danger" />
+            <ValidationMessage For="() => NurseUpdateDto.PhoneNumber" class="text-danger" />
         </div>
 
-        @if (_departments is not null && _departments.Any())
+        @if (departments is not null && departments.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_NurseUpdateDto.DepartmentId" class="form-control">
-                    @foreach (var department in _departmentsSelect)
+                <InputSelect id="Department" @bind-Value="NurseUpdateDto.DepartmentId" class="form-control">
+                    @foreach (var department in departmentsSelect)
                     {
                         <option value="@department.Value">@department.Text</option>
                     }
@@ -69,29 +69,29 @@
     public int NurseId { get; set; }
 
     [SupplyParameterFromForm]
-    private NurseUpdateDto _NurseUpdateDto { get; set; } = new();
+    private NurseUpdateDto NurseUpdateDto { get; set; } = new();
 
-    private List<DepartmentDto>? _departments { get; set; }
+    private List<DepartmentDto>? departments { get; set; }
 
-    private bool _inProgress = false;
-    private Alert _alert = new();
-    private FluentValidationValidator _fluentValidationValidator = new();
+    private bool inProgress = false;
+    private Alert alert = new();
+    private FluentValidationValidator fluentValidationValidator = new();
 
-    private List<SelectItem> _departmentsSelect = new List<SelectItem>();
+    private List<SelectItem> departmentsSelect = new List<SelectItem>();
 
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
 
-        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
 
-        _departmentsSelect = _departments.Select(s => new SelectItem
+        departmentsSelect = departments.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
 
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
         
         LoaderService.SetLoader(false);
     }
@@ -99,7 +99,7 @@
     protected override async Task OnParametersSetAsync()
     {
         var nurse = await NurseService.GetNurseByIdAsync(NurseId);
-        _NurseUpdateDto = nurse?.MapToUpdateDto() ?? new();
+        NurseUpdateDto = nurse?.MapToUpdateDto() ?? new();
 
         SetBreadcrumbs();
     }
@@ -121,25 +121,25 @@
         var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
         var buffer = new byte[resizeImage.Size];
         await resizeImage.OpenReadStream().ReadAsync(buffer);
-        _NurseUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        NurseUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
     }
 
     private async Task UpdateNurse()
     {
-        _inProgress = true;
+        inProgress = true;
 
-        if (!await _fluentValidationValidator.ValidateAsync())
+        if (!await fluentValidationValidator.ValidateAsync())
         {
-            _inProgress = false;
+            inProgress = false;
             return;
         }
 
-        var result = await NurseService.UpdateNurseAsync(_NurseUpdateDto);
-        _inProgress = false;
+        var result = await NurseService.UpdateNurseAsync(NurseUpdateDto);
+        inProgress = false;
 
         if (!result.Success)
         {
-            _alert.ShowFailed(result.ErrorMessage);
+            alert.ShowFailed(result.ErrorMessage);
         }
         else
         {

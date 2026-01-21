@@ -11,7 +11,7 @@
         <MassImportButton OnClick="ShowImportWizard" />
     </div>
     <div class="">
-        <InputSelect id="viewSelect" class="form-select" @bind-Value="_selectedView">
+        <InputSelect id="viewSelect" class="form-select" @bind-Value="selectedView">
             <option value="Card">@Resource.Card</option>
             <option value="Grid">@Resource.Grid</option>
         </InputSelect>
@@ -26,16 +26,16 @@
                       OnClose="HideImportWizard" />
 }
 
-@if (_patients is null || !_patients.Any())
+@if (patients is null || !patients.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Patients)</p>
 }
 else
 {
-    @if (_selectedView == "Card")
+    @if (selectedView == "Card")
     {
         <div class="row">
-            <Virtualize Items="@_patients.ToList()" Context="patient" ItemSize="100">
+            <Virtualize Items="@patients.ToList()" Context="patient" ItemSize="100">
                 <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                     <div class="mb-3">
                         <UserCard Id="@patient.Id"
@@ -52,13 +52,13 @@ else
             </Virtualize>
         </div>
     }
-    else if (_selectedView == "Grid")
+    else if (selectedView == "Grid")
     {
         <div class="patientsTableDiv mt-3">
             <div class="card">
                 <div class="card-header d-flex flex-row justify-content-end">
                     <div class="px-1">
-                        <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                        <InputSelect class="form-select form-select-sm" @bind-Value="paginationState.ItemsPerPage">
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="25">25</option>
@@ -69,11 +69,11 @@ else
                 </div>
                 <div class="table-responsive">
                     <div class="card-body pb-2 px-0 m-0">
-                        <QuickGrid @ref="_quickGrid"
+                        <QuickGrid @ref="quickGrid"
                                    Class="table table-responsive"
-                                   Items="@_patients.AsQueryable()"
+                                   Items="@patients.AsQueryable()"
                                    ItemKey="@(x => x.Id)"
-                                   Pagination="_paginationState">
+                                   Pagination="paginationState">
                             <TemplateColumn>
                                 <img class="rounded-circle" src="@(context.Image ?? "images/generic.jpg")" alt="@context.FullName" width="25" height="25" />
                             </TemplateColumn>
@@ -122,7 +122,7 @@ else
                     </div>
                 </div>
                 <div id="paginatorDiv" class="px-3">
-                    <Paginator State="_paginationState" />
+                    <Paginator State="paginationState" />
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@
 @inject AlertModalStateService AlertService
 @inject NavigationManager NavivationManager
 
-@if (_showModal)
+@if (showModal)
 {
     <div class="modal" tabindex="-1" role="dialog" style="display:block">
         <div class="modal-dialog" role="document">
@@ -31,7 +31,7 @@
 
 @code{
 
-    private bool _showModal { get; set; }
+    private bool showModal { get; set; }
 
     protected override void OnInitialized()
     {
@@ -41,13 +41,13 @@
 
     private void Show()
     {
-        _showModal = true;
+        showModal = true;
         StateHasChanged();
     }
 
     private void Hide()
     {
-        _showModal = false;
+        showModal = false;
         StateHasChanged();
 
         NavivationManager.NavigateTo(NavivationManager.Uri, forceLoad: true);

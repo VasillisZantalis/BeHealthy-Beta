@@ -15,82 +15,82 @@
 
 <BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
     <Body>
-        <EditForm Model="_DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
+        <EditForm Model="DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
 
-            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-                @if (_inProgress)
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+                @if (inProgress)
                 {
                     <SmallLoader />
                 }
                 <span>@Resource.Save</span>
             </button>
 
-            <ValidationComponent @ref="_validationComponent"/>
+            <ValidationComponent @ref="validationComponent"/>
 
-            <Alert @ref="_alert" />
+            <Alert @ref="alert" />
 
             <div class="d-flex flex-column gap-3 p-3">
                 <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal">
-                    <ImagePreview ImageUrl="@_DoctorCreateDto.Image" />
+                    <ImagePreview ImageUrl="@DoctorCreateDto.Image" />
                 </ImageUploadContainer>
 
                 <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
 
                     <InputText id="firstName" 
-                                @bind-Value="_DoctorCreateDto.FirstName" 
+                                @bind-Value="DoctorCreateDto.FirstName" 
                                 class="form-control"
                                 aria-required="true" />
 
-                    <ValidationMessage For="() => _DoctorCreateDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => DoctorCreateDto.FirstName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
                     <InputText id="lastName"
                                 class="form-control"
-                                @bind-Value="_DoctorCreateDto.LastName"
+                                @bind-Value="DoctorCreateDto.LastName"
                                 aria-required="true" />
-                    <ValidationMessage For="() => _DoctorCreateDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => DoctorCreateDto.LastName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
                         <InputText id="email"
                                     class="form-control"
-                                    @bind-Value="_DoctorCreateDto.Email"
+                                    @bind-Value="DoctorCreateDto.Email"
                                     aria-required="true" />
-                        <ValidationMessage For="() => _DoctorCreateDto.Email" class="text-danger" />
+                        <ValidationMessage For="() => DoctorCreateDto.Email" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
                     <InputText id="password"
                                 type="password"
                                 class="form-control"
-                                @bind-Value="_DoctorCreateDto.Password"
+                                @bind-Value="DoctorCreateDto.Password"
                                 aria-required="true" />
-                    <ValidationMessage For="() => _DoctorCreateDto.Password" class="text-danger" />
+                    <ValidationMessage For="() => DoctorCreateDto.Password" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
                     <InputText id="confirmPassword"
                                 type="password"
                                 class="form-control"
-                                @bind-Value="_DoctorCreateDto.ConfirmPassword"
+                                @bind-Value="DoctorCreateDto.ConfirmPassword"
                                 aria-required="true" />
-                    <ValidationMessage For="() => _DoctorCreateDto.ConfirmPassword" class="text-danger" />
+                    <ValidationMessage For="() => DoctorCreateDto.ConfirmPassword" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
                     <InputText id="phoneNumber"
                                 class="form-control"
-                                @bind-Value="_DoctorCreateDto.PhoneNumber"
+                                @bind-Value="DoctorCreateDto.PhoneNumber"
                                 aria-required="true" />
-                    <ValidationMessage For="() => _DoctorCreateDto.PhoneNumber" class="text-danger" />
+                    <ValidationMessage For="() => DoctorCreateDto.PhoneNumber" class="text-danger" />
                 </BeHealthyFormGroup>
              
-                @if (_departmentsSelect is not null && _departmentsSelect.Any())
+                @if (departmentsSelect is not null && departmentsSelect.Any())
                 {
                     <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
-                        <InputSelect id="department" @bind-Value="_DoctorCreateDto.DepartmentId" class="form-control">
-                            @foreach (var department in _departmentsSelect)
+                        <InputSelect id="department" @bind-Value="DoctorCreateDto.DepartmentId" class="form-control">
+                            @foreach (var department in departmentsSelect)
                             {
                                 <option value="@department.Value">@department.Text</option>
                             }
@@ -98,16 +98,16 @@
                     </BeHealthyFormGroup>
                 }
 
-                @if (_specialtiesSelect is not null && _specialtiesSelect.Any())
+                @if (specialtiesSelect is not null && specialtiesSelect.Any())
                 {
-                    <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="_doNotAllowDoctorWithoutSpecialty">
-                        <InputSelect id="specialty" @bind-Value="_DoctorCreateDto.SpecialtyId" class="form-control">
-                            @foreach (var specialty in _specialtiesSelect)
+                    <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="doNotAllowDoctorWithoutSpecialty">
+                        <InputSelect id="specialty" @bind-Value="DoctorCreateDto.SpecialtyId" class="form-control">
+                            @foreach (var specialty in specialtiesSelect)
                             {
                                 <option value="@specialty.Value">@specialty.Text</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For="() => _DoctorCreateDto.SpecialtyId" class="text-danger" />
+                        <ValidationMessage For="() => DoctorCreateDto.SpecialtyId" class="text-danger" />
                     </BeHealthyFormGroup>
                 }
             </div>
@@ -117,17 +117,17 @@
 @code {
 
     [SupplyParameterFromForm]
-    private DoctorCreateDto _DoctorCreateDto { get; set; } = new();
+    private DoctorCreateDto DoctorCreateDto { get; set; } = new();
 
-    private ValidationComponent? _validationComponent;
+    private ValidationComponent? validationComponent;
 
-    private bool _inProgress = false;
-    private bool _doNotAllowDoctorWithoutSpecialty = false;
+    private bool inProgress = false;
+    private bool doNotAllowDoctorWithoutSpecialty = false;
 
-    private Alert _alert = new();
+    private Alert alert = new();
 
-    private List<SelectItem>? _departmentsSelect = new();
-    private List<SelectItem>? _specialtiesSelect = new();
+    private List<SelectItem>? departmentsSelect = new();
+    private List<SelectItem>? specialtiesSelect = new();
 
     protected override void OnInitialized()
     {
@@ -141,21 +141,21 @@
         await GetSettings();
 
         var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
-        _departmentsSelect = departments.Select(s => new SelectItem
+        departmentsSelect = departments.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         var specialties = await SpecialtyService.GetSpecialtiesAsync();
 
-        _specialtiesSelect = specialties?.Select(s => new SelectItem
+        specialtiesSelect = specialties?.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        _specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         LoaderService.SetLoader(false);
     }
@@ -163,7 +163,7 @@
     private async Task GetSettings()
     {
         AppSetting? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
-        _doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
+        doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
     }
 
     private void SetBreadcrumbs()
@@ -191,33 +191,33 @@
 
     private void HandleImageUploaded(string imageData)
     {
-        _DoctorCreateDto.Image = imageData;
+        DoctorCreateDto.Image = imageData;
         StateHasChanged();
     }
 
     public async Task RegisterDoctor(EditContext editContext)
     {
-        _inProgress = true;
+        inProgress = true;
 
-        _validationComponent?.ClearErrors();
+        validationComponent?.ClearErrors();
 
-        var validator = new DoctorCreateDtoValidator(_doNotAllowDoctorWithoutSpecialty);
-        var validationResult = await validator.ValidateAsync(_DoctorCreateDto);
+        var validator = new DoctorCreateDtoValidator(doNotAllowDoctorWithoutSpecialty);
+        var validationResult = await validator.ValidateAsync(DoctorCreateDto);
 
         if (!validationResult.IsValid)
         {
             var errors = validationResult.GetErrorsGroupedByProperty();
-            _validationComponent?.DisplayErrors(errors);
-            _inProgress = false;
+            validationComponent?.DisplayErrors(errors);
+            inProgress = false;
             return;
         }
 
-        var doctorCreationResult = await DoctorService.AddDoctorAsync(_DoctorCreateDto);
-        _inProgress = false;
+        var doctorCreationResult = await DoctorService.AddDoctorAsync(DoctorCreateDto);
+        inProgress = false;
 
         if (!doctorCreationResult.Success)
         {
-            _alert.ShowFailed(Resource.SomethingWentWrong);
+            alert.ShowFailed(Resource.SomethingWentWrong);
         }
         else
         {

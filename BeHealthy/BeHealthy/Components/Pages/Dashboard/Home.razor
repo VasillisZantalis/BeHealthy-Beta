@@ -13,7 +13,7 @@
                 <TotalNurses />
                 <TotalPatients />
             </div>
-            @if (_isAdminUser)
+            @if (isAdminUser)
             {
                 <UserDistributionChart />
             }
@@ -22,7 +22,7 @@
         </div>
         <div class="col-12 col-xl-6">
             <Calendar />
-            @if (_isAdminUser)
+            @if (isAdminUser)
             {
                 <ReasonOfAppointmentsChart />
             }

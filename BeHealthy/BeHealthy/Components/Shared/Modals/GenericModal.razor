@@ -1,4 +1,4 @@
-﻿@if (_showModal)
+﻿@if (showModal)
 {
     <div class="modal" tabindex="-1" style="display:block">
         <div class="modal-dialog">
@@ -33,15 +33,15 @@
     [Parameter]
     public string? ActionButtonText { get; set; } = Resource.OK;
 
-    private bool _showModal;
+    private bool showModal;
 
     protected override void OnParametersSet()
     {
     }
 
-    public void OpenModal() => _showModal = true;
+    public void OpenModal() => showModal = true;
 
-    public void CloseModal() => _showModal = false;
+    public void CloseModal() => showModal = false;
 
     private void SaveAndClose()
     {

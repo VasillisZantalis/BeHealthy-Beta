@@ -1,8 +1,8 @@
-﻿@if (_showAlert)
+﻿@if (showAlert)
 {
-    <div class="alert alert-@_severity.ToString().ToLower() alert-dismissible fade show" role="alert">
+    <div class="alert alert-@severity.ToString().ToLower() alert-dismissible fade show" role="alert">
         <div class="d-flex flex-row gap-2">
-            <span class="fs-5 @_icon text-@_severity.ToString().ToLower()"></span>
+            <span class="fs-5 @icon text-@severity.ToString().ToLower()"></span>
             <span class="fw-bold">@Message</span>
             @if (ShowCloseButton)
             {
@@ -19,50 +19,50 @@
     [Parameter]
     public bool ShowCloseButton { get; set; } = true;
 
-    private Severity _severity { get; set; }
+    private Severity severity { get; set; }
 
-    private bool _showAlert = false;
+    private bool showAlert = false;
 
-    private string? _icon;
+    private string? icon;
 
     private void CloseAlert()
     {
-        _showAlert = false;
+        showAlert = false;
         StateHasChanged();
     }
 
     public void ShowFailed(string? message)
     {
-        _showAlert = true;
-        _severity = Severity.Danger;
-        _icon = FAIcon.CircleXmark;
+        showAlert = true;
+        severity = Severity.Danger;
+        icon = FAIcon.CircleXmark;
         Message = message ?? Resource.SomethingWentWrong;
         StateHasChanged();
     }
 
     public void ShowSuccess(string? message)
     {
-        _showAlert = true;
-        _severity = Severity.Success;
-        _icon = FAIcon.CircleCheck;
+        showAlert = true;
+        severity = Severity.Success;
+        icon = FAIcon.CircleCheck;
         Message = message ?? Resource.Success;
         StateHasChanged();
     }
 
     public void ShowInfo(string message)
     {
-        _showAlert = true;
-        _severity = Severity.Info;
-        _icon = FAIcon.CircleInfo;
+        showAlert = true;
+        severity = Severity.Info;
+        icon = FAIcon.CircleInfo;
         Message = message;
         StateHasChanged();
     }
 
     public void ShowWarning(string message)
     {
-        _showAlert = true;
-        _severity = Severity.Warning;
-        _icon = FAIcon.TriangleExclamation;
+        showAlert = true;
+        severity = Severity.Warning;
+        icon = FAIcon.TriangleExclamation;
         Message = message;
         StateHasChanged();
     }

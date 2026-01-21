@@ -10,10 +10,10 @@
 
 <CreateButton OnClick="CreateRoom" />
 
-<UpsertModal @ref="_roomUpsertModal"
-             RoomId="_roomId" />
+<UpsertModal @ref="roomUpsertModal"
+             RoomId="roomId" />
 
-@if (_rooms is null || !_rooms.Any())
+@if (rooms is null || !rooms.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Rooms)</p>
 }
@@ -23,7 +23,7 @@ else
         <div class="card">
             <div class="card-header d-flex flex-row justify-content-end">
                 <div class="px-1">
-                    <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                    <InputSelect class="form-select form-select-sm" @bind-Value="paginationState.ItemsPerPage">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="25">25</option>
@@ -35,9 +35,9 @@ else
             <div class="table-responsive">
                 <div class="card-body pb-2 px-0 m-0">
                     <QuickGrid Class="table rounded"
-                                Items="@_rooms.AsQueryable()"
+                                Items="@rooms.AsQueryable()"
                                 ItemKey="@(x => x.Id)"
-                    Pagination="_paginationState">
+                    Pagination="paginationState">
                         <PropertyColumn Title="@Resource.Name"
                                         Property="@(x => x.Name)" 
                                         Sortable="true"/>
@@ -62,18 +62,18 @@ else
 
             </div>
             <div id="paginatorDiv" class="px-3">
-                <Paginator State="_paginationState" />
+                <Paginator State="paginationState" />
             </div>
         </div>
     </div>
 }
 
 @code {
-    private IEnumerable<RoomDto> _rooms = default!;
+    private IEnumerable<RoomDto> rooms = default!;
 
-    private PaginationState _paginationState = new();
-    private int? _roomId;
-    private UpsertModal _roomUpsertModal = new();
+    private PaginationState paginationState = new();
+    private int? roomId;
+    private UpsertModal roomUpsertModal = new();
 
     protected override void OnInitialized()
     {
@@ -84,8 +84,8 @@ else
     {
         LoaderService.SetLoader(true);
 
-        _rooms = await RoomService.GetAllRoomsAsync();
-        _paginationState.ItemsPerPage = _rooms.Count();
+        rooms = await RoomService.GetAllRoomsAsync();
+        paginationState.ItemsPerPage = rooms.Count();
 
         LoaderService.SetLoader(false);
     }
@@ -101,14 +101,14 @@ else
 
     private void CreateRoom()
     {
-        _roomId = null;
-        _roomUpsertModal.OpenModal();
+        roomId = null;
+        roomUpsertModal.OpenModal();
     }
 
     private void EditRoom(int roomId)
     {
-        _roomId = roomId;
-        _roomUpsertModal.OpenModal();
+        roomId = roomId;
+        roomUpsertModal.OpenModal();
     }
 
     public async Task DeleteRoom(int roomId)

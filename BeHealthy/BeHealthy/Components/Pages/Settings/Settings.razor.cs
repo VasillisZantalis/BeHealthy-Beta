@@ -11,16 +11,16 @@ namespace BeHealthy.Components.Pages.Settings;
 
 public partial class Settings : BasePage
 {
-    private List<AppSetting> _settings = default!;
+    private List<AppSetting> settings = default!;
 
-    private IEnumerable<IGrouping<SettingGroup, AppSetting>>? _settingsGroupedByArea;
+    private IEnumerable<IGrouping<SettingGroup, AppSetting>>? settingsGroupedByArea;
 
     [Inject]
     IAppSettingsService AppSettingsService { get; set; } = default!;
     [Inject]
-    private IDoctorService _doctorService { get; set; } = default!;
+    private IDoctorService doctorService { get; set; } = default!;
 
-    private List<SelectItem> _doctorsSelect = new();
+    private List<SelectItem> doctorsSelect = new();
 
     protected override void OnInitialized()
     {
@@ -31,22 +31,22 @@ public partial class Settings : BasePage
     {
         LoaderService.SetLoader(true);
 
-        _settings = (await AppSettingsService.GetAppSettingsAsync()).ToList();
-        _settingsGroupedByArea = _settings
+        settings = (await AppSettingsService.GetAppSettingsAsync()).ToList();
+        settingsGroupedByArea = settings
             .OrderBy(o => o.Group)
             .ThenBy(o => o.Key)
             .GroupBy(s => s.Group);
 
-        if (_settings.Any(s => s.Key == "DefaultDepartmentSupervison"))
+        if (settings.Any(s => s.Key == "DefaultDepartmentSupervison"))
         {
-            var doctors = (await _doctorService.GetAllDoctorsSimpleAsync()).ToList();
+            var doctors = (await doctorService.GetAllDoctorsSimpleAsync()).ToList();
 
-            _doctorsSelect = doctors.Select(s => new SelectItem
+            doctorsSelect = doctors.Select(s => new SelectItem
             {
                 Value = s.Id,
                 Text = s.FullName
             }).ToList();
-            _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+            doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
         }
 
 

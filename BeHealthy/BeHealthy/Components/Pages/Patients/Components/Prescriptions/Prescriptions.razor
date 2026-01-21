@@ -11,15 +11,15 @@
         <CreateButton OnClick="CreatePrescription" />
     }
 
-    <PrescriptionModal @ref="_prescriptionModal"
+    <PrescriptionModal @ref="prescriptionModal"
                        Successful="HandleResponse"
-                       PrescriptionId="_prescriptionId" />
+                       PrescriptionId="prescriptionId" />
 
-    @if (_prescriptions is not null && _prescriptions.Any())
+    @if (prescriptions is not null && prescriptions.Any())
     {
         <QuickGrid @ref="quickGrid"
         Class="table table-responsive"
-        Items="@_prescriptions.AsQueryable()"
+        Items="@prescriptions.AsQueryable()"
         ItemKey="@(x => x.Id)">
             <PropertyColumn Title="@Resource.Medication"
             Property="@(x => x.Medication)" />
@@ -78,16 +78,16 @@
     [Parameter, EditorRequired]
     public bool CanCreatePrescription { get; set; }
 
-    private List<PrescriptionDto> _prescriptions { get; set; } = default!;
+    private List<PrescriptionDto> prescriptions { get; set; } = default!;
 
 
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
 
-    private int? _prescriptionId;
+    private int? prescriptionId;
 
-    private PrescriptionModal _prescriptionModal { get; set; } = new();
+    private PrescriptionModal prescriptionModal { get; set; } = new();
     private QuickGrid<PrescriptionDto> quickGrid = new();
 
     protected override async Task OnInitializedAsync()
@@ -96,21 +96,21 @@
 
         //hasActionRights = hasEditRight || hasDeleteRight;
 
-        _prescriptions = (await PrescriptionService.GetPrescriptionsByPatientIdAsync(PatientId)).ToList();
+        prescriptions = (await PrescriptionService.GetPrescriptionsByPatientIdAsync(PatientId)).ToList();
 
         LoaderService.SetLoader(false);
     }
 
     private void CreatePrescription()
     {
-        _prescriptionId = null;
-        _prescriptionModal.OpenModal();
+        prescriptionId = null;
+        prescriptionModal.OpenModal();
     }
 
     private void EditPrescription(int prescriptionId)
     {
-        _prescriptionId = prescriptionId;
-        _prescriptionModal.OpenModal();
+        prescriptionId = prescriptionId;
+        prescriptionModal.OpenModal();
     }
 
     private async Task DeletePrescription(int prescriptionId)
@@ -119,10 +119,10 @@
 
         if (response.Success)
         {
-            var deletedPrescription = _prescriptions.FirstOrDefault(p => p.Id == prescriptionId);
+            var deletedPrescription = prescriptions.FirstOrDefault(p => p.Id == prescriptionId);
             if (deletedPrescription != null)
             {
-                _prescriptions.Remove(deletedPrescription);
+                prescriptions.Remove(deletedPrescription);
             }
 
             ToastService.ShowToast(Resource.Success, "success");

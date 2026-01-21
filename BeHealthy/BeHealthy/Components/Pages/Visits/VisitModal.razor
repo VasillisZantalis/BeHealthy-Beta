@@ -6,7 +6,7 @@
 @inject IPatientService PatientService
 @inject NavigationManager NavigationManager
 
-@if (_showModal)
+@if (showModal)
 {
     <div class="modal fade show" tabindex="-1" style="display: block;">
         <div class="modal-dialog">
@@ -16,21 +16,21 @@
                     <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <EditForm Model="_visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit" Enhance>
-                        <ValidationComponent @ref="_validationComponent" />
+                    <EditForm Model="visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit" Enhance>
+                        <ValidationComponent @ref="validationComponent" />
                         <div class="d-flex flex-column gap-2">
                             <div class="form-group">
                                 <label for="reason" class="form-label fw-bold required">@Resource.Reason</label>
-                                <InputText id="reason" @bind-Value="_visitDto.Reason" class="form-control" />
+                                <InputText id="reason" @bind-Value="visitDto.Reason" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label for="notes" class="form-label fw-bold">@Resource.Notes</label>
-                                <InputText id="notes" @bind-Value="_visitDto.Notes" class="form-control" />
+                                <InputText id="notes" @bind-Value="visitDto.Notes" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label for="doctor" class="form-label fw-bold required">@Resource.Doctor</label>
-                                <InputSelect id="doctor" class="form-select" @bind-Value="_visitDto.Doctor.Id">
-                                    @foreach (var doctor in _doctorsSelect)
+                                <InputSelect id="doctor" class="form-select" @bind-Value="visitDto.Doctor.Id">
+                                    @foreach (var doctor in doctorsSelect)
                                     {
                                         <option value="@doctor.Value">@doctor.Text</option>
                                     }
@@ -56,57 +56,57 @@
     public int PatientId { get; set; }
 
     [SupplyParameterFromForm]
-    private VisitDto _visitDto { get; set; } = new();
-    private ValidationComponent? _validationComponent;
+    private VisitDto visitDto { get; set; } = new();
+    private ValidationComponent? validationComponent;
 
-    private int? _visitId { get; set; }
-    private bool _showModal { get; set; }
-    private bool _isEditMode => _visitId.HasValue;
-    private List<SelectItem> _doctorsSelect = new();
-    private List<SelectItem> _patientsSelect = new();
+    private int? visitId { get; set; }
+    private bool showModal { get; set; }
+    private bool isEditMode => visitId.HasValue;
+    private List<SelectItem> doctorsSelect = new();
+    private List<SelectItem> patientsSelect = new();
 
-    private string ModalTitle => _isEditMode ? Resource.Edit : Resource.Create;
+    private string ModalTitle => isEditMode ? Resource.Edit : Resource.Create;
 
     protected override async Task OnInitializedAsync()
     {
-        _doctorsSelect = (await DoctorService.GetAllDoctorsAsync())
+        doctorsSelect = (await DoctorService.GetAllDoctorsAsync())
             .Select(d => new SelectItem { Value = d.Id, Text = d.FullName })
             .ToList();
 
-        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     protected override void OnParametersSet()
     {
-        _visitDto.Patient.Id = PatientId;
-        _visitDto.VisitDate = DateTime.UtcNow;
-        _visitDto.MedicalRecordId = MedicalRecordId;
+        visitDto.Patient.Id = PatientId;
+        visitDto.VisitDate = DateTime.UtcNow;
+        visitDto.MedicalRecordId = MedicalRecordId;
     }
 
     private void Close()
     {
-        _showModal = false;
-        _visitId = null;
+        showModal = false;
+        visitId = null;
         StateHasChanged();
         NavigationManager.Refresh(true);
     }
 
     public void Show(int? visitId = null)
     {
-        _visitId = visitId;
-        _showModal = true;
+        visitId = visitId;
+        showModal = true;
         StateHasChanged();
     }
 
     private async Task SaveVisit()
     {
-        _validationComponent?.ClearErrors();
+        validationComponent?.ClearErrors();
 
         ServiceResponse response;
 
-        if (_isEditMode)
+        if (isEditMode)
         {
-            var visitUpdateDto = _visitDto.MapToUpdateDto();
+            var visitUpdateDto = visitDto.MapToUpdateDto();
 
             var validator = new VisitUpdateDtoValidator();
             var validationResult = validator.Validate(visitUpdateDto);
@@ -122,7 +122,7 @@
         }
         else
         {
-            var visitCreateDto = _visitDto.MapToCreateDto();
+            var visitCreateDto = visitDto.MapToCreateDto();
 
             var validator = new VisitCreateDtoValidator();
             var validationResult = validator.Validate(visitCreateDto);
@@ -145,5 +145,5 @@
     }
 
     private void HandleValidationErrors(Dictionary<string, List<string>> errors) 
-        => _validationComponent?.DisplayErrors(errors);
+        => validationComponent?.DisplayErrors(errors);
 }

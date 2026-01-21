@@ -52,11 +52,11 @@
         @if (Entity != ImportEntity.Appointment)
         {
             <label class="form-label">
-                <InputCheckbox @bind-Value="_useValidation" class="form-check-input" id="useValidation" />
+                <InputCheckbox @bind-Value="useValidation" class="form-check-input" id="useValidation" />
                 @Resource.UseValidation
             </label>
 
-            @if (_useValidation)
+            @if (useValidation)
             {
                 <div class="alert alert-warning" role="alert">
                     @Resource.DisabledValidationMessage
@@ -73,10 +73,10 @@
     private List<FieldDefinition> FieldDefinitions = [];
     private List<Dictionary<string, object>> Rows = new();
 
-    private List<SelectItem> _doctorsSelect = new();
-    private List<SelectItem> _patientsSelect = new();
-    private List<SelectItem> _departmentsSelect = new();
-    private bool _useValidation;
+    private List<SelectItem> doctorsSelect = new();
+    private List<SelectItem> patientsSelect = new();
+    private List<SelectItem> departmentsSelect = new();
+    private bool useValidation;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,16 +90,16 @@
         var patients = await patientsTask;
         var departments = await departmentsTask;
 
-        _doctorsSelect = doctors.Select(d => new SelectItem { Value = d.Id, Text = d.FullName }).ToList();
-        _doctorsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+        doctorsSelect = doctors.Select(d => new SelectItem { Value = d.Id, Text = d.FullName }).ToList();
+        doctorsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
-        _patientsSelect = patients.Select(p => new SelectItem { Value = p.Id, Text = p.FullName }).ToList();
-        _patientsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+        patientsSelect = patients.Select(p => new SelectItem { Value = p.Id, Text = p.FullName }).ToList();
+        patientsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
-        _departmentsSelect = departments.Select(d => new SelectItem { Value = d.Id, Text = d.Name }).ToList();
-        _departmentsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+        departmentsSelect = departments.Select(d => new SelectItem { Value = d.Id, Text = d.Name }).ToList();
+        departmentsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
-        FieldDefinitions = FieldMapper.GetFields(Entity, _doctorsSelect, _departmentsSelect, _patientsSelect);
+        FieldDefinitions = FieldMapper.GetFields(Entity, doctorsSelect, departmentsSelect, patientsSelect);
         AddRow();
     }
 
@@ -161,7 +161,7 @@
 
         if (!doctors.Any() || doctors is null) return;
 
-        await OnSave.InvokeAsync((doctors.Cast<TEntity>().ToList(), _useValidation));
+        await OnSave.InvokeAsync((doctors.Cast<TEntity>().ToList(), useValidation));
 
         Close();
     }
@@ -180,7 +180,7 @@
 
         if (!patients.Any() || patients is null) return;
 
-        await OnSave.InvokeAsync((patients.Cast<TEntity>().ToList(), _useValidation));
+        await OnSave.InvokeAsync((patients.Cast<TEntity>().ToList(), useValidation));
 
         Close();
     }
@@ -199,7 +199,7 @@
 
         if (!nurses.Any() || nurses is null) return;
 
-        await OnSave.InvokeAsync((nurses.Cast<TEntity>().ToList(), _useValidation));
+        await OnSave.InvokeAsync((nurses.Cast<TEntity>().ToList(), useValidation));
 
         Close();
     }
@@ -220,7 +220,7 @@
 
         if (!appointments.Any() || appointments is null) return;
 
-        await OnSave.InvokeAsync((appointments.Cast<TEntity>().ToList(), _useValidation));
+        await OnSave.InvokeAsync((appointments.Cast<TEntity>().ToList(), useValidation));
 
         Close();
     }

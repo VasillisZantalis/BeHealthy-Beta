@@ -17,21 +17,21 @@ namespace BeHealthy.Components.Pages.Doctors;
 
 public partial class Doctors : BasePage
 {
-    [Inject] IDoctorService _doctorService { get; set; } = default!;
-    [Inject] IPatientService _patientsService { get; set; } = default!;
-    [Inject] ISpecialtyService _specialtyService { get; set; } = default!;
-    [Inject] NavigationManager _navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    [Inject] IDoctorService doctorService { get; set; } = default!;
+    [Inject] IPatientService patientsService { get; set; } = default!;
+    [Inject] ISpecialtyService specialtyService { get; set; } = default!;
+    [Inject] NavigationManager navigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
-    private List<DoctorDto> _doctors = new();
+    private List<DoctorDto> doctors = new();
     private DoctorQueryParameters QueryParameters { get; set; } = new();
     private List<SelectItem> specialties = new();
-    private HashSet<int> _selectedDoctorIds = new();
+    private HashSet<int> selectedDoctorIds = new();
 
-    private string _selectedView = "Grid";
+    private string selectedView = "Grid";
     private bool hasActionRights;
-    private UserRole? _userRole;
-    private string? _currentUserId;
+    private UserRole? userRole;
+    private string? currentUserId;
 
     protected override void OnInitialized()
     {
@@ -42,21 +42,21 @@ public partial class Doctors : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _userRole = authState.User.GetUserRoleEnum();
-        _currentUserId = authState.User.GetUserId();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        userRole = authState.User.GetUserRoleEnum();
+        currentUserId = authState.User.GetUserId();
 
-        await LoadDoctors(_currentUserId, _userRole);
+        await LoadDoctors(currentUserId, userRole);
         await LoadSpecialties();
 
-        hasActionRights = _userRole == UserRole.Admin;
+        hasActionRights = userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
     }
 
     private async Task LoadSpecialties()
     {
-        var data = await _specialtyService.GetSpecialtiesAsync();
+        var data = await specialtyService.GetSpecialtiesAsync();
 
         specialties = data.Select(s => new SelectItem
         {
@@ -68,13 +68,13 @@ public partial class Doctors : BasePage
     private async Task HandleSearch(string term)
     {
         QueryParameters.SearchTerm = term;
-        await LoadDoctors(_currentUserId, _userRole);
+        await LoadDoctors(currentUserId, userRole);
     }
 
     private async Task HandleSpecialtyFilter(int? specialtyId)
     {
         QueryParameters.SpecialtyId = specialtyId;
-        await LoadDoctors(_currentUserId, _userRole);
+        await LoadDoctors(currentUserId, userRole);
     }
 
     private async Task HandleClearFilters()
@@ -84,7 +84,7 @@ public partial class Doctors : BasePage
 
         QueryParameters.SearchTerm = "";
         QueryParameters.SpecialtyId = null;
-        await LoadDoctors(_currentUserId, _userRole);
+        await LoadDoctors(currentUserId, userRole);
     }
 
     private void SetBreadcrumbs()
@@ -100,14 +100,14 @@ public partial class Doctors : BasePage
     {
         LoaderService.SetLoader(true);
 
-        _doctors = userRole switch
+        doctors = userRole switch
         {
-            UserRole.Patient when userId is not null => (await _patientsService.GetMyDoctorsAsync(userId)).ToList(),
-            _ => (await _doctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
+            UserRole.Patient when userId is not null => (await patientsService.GetMyDoctorsAsync(userId)).ToList(),
+            _ => (await doctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
         };
 
         // Clear selection if doctors were reloaded
-        _selectedDoctorIds.Clear();
+        selectedDoctorIds.Clear();
 
         await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
@@ -115,24 +115,24 @@ public partial class Doctors : BasePage
 
     private void ToggleDoctorSelection(int doctorId)
     {
-        if (_selectedDoctorIds.Contains(doctorId))
+        if (selectedDoctorIds.Contains(doctorId))
         {
-            _selectedDoctorIds.Remove(doctorId);
+            selectedDoctorIds.Remove(doctorId);
         }
         else
         {
-            _selectedDoctorIds.Add(doctorId);
+            selectedDoctorIds.Add(doctorId);
         }
     }
 
     private void EditDoctor(int id)
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{id}");
+        navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{id}");
     }
 
     private void CreateDoctor()
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
+        navigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
     private async Task BulkCreateDoctors((List<DoctorCreateDto> doctorCreateDtos, bool UseValidation) result)
@@ -155,10 +155,10 @@ public partial class Doctors : BasePage
                 }
             }
 
-            var response = await _doctorService.AddDoctorAsync(doctor);
+            var response = await doctorService.AddDoctorAsync(doctor);
             if (HandleServiceResponse(response)) continue;
         }
-        await LoadDoctors(_currentUserId, _userRole);
+        await LoadDoctors(currentUserId, userRole);
         LoaderService.SetLoader(false);
     }
 
@@ -179,7 +179,7 @@ public partial class Doctors : BasePage
 
     private void ConfirmBulkDelete()
     {
-        ConfirmDelete(_selectedDoctorIds.ToList());
+        ConfirmDelete(selectedDoctorIds.ToList());
     }
 
     private void ConfirmDelete(IEnumerable<int> doctorIds)
@@ -199,11 +199,11 @@ public partial class Doctors : BasePage
 
         foreach (var doctorId in doctorIds)
         {
-            await _doctorService.DeleteDoctorAsync(doctorId);
+            await doctorService.DeleteDoctorAsync(doctorId);
         }
 
-        _selectedDoctorIds.Clear();
-        await LoadDoctors(_currentUserId, _userRole);
+        selectedDoctorIds.Clear();
+        await LoadDoctors(currentUserId, userRole);
 
         LoaderService.SetLoader(false);
     }

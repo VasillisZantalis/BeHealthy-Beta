@@ -11,62 +11,62 @@
 <PageTitle>@Resource.Create</PageTitle>
 
 <div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="_PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
+    <EditForm Model="PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
 
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@_inProgress">
-            @if (_inProgress)
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+            @if (inProgress)
             {
                 <SmallLoader />
             }
             <span>@Resource.Save</span>
         </button>
 
-        <FluentValidationValidator @ref="_fluentValidationValidator" />
+        <FluentValidationValidator @ref="fluentValidationValidator" />
         <div class="row">
-            <Alert @ref="_alert" />
-            <ImagePreview ImageUrl="@_PatientCreateDto.Image" />
+            <Alert @ref="alert" />
+            <ImagePreview ImageUrl="@PatientCreateDto.Image" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_PatientCreateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="PatientCreateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => _PatientCreateDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => PatientCreateDto.FirstName" class="text-danger" />
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_PatientCreateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="PatientCreateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => _PatientCreateDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => PatientCreateDto.LastName" class="text-danger" />
                 </div>
             </div>
         </div>
-        <ImageUpload OnImageChanged="image => _PatientCreateDto.Image = image" />
+        <ImageUpload OnImageChanged="image => PatientCreateDto.Image = image" />
         <div class="form-floating mb-3">
-            <InputText @bind-Value="_PatientCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
+            <InputText @bind-Value="PatientCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
             <label for="email">@Resource.Email</label>
-            <ValidationMessage For="() => _PatientCreateDto.Email" class="text-danger" />
+            <ValidationMessage For="() => PatientCreateDto.Email" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="_PatientCreateDto.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
+            <InputText type="password" @bind-Value="PatientCreateDto.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
             <label for="password">@Resource.Password</label>
-            <ValidationMessage For="() => _PatientCreateDto.Password" class="text-danger" />
+            <ValidationMessage For="() => PatientCreateDto.Password" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="_PatientCreateDto.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
+            <InputText type="password" @bind-Value="PatientCreateDto.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
             <label for="confirmPassword">@Resource.ConfirmPassword</label>
-            <ValidationMessage For="() => _PatientCreateDto.ConfirmPassword" class="text-danger" />
+            <ValidationMessage For="() => PatientCreateDto.ConfirmPassword" class="text-danger" />
         </div>
         <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="_PatientCreateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+            <InputText id="phoneNumber" @bind-Value="PatientCreateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
             <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => _PatientCreateDto.PhoneNumber" class="text-danger" />
+            <ValidationMessage For="() => PatientCreateDto.PhoneNumber" class="text-danger" />
         </div>
 
-        @if (_departments is not null && _departments.Any())
+        @if (departments is not null && departments.Any())
         {
             <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="_PatientCreateDto.DepartmentId" class="form-control">
-                    @foreach (var department in _departmentsSelect)
+                <InputSelect id="Department" @bind-Value="PatientCreateDto.DepartmentId" class="form-control">
+                    @foreach (var department in departmentsSelect)
                     {
                         <option value="@department.Value">@department.Text</option>
                     }
@@ -80,14 +80,14 @@
 @code {
 
     [SupplyParameterFromForm]
-    private PatientCreateDto _PatientCreateDto { get; set; } = new();
-    private bool _inProgress = false;
-    private List<DepartmentDto>? _departments { get; set; }
+    private PatientCreateDto PatientCreateDto { get; set; } = new();
+    private bool inProgress = false;
+    private List<DepartmentDto>? departments { get; set; }
 
-    private Alert _alert = new();
-    private FluentValidationValidator _fluentValidationValidator = new();
+    private Alert alert = new();
+    private FluentValidationValidator fluentValidationValidator = new();
 
-    private List<SelectItem> _departmentsSelect = new List<SelectItem>();
+    private List<SelectItem> departmentsSelect = new List<SelectItem>();
 
     protected override void OnInitialized()
     {
@@ -98,13 +98,13 @@
     {
         LoaderService.SetLoader(true);
 
-        _departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
-        _departmentsSelect = _departments.Select(s => new SelectItem
+        departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        departmentsSelect = departments.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        _departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         LoaderService.SetLoader(false);
     }
@@ -121,20 +121,20 @@
 
     public async Task RegisterPatient(EditContext editContext)
     {
-        _inProgress = true;
+        inProgress = true;
 
-        if (!await _fluentValidationValidator.ValidateAsync())
+        if (!await fluentValidationValidator.ValidateAsync())
         {
-            _inProgress = false;
+            inProgress = false;
             return;
         }
 
-        var patientCreationResult = await PatientService.AddPatientAsync(_PatientCreateDto);
-        _inProgress = false;
+        var patientCreationResult = await PatientService.AddPatientAsync(PatientCreateDto);
+        inProgress = false;
 
         if (!patientCreationResult.Success)
         {
-            _alert.ShowFailed(patientCreationResult.ErrorMessage);
+            alert.ShowFailed(patientCreationResult.ErrorMessage);
             return;
         }
         else

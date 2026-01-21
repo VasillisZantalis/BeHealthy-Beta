@@ -2,7 +2,7 @@
 @inject IPrescriptionService PrescriptionService
 @inject NavigationManager NavigationManager
 
-@if (_showModal)
+@if (showModal)
 {
     <div class="modal fade show" tabindex="-1" style="display: block;">
         <div class="modal-dialog">
@@ -12,34 +12,34 @@
                     <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
-                    <EditForm Model="_prescriptionDto" FormName="PrescriptionForm" OnValidSubmit="SavePrescription">
+                    <EditForm Model="prescriptionDto" FormName="PrescriptionForm" OnValidSubmit="SavePrescription">
                         <DataAnnotationsValidator />
 
                         <div class="d-flex flex-column gap-3">
                             <div class="form">
                                 <label class="fw-bold" for="medication">@Resource.Medication</label>
-                                <InputText id="medication" class="form-control" @bind-Value="_prescriptionDto.Medication" />
-                                <ValidationMessage For="@(() => _prescriptionDto.Medication)" />
+                                <InputText id="medication" class="form-control" @bind-Value="prescriptionDto.Medication" />
+                                <ValidationMessage For="@(() => prescriptionDto.Medication)" />
                             </div>
                             <div class="form">
                                 <label class="fw-bold" for="dosage">@Resource.Dosage</label>
-                                <InputText id="dosage" class="form-control" @bind-Value="_prescriptionDto.Dosage" />
-                                <ValidationMessage For="@(() => _prescriptionDto.Dosage)" />
+                                <InputText id="dosage" class="form-control" @bind-Value="prescriptionDto.Dosage" />
+                                <ValidationMessage For="@(() => prescriptionDto.Dosage)" />
                             </div>
                             <div class="form">
                                 <label class="fw-bold" for="datePrescribed">@Resource.DatePrescribed</label>
-                                <InputDate id="datePrescribed" class="form-control" @bind-Value="_prescriptionDto.DatePrescribed" disabled="@_lockDatePrescribed" />
-                                <ValidationMessage For="@(() => _prescriptionDto.DatePrescribed)" />
+                                <InputDate id="datePrescribed" class="form-control" @bind-Value="prescriptionDto.DatePrescribed" disabled="@lockDatePrescribed" />
+                                <ValidationMessage For="@(() => prescriptionDto.DatePrescribed)" />
                             </div>
                             <div class="">
                                 <label class="fw-bold" for="doctorIdSelect">@Resource.Doctor</label>
-                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_prescriptionDto.DoctorId" disabled="@_lockDoctorsDropdown">
-                                    @foreach (var doctor in _doctorsSelect)
+                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="prescriptionDto.DoctorId" disabled="@lockDoctorsDropdown">
+                                    @foreach (var doctor in doctorsSelect)
                                     {
                                         <option value="@doctor.Value">@doctor.Text</option>
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="@(() => _prescriptionDto.DoctorId)" />
+                                <ValidationMessage For="@(() => prescriptionDto.DoctorId)" />
                             </div>
                         </div>
                         <div class="d-flex flex-row justify-content-end m-3 gap-2">
@@ -61,82 +61,82 @@
     public EventCallback<bool> Successful { get; set; }
 
     [SupplyParameterFromForm]
-    private PrescriptionDto _prescriptionDto { get; set; } = new();
+    private PrescriptionDto prescriptionDto { get; set; } = new();
 
     [Parameter, EditorRequired]
     public int? PrescriptionId { get; set; }
 
-    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
-    private bool _showModal { get; set; }
-    private bool _isEditMode => PrescriptionId.HasValue;
+    private bool showModal { get; set; }
+    private bool isEditMode => PrescriptionId.HasValue;
 
-    private List<DoctorDto> _doctors { get; set; } = default!;
-    private string ModalTitle => _isEditMode ? Resource.Edit : Resource.Create;
-    private List<SelectItem> _doctorsSelect = new();
+    private List<DoctorDto> doctors { get; set; } = default!;
+    private string ModalTitle => isEditMode ? Resource.Edit : Resource.Create;
+    private List<SelectItem> doctorsSelect = new();
 
-    private UserRole? _userRole;
-    private string? _userId;
+    private UserRole? userRole;
+    private string? userId;
 
-    private bool _lockDoctorsDropdown => _userRole == UserRole.Doctor;
-    private bool _lockDatePrescribed => PrescriptionId.HasValue;
+    private bool lockDoctorsDropdown => userRole == UserRole.Doctor;
+    private bool lockDatePrescribed => PrescriptionId.HasValue;
 
 
 
     [Inject]
-    private IDoctorService _doctorService { get; set; } = default!;
+    private IDoctorService doctorService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _userId = authState.User.GetUserId();
-        _userRole = authState.User.GetUserRoleEnum();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        userId = authState.User.GetUserId();
+        userRole = authState.User.GetUserRoleEnum();
     }
 
     protected override async Task OnParametersSetAsync()
     {
-        _prescriptionDto = new();
+        prescriptionDto = new();
 
-        var doctors = (await _doctorService.GetAllDoctorsSimpleAsync()).ToList();
+        var doctors = (await doctorService.GetAllDoctorsSimpleAsync()).ToList();
 
-        _doctorsSelect = doctors.Select(s => new SelectItem
+        doctorsSelect = doctors.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.FullName
         }).ToList();
 
-        _prescriptionDto.DatePrescribed = !_isEditMode ? DateTime.Now : DateTime.Now;
+        prescriptionDto.DatePrescribed = !isEditMode ? DateTime.Now : DateTime.Now;
 
         if (PrescriptionId.HasValue)
         {
-            _prescriptionDto = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value) ?? new();
+            prescriptionDto = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value) ?? new();
         }
 
-        if (_prescriptionDto != null && _userRole == UserRole.Doctor && doctors.Any())
+        if (prescriptionDto != null && userRole == UserRole.Doctor && doctors.Any())
         {
-            _prescriptionDto.DoctorId = doctors.FirstOrDefault(w => w.UserId == _userId)!.Id;
+            prescriptionDto.DoctorId = doctors.FirstOrDefault(w => w.UserId == userId)!.Id;
         }
     }
 
     public void OpenModal()
     {
-        _showModal = true;
+        showModal = true;
     }
 
     public void CloseModal()
     {
-        _showModal = false;
+        showModal = false;
     }
 
     private async Task SavePrescription()
     {
         var patientId = NavigationManager.Uri.Split("/").LastOrDefault();
 
-        _prescriptionDto.PatientId = Convert.ToInt32(patientId);
+        prescriptionDto.PatientId = Convert.ToInt32(patientId);
 
-        if (_isEditMode && PrescriptionId.HasValue)
+        if (isEditMode && PrescriptionId.HasValue)
         {
-            var prescriptionForUpdate = _prescriptionDto.MapDtoToUpdateDto();
+            var prescriptionForUpdate = prescriptionDto.MapDtoToUpdateDto();
 
             var response = await PrescriptionService.UpdatePrescriptionAsync(prescriptionForUpdate);
 
@@ -145,7 +145,7 @@
         }
         else
         {
-            var prescriptionForCreation = _prescriptionDto.MapDtoToCreateDto();
+            var prescriptionForCreation = prescriptionDto.MapDtoToCreateDto();
 
             var response = await PrescriptionService.AddPrescriptionAsync(prescriptionForCreation);
 

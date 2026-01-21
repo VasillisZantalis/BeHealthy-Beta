@@ -4,7 +4,7 @@
 @inherits BasePage
 
 <div class="mb-3">
-    <CreateButton OnClick="() => _appointmentModal.Open()" />
+    <CreateButton OnClick="() => appointmentModal.Open()" />
     <MassImportButton OnClick="ShowImportWizard" />
 </div>
 
@@ -16,7 +16,7 @@
                       OnClose="HideImportWizard" />
 }
 
-@if (_appointments is null || !_appointments.Any())
+@if (appointments is null || !appointments.Any())
 {
     <p>@string.Format(Resource.NoAvailable, Resource.Appointments)</p>
 }
@@ -26,7 +26,7 @@ else
         <div class="card">
             <div class="card-header d-flex flex-row justify-content-end">
                 <div class="px-1">
-                    <InputSelect class="form-select form-select-sm" @bind-Value="_paginationState.ItemsPerPage">
+                    <InputSelect class="form-select form-select-sm" @bind-Value="paginationState.ItemsPerPage">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="25">25</option>
@@ -38,9 +38,9 @@ else
             <div class="table-responsive">
                 <div class="card-body pb-2 px-0 m-0">
                     <QuickGrid Class="table rounded"
-                               Items="@_appointments.AsQueryable()"
+                               Items="@appointments.AsQueryable()"
                                ItemKey="@(x => x.Id)"
-                               Pagination="_paginationState">
+                               Pagination="paginationState">
                         <PropertyColumn Title="@Resource.Date"
                                         Property="@(x => x.AppointmentDate)"
                                         Format="dd MMM yyyy"
@@ -96,19 +96,19 @@ else
 
             </div>
             <div id="paginatorDiv" class="px-3">
-                <Paginator State="_paginationState" />
+                <Paginator State="paginationState" />
             </div>
         </div>
     </div>
 }
 
-@if (_doctors != null && _patients != null)
+@if (doctors != null && patients != null)
 {
-    <AppointmentModal @ref="_appointmentModal"
+    <AppointmentModal @ref="appointmentModal"
                       OnFormSubmit="HandleAppointmentFormSubmission"
-                      Doctors="_doctors"
-                      Patients="_patients"
+                      Doctors="doctors"
+                      Patients="patients"
                       Role="userRole"
-                      CurrentUserId="@_currentUserId" 
-                      AppointmentId="_appointmentId"/>
+                      CurrentUserId="@currentUserId" 
+                      AppointmentId="appointmentId"/>
 }

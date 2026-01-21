@@ -19,10 +19,10 @@ public partial class Upsert : BasePage
     private List<DoctorDto> Doctors = new();
 
     [Inject]
-    private IDepartmentService _departmentService { get; set; } = default!;
+    private IDepartmentService departmentService { get; set; } = default!;
 
     [Inject]
-    private IDoctorService _doctorService { get; set; } = default!;
+    private IDoctorService doctorService { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -33,11 +33,11 @@ public partial class Upsert : BasePage
     {
         LoaderService.SetLoader(true);
 
-        Doctors = (await _doctorService.GetAllDoctorsAsync()).ToList();
+        Doctors = (await doctorService.GetAllDoctorsAsync()).ToList();
 
         if (IsEditMode && id.HasValue)
         {
-            var department = await _departmentService.GetDepartmentByIdAsync(id.Value);
+            var department = await departmentService.GetDepartmentByIdAsync(id.Value);
             DepartmentDto = department;
         }
 

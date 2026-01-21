@@ -7,23 +7,23 @@
         <h5 class="modal-title">@Title</h5>
     </Header>
     <Body>
-        <div @ref="_dropzoneElement" 
+        <div @ref="dropzoneElement" 
              class="dropzone @GetDropzoneClass()"
              @ondragenter="HandleDragEnter"
              @ondragleave="HandleDragLeave"
              @ondragover:preventDefault="true">
             
-            @if (string.IsNullOrEmpty(_previewUrl))
+            @if (string.IsNullOrEmpty(previewUrl))
             {
                 <div class="dropzone-content">
                     <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-muted"></i>
                     <p class="mb-2">@DropzoneText</p>
                     <p class="text-muted small">or</p>
-                    <label for="@_instanceId" class="btn btn-primary btn-sm">
+                    <label for="@instanceId" class="btn btn-primary btn-sm">
                         Browse Files
                     </label>
-                    <InputFile @ref="_fileInput"
-                               id="@_instanceId"
+                    <InputFile @ref="fileInput"
+                               id="@instanceId"
                                OnChange="HandleFileSelected"
                                accept="@AcceptedFormats"
                                class="d-none" />
@@ -34,14 +34,14 @@
                 <div class="preview-container">
                     @if (IsImage)
                     {
-                        <img src="@_previewUrl" alt="Preview" class="preview-image" />
+                        <img src="@previewUrl" alt="Preview" class="preview-image" />
                     }
                     else
                     {
                         <div class="file-info">
                             <i class="fas fa-file fa-3x text-primary mb-2"></i>
-                            <p class="mb-0">@_fileName</p>
-                            <p class="text-muted small">@_fileSizeFormatted</p>
+                            <p class="mb-0">@fileName</p>
+                            <p class="text-muted small">@fileSizeFormatted</p>
                         </div>
                     }
                     <button type="button" class="btn btn-danger btn-sm mt-3" @onclick="ClearFile">
@@ -50,18 +50,18 @@
                 </div>
             }
 
-            @if (!string.IsNullOrEmpty(_errorMessage))
+            @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="alert alert-danger mt-3 mb-0" role="alert">
-                    @_errorMessage
+                    @errorMessage
                 </div>
             }
         </div>
 
-        @if (!string.IsNullOrEmpty(_successMessage))
+        @if (!string.IsNullOrEmpty(successMessage))
         {
             <div class="alert alert-success mt-3" role="alert">
-                @_successMessage
+                @successMessage
             </div>
         }
     </Body>
@@ -72,7 +72,7 @@
         <button type="button" 
                 class="btn btn-success" 
                 @onclick="ConfirmUpload" 
-                disabled="@(string.IsNullOrEmpty(_previewUrl))">
+                disabled="@(string.IsNullOrEmpty(previewUrl))">
             <i class="fas fa-check"></i> @Resource.Save
         </button>
     </Footer>
@@ -88,16 +88,16 @@
     [Parameter] public int? ResizeHeight { get; set; } = 200;
     [Parameter] public EventCallback<string> OnFileUploaded { get; set; }
 
-    private bool _isDragging = false;
-    private string? _previewUrl;
-    private string? _errorMessage;
-    private string? _successMessage;
-    private string? _fileName;
-    private string? _fileSizeFormatted;
-    private string _instanceId = Guid.NewGuid().ToString();
-    private ElementReference _dropzoneElement;
-    private InputFile? _fileInput;
-    private IJSObjectReference? _jsModule;
+    private bool isDragging = false;
+    private string? previewUrl;
+    private string? errorMessage;
+    private string? successMessage;
+    private string? fileName;
+    private string? fileSizeFormatted;
+    private string instanceId = Guid.NewGuid().ToString();
+    private ElementReference dropzoneElement;
+    private InputFile? fileInput;
+    private IJSObjectReference? jsModule;
 
     private string AcceptedFormats => string.Join(",", AllowedFormats.Select(f => 
         f.StartsWith(".") ? f : $".{f.Split('/').Last()}"));
@@ -108,11 +108,11 @@
         {
             try
             {
-                _jsModule = await JS.InvokeAsync<IJSObjectReference>(
+                jsModule = await JS.InvokeAsync<IJSObjectReference>(
                     "import", "./Components/Shared/Modals/FileUploadModal.razor.js");
                 
                 var dotNetRef = DotNetObjectReference.Create(this);
-                await _jsModule.InvokeVoidAsync("initializeDropzone", _dropzoneElement, dotNetRef);
+                await jsModule.InvokeVoidAsync("initializeDropzone", dropzoneElement, dotNetRef);
             }
             catch (Exception ex)
             {
@@ -124,32 +124,32 @@
     private string GetDropzoneClass()
     {
         var classes = new List<string>();
-        if (_isDragging) classes.Add("dragging");
-        if (!string.IsNullOrEmpty(_previewUrl)) classes.Add("has-file");
+        if (isDragging) classes.Add("dragging");
+        if (!string.IsNullOrEmpty(previewUrl)) classes.Add("has-file");
         return string.Join(" ", classes);
     }
 
     private void HandleDragEnter()
     {
-        _isDragging = true;
+        isDragging = true;
     }
 
     private void HandleDragLeave()
     {
-        _isDragging = false;
+        isDragging = false;
     }
 
     [JSInvokable]
     public async Task HandleDroppedFile(string fileName, string contentType, long fileSize, string base64Data)
     {
-        _isDragging = false;
-        _errorMessage = null;
-        _successMessage = null;
+        isDragging = false;
+        errorMessage = null;
+        successMessage = null;
 
         // Validate file size
         if (fileSize > MaxFileSizeInKB * 1024)
         {
-            _errorMessage = $"File size cannot exceed {MaxFileSizeInKB} KB.";
+            errorMessage = $"File size cannot exceed {MaxFileSizeInKB} KB.";
             StateHasChanged();
             return;
         }
@@ -157,7 +157,7 @@
         // Validate file type
         if (!AllowedFormats.Contains(contentType))
         {
-            _errorMessage = $"Only {string.Join(", ", AllowedFormats.Select(f => f.Split('/')[1]))} files are allowed.";
+            errorMessage = $"Only {string.Join(", ", AllowedFormats.Select(f => f.Split('/')[1]))} files are allowed.";
             StateHasChanged();
             return;
         }
@@ -165,14 +165,14 @@
         try
         {
             // For images, we can resize using JS Canvas API if needed, or just use as-is
-            _previewUrl = base64Data;
-            _fileName = fileName;
-            _fileSizeFormatted = FormatFileSize(fileSize);
-            _successMessage = "File loaded successfully!";
+            previewUrl = base64Data;
+            fileName = fileName;
+            fileSizeFormatted = FormatFileSize(fileSize);
+            successMessage = "File loaded successfully!";
         }
         catch (Exception ex)
         {
-            _errorMessage = $"Error processing file: {ex.Message}";
+            errorMessage = $"Error processing file: {ex.Message}";
         }
 
         StateHasChanged();
@@ -185,20 +185,20 @@
 
     private async Task ProcessFile(IBrowserFile file)
     {
-        _errorMessage = null;
-        _successMessage = null;
+        errorMessage = null;
+        successMessage = null;
 
         // Validate file size
         if (file.Size > MaxFileSizeInKB * 1024)
         {
-            _errorMessage = $"File size cannot exceed {MaxFileSizeInKB} KB.";
+            errorMessage = $"File size cannot exceed {MaxFileSizeInKB} KB.";
             return;
         }
 
         // Validate file type
         if (!AllowedFormats.Contains(file.ContentType))
         {
-            _errorMessage = $"Only {string.Join(", ", AllowedFormats.Select(f => f.Split('/')[1]))} files are allowed.";
+            errorMessage = $"Only {string.Join(", ", AllowedFormats.Select(f => f.Split('/')[1]))} files are allowed.";
             return;
         }
 
@@ -215,14 +215,14 @@
             var buffer = new byte[processedFile.Size];
             await processedFile.OpenReadStream(MaxFileSizeInKB * 1024).ReadAsync(buffer);
 
-            _previewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
-            _fileName = file.Name;
-            _fileSizeFormatted = FormatFileSize(file.Size);
-            _successMessage = "File loaded successfully!";
+            previewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+            fileName = file.Name;
+            fileSizeFormatted = FormatFileSize(file.Size);
+            successMessage = "File loaded successfully!";
         }
         catch (Exception ex)
         {
-            _errorMessage = $"Error processing file: {ex.Message}";
+            errorMessage = $"Error processing file: {ex.Message}";
         }
 
         StateHasChanged();
@@ -230,18 +230,18 @@
 
     private void ClearFile()
     {
-        _previewUrl = null;
-        _fileName = null;
-        _fileSizeFormatted = null;
-        _errorMessage = null;
-        _successMessage = null;
+        previewUrl = null;
+        fileName = null;
+        fileSizeFormatted = null;
+        errorMessage = null;
+        successMessage = null;
     }
 
     private async Task ConfirmUpload()
     {
-        if (!string.IsNullOrEmpty(_previewUrl))
+        if (!string.IsNullOrEmpty(previewUrl))
         {
-            await OnFileUploaded.InvokeAsync(_previewUrl);
+            await OnFileUploaded.InvokeAsync(previewUrl);
             Close();
         }
     }
@@ -261,9 +261,9 @@
 
     public async ValueTask DisposeAsync()
     {
-        if (_jsModule is not null)
+        if (jsModule is not null)
         {
-            await _jsModule.DisposeAsync();
+            await jsModule.DisposeAsync();
         }
     }
 }

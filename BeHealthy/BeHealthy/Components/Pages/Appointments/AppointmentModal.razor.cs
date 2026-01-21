@@ -22,7 +22,7 @@ public partial class AppointmentModal : BasePage
     public EventCallback<(AppointmentDto, int?)> OnFormSubmit { get; set; }
 
     [SupplyParameterFromForm]
-    private AppointmentDto _appointmentDto { get; set; } = new();
+    private AppointmentDto appointmentDto { get; set; } = new();
 
     [Parameter]
     public List<DoctorSimpleDto> Doctors { get; set; } = default!;
@@ -37,131 +37,131 @@ public partial class AppointmentModal : BasePage
     public UserRole? Role { get; set; }
 
     [Inject]
-    private IRoomService _roomService { get; set; } = default!;
+    private IRoomService roomService { get; set; } = default!;
 
     [Inject]
-    private IAppSettingsService _appSettingsService { get; set; } = default!;
+    private IAppSettingsService appSettingsService { get; set; } = default!;
 
     [Inject]
-    private INurseService _nurseService { get; set; } = default!;
+    private INurseService nurseService { get; set; } = default!;
 
     [Inject]
-    private IAppointmentService _appointmentService { get; set; } = default!;
+    private IAppointmentService appointmentService { get; set; } = default!;
 
-    private List<SelectItem> _doctorsSelect = new();
-    private List<SelectItem> _patientsSelect = new();
-    private List<SelectItem> _roomsSelect = new();
-    private List<SelectItem> _nursesSelect = new();
+    private List<SelectItem> doctorsSelect = new();
+    private List<SelectItem> patientsSelect = new();
+    private List<SelectItem> roomsSelect = new();
+    private List<SelectItem> nursesSelect = new();
 
     private bool LockDoctorsDropdown => Role == UserRole.Doctor;
     private bool LockPatientsDropdown => Role == UserRole.Patient;
 
-    private bool _show;
-    private bool _isEdit => AppointmentId.HasValue;
-    private bool _showRooms;
-    private bool _showNurses;
+    private bool show;
+    private bool isEdit => AppointmentId.HasValue;
+    private bool showRooms;
+    private bool showNurses;
 
-    private ValidationComponent? _validationComponent;
+    private ValidationComponent? validationComponent;
 
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
 
-        var rooms = (await _roomService.GetAllRoomsAsync()).ToList();
-        var nurses = (await _nurseService.GetAllNursesAsync()).ToList();
+        var rooms = (await roomService.GetAllRoomsAsync()).ToList();
+        var nurses = (await nurseService.GetAllNursesAsync()).ToList();
 
         await GetAppSettings();
        
-        _roomsSelect = rooms.Select(s => new SelectItem
+        roomsSelect = rooms.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.Name,
         }).ToList();
-        _roomsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+        roomsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
-        _nursesSelect = nurses.Select(s => new SelectItem
+        nursesSelect = nurses.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.FullName,
         }).ToList();
-        _nursesSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+        nursesSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
 
         // Even thought we set currect hours, still are converted to UTC
         // Leave it like this for now
 
         var now = DateTime.Now;
-        _appointmentDto.AppointmentDate = DateOnly.FromDateTime(now);
-        _appointmentDto.AppointmentStartTime = TimeOnly.FromDateTime(now);
-        _appointmentDto.AppointmentEndTime = TimeOnly.FromDateTime(now.AddHours(1));
+        appointmentDto.AppointmentDate = DateOnly.FromDateTime(now);
+        appointmentDto.AppointmentStartTime = TimeOnly.FromDateTime(now);
+        appointmentDto.AppointmentEndTime = TimeOnly.FromDateTime(now.AddHours(1));
 
         LoaderService.SetLoader(false);
     }
 
     protected override void OnParametersSet()
     {
-        _doctorsSelect = Doctors.Select(s => new SelectItem
+        doctorsSelect = Doctors.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.FullName
         }).ToList();
-        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
-        _patientsSelect = Patients.Select(s => new SelectItem
+        patientsSelect = Patients.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.FullName
         }).ToList();
-        _patientsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        patientsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     protected override async Task OnParametersSetAsync()
     {
         if (AppointmentId.HasValue && AppointmentId.Value > 0)
-            _appointmentDto = await _appointmentService.GetAppointmentByIdAsync(AppointmentId.Value) ?? new();
+            appointmentDto = await appointmentService.GetAppointmentByIdAsync(AppointmentId.Value) ?? new();
 
         if (Role == UserRole.Doctor)
         {
-            _appointmentDto.DoctorId = Doctors.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
+            appointmentDto.DoctorId = Doctors.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
         }
 
         if (Role == UserRole.Patient)
         {
-            _appointmentDto.PatientId = Patients.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
+            appointmentDto.PatientId = Patients.FirstOrDefault(w => w.UserId == CurrentUserId)!.Id;
         }
     }
 
     protected async Task GetAppSettings()
     {
         var keys = new[] { "AppointmentRequiresRoom", "NurseIsRequiredForAppointment" }.ToList();
-        var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
+        var settings = await appSettingsService.GetMassAppSettingsAsync(keys);
 
         var nurseSetting = settings.FirstOrDefault(s => s.Key == "NurseIsRequiredForAppointment");
         var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "AppointmentRequiresRoom");
 
-        _showNurses = nurseSetting?.GetBooleanValue() ?? false;
-        _showRooms = requireRoomSetting?.GetBooleanValue() ?? false;
+        showNurses = nurseSetting?.GetBooleanValue() ?? false;
+        showRooms = requireRoomSetting?.GetBooleanValue() ?? false;
     }
 
-    public void Open() => _show = true;
+    public void Open() => show = true;
 
-    public void Close() => _show = false;
+    public void Close() => show = false;
 
     public async Task HandleSaveClick()
     {
-        _validationComponent?.ClearErrors();
+        validationComponent?.ClearErrors();
 
-        var validator = new AppointmentDtoValidator(_showNurses, _showRooms);
-        var validationResult = await validator.ValidateAsync(_appointmentDto);
+        var validator = new AppointmentDtoValidator(showNurses, showRooms);
+        var validationResult = await validator.ValidateAsync(appointmentDto);
 
         if (!validationResult.IsValid)
         {
             var errors = validationResult.GetErrorsGroupedByProperty();
-            _validationComponent?.DisplayErrors(errors);
+            validationComponent?.DisplayErrors(errors);
         }
         else
         {
-            await OnFormSubmit.InvokeAsync((_appointmentDto, AppointmentId));
+            await OnFormSubmit.InvokeAsync((appointmentDto, AppointmentId));
         }
     }
 

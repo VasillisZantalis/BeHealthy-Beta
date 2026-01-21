@@ -6,15 +6,15 @@
 
 @inject IUserService UserService
 
-@if (_config != null)
+@if (config != null)
 {
     <div class="card border-0 rounded shadow mb-3">
-        <Chart Config="_config"></Chart>
+        <Chart Config="config"></Chart>
     </div>
 }
 
 @code {
-    private PieConfig? _config;
+    private PieConfig? config;
     private Dictionary<string, int> rolesAndCounts = new();
 
     protected override async Task OnInitializedAsync()
@@ -23,7 +23,7 @@
         {
             LoaderService.SetLoader(true);
 
-            _config = new PieConfig
+            config = new PieConfig
             {
                 Options = new PieOptions
                 {
@@ -58,7 +58,7 @@
 
                 foreach (string role in new[] { Resource.Doctors, Resource.Patients, Resource.Nurses })
                 {
-                    _config?.Data.Labels.Add(role);
+                    config?.Data.Labels.Add(role);
                 }
 
                 PieDataset<int> dataset = new PieDataset<int>(rolesAndCounts.Values)
@@ -71,7 +71,7 @@
                     }
                 };
 
-                _config?.Data.Datasets.Add(dataset);
+                config?.Data.Datasets.Add(dataset);
 
                 StateHasChanged();
             }

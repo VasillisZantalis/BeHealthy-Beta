@@ -9,16 +9,16 @@
 
 @inject IAppointmentService AppointmentService
 
-@if (_config != null)
+@if (config != null)
 {
     <div class="card border-0 rounded shadow mt-3">
-        <Chart Config="_config"></Chart>
+        <Chart Config="config"></Chart>
     </div>
 }
 
 @code {
-    private BarConfig? _config;
-    private Dictionary<AppointmentReason, int> _appointmentsByReasonCount = new();
+    private BarConfig? config;
+    private Dictionary<AppointmentReason, int> appointmentsByReasonCount = new();
 
     protected override void OnInitialized()
     {
@@ -26,7 +26,7 @@
         {
             LoaderService.SetLoader(true);
 
-            _config = new BarConfig
+            config = new BarConfig
             {
                 Options = new BarOptions
                 {
@@ -84,16 +84,16 @@
    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _appointmentsByReasonCount = await AppointmentService.GetAppointmentReasonCounts();
+        appointmentsByReasonCount = await AppointmentService.GetAppointmentReasonCounts();
 
-        if (firstRender && _appointmentsByReasonCount.Any())
+        if (firstRender && appointmentsByReasonCount.Any())
         {
-            foreach (var reason in _appointmentsByReasonCount.Keys)
+            foreach (var reason in appointmentsByReasonCount.Keys)
             {
-                _config?.Data.Labels.Add(reason.ToLocalizedString());
+                config?.Data.Labels.Add(reason.ToLocalizedString());
             }
 
-            var dataset = new BarDataset<int>(_appointmentsByReasonCount.Values)
+            var dataset = new BarDataset<int>(appointmentsByReasonCount.Values)
             {
                 Label = Resource.TotalAppointments,
                 BackgroundColor = new[]
@@ -107,7 +107,7 @@
                 BorderWidth = 1
             };
 
-            _config?.Data.Datasets.Add(dataset);
+            config?.Data.Datasets.Add(dataset);
             StateHasChanged();
         }
     }

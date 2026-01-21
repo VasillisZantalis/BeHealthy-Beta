@@ -19,19 +19,19 @@ namespace BeHealthy.Components.Pages.Nurses;
 
 public partial class Nurses : BasePage
 {
-    [Inject] INurseService _nurseService { get; set; } = default!;
+    [Inject] INurseService nurseService { get; set; } = default!;
 
-    [Inject] NavigationManager _navigationManager { get; set; } = default!;
-    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    [Inject] NavigationManager navigationManager { get; set; } = default!;
+    [Inject] AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
 
-    private List<NurseDto> _nurses { get; set; } = new();
+    private List<NurseDto> nurses { get; set; } = new();
     private QueryParameters QueryParameters { get; set; } = new();
     private HashSet<int> selectedNurseIds = new();
 
-    private string _selectedView = "Grid";
+    private string selectedView = "Grid";
     private bool hasActionRights;
-    private UserRole? _userRole;
-    private string? _currentUserId;
+    private UserRole? userRole;
+    private string? currentUserId;
 
     void ShowImportWizard()
     {
@@ -52,13 +52,13 @@ public partial class Nurses : BasePage
     {
         LoaderService.SetLoader(true);
 
-        var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _userRole = authState.User.GetUserRoleEnum();
-        _currentUserId = authState.User.GetUserId();
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        userRole = authState.User.GetUserRoleEnum();
+        currentUserId = authState.User.GetUserId();
 
-        await LoadNurses(_currentUserId, _userRole);
+        await LoadNurses(currentUserId, userRole);
 
-        hasActionRights = _userRole == UserRole.Admin;
+        hasActionRights = userRole == UserRole.Admin;
 
         LoaderService.SetLoader(false);
     }
@@ -76,10 +76,10 @@ public partial class Nurses : BasePage
     {
         LoaderService.SetLoader(true);
 
-        _nurses = userRole switch
+        nurses = userRole switch
         {
-            UserRole.Patient when userId is not null => (await _nurseService.GetNursesOfPatientByUserId(userId)).ToList(),
-            _ => (await _nurseService.GetAllNursesAsync(QueryParameters)).ToList()
+            UserRole.Patient when userId is not null => (await nurseService.GetNursesOfPatientByUserId(userId)).ToList(),
+            _ => (await nurseService.GetAllNursesAsync(QueryParameters)).ToList()
         };
 
         selectedNurseIds.Clear();
@@ -102,12 +102,12 @@ public partial class Nurses : BasePage
 
     private void EditNurse(int id)
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/edit/{id}");
+        navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/edit/{id}");
     }
 
     private void CreateNurse()
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/create");
+        navigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/create");
     }
 
     private async Task BulkCreateNurses((List<NurseCreateDto> nurseForCreationDtos, bool UseValidation) result)
@@ -130,17 +130,17 @@ public partial class Nurses : BasePage
                 }
             }
 
-            var response = await _nurseService.AddNurseAsync(nurse);
+            var response = await nurseService.AddNurseAsync(nurse);
             if (HandleServiceResponse(response)) continue;
         }
-        await LoadNurses(_currentUserId, _userRole);
+        await LoadNurses(currentUserId, userRole);
         LoaderService.SetLoader(false);
     }
 
     private async Task HandleSearch(string term)
     {
         QueryParameters.SearchTerm = term;
-        await LoadNurses(_currentUserId, _userRole);
+        await LoadNurses(currentUserId, userRole);
     }
 
     private async Task HandleClearFilters()
@@ -148,7 +148,7 @@ public partial class Nurses : BasePage
         if (string.IsNullOrEmpty(QueryParameters.SearchTerm)) return;
 
         QueryParameters.SearchTerm = "";
-        await LoadNurses(_currentUserId, _userRole);
+        await LoadNurses(currentUserId, userRole);
     }
 
     private void ConfirmDelete(int nurseId)
@@ -178,11 +178,11 @@ public partial class Nurses : BasePage
 
         foreach (var nurseId in nurseIds)
         {
-            await _nurseService.DeleteNurseAsync(nurseId);
+            await nurseService.DeleteNurseAsync(nurseId);
         }
 
         selectedNurseIds.Clear();
-        await LoadNurses(_currentUserId, _userRole);
+        await LoadNurses(currentUserId, userRole);
 
         LoaderService.SetLoader(false);
     }

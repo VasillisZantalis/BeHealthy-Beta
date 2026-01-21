@@ -4,15 +4,15 @@
 <EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
 
     <button type="submit" class="btn btn-success mb-3 px-4 text-end">
-        @if (_inProgress)
+        @if (inProgress)
         {
             <span class="spinner-border spinner-border-sm"></span>
         }
         @Resource.Save
     </button>
 
-    <Alert @ref="_alert" />
-    <ValidationComponent @ref="_validationComponent" />
+    <Alert @ref="alert" />
+    <ValidationComponent @ref="validationComponent" />
     <div class="d-flex flex-column gap-3">
         <div class="form-group">
             <label class="fw-bold" for="name">@Resource.Name</label>
@@ -23,9 +23,9 @@
             <InputText id="location" class="form-control" @bind-Value="DepartmentDto.Location" />
         </div>
         <div class="form-group">
-            <label class="fw-bold @(_isRequiredHeadOfDepartment ? "required" : "")" for="headOfDepartment">@Resource.HeadΟfDepartment</label>
+            <label class="fw-bold @(isRequiredHeadOfDepartment ? "required" : "")" for="headOfDepartment">@Resource.HeadΟfDepartment</label>
             <InputSelect id="headOfDepartment" class="form-control" @bind-Value="DepartmentDto.HeadOfDepartmentId">
-                @foreach (var doctor in _doctorsSelect)
+                @foreach (var doctor in doctorsSelect)
                 {
                     <option value="@doctor.Value">@doctor.Text</option>
                 }
@@ -46,30 +46,30 @@
     public DepartmentDto DepartmentDto { get; set; } = new();
 
     [Inject]
-    private IDepartmentService _departmentService { get; set; } = default!;
+    private IDepartmentService departmentService { get; set; } = default!;
 
     [Inject]
-    private IAppSettingsService _appSettingsService { get; set; } = default!;
+    private IAppSettingsService appSettingsService { get; set; } = default!;
 
     [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
+    private NavigationManager navigationManager { get; set; } = default!;
 
-    private bool _inProgress = false;
-    private Alert _alert = new();
-    private bool _isRequiredHeadOfDepartment;
+    private bool inProgress = false;
+    private Alert alert = new();
+    private bool isRequiredHeadOfDepartment;
 
-    private List<SelectItem> _doctorsSelect = new List<SelectItem>();
+    private List<SelectItem> doctorsSelect = new List<SelectItem>();
 
-    private ValidationComponent? _validationComponent;
+    private ValidationComponent? validationComponent;
 
     protected override async Task OnParametersSetAsync()
     {
-        _doctorsSelect = Doctors.Select(s => new SelectItem
+        doctorsSelect = Doctors.Select(s => new SelectItem
             {
                 Value = s.Id,
                 Text = s.FullName
             }).ToList();
-        _doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+        doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         await GetSettings();
     }
@@ -77,17 +77,17 @@
     private async Task GetSettings()
     {
         var keys = new[] { "DepartmentRequiresSupervisor", "DefaultDepartmentSupervison" }.ToList();
-        var settings = await _appSettingsService.GetMassAppSettingsAsync(keys);
+        var settings = await appSettingsService.GetMassAppSettingsAsync(keys);
 
         var requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
         var defaultSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DefaultDepartmentSupervison");
 
-        _isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;
+        isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;
         var defaultSupervisor = defaultSupervisorSetting?.GetIntValue();
 
         if (!IsEditMode && defaultSupervisor.HasValue && (DepartmentDto.HeadOfDepartmentId == null || DepartmentDto.HeadOfDepartmentId == 0))
         {
-            if (_doctorsSelect.Any(d => d.Value == defaultSupervisor.Value))
+            if (doctorsSelect.Any(d => d.Value == defaultSupervisor.Value))
             {
                 DepartmentDto.HeadOfDepartmentId = defaultSupervisor.Value;
             }
@@ -96,13 +96,13 @@
 
     private async Task HandleSubmit()
     {
-        _inProgress = true;
+        inProgress = true;
         ServiceResponse result;
 
-        _validationComponent?.ClearErrors();
+        validationComponent?.ClearErrors();
         var errors = new Dictionary<string, List<string>>();
 
-        if (_isRequiredHeadOfDepartment && !(DepartmentDto.HeadOfDepartmentId > 0))
+        if (isRequiredHeadOfDepartment && !(DepartmentDto.HeadOfDepartmentId > 0))
         {
             errors.Add(nameof(DepartmentDto.HeadOfDepartmentId),
                 new() { string.Format(Resource.TheFieldIsRequired, Resource.HeadΟfDepartment) });
@@ -111,33 +111,33 @@
         if (DepartmentDto.HeadOfDepartmentId == 0)
             DepartmentDto.HeadOfDepartmentId = null;
 
-        _inProgress = false;
+        inProgress = false;
         
         if (errors.Any())
         {
-            _validationComponent?.DisplayErrors(errors);
+            validationComponent?.DisplayErrors(errors);
         }
         else 
         {
             if (IsEditMode)
             {
                 var departmentForUpdateDto = DepartmentDto.MapToUpdateDto();
-                result = await _departmentService.UpdateDepartmentAsync(departmentForUpdateDto);
+                result = await departmentService.UpdateDepartmentAsync(departmentForUpdateDto);
             }
             else
             {
                 var departmentForCreateDto = DepartmentDto.MapToCreationDto();
-                result = await _departmentService.AddDepartmentAsync(departmentForCreateDto);
+                result = await departmentService.AddDepartmentAsync(departmentForCreateDto);
             }
 
             if (!result.Success)
             {
-                _alert.ShowFailed(result.ErrorMessage!);
+                alert.ShowFailed(result.ErrorMessage!);
             }
             else
             {
                 ToastService.ShowToast(Resource.Success, "success");
-                _navigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
+                navigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
             }
         }
     }

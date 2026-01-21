@@ -10,9 +10,9 @@
         <h5 class="card-title">@Resource.UpcomingAppointments</h5>
 
         <div class="d-flex flex-column">
-            @if (_upcomingAppointments is not null && _upcomingAppointments.Any())
+            @if (upcomingAppointments is not null && upcomingAppointments.Any())
             {
-                foreach (var appointment in _upcomingAppointments)
+                foreach (var appointment in upcomingAppointments)
                 {
                     <div class="list-group">
                         <ul class="list-group list-group-flush">
@@ -42,7 +42,7 @@
 </div>
 
 @code {
-    private List<AppointmentDto> _upcomingAppointments = new();
+    private List<AppointmentDto> upcomingAppointments = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,7 +51,7 @@
 
         var appointments = await AppointmentService.GetAllAppointmentsAsync();
 
-        _upcomingAppointments = appointments
+        upcomingAppointments = appointments
             .Where(a =>
                 a.AppointmentDate >= today &&
                 a.AppointmentDate <= threeDaysFromNow &&

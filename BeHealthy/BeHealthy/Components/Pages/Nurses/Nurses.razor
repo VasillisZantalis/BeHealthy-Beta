@@ -8,7 +8,7 @@
 <BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
     <Header>
         <div class="d-flex gap-3">
-            @if (_userRole == UserRole.Admin)
+            @if (userRole == UserRole.Admin)
             {
                 <div class="">
                     <CreateButton OnClick="CreateNurse" />
@@ -23,7 +23,7 @@
                 </div>
             }
             <div>
-                <ViewSelect @bind-Value="_selectedView" />
+                <ViewSelect @bind-Value="selectedView" />
             </div>
         </div>
         <div>
@@ -33,16 +33,16 @@
     </Header>
 
     <Body>
-        @if (_selectedView == "Card")
+        @if (selectedView == "Card")
         {
-            @if (_nurses is null || !_nurses.Any())
+            @if (nurses is null || !nurses.Any())
             {
                 <p>@string.Format(Resource.NoAvailable, Resource.Nurses)</p>
             }
             else
             {
                 <div class="row">
-                    <Virtualize Items="@_nurses" Context="nurse" ItemSize="100">
+                    <Virtualize Items="@nurses" Context="nurse" ItemSize="100">
                         <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
                             <div class="mb-3">
                                 <UserCard Id="@nurse.Id"
@@ -60,10 +60,10 @@
                 </div>
             }
         }
-        else if (_selectedView == "Grid")
+        else if (selectedView == "Grid")
         {
             <BeHealthyTable TItem="NurseDto"
-                            Items="@_nurses"
+                            Items="@nurses"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
                             EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Nurses)">

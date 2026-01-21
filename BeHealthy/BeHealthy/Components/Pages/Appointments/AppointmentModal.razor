@@ -1,10 +1,10 @@
 ﻿@inherits BasePage
 
-<div class="modal" tabindex="-1" style="@(_show ? "display:block" : "display:none")">
+<div class="modal" tabindex="-1" style="@(show ? "display:block" : "display:none")">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">@(_isEdit ? string.Join(" ", Resource.Edit, Resource.Appointments) : string.Join(" ", Resource.Create, Resource.Appointments))</h5>
+                <h5 class="modal-title">@(isEdit ? string.Join(" ", Resource.Edit, Resource.Appointments) : string.Join(" ", Resource.Create, Resource.Appointments))</h5>
                 <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
             </div>
             <div class="modal-body">
@@ -14,8 +14,8 @@
                 }
                 else
                 {
-                    <EditForm FormName="AppointmentForm" OnValidSubmit="HandleSaveClick" Model="_appointmentDto">
-                        <ValidationComponent @ref="_validationComponent"/>
+                    <EditForm FormName="AppointmentForm" OnValidSubmit="HandleSaveClick" Model="appointmentDto">
+                        <ValidationComponent @ref="validationComponent"/>
 
                         <div class="d-flex flex-column gap-3">
 
@@ -23,31 +23,31 @@
 
                                 <div class="form-group col-12 col-sm-6">
                                     <label class="fw-bold required" for="patientIdSelect">@Resource.Patient</label>
-                                    <InputSelect id="patientIdSelect" class="form-select" @bind-Value="_appointmentDto.PatientId" disabled="@LockPatientsDropdown">
-                                        @foreach (var patient in _patientsSelect)
+                                    <InputSelect id="patientIdSelect" class="form-select" @bind-Value="appointmentDto.PatientId" disabled="@LockPatientsDropdown">
+                                        @foreach (var patient in patientsSelect)
                                         {
                                             <option value="@patient.Value">@patient.Text</option>
                                         }
                                     </InputSelect>
-                                    <ValidationMessage For="@(() => _appointmentDto.PatientId)" />
+                                    <ValidationMessage For="@(() => appointmentDto.PatientId)" />
                                 </div>
 
                                 <div class="form-group col-12 col-sm-6">
                                     <label class="fw-bold required" for="doctorIdSelect">@Resource.Doctor</label>
-                                    <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="_appointmentDto.DoctorId" disabled="@LockDoctorsDropdown">
-                                        @foreach (var doctor in _doctorsSelect)
+                                    <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="appointmentDto.DoctorId" disabled="@LockDoctorsDropdown">
+                                        @foreach (var doctor in doctorsSelect)
                                         {
                                             <option value="@doctor.Value">@doctor.Text</option>
                                         }
                                     </InputSelect>
-                                    <ValidationMessage For="@(() => _appointmentDto.DoctorId)" />
+                                    <ValidationMessage For="@(() => appointmentDto.DoctorId)" />
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="fw-bold" for="appointmentDate">@Resource.Date</label>
-                                <InputDate id="appointmentDate" class="form-control" @bind-Value="_appointmentDto.AppointmentDate" />
-                                <ValidationMessage For="@(() => _appointmentDto.AppointmentDate)" />
+                                <InputDate id="appointmentDate" class="form-control" @bind-Value="appointmentDto.AppointmentDate" />
+                                <ValidationMessage For="@(() => appointmentDto.AppointmentDate)" />
                             </div>
 
                             <div class="form-group">
@@ -56,53 +56,53 @@
                                         <label class="fw-bold" for="appointmentStartTime">@Resource.StartTime</label>
                                         <input type="time"
                                                id="appointmentStartTime"
-                                               @bind="_appointmentDto.AppointmentStartTime"
+                                               @bind="appointmentDto.AppointmentStartTime"
                                                class="form-control"/>
                                     </div>
                                     <div class="col">
                                         <label class="fw-bold" for="appointmentEndTime">@Resource.EndTime</label>
                                         <input type="time"
                                                id="appointmentEndTime"
-                                               @bind="_appointmentDto.AppointmentEndTime"
+                                               @bind="appointmentDto.AppointmentEndTime"
                                                class="form-control"/>
-                                        <ValidationMessage For="@(() => _appointmentDto.AppointmentEndTime)" />
+                                        <ValidationMessage For="@(() => appointmentDto.AppointmentEndTime)" />
                                     </div>
                                 </div>
                             </div>
 
-                            @if (_showNurses)
+                            @if (showNurses)
                             {
                                 <div class="form-group col">
                                     <label class="fw-bold required" for="nursesIdSelect">@Resource.Nurse</label>
-                                    <InputSelect id="nursesIdSelect" class="form-select" @bind-Value="_appointmentDto.NurseId">
-                                        @foreach (var nurse in _nursesSelect)
+                                    <InputSelect id="nursesIdSelect" class="form-select" @bind-Value="appointmentDto.NurseId">
+                                        @foreach (var nurse in nursesSelect)
                                         {
                                             <option value="@nurse.Value">@nurse.Text</option>
                                         }
                                     </InputSelect>
-                                    <ValidationMessage For="@(() => _appointmentDto.NurseId)" />
+                                    <ValidationMessage For="@(() => appointmentDto.NurseId)" />
                                 </div>
                             }
 
-                            @if (_showRooms)
+                            @if (showRooms)
                             {
                                 <div class="form-group col">
                                     <label class="fw-bold required" for="roomIdSelect">@Resource.Room</label>
-                                    <InputSelect id="roomIdSelect" class="form-select" @bind-Value="_appointmentDto.RoomId">
-                                        @foreach (var room in _roomsSelect)
+                                    <InputSelect id="roomIdSelect" class="form-select" @bind-Value="appointmentDto.RoomId">
+                                        @foreach (var room in roomsSelect)
                                         {
                                             <option value="@room.Value">@room.Text</option>
                                         }
                                     </InputSelect>
-                                    <ValidationMessage For="@(() => _appointmentDto.RoomId)" />
+                                    <ValidationMessage For="@(() => appointmentDto.RoomId)" />
                                 </div>
                             }
 
-                            @if (_isEdit)
+                            @if (isEdit)
                             {
                                 <div class="form-group">
                                     <label class="fw-bold" for="status">@Resource.Status</label>
-                                    <InputSelect id="status" @bind-Value="_appointmentDto.Status" class="form-select">
+                                    <InputSelect id="status" @bind-Value="appointmentDto.Status" class="form-select">
                                         @foreach (var status in Enum.GetValues(typeof(AppointmentStatus)).Cast<AppointmentStatus>())
                                         {
                                             if (status != AppointmentStatus.Scheduled)
@@ -116,18 +116,18 @@
 
                             <div class="form-group">
                                 <label class="fw-bold" for="reason">@Resource.Reason</label>
-                                <InputSelect id="reason" @bind-Value="_appointmentDto.Reason" class="form-select">
+                                <InputSelect id="reason" @bind-Value="appointmentDto.Reason" class="form-select">
                                     @foreach (var reason in Enum.GetValues(typeof(AppointmentReason)).Cast<AppointmentReason>())
                                     {
                                         <option value="@reason">@reason.ToLocalizedString()</option>
                                     }
                                 </InputSelect>
-                                <ValidationMessage For="() => _appointmentDto.Reason" class="text-danger" />
+                                <ValidationMessage For="() => appointmentDto.Reason" class="text-danger" />
                             </div>
 
                             <div class="form-group">
                                 <label class="fw-bold" for="notes">@Resource.Notes</label>
-                                <InputTextArea id="notes" class="form-control" @bind-Value="_appointmentDto.Notes" style="resize: none;" />
+                                <InputTextArea id="notes" class="form-control" @bind-Value="appointmentDto.Notes" style="resize: none;" />
                             </div>
 
                             <div class="d-flex flex-row justify-content-end">
@@ -142,7 +142,7 @@
         </div>
     </div>
 </div>
-@if (_show)
+@if (show)
 {
     <div class="modal-backdrop fade show"></div>
 }

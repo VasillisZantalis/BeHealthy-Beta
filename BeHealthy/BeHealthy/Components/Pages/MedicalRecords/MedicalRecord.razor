@@ -9,7 +9,7 @@
 
 <div class="container-fluid">
     <div class="p-5 border rounded shadow-sm mb-3">
-        @if (_medicalRecord is null)
+        @if (medicalRecord is null)
         {
             <h2 class="text-center">@Resource.NotAvailable</h2>
         }
@@ -18,16 +18,16 @@
             <div class="d-flex flex-column gap-2">
                 <div class="d-flex align-items-center gap-2">
                     <label class="fw-bold mb-0">@Resource.CreatedBy:</label>
-                    <span>@_medicalRecord.CreatedBy</span>
+                    <span>@medicalRecord.CreatedBy</span>
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <label class="fw-bold mb-0">@Resource.Created:</label>
-                    <span>@_medicalRecord.RecordDate.ToShortHumanizedDateString()</span>
+                    <span>@medicalRecord.RecordDate.ToShortHumanizedDateString()</span>
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <label class="fw-bold mb-0">@Resource.Notes:</label>
                     <InputText class="form-control form-control-sm d-inline-block w-50"
-                               @bind-value="_medicalRecord.Notes"
+                               @bind-value="medicalRecord.Notes"
                                disabled="@(!isEditing)" />
                     @if (!isEditing)
                     {
@@ -73,7 +73,7 @@
     [Parameter]
     public int MedicalRecordId { get; set; }
 
-    private MedicalRecordDto _medicalRecord { get; set; } = new();
+    private MedicalRecordDto medicalRecord { get; set; } = new();
     private MedicalRecordTabs activeTab = MedicalRecordTabs.Visits;
 
     private bool isEditing = false;
@@ -88,7 +88,7 @@
     {
         LoaderService.SetLoader(true);
 
-        _medicalRecord = await MedicalRecordService.GetMedicalRecordByIdAsync(MedicalRecordId) ?? new();
+        medicalRecord = await MedicalRecordService.GetMedicalRecordByIdAsync(MedicalRecordId) ?? new();
 
         LoaderService.SetLoader(false);
     }
@@ -107,14 +107,14 @@
 
     private void EditNotes()
     {
-        notesBackup = _medicalRecord.Notes;
+        notesBackup = medicalRecord.Notes;
         isEditing = true;
     }
 
     private void CancelEdit()
     {
         isEditing = false;
-        _medicalRecord.Notes = notesBackup;
+        medicalRecord.Notes = notesBackup;
     }
 
     private async Task SaveNotesAsync()
@@ -123,10 +123,10 @@
 
         isEditing = false;
 
-        if (_medicalRecord.Notes != notesBackup && !string.IsNullOrWhiteSpace(_medicalRecord.Notes))
+        if (medicalRecord.Notes != notesBackup && !string.IsNullOrWhiteSpace(medicalRecord.Notes))
         {
-            await MedicalRecordService.UpdateMedicalRecordNotesAsync(MedicalRecordId, _medicalRecord.Notes);
-            notesBackup = _medicalRecord.Notes;
+            await MedicalRecordService.UpdateMedicalRecordNotesAsync(MedicalRecordId, medicalRecord.Notes);
+            notesBackup = medicalRecord.Notes;
         }
 
         LoaderService.SetLoader(false);

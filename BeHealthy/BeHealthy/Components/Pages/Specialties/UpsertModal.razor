@@ -1,6 +1,6 @@
 ﻿@inject ISpecialtyService SpecialtyService
 
-@if (_show)
+@if (show)
 {
     <div class="modal fade show" tabindex="-1" style="display: block;">
         <div class="modal-dialog">
@@ -10,13 +10,13 @@
                     <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
-                    <EditForm Model="_specialtyDto" FormName="SpecialtyForm" OnValidSubmit="SaveSpecialty">
-                        <FluentValidationValidator @ref="_fluentValidationValidator" />
+                    <EditForm Model="specialtyDto" FormName="SpecialtyForm" OnValidSubmit="SaveSpecialty">
+                        <FluentValidationValidator @ref="fluentValidationValidator" />
                         <div class="d-flex flex-column gap-3">
                             <div class="form">
                                 <label class="fw-bold required" aria-required="true" for="name">@Resource.Name</label>
-                                <InputText id="name" class="form-control" @bind-Value="_specialtyDto.Name" />
-                                <ValidationMessage For="@(() => _specialtyDto.Name)" />
+                                <InputText id="name" class="form-control" @bind-Value="specialtyDto.Name" />
+                                <ValidationMessage For="@(() => specialtyDto.Name)" />
                             </div>
                         </div>
                         <div class="d-flex flex-row justify-content-end m-3 gap-2">
@@ -39,36 +39,36 @@
     public EventCallback HandleResponse { get; set; }
 
     [SupplyParameterFromForm]
-    private SpecialtyDto _specialtyDto { get; set; } = new();
+    private SpecialtyDto specialtyDto { get; set; } = new();
 
-    private FluentValidationValidator _fluentValidationValidator = new();
+    private FluentValidationValidator fluentValidationValidator = new();
 
     private string ModalTitle => SpecialtyId.HasValue ? Resource.Edit : Resource.Create;
 
-    private bool _show;
+    private bool show;
 
     protected override async Task OnParametersSetAsync()
     {
-        _specialtyDto = new();
+        specialtyDto = new();
 
         if (SpecialtyId.HasValue)
-            _specialtyDto = await SpecialtyService.GetSpecialtyByIdAsync(SpecialtyId.Value) ?? new();
+            specialtyDto = await SpecialtyService.GetSpecialtyByIdAsync(SpecialtyId.Value) ?? new();
     }
 
-    public void OpenModal() => _show = true;
+    public void OpenModal() => show = true;
 
-    public void CloseModal() => _show = false;
+    public void CloseModal() => show = false;
 
     private async Task SaveSpecialty()
     {
-        if (await _fluentValidationValidator.ValidateAsync())
+        if (await fluentValidationValidator.ValidateAsync())
         {
             if (SpecialtyId.HasValue)
             {
                 var specialtyForUpdateDto = new SpecialtyUpdateDto
                 {
                     Id = SpecialtyId.Value,
-                    Name = _specialtyDto.Name
+                    Name = specialtyDto.Name
                 };
                 await SpecialtyService.UpdateSpecialtyAsync(SpecialtyId.Value, specialtyForUpdateDto);
             }
@@ -76,7 +76,7 @@
             {
                 var specialtyForCreationDto = new SpecialtyCreateDto
                 {
-                    Name = _specialtyDto.Name
+                    Name = specialtyDto.Name
                 };
                 await SpecialtyService.AddSpecialtyAsync(specialtyForCreationDto);
             }

@@ -14,16 +14,16 @@
     [Parameter] public TTabKey Key { get; set; } = default!;
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    private TabItem<TTabKey>? _item;
+    private TabItem<TTabKey>? item;
 
     protected override void OnInitialized()
     {
-        _item = new TabItem<TTabKey> { Title = Title, Key = Key };
-        Parent?.AddTab(_item);
+        item = new TabItem<TTabKey> { Title = Title, Key = Key };
+        Parent?.AddTab(item);
     }
 
     public void Dispose()
     {
-        if (_item is not null) Parent?.RemoveTab(_item);
+        if (item is not null) Parent?.RemoveTab(item);
     }
 }

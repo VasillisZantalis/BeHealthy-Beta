@@ -13,16 +13,16 @@ namespace BeHealthy.Components.Pages.Department;
 
 public partial class Departments : BasePage
 {
-    [Inject] IDepartmentService _departmentService { get; set; } = default!;
-    [Inject] IPatientService _patientService { get; set; } = default!;
-    [Inject] IDoctorService _doctorService { get; set; } = default!;
-    [Inject] INurseService _nurseService { get; set; } = default!;
-    [Inject] NavigationManager _navigationManager { get; set; } = default!;
+    [Inject] IDepartmentService departmentService { get; set; } = default!;
+    [Inject] IPatientService patientService { get; set; } = default!;
+    [Inject] IDoctorService doctorService { get; set; } = default!;
+    [Inject] INurseService nurseService { get; set; } = default!;
+    [Inject] NavigationManager navigationManager { get; set; } = default!;
 
-    private List<DepartmentDto> _departments = new();
+    private List<DepartmentDto> departments = new();
 
-    private bool _hasActionRights;
-    private PaginationState _paginationState = new();
+    private bool hasActionRights;
+    private PaginationState paginationState = new();
 
     protected override void OnInitialized()
     {
@@ -34,15 +34,15 @@ public partial class Departments : BasePage
         LoaderService.SetLoader(true);
 
         await LoadDepartments();
-        _hasActionRights = true;
-        _paginationState.ItemsPerPage = _departments.Count;
+        hasActionRights = true;
+        paginationState.ItemsPerPage = departments.Count;
 
         LoaderService.SetLoader(false);
     }
 
     private async Task LoadDepartments()
     {
-        _departments = (await _departmentService.GetAllDepartmentsAsync()).ToList();
+        departments = (await departmentService.GetAllDepartmentsAsync()).ToList();
         await InvokeAsync(StateHasChanged);
     }
 
@@ -57,7 +57,7 @@ public partial class Departments : BasePage
 
     public void EditDepartment(int departmentId)
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/edit/{departmentId}");
+        navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/edit/{departmentId}");
     }
 
     private void ConfirmDelete(int departmentId)
@@ -71,12 +71,12 @@ public partial class Departments : BasePage
 
     private async Task OnConfirmDeleteAsync(int departmentId)
     {
-        await _departmentService.DeleteDepartmentAsync(departmentId);
+        await departmentService.DeleteDepartmentAsync(departmentId);
         await LoadDepartments();
     }
 
     private void Create()
     {
-        _navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/create");
+        navigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/create");
     }
 }

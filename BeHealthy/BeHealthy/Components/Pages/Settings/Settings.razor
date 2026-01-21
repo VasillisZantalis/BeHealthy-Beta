@@ -7,15 +7,15 @@
 
 <PageTitle>@Resource.Settings</PageTitle>
 
-@if (_settingsGroupedByArea is not null)
+@if (settingsGroupedByArea is not null)
 {
-    foreach (var areaGroup in _settingsGroupedByArea)
+    foreach (var areaGroup in settingsGroupedByArea)
     {
         <div class="mb-3">
             <h4>@areaGroup.Key</h4>
             @foreach (var setting in areaGroup)
             {
-                <SettingInput Setting="setting" OnSettingChanged="UpdateSettingValue" SelectItems="_doctorsSelect"/>                
+                <SettingInput Setting="setting" OnSettingChanged="UpdateSettingValue" SelectItems="doctorsSelect"/>                
             }
         </div>
     }

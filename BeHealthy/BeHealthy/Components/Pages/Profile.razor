@@ -13,22 +13,22 @@
 <PageTitle>@Resource.Profile</PageTitle>
 
 <div id="profile-container" class="container-fluid p-5 border rounded shadow">
-    <EditForm id="profileForm" Model="_profileDto" OnValidSubmit="UpdateProfile">
+    <EditForm id="profileForm" Model="profileDto" OnValidSubmit="UpdateProfile">
         <div>
             <button type="submit" class="btn btn-success px-5">@Resource.Save</button>
         </div>
         <div class="row">
-            <ImagePreview ImageUrl="@_profileDto.Image" />
-            <ImageUpload OnImageChanged="image => _profileDto.Image = image" />
+            <ImagePreview ImageUrl="@profileDto.Image" />
+            <ImageUpload OnImageChanged="image => profileDto.Image = image" />
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_profileDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <InputText @bind-Value="profileDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
                     <label for="firstName">@Resource.FirstName</label>
                 </div>
             </div>
             <div class="col-12 col-sm-6">
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="_profileDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <InputText @bind-Value="profileDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
                     <label for="lastName">@Resource.LastName</label>
                 </div>
             </div>
@@ -37,9 +37,9 @@
 </div>
 
 @code {
-    private ProfileDto _profileDto { get; set; } = new();
-    private UserRole? _userRole;
-    private string? _userId;
+    private ProfileDto profileDto { get; set; } = new();
+    private UserRole? userRole;
+    private string? userId;
 
     protected override void OnInitialized()
     {
@@ -51,23 +51,23 @@
         LoaderService.SetLoader(true);
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        _userId = authState.User.GetUserId() ?? string.Empty;
+        userId = authState.User.GetUserId() ?? string.Empty;
 
-        var user = await UserManager.FindByIdAsync(_userId);
+        var user = await UserManager.FindByIdAsync(userId);
 
         if (user is null)
             NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
 
-        _userRole = authState.User.GetUserRoleEnum();
+        userRole = authState.User.GetUserRoleEnum();
 
-        switch (_userRole)
+        switch (userRole)
         {
-            case UserRole.Doctor when _userId is not null:
-                _profileDto = await GetDoctorProfileByUserId(_userId);
+            case UserRole.Doctor when userId is not null:
+                profileDto = await GetDoctorProfileByUserId(userId);
                 break;
-            case UserRole.Nurse when _userId is not null:
+            case UserRole.Nurse when userId is not null:
                 break;
-            case UserRole.Patient when _userId is not null:
+            case UserRole.Patient when userId is not null:
                 break;
             default:
                 break;
@@ -89,27 +89,27 @@
 
     private async Task UpdateProfile()
     {
-        var user = await UserManager.FindByIdAsync(_userId ?? string.Empty);
+        var user = await UserManager.FindByIdAsync(userId ?? string.Empty);
 
         if (user != null)
         {
-            user.FirstName = _profileDto.FirstName;
-            user.LastName = _profileDto.LastName;
-            user.PhoneNumber = _profileDto.PhoneNumber;
+            user.FirstName = profileDto.FirstName;
+            user.LastName = profileDto.LastName;
+            user.PhoneNumber = profileDto.PhoneNumber;
 
             var result = await UserManager.UpdateAsync(user);
 
             if (!result.Succeeded)
             {
-                //_inProgress = false;
-                //_alert.ShowSuccess(Resource.SomethingWentWrong);
+                //inProgress = false;
+                //alert.ShowSuccess(Resource.SomethingWentWrong);
             }
             else
             {
-                switch (_userRole)
+                switch (userRole)
                 {
                     case UserRole.Doctor:
-                        var doctorForUpdate = _profileDto.MapToDoctorForUpdateDto();
+                        var doctorForUpdate = profileDto.MapToDoctorForUpdateDto();
                         await DoctorService.UpdateDoctorAsync(doctorForUpdate);
                         break;
                     case UserRole.Nurse:

@@ -7,9 +7,9 @@
 <div class="py-3">
     <CreateButton OnClick="CreateVisit" />
 
-    @if (_visits.Any())
+    @if (visits.Any())
     {
-        <QuickGrid Items="_visits.AsQueryable()"
+        <QuickGrid Items="visits.AsQueryable()"
                    ItemKey="@(x => x.Id)"
                    Class="table table-responsive">
             <PropertyColumn Title="@Resource.Date"
@@ -53,11 +53,11 @@
 
     private VisitModal visitModal { get; set; } = new();
     
-    private List<VisitDto> _visits { get; set; } = new List<VisitDto>();
+    private List<VisitDto> visits { get; set; } = new List<VisitDto>();
 
     protected override async Task OnInitializedAsync()
     {
-        _visits = (await VisitService.GetVisitsByPatientIdAsync(PatientId)).ToList();
+        visits = (await VisitService.GetVisitsByPatientIdAsync(PatientId)).ToList();
     }
 
     private void CreateVisit() => visitModal.Show();

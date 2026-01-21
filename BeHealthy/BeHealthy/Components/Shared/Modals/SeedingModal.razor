@@ -12,20 +12,20 @@
         <button type="button" class="btn-close" @onclick="Close" aria-label="Close"></button>
     </Header>
     <Body>
-        @if (_isSeeding)
+        @if (isSeeding)
         {
             <SmallLoader />
         }
         else
         {
-            <EditForm Model="_seedingOptions" OnValidSubmit="HandleSeed">
+            <EditForm Model="seedingOptions" OnValidSubmit="HandleSeed">
                 <!-- Doctors -->
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="form-check mb-2">
                             <InputCheckbox class="form-check-input"
                                            id="seedDoctors"
-                                           @bind-Value="_seedingOptions.SeedDoctors"
+                                           @bind-Value="seedingOptions.SeedDoctors"
                                            @bind-Value:after="UpdateAppointmentAvailability" />
                             <label class="form-check-label fw-bold" for="seedDoctors">
                                 @Resource.Doctors
@@ -33,7 +33,7 @@
                         </div>
                         <div class="input-group">
                             <span class="input-group-text">@Resource.Count</span>
-                            <InputNumber class="form-control" @bind-Value="_seedingOptions.DoctorCount" min="1" max="10" disabled="@(!_seedingOptions.SeedDoctors)" />
+                            <InputNumber class="form-control" @bind-Value="seedingOptions.DoctorCount" min="1" max="10" disabled="@(!seedingOptions.SeedDoctors)" />
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         <div class="form-check mb-2">
                             <InputCheckbox class="form-check-input"
                                            id="seedPatients"
-                                           @bind-Value="_seedingOptions.SeedPatients"
+                                           @bind-Value="seedingOptions.SeedPatients"
                                            @bind-Value:after="UpdateAppointmentAvailability" />
                             <label class="form-check-label fw-bold" for="seedPatients">
                                 @Resource.Patients
@@ -52,7 +52,7 @@
                         </div>
                         <div class="input-group">
                             <span class="input-group-text">@Resource.Count</span>
-                            <InputNumber class="form-control" @bind-Value="_seedingOptions.PatientCount" min="1" max="10" disabled="@(!_seedingOptions.SeedPatients)" />
+                            <InputNumber class="form-control" @bind-Value="seedingOptions.PatientCount" min="1" max="10" disabled="@(!seedingOptions.SeedPatients)" />
                         </div>
                     </div>
                 </div>
@@ -61,14 +61,14 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="form-check mb-2">
-                            <InputCheckbox class="form-check-input" id="seedNurses" @bind-Value="_seedingOptions.SeedNurses" />
+                            <InputCheckbox class="form-check-input" id="seedNurses" @bind-Value="seedingOptions.SeedNurses" />
                             <label class="form-check-label fw-bold" for="seedNurses">
                                 @Resource.Nurses
                             </label>
                         </div>
                         <div class="input-group">
                             <span class="input-group-text">@Resource.Count</span>
-                            <InputNumber class="form-control" @bind-Value="_seedingOptions.NurseCount" min="1" max="10" disabled="@(!_seedingOptions.SeedNurses)" />
+                            <InputNumber class="form-control" @bind-Value="seedingOptions.NurseCount" min="1" max="10" disabled="@(!seedingOptions.SeedNurses)" />
                         </div>
                     </div>
                 </div>
@@ -77,18 +77,18 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="form-check mb-2">
-                            <InputCheckbox class="form-check-input" id="seedAppointments" @bind-Value="_seedingOptions.SeedAppointments" disabled="@_disableAppointments" />
+                            <InputCheckbox class="form-check-input" id="seedAppointments" @bind-Value="seedingOptions.SeedAppointments" disabled="@disableAppointments" />
                             <label class="form-check-label fw-bold" for="seedAppointments">
                                 @Resource.Appointments
                             </label>
-                            @if (_disableAppointments)
+                            @if (disableAppointments)
                             {
                                 <small class="text-muted d-block">@Resource.RequiresDoctorsAndPatients</small>
                             }
                         </div>
                         <div class="input-group">
                             <span class="input-group-text">@Resource.Count</span>
-                            <InputNumber class="form-control" @bind-Value="_seedingOptions.AppointmentCount" min="1" max="10" disabled="@(!_seedingOptions.SeedAppointments || _disableAppointments)" />
+                            <InputNumber class="form-control" @bind-Value="seedingOptions.AppointmentCount" min="1" max="10" disabled="@(!seedingOptions.SeedAppointments || disableAppointments)" />
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
     </Body>
     <Footer>
         <button type="button" class="btn btn-outline-secondary rounded-pill px-3" @onclick="Close">@Resource.Cancel</button>
-        <button type="button" class="btn btn-success rounded-pill px-3" @onclick="HandleSeed" disabled="@(!HasAnySelection() || _isSeeding)">@Resource.Save</button>
+        <button type="button" class="btn btn-success rounded-pill px-3" @onclick="HandleSeed" disabled="@(!HasAnySelection() || isSeeding)">@Resource.Save</button>
     </Footer>
 </BeHealthyModal>
 
@@ -105,9 +105,9 @@
     [Parameter]
     public EventCallback OnSeedingCompleted { get; set; }
 
-    private bool _isSeeding;
-    private SeedingOptionsDto _seedingOptions = new();
-    private bool _disableAppointments = true;
+    private bool isSeeding;
+    private SeedingOptionsDto seedingOptions = new();
+    private bool disableAppointments = true;
 
     private void OnDoctorCheckChanged()
     {
@@ -121,26 +121,26 @@
 
     private void UpdateAppointmentAvailability()
     {
-        _disableAppointments = !(_seedingOptions.SeedDoctors && _seedingOptions.SeedPatients);
-        if (_disableAppointments)
+        disableAppointments = !(seedingOptions.SeedDoctors && seedingOptions.SeedPatients);
+        if (disableAppointments)
         {
-            _seedingOptions.SeedAppointments = false;
+            seedingOptions.SeedAppointments = false;
         }
     }
 
     private bool HasAnySelection()
     {
-        return _seedingOptions.SeedDoctors || _seedingOptions.SeedPatients || 
-               _seedingOptions.SeedNurses || _seedingOptions.SeedAppointments;
+        return seedingOptions.SeedDoctors || seedingOptions.SeedPatients || 
+               seedingOptions.SeedNurses || seedingOptions.SeedAppointments;
     }
 
     private async Task HandleSeed()
     {
-        _isSeeding = true;
+        isSeeding = true;
 
-        var result = await SeedingService.SeedAllAsync(_seedingOptions);
+        var result = await SeedingService.SeedAllAsync(seedingOptions);
 
-        _isSeeding = false;
+        isSeeding = false;
 
         if (!result.Success)
         {

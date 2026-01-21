@@ -8,9 +8,9 @@
 <div class="py-3">
     <CreateButton OnClick="CreateMedicalRecord" />
 
-    @if (_medicalRecords.Any())
+    @if (medicalRecords.Any())
     {
-        <QuickGrid Items="_medicalRecords.AsQueryable()"
+        <QuickGrid Items="medicalRecords.AsQueryable()"
                    ItemKey="@(x => x.Id)"
                    Class="table table-responsive">
             <PropertyColumn Title="@Resource.Date"
@@ -42,13 +42,13 @@
     }
 </div>
 
-<GenericModal @ref="_genericModal"
+<GenericModal @ref="genericModal"
               Title="@Resource.MedicalRecord"
               OnSave="SaveMedicalRecord">
 
-    <EditForm Model="_medicalRecordDto" FormName="MedicalRecordForm">
+    <EditForm Model="medicalRecordDto" FormName="MedicalRecordForm">
         <div class="form-floating">
-            <InputText id="notes" @bind-Value="_medicalRecordDto.Notes" class="form-control" />
+            <InputText id="notes" @bind-Value="medicalRecordDto.Notes" class="form-control" />
             <label for="notes">@Resource.Notes</label>
         </div>
     </EditForm>
@@ -60,20 +60,20 @@
     [Parameter, EditorRequired]
     public int PatientId { get; set; }
 
-    private GenericModal _genericModal { get; set; } = new();
+    private GenericModal genericModal { get; set; } = new();
 
-    private List<MedicalRecordDto> _medicalRecords { get; set; } = new();
+    private List<MedicalRecordDto> medicalRecords { get; set; } = new();
 
     [SupplyParameterFromForm]
-    private MedicalRecordDto _medicalRecordDto { get; set; } = new();
+    private MedicalRecordDto medicalRecordDto { get; set; } = new();
 
-    private AuthenticationState? _authState;
+    private AuthenticationState? authState;
 
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
         await LoadMedicalRecords();
-        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
         LoaderService.SetLoader(false);
     }
@@ -81,25 +81,25 @@
     private async Task LoadMedicalRecords()
     {
         LoaderService.SetLoader(true);
-        _medicalRecords = (await MedicalRecordService.GetMedicalRecordsByPatientIdAsync(PatientId)).ToList();
+        medicalRecords = (await MedicalRecordService.GetMedicalRecordsByPatientIdAsync(PatientId)).ToList();
         await InvokeAsync(StateHasChanged);
         LoaderService.SetLoader(false);
     }
 
     private async Task SaveMedicalRecord()
     {
-        _medicalRecordDto.PatientId = PatientId;
-        _medicalRecordDto.CreatedBy = _authState?.User.GetUserName();
+        medicalRecordDto.PatientId = PatientId;
+        medicalRecordDto.CreatedBy = authState?.User.GetUserName();
 
-        if (_medicalRecordDto.Id > 0)
+        if (medicalRecordDto.Id > 0)
         {
-            var medicalRecordUpdateDto = _medicalRecordDto.MapToMedicalRecordUpdateDto();
+            var medicalRecordUpdateDto = medicalRecordDto.MapToMedicalRecordUpdateDto();
             await MedicalRecordService.UpdateMedicalRecordAsync(medicalRecordUpdateDto);
         }
         else
         {
-            _medicalRecordDto.RecordDate = DateTime.UtcNow;
-            var medicalRecordCreateDto = _medicalRecordDto.MapToMedicalRecordCreateDto();
+            medicalRecordDto.RecordDate = DateTime.UtcNow;
+            var medicalRecordCreateDto = medicalRecordDto.MapToMedicalRecordCreateDto();
             await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
         }
 
@@ -114,14 +114,14 @@
 
     private async Task EditMedicalRecord(int medicalRecordId)
     {
-        _medicalRecordDto = await MedicalRecordService.GetMedicalRecordByIdAsync(medicalRecordId) ?? new();
-        _genericModal.OpenModal();
+        medicalRecordDto = await MedicalRecordService.GetMedicalRecordByIdAsync(medicalRecordId) ?? new();
+        genericModal.OpenModal();
     }
 
     private void CreateMedicalRecord()
     {
-        _medicalRecordDto = new();
-        _genericModal.OpenModal();
+        medicalRecordDto = new();
+        genericModal.OpenModal();
     }
 
 
