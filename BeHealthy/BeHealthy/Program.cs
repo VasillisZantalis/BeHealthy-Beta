@@ -61,7 +61,7 @@ if (provider != null)
 }
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.Configure<JsonOptions>(options =>
 {

@@ -12,6 +12,6 @@ services:
     environment:
       - POSTGRES_DB=behealthy
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=7530
+      - POSTGRES_PASSWORD=123456asd!@#
     ports:
       - "5432:5432"

@@ -15,12 +15,8 @@ namespace BeHealthy.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var configuration = new ConfigurationBuilder()
-               .AddUserSecrets<ApplicationDbContextFactory>()
-               .Build();
-
         var connectionString = configuration.GetConnectionString("Default");
 
         services.AddDbContextFactory<ApplicationDbContext>(options =>
