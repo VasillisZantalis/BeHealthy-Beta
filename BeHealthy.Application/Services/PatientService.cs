@@ -14,9 +14,19 @@ public class PatientService : IPatientService
         _userService = userService;
     }
 
-    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync()
+    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync(PatientQueryParameters? parameters = null)
     {
-        var patients = await _unitOfWork.PatientRepository.GetAllPatientsAsync();
+        parameters ??= new PatientQueryParameters();
+        var queryOptions = new QueryOptions<Patient>
+        {
+            Predicate = p => (string.IsNullOrEmpty(parameters.SearchTerm) ||
+                             p.FirstName.Contains(parameters.SearchTerm) ||
+                             p.LastName.Contains(parameters.SearchTerm)),
+
+            Includes = { d => d.User! }
+        };
+
+        var patients = await _unitOfWork.PatientRepository.QueryAsync(queryOptions);
         return patients.MapToDto();
     }
 

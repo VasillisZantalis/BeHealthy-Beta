@@ -106,7 +106,6 @@ public partial class Doctors : BasePage
             _ => (await DoctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
         };
 
-        // Clear selection if doctors were reloaded
         selectedDoctorIds.Clear();
 
         await InvokeAsync(StateHasChanged);
@@ -205,10 +204,9 @@ public partial class Doctors : BasePage
         {
             await DoctorService.DeleteDoctorAsync(doctorId);
         }
-
-        selectedDoctorIds.Clear();
-        await LoadDoctors(currentUserId, userRole);
-
+     
         LoaderService.SetLoader(false);
+
+        await LoadDoctors(currentUserId, userRole);
     }
 }
