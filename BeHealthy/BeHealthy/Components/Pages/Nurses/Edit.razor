@@ -9,59 +9,58 @@
 
 <PageTitle>@Resource.Edit</PageTitle>
 
-<div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="NurseUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
 
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
-            @if (inProgress)
-            {
-                <SmallLoader />
-            }
-            <span>@Resource.Save</span>
-        </button>
+<BeHealthyCard BodyClass="p-3">
+    <Body>
+        <EditForm Model="NurseUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
 
-        <FluentValidationValidator @ref="fluentValidationValidator" />
-        <div class="row">
-            <Alert @ref="alert" />
-            <ImagePreview ImageUrl="@NurseUpdateDto.Image" />
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                    <label for="firstName">@Resource.FirstName</label>
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+                @if (inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
+
+            <FluentValidationValidator @ref="fluentValidationValidator" />
+
+             <div class="d-flex flex-column gap-3 p-3">
+
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal">
+                    <ImagePreview ImageUrl="@NurseUpdateDto.Image" />
+                </ImageUploadContainer>
+
+                <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
+                    <InputText @bind-Value="NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" />
                     <ValidationMessage For="() => NurseUpdateDto.FirstName" class="text-danger" />
-                </div>
-            </div>
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="NurseUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                    <label for="lastName">@Resource.LastName</label>
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                    <InputText @bind-Value="NurseUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" />
                     <ValidationMessage For="() => NurseUpdateDto.LastName" class="text-danger" />
-                </div>
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
+                    <InputText id="phoneNumber" @bind-Value="NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" />
+                    <ValidationMessage For="() => NurseUpdateDto.PhoneNumber" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                @if (departments is not null && departments.Any())
+                {
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Department" @bind-Value="NurseUpdateDto.DepartmentId" class="form-control">
+                            @foreach (var department in departmentsSelect)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </InputSelect>
+                        <label for="Department">@Resource.Department</label>
+                    </div>
+                }
             </div>
-        </div>
-
-        <ImageUpload OnImageChanged="image => NurseUpdateDto.Image = image" />
-
-        <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => NurseUpdateDto.PhoneNumber" class="text-danger" />
-        </div>
-
-        @if (departments is not null && departments.Any())
-        {
-            <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="NurseUpdateDto.DepartmentId" class="form-control">
-                    @foreach (var department in departmentsSelect)
-                    {
-                        <option value="@department.Value">@department.Text</option>
-                    }
-                </InputSelect>
-                <label for="Department">@Resource.Department</label>
-            </div>
-        }
-    </EditForm>
-</div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
 
 
 @code {
@@ -115,13 +114,22 @@
         });
     }
 
-    async Task OnFileChange(InputFileChangeEventArgs e)
+    private void OpenImageUploadModal()
     {
-        var format = e.File.ContentType;
-        var resizeImage = await e.File.RequestImageFileAsync(format, 200, 200);
-        var buffer = new byte[resizeImage.Size];
-        await resizeImage.OpenReadStream().ReadAsync(buffer);
-        NurseUpdateDto.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        NurseUpdateDto.Image = imageData;
+        StateHasChanged();
     }
 
     private async Task UpdateNurse()

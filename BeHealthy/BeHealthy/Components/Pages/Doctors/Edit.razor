@@ -49,11 +49,11 @@
                     <ValidationMessage For="() => DoctorUpdateDto.PhoneNumber" class="text-danger" />
                 </BeHealthyFormGroup>
 
-                @if (specialtiesSelect is not null && specialtiesSelect.Any())
+                @if (departmentsSelect is not null && departmentsSelect.Any())
                 {
                     <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
                         <InputSelect id="department" @bind-Value="DoctorUpdateDto.DepartmentId" class="form-control">
-                            @foreach (var department in departmentsSelect!)
+                            @foreach (var department in departmentsSelect)
                             {
                                 <option value="@department.Value">@department.Text</option>
                             }
