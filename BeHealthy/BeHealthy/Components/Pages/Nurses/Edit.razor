@@ -26,7 +26,7 @@
 
              <div class="d-flex flex-column gap-3 p-3">
 
-                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal">
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(NurseUpdateDto.Image != null)" OnDeleteImage="@(() => NurseUpdateDto.Image = null)">
                     <ImagePreview ImageUrl="@NurseUpdateDto.Image" />
                 </ImageUploadContainer>
 

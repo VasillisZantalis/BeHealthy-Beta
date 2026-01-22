@@ -1,11 +1,23 @@
 ﻿<div class="d-flex flex-column justify-content-center align-items-center">
+
     @ChildContent
-    <button type="button" class="btn btn-outline-primary" @onclick="OnOpenImageUploadModal">
-        <i class="fas fa-upload"></i> @Resource.UploadFile
-    </button>
+
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-primary" @onclick="OnOpenImageUploadModal">
+            <i class="fas fa-upload"></i> @Resource.UploadFile
+        </button>
+        @if (HasImage)
+        {
+            <button type="button" class="btn btn-danger" @onclick="OnDeleteImage">
+                <i class="fas fa-trash"></i> @Resource.Delete
+            </button>
+        }
+    </div>
 </div>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public EventCallback OnOpenImageUploadModal { get; set; }
+    [Parameter] public bool HasImage { get; set; }
+    [Parameter] public EventCallback OnDeleteImage { get; set; }
 }

@@ -24,7 +24,7 @@
         <FluentValidationValidator @ref="fluentValidationValidator" />
 
          <div class="d-flex flex-column gap-3 p-3">
-                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal">
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage ="@(NurseCreateDto.Image !=null)" OnDeleteImage="@(() => NurseCreateDto.Image = null)">
                     <ImagePreview ImageUrl="@NurseCreateDto.Image" />
                 </ImageUploadContainer>
 
