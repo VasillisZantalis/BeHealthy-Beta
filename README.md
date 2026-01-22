@@ -58,33 +58,7 @@ git clone https://github.com/VasillisZantalis/BeHealthy-Beta.git
 cd BeHealthy-Beta
 ```
 
-### 2. Set up the Database Connection String with User-Secrets
-The project uses user-secrets in the Infrastructure project to store the database connection string securely.
-
-Navigate to the Infrastructure project folder:
-
-```bash
-cd src/BeHealthy.Infrastructure
-```
-
-Initialize user-secrets (if not already initialized):
-
-```bash
-dotnet user-secrets init
-```
-
-Set the connection string:
-```bash
-dotnet user-secrets set "ConnectionStrings:Default" "Host=behealthydb;Port=5432;Database=behealthy;Username=admin;Password=7530"
-```
-
-Explanation:
-Host should match the service name in docker-compose.yml if using Docker (behealthydb).
-Port is the PostgreSQL port (default 5432).
-Database is the database name (behealthy).
-Username and Password are the database credentials.
-
-### 3. Set docker-compose as the Startup project and run the app
+### 2. Set docker-compose as the Startup project and run the app
 
 <img width="1134" height="346" alt="image" src="https://github.com/user-attachments/assets/5b22d312-3b8b-44e3-9eaf-209e25155c8d" />
 
@@ -103,7 +77,7 @@ docker run -d \
   --name behealthydb \
   -e POSTGRES_DB=behealthy \
   -e POSTGRES_USER=admin \
-  -e POSTGRES_PASSWORD=7530 \
+  -e POSTGRES_PASSWORD=123456asd!@# \
   -p 5432:5432 \
   postgres:latest
 ```
