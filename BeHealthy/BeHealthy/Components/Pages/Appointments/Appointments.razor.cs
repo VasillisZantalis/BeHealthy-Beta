@@ -140,7 +140,7 @@ public partial class Appointments : BasePage
 
     private void EditAppointment(int appointmentId)
     {
-        appointmentId = appointmentId;
+        this.appointmentId = appointmentId;
         appointmentModal.Open();
     }
 
