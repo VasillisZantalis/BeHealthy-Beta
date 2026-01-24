@@ -5,7 +5,7 @@ public class Patient
     public int Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
     public string FullName => $"{FirstName} {LastName}";
     public string? Image { get; set; }
 

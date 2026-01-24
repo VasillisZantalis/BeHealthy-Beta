@@ -1,9 +1,5 @@
-﻿using BeHealthy.Application.Interfaces;
-using BeHealthy.Domain.Entities;
-using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
-using System.Numerics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BeHealthy.Application.Services;
 
@@ -98,9 +94,9 @@ public class DoctorService : IDoctorService
 
         existingDoctor.FirstName = doctorDto.FirstName;
         existingDoctor.LastName = doctorDto.LastName;
-        existingDoctor.Image = doctorDto.Image ?? existingDoctor.Image;
-        existingDoctor.SpecialtyId = doctorDto.SpecialtyId ?? existingDoctor.SpecialtyId;
-        existingDoctor.DepartmentId = doctorDto.DepartmentId ?? existingDoctor.DepartmentId;
+        existingDoctor.Image = doctorDto.Image;
+        existingDoctor.SpecialtyId = doctorDto.SpecialtyId;
+        existingDoctor.DepartmentId = doctorDto.DepartmentId;
 
         await _unitOfWork.DoctorRepository.UpdateAsync(existingDoctor);
 

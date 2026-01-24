@@ -1,15 +1,10 @@
-﻿using BeHealthy.Shared.Locales;
-using System.ComponentModel.DataAnnotations;
-
-namespace BeHealthy.Application.Dtos.Patient;
+﻿namespace BeHealthy.Application.Dtos.Patient;
 
 public class PatientUpdateDto
 {
     public int Id { get; set; }
-    [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
 
     public string FirstName { get; set; } = string.Empty;
-    [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
 
     public string LastName { get; set; } = string.Empty;
 

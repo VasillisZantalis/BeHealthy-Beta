@@ -47,7 +47,8 @@ public static class DoctorMapper
             SpecialtyId = dto.SpecialtyId,
             UserId = dto.UserId,
             DepartmentId = dto.DepartmentId,
-            Image = dto.Image
+            Image = dto.Image,
+            CreatedAt = DateTime.UtcNow
         };
     }
 

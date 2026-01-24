@@ -21,7 +21,9 @@ public class NurseService : INurseService
         {
             Predicate = n => string.IsNullOrEmpty(parameters.SearchTerm) ||
                              n.FirstName.Contains(parameters.SearchTerm) ||
-                             n.LastName.Contains(parameters.SearchTerm)
+                             n.LastName.Contains(parameters.SearchTerm),
+
+            Includes = [n => n.User!]
         };
 
         var nurses = await _unitOfWork.NurseRepository.QueryAsync(queryOptions);
@@ -82,7 +84,15 @@ public class NurseService : INurseService
         if (!updateUserResult.Success)
             return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
 
-        var nurse = nurseDto.MapToDomain();
+        var nurse = await _unitOfWork.NurseRepository.GetByIdAsync(nurseDto.Id);
+        if (nurse is null)
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        nurse.FirstName = nurseDto.FirstName;
+        nurse.LastName = nurseDto.LastName;
+        nurse.Image = nurseDto.Image;
+        nurse.DepartmentId = nurseDto.DepartmentId;
+
         await _unitOfWork.NurseRepository.UpdateAsync(nurse);
 
         return ServiceResponse.Successful();

@@ -90,7 +90,15 @@ public class PatientService : IPatientService
         if (!updateUserResult.Success)
             return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
 
-        var patient = patientDto.MapToDomain();
+        var patient = await _unitOfWork.PatientRepository.GetByIdAsync(patientDto.Id);
+        if (patient is null)
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        patient.FirstName = patientDto.FirstName;
+        patient.FirstName = patientDto.FirstName;
+        patient.Image = patientDto.Image;
+        patient.DepartmentId = patientDto.DepartmentId;
+
         await _unitOfWork.PatientRepository.UpdateAsync(patient);
 
         return ServiceResponse.Successful();

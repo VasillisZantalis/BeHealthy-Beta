@@ -40,7 +40,8 @@ public static class PatientMapper
             LastName = dto.LastName,
             Image = dto.Image,
             UserId = dto.UserId,
-            DepartmentId = dto.DepartmentId
+            DepartmentId = dto.DepartmentId,
+            CreatedAt = DateTime.UtcNow
         };
     }
 
