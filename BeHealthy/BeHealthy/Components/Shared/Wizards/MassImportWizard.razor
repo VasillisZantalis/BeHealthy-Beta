@@ -260,8 +260,20 @@
                 builder.OpenElement(seq++, "input");
                 builder.AddAttribute(seq++, "class", "form-control");
                 builder.AddAttribute(seq++, "type", "date");
-                builder.AddAttribute(seq++, "value", ((DateTime)row[field.Name]).ToString("yyyy-MM-dd"));
-                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = DateTime.Parse(e.Value.ToString())));
+                builder.AddAttribute(seq++, "value",
+                    (row[field.Name] as DateTime?)?.ToString("yyyy-MM-dd") ?? "");
+                builder.AddAttribute(seq++, "oninput",
+                    EventCallback.Factory.Create<ChangeEventArgs>(this, e =>
+                    {
+                        if (DateTime.TryParse(e.Value?.ToString(), out var parsedDate))
+                        {
+                            row[field.Name] = parsedDate;
+                        }
+                        else
+                        {
+                            row[field.Name] = null!;
+                        }
+                    }));
                 builder.CloseElement();
                 break;
 
@@ -269,8 +281,20 @@
                 builder.OpenElement(seq++, "input");
                 builder.AddAttribute(seq++, "class", "form-control");
                 builder.AddAttribute(seq++, "type", "time");
-                builder.AddAttribute(seq++, "value", ((TimeSpan)row[field.Name]).ToString(@"hh\:mm"));
-                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = TimeSpan.Parse(e.Value.ToString())));
+                builder.AddAttribute(seq++, "value",
+                    (row[field.Name] as TimeSpan?)?.ToString(@"hh\:mm") ?? string.Empty);
+                builder.AddAttribute(seq++, "oninput",
+                    EventCallback.Factory.Create<ChangeEventArgs>(this, e =>
+                    {
+                        if (TimeSpan.TryParse(e.Value?.ToString(), out var parsedTime))
+                        {
+                            row[field.Name] = parsedTime;
+                        }
+                        else
+                        {
+                            row[field.Name] = null!;
+                        }
+                    }));
                 builder.CloseElement();
                 break;
 
