@@ -22,9 +22,7 @@
         </div>
 
         <div>
-            <BeHealthySearch OnSearch="HandleSearch"
-                            OnClear="HandleClearFilters"
-                            DebounceMilliseconds="500">
+            <BeHealthySearch ShowSearchBox="false">
                 <Filters>
                     <InputSelect class="form-select" 
                                  @bind-Value="QueryParameters.DoctorId"

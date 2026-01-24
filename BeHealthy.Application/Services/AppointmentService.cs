@@ -27,13 +27,13 @@ public class AppointmentService : IAppointmentService
 
         Expression<Func<Appointment, bool>> predicate = a => true;
 
-        if (parameters.DoctorId.HasValue)
+        if (parameters.DoctorId.HasValue && parameters.DoctorId.Value > 0)
         {
             var doctorId = parameters.DoctorId.Value;
             predicate = predicate.And(a => a.DoctorId == doctorId);
         }
 
-        if (parameters.PatientId.HasValue)
+        if (parameters.PatientId.HasValue && parameters.PatientId.Value > 0)
         {
             var patientId = parameters.PatientId.Value;
             predicate = predicate.And(a => a.PatientId == patientId);
