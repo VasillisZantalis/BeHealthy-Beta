@@ -1,5 +1,4 @@
-﻿@* CalendarPicker.razor *@
-@using System.Globalization
+﻿@using System.Globalization
 @implements IDisposable
 
 <div class="calendar-dropdown">
@@ -9,7 +8,7 @@
                value="@GetDisplayValue()"
                placeholder="Select a date..."
                class="date-input" />
-        <span class="calendar-icon">📅</span>
+        <Icon IconClass="@FAIcon.CalendarDays" />
     </div>
 
     @if (isOpen)
