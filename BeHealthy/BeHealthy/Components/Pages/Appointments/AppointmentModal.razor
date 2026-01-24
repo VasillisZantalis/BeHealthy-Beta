@@ -46,7 +46,8 @@
 
                     <div class="form-group">
                         <label class="fw-bold" for="appointmentDate">@Resource.Date</label>
-                        <InputDate id="appointmentDate" class="form-control" @bind-Value="appointmentDto.AppointmentDate" />
+                        <BeHealthyCalendar Value="@appointmentDto.AppointmentDate" 
+                                           ValueChanged="@((DateOnly? value) => appointmentDto.AppointmentDate = value ?? DateOnly.FromDateTime(DateTime.Today))" />
                         <ValidationMessage For="@(() => appointmentDto.AppointmentDate)" />
                     </div>
 

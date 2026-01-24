@@ -67,6 +67,14 @@ public partial class AppointmentModal : ModalBase
 
     private ValidationComponent? validationComponent;
 
+    protected override void OnInitialized()
+    {
+        var now = DateTime.Now;
+        appointmentDto.AppointmentDate = DateOnly.FromDateTime(now);
+        appointmentDto.AppointmentStartTime = TimeOnly.FromDateTime(now);
+        appointmentDto.AppointmentEndTime = TimeOnly.FromDateTime(now.AddHours(1));
+    }
+
     protected override async Task OnInitializedAsync()
     {
         LoaderService.SetLoader(true);
@@ -93,11 +101,6 @@ public partial class AppointmentModal : ModalBase
 
         // Even thought we set currect hours, still are converted to UTC
         // Leave it like this for now
-
-        var now = DateTime.Now;
-        appointmentDto.AppointmentDate = DateOnly.FromDateTime(now);
-        appointmentDto.AppointmentStartTime = TimeOnly.FromDateTime(now);
-        appointmentDto.AppointmentEndTime = TimeOnly.FromDateTime(now.AddHours(1));
 
         LoaderService.SetLoader(false);
     }

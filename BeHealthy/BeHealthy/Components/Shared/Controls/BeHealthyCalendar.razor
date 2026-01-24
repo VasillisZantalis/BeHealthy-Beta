@@ -2,7 +2,7 @@
 @implements IDisposable
 
 <div class="calendar-dropdown">
-    <div class="calendar-input" @onclick="ToggleCalendar">
+    <div class="calendar-input" @onclick="ToggleCalendar" @onclick:stopPropagation="true">
         <input type="text"
                readonly
                value="@GetDisplayValue()"
@@ -13,15 +13,15 @@
 
     @if (isOpen)
     {
-        <div class="calendar-overlay" @onclick="CloseCalendar"></div>
+        <div class="calendar-overlay" @onclick="CloseCalendar" @onclick:stopPropagation="true"></div>
         <div class="calendar-popup" @onclick:stopPropagation="true">
             <div class="calendar-picker">
                 <div class="calendar-header">
-                    <button class="nav-button" @onclick="PreviousMonth">&lt;</button>
+                    <button type="button" class="nav-button" @onclick="PreviousMonth" @onclick:stopPropagation="true">&lt;</button>
                     <div class="month-year">
                         @CurrentMonth.ToString("MMMM yyyy")
                     </div>
-                    <button class="nav-button" @onclick="NextMonth">&gt;</button>
+                    <button type="button" class="nav-button" @onclick="NextMonth" @onclick:stopPropagation="true">&gt;</button>
                 </div>
 
                 <div class="calendar-grid">
@@ -35,8 +35,10 @@
                     <div class="days">
                         @foreach (var day in CalendarDays)
                         {
-                            <button class="day-cell @GetDayClass(day)"
+                            <button type="button" 
+                                    class="day-cell @GetDayClass(day)"
                                     @onclick="() => SelectDate(day)"
+                                    @onclick:stopPropagation="true"
                                     disabled="@(!day.IsCurrentMonth)">
                                 @day.Day
                             </button>
@@ -45,8 +47,8 @@
                 </div>
 
                 <div class="calendar-footer">
-                    <button class="btn-today" @onclick="SelectToday">Today</button>
-                    <button class="btn-clear" @onclick="ClearDate">Clear</button>
+                    <button type="button" class="btn-today" @onclick="SelectToday" @onclick:stopPropagation="true">Today</button>
+                    <button type="button" class="btn-clear" @onclick="ClearDate" @onclick:stopPropagation="true">Clear</button>
                 </div>
             </div>
         </div>
@@ -55,10 +57,10 @@
 
 @code {
     [Parameter]
-    public DateTime? Value { get; set; }
+    public DateOnly? Value { get; set; }
 
     [Parameter]
-    public EventCallback<DateTime?> ValueChanged { get; set; }
+    public EventCallback<DateOnly?> ValueChanged { get; set; }
 
     [Parameter]
     public string DateFormat { get; set; } = "MMM dd, yyyy";
@@ -70,7 +72,7 @@
 
     protected override void OnInitialized()
     {
-        CurrentMonth = Value?.Date ?? DateTime.Today;
+        CurrentMonth = Value?.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
         CurrentMonth = new DateTime(CurrentMonth.Year, CurrentMonth.Month, 1);
         GenerateCalendarDays();
     }
@@ -99,13 +101,14 @@
         for (int i = 0; i < 42; i++)
         {
             var date = startDate.AddDays(i);
+            var dateOnly = DateOnly.FromDateTime(date);
             CalendarDays.Add(new CalendarDay
             {
-                Date = date,
+                Date = dateOnly,
                 Day = date.Day,
                 IsCurrentMonth = date.Month == CurrentMonth.Month,
-                IsToday = date.Date == DateTime.Today,
-                IsSelected = Value.HasValue && date.Date == Value.Value.Date
+                IsToday = dateOnly == DateOnly.FromDateTime(DateTime.Today),
+                IsSelected = Value.HasValue && dateOnly == Value.Value
             });
         }
     }
@@ -122,7 +125,7 @@
 
     private async Task SelectToday()
     {
-        Value = DateTime.Today;
+        Value = DateOnly.FromDateTime(DateTime.Today);
         CurrentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
         await ValueChanged.InvokeAsync(Value);
         GenerateCalendarDays();
@@ -167,7 +170,7 @@
 
     private class CalendarDay
     {
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public int Day { get; set; }
         public bool IsCurrentMonth { get; set; }
         public bool IsToday { get; set; }
