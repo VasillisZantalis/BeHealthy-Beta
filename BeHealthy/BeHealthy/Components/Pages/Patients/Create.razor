@@ -10,72 +10,94 @@
 
 <PageTitle>@Resource.Create</PageTitle>
 
-<div class="container-fluid p-5 border rounded shadow">
-    <EditForm Model="PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
+<BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
+    <Body>
+        <EditForm Model="PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
 
-        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
-            @if (inProgress)
-            {
-                <SmallLoader />
-            }
-            <span>@Resource.Save</span>
-        </button>
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+                @if (inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
 
-        <FluentValidationValidator @ref="fluentValidationValidator" />
-        <div class="row">
+            <FluentValidationValidator @ref="fluentValidationValidator" />
+       
             <Alert @ref="alert" />
-            <ImagePreview ImageUrl="@PatientCreateDto.Image" />
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="PatientCreateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                    <label for="firstName">@Resource.FirstName</label>
-                    <ValidationMessage For="() => PatientCreateDto.FirstName" class="text-danger" />
-                </div>
-            </div>
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="PatientCreateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                    <label for="lastName">@Resource.LastName</label>
-                    <ValidationMessage For="() => PatientCreateDto.LastName" class="text-danger" />
-                </div>
-            </div>
-        </div>
-        <ImageUpload OnImageChanged="image => PatientCreateDto.Image = image" />
-        <div class="form-floating mb-3">
-            <InputText @bind-Value="PatientCreateDto.Email" class="form-control" autocomplete="username" aria-required="true" id="email" placeholder="name@example.com" />
-            <label for="email">@Resource.Email</label>
-            <ValidationMessage For="() => PatientCreateDto.Email" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="PatientCreateDto.Password" class="form-control" autocomplete="new-password" aria-required="true" id="password" placeholder="Password" />
-            <label for="password">@Resource.Password</label>
-            <ValidationMessage For="() => PatientCreateDto.Password" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="PatientCreateDto.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="confirmPassword" placeholder="Confirm Password" />
-            <label for="confirmPassword">@Resource.ConfirmPassword</label>
-            <ValidationMessage For="() => PatientCreateDto.ConfirmPassword" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText id="phoneNumber" @bind-Value="PatientCreateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-            <label for="phoneNumber">@Resource.PhoneNumber</label>
-            <ValidationMessage For="() => PatientCreateDto.PhoneNumber" class="text-danger" />
-        </div>
+                <div class="d-flex flex-column gap-3 p-3">
+                    <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(PatientCreateDto.Image != null)" OnDeleteImage="@(() => PatientCreateDto.Image = null)">
+                        <ImagePreview ImageUrl="@PatientCreateDto.Image" />
+                    </ImageUploadContainer>
 
-        @if (departments is not null && departments.Any())
-        {
-            <div class="form-floating mb-3">
-                <InputSelect id="Department" @bind-Value="PatientCreateDto.DepartmentId" class="form-control">
-                    @foreach (var department in departmentsSelect)
+                    <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
+
+                        <InputText id="firstName"
+                                   @bind-Value="PatientCreateDto.FirstName"
+                                   class="form-control"
+                                   aria-required="true" />
+
+                        <ValidationMessage For="() => PatientCreateDto.FirstName" class="text-danger" />
+                    </BeHealthyFormGroup>
+
+                    <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                        <InputText id="lastName"
+                                   class="form-control"
+                                   @bind-Value="PatientCreateDto.LastName"
+                                   aria-required="true" />
+                        <ValidationMessage For="() => PatientCreateDto.LastName" class="text-danger" />
+                    </BeHealthyFormGroup>
+
+                    <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
+                        <InputText id="email"
+                                   class="form-control"
+                                   @bind-Value="PatientCreateDto.Email"
+                                   aria-required="true" />
+                        <ValidationMessage For="() => PatientCreateDto.Email" class="text-danger" />
+                    </BeHealthyFormGroup>
+
+                    <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
+                        <InputText id="password"
+                                   type="password"
+                                   class="form-control"
+                                   @bind-Value="PatientCreateDto.Password"
+                                   aria-required="true" />
+                        <ValidationMessage For="() => PatientCreateDto.Password" class="text-danger" />
+                    </BeHealthyFormGroup>
+
+                    <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
+                        <InputText id="confirmPassword"
+                                   type="password"
+                                   class="form-control"
+                                   @bind-Value="PatientCreateDto.ConfirmPassword"
+                                   aria-required="true" />
+                        <ValidationMessage For="() => PatientCreateDto.ConfirmPassword" class="text-danger" />
+                    </BeHealthyFormGroup>
+
+                    <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
+                        <InputText id="phoneNumber"
+                                   class="form-control"
+                                   @bind-Value="PatientCreateDto.PhoneNumber"
+                                   aria-required="true" />
+                        <ValidationMessage For="() => PatientCreateDto.PhoneNumber" class="text-danger" />
+                    </BeHealthyFormGroup>
+
+                    @if (departmentsSelect is not null && departmentsSelect.Any())
                     {
-                        <option value="@department.Value">@department.Text</option>
+                        <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
+                            <InputSelect id="department" @bind-Value="PatientCreateDto.DepartmentId" class="form-control">
+                                @foreach (var department in departmentsSelect)
+                                {
+                                    <option value="@department.Value">@department.Text</option>
+                                }
+                            </InputSelect>
+                        </BeHealthyFormGroup>
                     }
-                </InputSelect>
-                <label for="Department">@Resource.Department</label>
-            </div>
-        }
-    </EditForm>
-</div>
+
+                </div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
 
 @code {
 
@@ -142,5 +164,23 @@
             ToastService.ShowToast(Resource.Success, "success");
             NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
         }
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        PatientCreateDto.Image = imageData;
+        StateHasChanged();
     }
 }
