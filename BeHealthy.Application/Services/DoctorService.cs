@@ -1,6 +1,9 @@
 ﻿using BeHealthy.Application.Interfaces;
+using BeHealthy.Domain.Entities;
 using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
+using System.Numerics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BeHealthy.Application.Services;
 
@@ -86,15 +89,20 @@ public class DoctorService : IDoctorService
         if (!updateUserResult.Success)
             return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
 
-        var doctor = doctorDto.MapToDomain();
-
-        if (doctor is null || !await _unitOfWork.DoctorRepository.ExistsAsync(doctorDto.Id))
+        var existingDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(doctorDto.Id);
+        if (existingDoctor is null)
             return ServiceResponse.Failed(Resource.NotFound);
 
-        if (doctor.SpecialtyId.HasValue && !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctor.SpecialtyId.Value))
+        if (doctorDto.SpecialtyId.HasValue && !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctorDto.SpecialtyId.Value))
             return ServiceResponse.Failed(Resource.NotFound);
 
-        await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
+        existingDoctor.FirstName = doctorDto.FirstName;
+        existingDoctor.LastName = doctorDto.LastName;
+        existingDoctor.Image = doctorDto.Image ?? existingDoctor.Image;
+        existingDoctor.SpecialtyId = doctorDto.SpecialtyId ?? existingDoctor.SpecialtyId;
+        existingDoctor.DepartmentId = doctorDto.DepartmentId ?? existingDoctor.DepartmentId;
+
+        await _unitOfWork.DoctorRepository.UpdateAsync(existingDoctor);
 
         return ServiceResponse.Successful();
     }

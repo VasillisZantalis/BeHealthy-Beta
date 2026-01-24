@@ -105,7 +105,6 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        departmentsSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         var specialties = await SpecialtyService.GetSpecialtiesAsync();
 
@@ -114,7 +113,6 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        specialtiesSelect?.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
     protected override async Task OnParametersSetAsync()

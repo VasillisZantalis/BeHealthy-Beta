@@ -124,7 +124,6 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        departmentsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
 
         LoaderService.SetLoader(false);
     }

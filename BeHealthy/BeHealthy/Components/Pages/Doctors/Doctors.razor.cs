@@ -106,6 +106,7 @@ public partial class Doctors : BasePage
 
         selectedDoctorIds.Clear();
         isLoading = false;
+        StateHasChanged();
     }
 
     private void ToggleDoctorSelection(int doctorId)
