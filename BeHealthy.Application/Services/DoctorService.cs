@@ -85,20 +85,20 @@ public class DoctorService : IDoctorService
         if (!updateUserResult.Success)
             return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
 
-        var existingDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(doctorDto.Id);
-        if (existingDoctor is null)
+        var doctor = await _unitOfWork.DoctorRepository.GetByIdAsync(doctorDto.Id);
+        if (doctor is null)
             return ServiceResponse.Failed(Resource.NotFound);
 
         if (doctorDto.SpecialtyId.HasValue && !await _unitOfWork.SpecialtyRepository.ExistsAsync(doctorDto.SpecialtyId.Value))
             return ServiceResponse.Failed(Resource.NotFound);
 
-        existingDoctor.FirstName = doctorDto.FirstName;
-        existingDoctor.LastName = doctorDto.LastName;
-        existingDoctor.Image = doctorDto.Image;
-        existingDoctor.SpecialtyId = doctorDto.SpecialtyId;
-        existingDoctor.DepartmentId = doctorDto.DepartmentId;
+        doctor.FirstName = doctorDto.FirstName;
+        doctor.LastName = doctorDto.LastName;
+        doctor.Image = doctorDto.Image;
+        doctor.SpecialtyId = doctorDto.SpecialtyId;
+        doctor.DepartmentId = doctorDto.DepartmentId;
 
-        await _unitOfWork.DoctorRepository.UpdateAsync(existingDoctor);
+        await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
 
         return ServiceResponse.Successful();
     }
