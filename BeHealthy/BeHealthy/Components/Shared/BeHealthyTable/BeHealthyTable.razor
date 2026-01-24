@@ -27,7 +27,15 @@
             </thead>
         }
         <tbody class="@BodyClass">
-            @if (Items != null && Items.Any())
+            @if (IsLoading)
+            {
+                <tr>
+                    <td colspan="@GetColumnCount()" class="text-center">
+                        <SmallLoader />
+                    </td>
+                </tr>
+            }
+            else if (Items != null && Items.Any())
             {
                 @foreach (var item in Items)
                 {
@@ -87,6 +95,9 @@
     [Parameter] public RenderFragment? EmptyContent { get; set; }
     [Parameter] public RenderFragment? FooterContent { get; set; }
     [Parameter] public string EmptyMessage { get; set; } = Resource.DataNotFound;
+
+    // Add this:
+    [Parameter] public bool IsLoading { get; set; }
 
     // Styling parameters
     [Parameter] public string WrapperClass { get; set; } = "";

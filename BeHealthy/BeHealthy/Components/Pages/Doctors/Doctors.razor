@@ -82,6 +82,7 @@
         {
             <BeHealthyTable TItem="DoctorDto"
                             Items="@doctors"
+                            IsLoading="isLoading"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
                             EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)">

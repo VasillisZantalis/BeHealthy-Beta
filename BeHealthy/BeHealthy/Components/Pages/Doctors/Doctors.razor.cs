@@ -32,6 +32,7 @@ public partial class Doctors : BasePage
     private bool hasActionRights;
     private UserRole? userRole;
     private string? currentUserId;
+    private bool isLoading = false;
 
     protected override void OnInitialized()
     {
@@ -40,8 +41,7 @@ public partial class Doctors : BasePage
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
-
+        isLoading = true;
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userRole = authState.User.GetUserRoleEnum();
         currentUserId = authState.User.GetUserId();
@@ -50,8 +50,7 @@ public partial class Doctors : BasePage
         await LoadSpecialties();
 
         hasActionRights = userRole == UserRole.Admin;
-
-        LoaderService.SetLoader(false);
+        isLoading = false;
     }
 
     private async Task LoadSpecialties()
@@ -98,8 +97,7 @@ public partial class Doctors : BasePage
 
     private async Task LoadDoctors(string? userId, UserRole? userRole = UserRole.Admin)
     {
-        LoaderService.SetLoader(true);
-
+        isLoading = true;
         doctors = userRole switch
         {
             UserRole.Patient when userId is not null => (await PatientsService.GetMyDoctorsAsync(userId)).ToList(),
@@ -107,9 +105,7 @@ public partial class Doctors : BasePage
         };
 
         selectedDoctorIds.Clear();
-
-        await InvokeAsync(StateHasChanged);
-        LoaderService.SetLoader(false);
+        isLoading = false;
     }
 
     private void ToggleDoctorSelection(int doctorId)
@@ -136,8 +132,7 @@ public partial class Doctors : BasePage
 
     private async Task BulkCreateDoctors((List<DoctorCreateDto> doctorCreateDtos, bool UseValidation) result)
     {
-        LoaderService.SetLoader(true);
-
+        isLoading = true;
         var validator = result.UseValidation ? new DoctorCreateDtoValidator(false) : null;
 
         foreach (var doctor in result.doctorCreateDtos)
@@ -148,7 +143,7 @@ public partial class Doctors : BasePage
                 if (!validationResult.IsValid)
                 {
                     AlertModalStateService.Show(null, validationResult.Errors.FirstOrDefault()?.ErrorMessage);
-                    LoaderService.SetLoader(false);
+                    isLoading = false;
                     return;
                 }
             }
@@ -156,13 +151,13 @@ public partial class Doctors : BasePage
             var response = await DoctorService.AddDoctorAsync(doctor);
             if (!HandleServiceResponse(response))
             {
-                LoaderService.SetLoader(false);
+                isLoading = false;
                 return;
             }
         }
         
         await LoadDoctors(currentUserId, userRole);
-        LoaderService.SetLoader(false);
+        isLoading = false;
     }
 
     void ShowImportWizard()
@@ -198,15 +193,13 @@ public partial class Doctors : BasePage
 
     private async Task OnConfirmDeleteAsync(IEnumerable<int> doctorIds)
     {
-        LoaderService.SetLoader(true);
-
+        isLoading = true;
         foreach (var doctorId in doctorIds)
         {
             await DoctorService.DeleteDoctorAsync(doctorId);
         }
-     
-        LoaderService.SetLoader(false);
 
         await LoadDoctors(currentUserId, userRole);
+        isLoading = false;
     }
 }
