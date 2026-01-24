@@ -25,6 +25,26 @@
             <BeHealthySearch OnSearch="HandleSearch"
                             OnClear="HandleClearFilters"
                             DebounceMilliseconds="500">
+                <Filters>
+                    <InputSelect class="form-select" 
+                                 @bind-Value="QueryParameters.DoctorId"
+                                 @bind-Value:after="@(() => HandleDoctorFilter(QueryParameters.DoctorId))">
+                        @foreach(var doctor in doctorsSelect)
+                        {
+                            <option value="@doctor.Value">@doctor.Text</option>
+                        }
+)
+                    </InputSelect>
+
+                    <InputSelect class="form-select"
+                                 @bind-Value="QueryParameters.PatientId"
+                                 @bind-Value:after="@(() => HandlePatientFilter(QueryParameters.PatientId))">
+                        @foreach (var patient in patientsSelect)
+                        {
+                            <option value="@patient.Value">@patient.Text</option>
+                        }
+                    </InputSelect>
+                </Filters>
             </BeHealthySearch>
         </div>
     </Header>

@@ -10,8 +10,8 @@ using BeHealthy.Components.Shared.Wizards;
 using BeHealthy.Domain;
 using BeHealthy.Models;
 using BeHealthy.Models.Enums;
-using BeHealthy.Services.Interfaces;
 using BeHealthy.Shared.Locales;
+using BeHealthy.Shared.Parameters;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -29,7 +29,10 @@ public partial class Appointments : BasePage
 
     private List<DoctorSimpleDto>? doctors { get; set; }
     private List<PatientSimpleDto>? patients { get; set; }
+    private List<SelectItem> doctorsSelect { get; set; } = new();
+    private List<SelectItem> patientsSelect { get; set; } = new();
     private HashSet<int> selectedAppointmentIds = new();
+    private AppointmentQueryParameters QueryParameters { get; set; } = new();
 
     private string? currentUserId;
     private bool hasActionRights;
@@ -72,7 +75,7 @@ public partial class Appointments : BasePage
         {
             (UserRole.Doctor, not null) => (await DoctorService.GetDoctorAppointmentsByUserIdAsync(currentUserId)).ToList(),
             (UserRole.Patient, not null) => (await PatientService.GetPatientAppointmentsByUserIdAsync(currentUserId)).ToList(),
-            _ => (await AppointmentService.GetAllAppointmentsAsync()).ToList()
+            _ => (await AppointmentService.GetAllAppointmentsAsync(QueryParameters)).ToList()
         };
 
         selectedAppointmentIds.Clear();
@@ -115,11 +118,24 @@ public partial class Appointments : BasePage
         {
             doctors = doctors.Where(d => d.UserId.ToString() == currentUserId).ToList();
         }
+
+        doctorsSelect = doctors.Select(s => new SelectItem
+        { 
+            Text = s.FullName,
+            Value = s.Id 
+        }).ToList();
+        doctorsSelect.Insert(0, new(){ Text = Resource.PleaseSelect, Value = 0 });
     }
 
     private async Task LoadPatients()
     {
         patients = (await PatientService.GetAllPatientsSimpleAsync()).ToList();
+        patientsSelect = patients.Select(s => new SelectItem
+        {
+            Text = s.FullName,
+            Value = s.Id
+        }).ToList();
+        patientsSelect.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
     }
 
     private void ToggleAppointmentSelection(int appointmentId)
@@ -132,6 +148,18 @@ public partial class Appointments : BasePage
         {
             selectedAppointmentIds.Add(appointmentId);
         }
+    }
+
+    private async Task HandleDoctorFilter(int? doctorId)
+    {
+        QueryParameters.DoctorId = doctorId;
+        await LoadAppointments();
+    }
+
+    private async Task HandlePatientFilter(int? patientId)
+    {
+        QueryParameters.PatientId = patientId;
+        await LoadAppointments();
     }
 
     private void CreateAppointment()
@@ -241,14 +269,16 @@ public partial class Appointments : BasePage
 
     private async Task HandleSearch(string term)
     {
-        // Implement search logic if needed
-        await Task.CompletedTask;
+        QueryParameters.SearchTerm = term;
+        await LoadAppointments();
     }
 
     private async Task HandleClearFilters()
     {
-        // Implement clear filters logic if needed
-        await Task.CompletedTask;
+        if (string.IsNullOrEmpty(QueryParameters.SearchTerm)) return;
+
+        QueryParameters.SearchTerm = "";
+        await LoadPatients();
     }
 
     void ShowImportWizard()

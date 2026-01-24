@@ -1,4 +1,6 @@
-﻿using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Application.Common.Extensions;
+using BeHealthy.Shared.Locales;
+using BeHealthy.Shared.Parameters;
 
 namespace BeHealthy.Application.Services;
 
@@ -11,9 +13,35 @@ public class AppointmentService : IAppointmentService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync()
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null)
     {
-        var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsAsync();
+        parameters ??= new();
+        var queryOptions = new QueryOptions<Appointment>
+        {
+            Includes = new List<Expression<Func<Appointment, object>>>
+            {
+                a => a.Doctor!,
+                a => a.Patient!
+            }
+        };
+
+        Expression<Func<Appointment, bool>> predicate = a => true;
+
+        if (parameters.DoctorId.HasValue)
+        {
+            var doctorId = parameters.DoctorId.Value;
+            predicate = predicate.And(a => a.DoctorId == doctorId);
+        }
+
+        if (parameters.PatientId.HasValue)
+        {
+            var patientId = parameters.PatientId.Value;
+            predicate = predicate.And(a => a.PatientId == patientId);
+        }
+
+        queryOptions.Predicate = predicate;
+
+        var appointments = await _unitOfWork.AppointmentRepository.QueryAsync(queryOptions);
         return appointments.MapToDto();
     }
 
