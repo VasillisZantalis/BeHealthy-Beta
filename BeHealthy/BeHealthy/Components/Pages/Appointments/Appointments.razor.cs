@@ -63,12 +63,9 @@ public partial class Appointments : BasePage
 
         await LoadAppointments();
 
-        await GetUserPrivilege(userRole!.Value);
-
         hasActionRights = hasEditRight || hasDeleteRight;
 
-        await LoadDoctors();
-        await LoadPatients();
+        await Task.WhenAll(LoadDoctors(), LoadPatients(), GetUserPrivilege(userRole!.Value));
 
         paginationState.ItemsPerPage = appointments.Count;
 
