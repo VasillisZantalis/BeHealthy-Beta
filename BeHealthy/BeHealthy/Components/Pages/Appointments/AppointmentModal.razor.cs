@@ -5,15 +5,17 @@ using BeHealthy.Application.Extensions;
 using BeHealthy.Application.Helpers;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Appointments;
+using BeHealthy.Components.Shared.Modals.Base;
 using BeHealthy.Domain;
 using BeHealthy.Extensions;
 using BeHealthy.Models;
 using BeHealthy.Shared.Locales;
+using BeHealthy.States;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Components.Pages.Appointments;
 
-public partial class AppointmentModal : BasePage
+public partial class AppointmentModal : ModalBase
 {
     [Parameter, EditorRequired]
     public int? AppointmentId { get; set; }
@@ -47,6 +49,8 @@ public partial class AppointmentModal : BasePage
 
     [Inject]
     private IAppointmentService AppointmentService { get; set; } = default!;
+
+    [Inject] LoaderServiceState LoaderService { get; set; } = default!;
 
     private List<SelectItem> doctorsSelect = new();
     private List<SelectItem> patientsSelect = new();
@@ -143,10 +147,6 @@ public partial class AppointmentModal : BasePage
         showRooms = requireRoomSetting?.GetBooleanValue() ?? false;
     }
 
-    public void Open() => show = true;
-
-    public void Close() => show = false;
-
     public async Task HandleSaveClick()
     {
         validationComponent?.ClearErrors();
@@ -163,6 +163,8 @@ public partial class AppointmentModal : BasePage
         {
             await OnFormSubmit.InvokeAsync((appointmentDto, AppointmentId));
         }
+
+        Close();
     }
 
     public static IEnumerable<SelectItem> GetReasons()
