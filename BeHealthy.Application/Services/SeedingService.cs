@@ -62,7 +62,7 @@ public class SeedingService : ISeedingService
                     LastName = $"Sample{i}",
                     Email = $"doctor{i}@behealthy.com",
                     Password = "Doctor123!",
-                    PhoneNumber = $"+1234567{i:D3}",
+                    PhoneNumber = $"1234567{i:D3}",
                     Image = null,
                     DepartmentId = null,
                     SpecialtyId = null
@@ -96,7 +96,7 @@ public class SeedingService : ISeedingService
                     LastName = $"Sample{i}",
                     Email = $"patient{i}@behealthy.com",
                     Password = "Patient123!",
-                    PhoneNumber = $"+1234568{i:D3}",
+                    PhoneNumber = $"1234568{i:D3}",
                     Image = null,
                     DepartmentId = null
                 };
@@ -129,7 +129,7 @@ public class SeedingService : ISeedingService
                     LastName = $"Sample{i}",
                     Email = $"nurse{i}@behealthy.com",
                     Password = "Nurse123!",
-                    PhoneNumber = $"+1234569{i:D3}",
+                    PhoneNumber = $"1234569{i:D3}",
                     Image = null,
                     DepartmentId = null
                 };
