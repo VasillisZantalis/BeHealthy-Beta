@@ -35,18 +35,18 @@
                         WrapperClass="table-wrapper"
                         EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Appointments)">
 
-            @if (hasDeleteRight)
-            {
-                <BeHealthyColumn TItem="AppointmentDto">
-                    <Template>
+           <BeHealthyColumn TItem="AppointmentDto">
+                <Template> 
+                    @if (hasDeleteRight)
+                    {
                         <input type="checkbox"
-                               class="form-check-input"
-                               checked="@selectedAppointmentIds.Contains(context.Id)"
-                               @onchange="@(() => ToggleAppointmentSelection(context.Id))"
-                               @onclick:stopPropagation="true" />
-                    </Template>
-                </BeHealthyColumn>
-            }
+                            class="form-check-input"
+                            checked="@selectedAppointmentIds.Contains(context.Id)"
+                            @onchange="@(() => ToggleAppointmentSelection(context.Id))"
+                            @onclick:stopPropagation="true" />
+                    }
+                </Template>
+            </BeHealthyColumn>
 
             <BeHealthyColumn TItem="AppointmentDto"
                              Title="@Resource.Date"

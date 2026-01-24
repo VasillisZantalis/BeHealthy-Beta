@@ -162,9 +162,8 @@ public partial class AppointmentModal : ModalBase
         else
         {
             await OnFormSubmit.InvokeAsync((appointmentDto, AppointmentId));
+            Close();
         }
-
-        Close();
     }
 
     public static IEnumerable<SelectItem> GetReasons()
