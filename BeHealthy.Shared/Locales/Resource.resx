@@ -603,4 +603,7 @@
   <data name="RequiresDoctorsAndPatients" xml:space="preserve">
     <value>Requires doctors and patients</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
 </root>

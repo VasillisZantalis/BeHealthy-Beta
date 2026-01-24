@@ -603,4 +603,7 @@
   <data name="RequiresDoctorsAndPatients" xml:space="preserve">
     <value>Απαιτεί γιατρούς και ασθενείς</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>Ολα</value>
+  </data>
 </root>

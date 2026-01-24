@@ -124,7 +124,7 @@ public partial class Appointments : BasePage
             Text = s.FullName,
             Value = s.Id 
         }).ToList();
-        doctorsSelect.Insert(0, new(){ Text = Resource.PleaseSelect, Value = 0 });
+        doctorsSelect.Insert(0, new(){ Text = Resource.All, Value = 0 });
     }
 
     private async Task LoadPatients()
@@ -135,7 +135,7 @@ public partial class Appointments : BasePage
             Text = s.FullName,
             Value = s.Id
         }).ToList();
-        patientsSelect.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+        patientsSelect.Insert(0, new() { Text = Resource.All, Value = 0 });
     }
 
     private void ToggleAppointmentSelection(int appointmentId)
