@@ -104,7 +104,6 @@ public partial class Appointments : BasePage
     private async Task HandleAppointmentFormSubmission((AppointmentDto, int?) submission)
     {
         var (appointmentDto, appointmentId) = submission;
-        appointmentModal.Close();
 
         if (appointmentId is not null)
         {
@@ -135,10 +134,28 @@ public partial class Appointments : BasePage
         patients = (await PatientService.GetAllPatientsSimpleAsync()).ToList();
     }
 
+    private void CreateAppointment()
+    {
+        ShowAppointmentModal(null);
+    }
+
     private void EditAppointment(int appointmentId)
     {
-        this.appointmentId = appointmentId;
-        appointmentModal.Open();
+        ShowAppointmentModal(appointmentId);
+    }
+
+    private void ShowAppointmentModal(int? appointmentId)
+    {
+        ModalService.Show<AppointmentModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(AppointmentModal.AppointmentId), appointmentId },
+                { nameof(AppointmentModal.OnFormSubmit), EventCallback.Factory.Create<(AppointmentDto, int?)>(this, HandleAppointmentFormSubmission) },
+                { nameof(AppointmentModal.Doctors), doctors! },
+                { nameof(AppointmentModal.Patients), patients! },
+                { nameof(AppointmentModal.Role), userRole },
+                { nameof(AppointmentModal.CurrentUserId), currentUserId! }
+            });
     }
 
     private void ConfirmDelete(int appointmentId)

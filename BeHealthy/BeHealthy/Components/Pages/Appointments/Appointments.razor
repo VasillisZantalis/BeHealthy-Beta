@@ -101,14 +101,3 @@ else
         </div>
     </div>
 }
-
-@if (doctors != null && patients != null)
-{
-    <AppointmentModal @ref="appointmentModal"
-                      OnFormSubmit="HandleAppointmentFormSubmission"
-                      Doctors="doctors"
-                      Patients="patients"
-                      Role="userRole"
-                      CurrentUserId="@currentUserId" 
-                      AppointmentId="appointmentId"/>
-}
