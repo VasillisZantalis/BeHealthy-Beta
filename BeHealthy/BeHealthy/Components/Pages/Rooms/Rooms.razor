@@ -4,76 +4,62 @@
 @inherits BasePage
 
 @inject IRoomService RoomService
-@inject NavigationManager NavigationManager
 
 <PageTitle>@Resource.Rooms</PageTitle>
 
-<CreateButton OnClick="CreateRoom" />
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Header>
+        <CreateButton OnClick="CreateRoom" />
+    </Header>
 
-<UpsertModal @ref="roomUpsertModal"
-             RoomId="roomId" />
+    <Body>
+        <BeHealthyTable TItem="RoomDto"
+                        Items="@rooms"
+                        IsLoading="isLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Rooms)">
 
-@if (rooms is null || !rooms.Any())
-{
-    <p>@string.Format(Resource.NoAvailable, Resource.Rooms)</p>
-}
-else
-{
-    <div class="departments-container mt-3">
-        <div class="card">
-            <div class="card-header d-flex flex-row justify-content-end">
-                <div class="px-1">
-                    <InputSelect class="form-select form-select-sm" @bind-Value="paginationState.ItemsPerPage">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </InputSelect>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <div class="card-body pb-2 px-0 m-0">
-                    <QuickGrid Class="table rounded"
-                                Items="@rooms.AsQueryable()"
-                                ItemKey="@(x => x.Id)"
-                    Pagination="paginationState">
-                        <PropertyColumn Title="@Resource.Name"
-                                        Property="@(x => x.Name)" 
-                                        Sortable="true"/>
-                        <PropertyColumn Title="@Resource.Number"
-                                        Property="@(x => x.Number)" />
-                        <PropertyColumn Title="@Resource.Department"
-                                        Property="@(x => x.Department)"
-                                        Sortable="true" />
-                        <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn" @onclick="() => EditRoom(context.Id)">
-                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                                </button>
-                                <button class="btn" @onclick="async () => await DeleteRoom(context.Id)">
-                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                </button>
-                            </div>
-                        </TemplateColumn>
-                    </QuickGrid>
+            <BeHealthyColumn TItem="RoomDto"
+                             Title="@Resource.Name"
+                             Property="@(x => x.Name)" />
 
-                </div>
+            <BeHealthyColumn TItem="RoomDto"
+                             Title="@Resource.Number"
+                             Property="@(x => x.Number)" />
 
-            </div>
-            <div id="paginatorDiv" class="px-3">
-                <Paginator State="paginationState" />
-            </div>
-        </div>
-    </div>
-}
+            <BeHealthyColumn TItem="RoomDto"
+                             Title="@Resource.Department"
+                             Property="@(x => x.Department)" />
+
+            <BeHealthyActionsColumn TItem="RoomDto"
+                                    Title="@Resource.Actions"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn"
+                                title="@(Resource.Edit)"
+                                @onclick="@(() => EditRoom(context.Id))"
+                                @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn"
+                                title="@(Resource.Delete)"
+                                @onclick="async () => await DeleteRoom(context.Id)"
+                                @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
 
 @code {
     private IEnumerable<RoomDto> rooms = default!;
-
-    private PaginationState paginationState = new();
-    private int? roomId;
     private UpsertModal roomUpsertModal = new();
+    private bool isLoading = false;
 
     protected override void OnInitialized()
     {
@@ -82,12 +68,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        await LoadRooms();
+    }
+
+    private async Task LoadRooms()
+    {
+        isLoading = true;
+        StateHasChanged();
 
         rooms = await RoomService.GetAllRoomsAsync();
-        paginationState.ItemsPerPage = rooms.Count();
 
-        LoaderService.SetLoader(false);
+        isLoading = false;
+        StateHasChanged();
     }
 
     private void SetBreadcrumbs()
@@ -101,14 +93,21 @@ else
 
     private void CreateRoom()
     {
-        roomId = null;
-        roomUpsertModal.OpenModal();
+        ShowRoomUpsertModal(null);
     }
 
     private void EditRoom(int roomId)
     {
-        roomId = roomId;
-        roomUpsertModal.OpenModal();
+        ShowRoomUpsertModal(roomId);
+    }
+
+    private void ShowRoomUpsertModal(int? id)
+    {
+        ModalService.Show<UpsertModal>(
+            new Dictionary<string, object?>
+            {
+                    { nameof(UpsertModal.RoomId), id }
+            });
     }
 
     public async Task DeleteRoom(int roomId)
@@ -123,6 +122,6 @@ else
     private async Task OnConfirmDeleteAsync(int roomId)
     {
         await RoomService.DeleteRoomAsync(roomId);
-        NavigationManager.Refresh(true);
+        await LoadRooms();
     }
 }
