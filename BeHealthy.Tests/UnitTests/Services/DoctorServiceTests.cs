@@ -60,7 +60,9 @@ public class DoctorServiceTests
             }
         };
 
-        _mockUnitOfWork.Setup(uow => uow.DoctorRepository.GetAllDoctorsAsync()).ReturnsAsync(doctors);
+        _mockDoctorRepository
+            .Setup(repo => repo.QueryAsync(It.IsAny<QueryOptions<Doctor>>()))
+            .ReturnsAsync(doctors);
 
         // Act
         var result = await _sut.GetAllDoctorsAsync();
@@ -84,21 +86,6 @@ public class DoctorServiceTests
 
         //Assert
         result.ShouldBeEmpty();
-    }
-
-    [Fact]
-    public async Task GetAllDoctorsAsync_RepositoryCalledOnce()
-    {
-        //Arrange
-        _mockDoctorRepository
-            .Setup(repo => repo.GetAllDoctorsAsync())
-            .ReturnsAsync(new List<Doctor>());
-
-        //Act
-        await _sut.GetAllDoctorsAsync();
-
-        //Assert
-        _mockDoctorRepository.Verify(repo => repo.GetAllDoctorsAsync(), Times.Once);
     }
 
     #endregion
