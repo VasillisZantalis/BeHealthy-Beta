@@ -76,6 +76,7 @@
     private async Task OnConfirmDeleteAsync(int doctorId)
     {
         await VisitService.DeleteVisitAsync(doctorId);
+        await ToastService.EnqueueToastAsync(Resource.Success, "success");
         NavigationManager.Refresh(true);
     }
 }

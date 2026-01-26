@@ -133,11 +133,11 @@
         }
     }
 
-    private void HandleResponse(bool successful)
+    private async Task HandleResponse(bool successful)
     {
         if (successful)
         {
-            ToastService.ShowToast(Resource.Success, "success");
+            await ToastService.EnqueueToastAsync(Resource.Success, "success");
             NavigationManager.Refresh(true);
         }
         else

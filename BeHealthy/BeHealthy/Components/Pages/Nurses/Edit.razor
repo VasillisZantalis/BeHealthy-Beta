@@ -149,7 +149,7 @@
         }
         else
         {
-            ToastService.ShowToast(Resource.Success, "success");
+            await ToastService.EnqueueToastAsync(Resource.Success, "success");
             NavigationManager.Refresh(true);
         }
     }

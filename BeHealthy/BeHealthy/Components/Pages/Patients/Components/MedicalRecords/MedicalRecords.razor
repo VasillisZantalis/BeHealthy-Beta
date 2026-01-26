@@ -103,8 +103,8 @@
             await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
         }
 
+        await ToastService.EnqueueToastAsync(Resource.Success, "success");
         NavigationManager.Refresh(true);
-        ToastService.ShowToast(Resource.Success, "success");
     }
 
     private void EditRecord(int medicalRecordId)
