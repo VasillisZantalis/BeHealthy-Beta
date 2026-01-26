@@ -1,7 +1,4 @@
 ﻿using BeHealthy.Application.Dtos.Specialty;
-using BeHealthy.Application.Interfaces;
-using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Services.Interfaces;
 
 namespace BeHealthy.Application.Services;
 
@@ -32,7 +29,7 @@ public class SpecialtyService : ISpecialtyService
         await _unitOfWork.SpecialtyRepository.AddAsync(specialty);
     }
 
-    public async Task UpdateSpecialtyAsync(int id, SpecialtyUpdateDto specialtyForUpdateDto)
+    public async Task UpdateSpecialtyAsync(SpecialtyUpdateDto specialtyForUpdateDto)
     {
         var specialty = specialtyForUpdateDto.MapToDomain();
 

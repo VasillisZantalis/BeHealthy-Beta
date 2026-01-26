@@ -1,88 +1,52 @@
-﻿@inject ISpecialtyService SpecialtyService
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+@inherits ModalBase
 
-@if (show)
-{
-    <div class="modal fade show" tabindex="-1" style="display: block;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">@ModalTitle</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
-                </div>
-                <div class="modal-body">
-                    <EditForm Model="specialtyDto" FormName="SpecialtyForm" OnValidSubmit="SaveSpecialty">
-                        <FluentValidationValidator @ref="fluentValidationValidator" />
-                        <div class="d-flex flex-column gap-3">
-                            <div class="form">
-                                <label class="fw-bold required" aria-required="true" for="name">@Resource.Name</label>
-                                <InputText id="name" class="form-control" @bind-Value="specialtyDto.Name" />
-                                <ValidationMessage For="@(() => specialtyDto.Name)" />
-                            </div>
-                        </div>
-                        <div class="d-flex flex-row justify-content-end m-3 gap-2">
-                            <button type="button" class="btn btn-outline-secondary" @onclick="CloseModal">@Resource.Cancel</button>
-                            <button type="submit" class="btn btn-success">@Resource.Save</button>
-                        </div>
-                    </EditForm>
-                </div>
+<BeHealthyModal BodyClass="">
+    <Header>
+        <h5 class="modal-title">@Resource.Room</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+
+    <Body>
+        <EditForm Model="specialtyDto" FormName="SpecialtyForm" OnValidSubmit="SaveSpecialty">
+            <FluentValidationValidator @ref="fluentValidationValidator" />
+
+            <BeHealthyFormGroup Label="@Resource.Name" IsRequired="true" InputId="name">
+                <InputText id="name" class="form-control" @bind-Value="specialtyDto.Name" />
+                <ValidationMessage For="@(() => specialtyDto.Name)" />
+            </BeHealthyFormGroup>
+
+            <div class="d-flex flex-row justify-content-end m-3 gap-2">
+                <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
+                <button type="submit" class="btn btn-success">@Resource.Save</button>
             </div>
-        </div>
-    </div>
-    <div class="modal-backdrop fade show"></div>
-}
+        </EditForm>
+    </Body>
+</BeHealthyModal>
 
 @code {
     [Parameter, EditorRequired]
-    public int? SpecialtyId { get; set; }
+    public SpecialtyDto Specialty { get; set; }
 
     [Parameter, EditorRequired]
-    public EventCallback HandleResponse { get; set; }
+    public EventCallback<SpecialtyDto> OnSpecialtySaved { get; set; }
 
     [SupplyParameterFromForm]
     private SpecialtyDto specialtyDto { get; set; } = new();
 
     private FluentValidationValidator fluentValidationValidator = new();
 
-    private string ModalTitle => SpecialtyId.HasValue ? Resource.Edit : Resource.Create;
-
-    private bool show;
-
     protected override async Task OnParametersSetAsync()
     {
-        specialtyDto = new();
-
-        if (SpecialtyId.HasValue)
-            specialtyDto = await SpecialtyService.GetSpecialtyByIdAsync(SpecialtyId.Value) ?? new();
+        specialtyDto = Specialty;
     }
-
-    public void OpenModal() => show = true;
-
-    public void CloseModal() => show = false;
 
     private async Task SaveSpecialty()
     {
         if (await fluentValidationValidator.ValidateAsync())
         {
-            if (SpecialtyId.HasValue)
-            {
-                var specialtyForUpdateDto = new SpecialtyUpdateDto
-                {
-                    Id = SpecialtyId.Value,
-                    Name = specialtyDto.Name
-                };
-                await SpecialtyService.UpdateSpecialtyAsync(SpecialtyId.Value, specialtyForUpdateDto);
-            }
-            else
-            {
-                var specialtyForCreationDto = new SpecialtyCreateDto
-                {
-                    Name = specialtyDto.Name
-                };
-                await SpecialtyService.AddSpecialtyAsync(specialtyForCreationDto);
-            }
+            await OnSpecialtySaved.InvokeAsync(specialtyDto);
+            Close();
         }
-
-        CloseModal();
-        await HandleResponse.InvokeAsync();
     }
 }

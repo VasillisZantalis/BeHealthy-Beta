@@ -7,66 +7,68 @@
 @inject NavigationManager NavigationManager
 @inject ISpecialtyService SpecialtyService
 
-<div class="">
-    <CreateButton OnClick="CreateSpecialty" />
-</div>
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Header>
+        <CreateButton OnClick="CreateSpecialty" />
+    </Header>
+    
+    <Body>
+        <BeHealthyTable TItem="SpecialtyDto"
+                        Items="@specialties"
+                        IsLoading="isLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Specialties)">
 
-<UpsertModal @ref="upsertModal"
-             HandleResponse="(async () => await HandleResponse())"
-             SpecialtyId="specialtyId" />
+            <BeHealthyColumn TItem="SpecialtyDto"
+                             Title="#"
+                             Property="@(x => specialties.IndexOf(x))" />
 
-@if (specialties is null || !specialties.Any())
-{
-    <p>@string.Format(Resource.NotAvailable, Resource.Specialties)</p>
-}
-else
-{
-    <div class="departments-container mt-3">
-        <div class="card px-3">
-            <div class="table-responsive">
-                <div class="card-body pb-2 px-0 m-0">
-                    <QuickGrid Class="table rounded"
-                               Items="@specialties.AsQueryable()"
-                               ItemKey="@(x => x.Id)">
-                        <PropertyColumn Title="#"
-                                        Property="@(x => specialties.IndexOf(x))" />
-                        <PropertyColumn Title="@Resource.Name"
-                                        Property="@(x => x.Name)" />
-                        <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditSpecialty(context.Id))">
-                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                                </button>
-                                <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
-                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                </button>
-                            </div>
-                        </TemplateColumn>
-                    </QuickGrid>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+            <BeHealthyColumn TItem="SpecialtyDto"
+                             Title="@Resource.Name"
+                             Property="@(x => x.Name)" />
+
+            <BeHealthyActionsColumn TItem="SpecialtyDto"
+                                    Title="@Resource.Actions"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn"
+                                title="@(Resource.Edit)"
+                                @onclick="@(() => EditSpecialty(context.Id))"
+                                @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn"
+                                title="@(Resource.Delete)"
+                                @onclick="async () => await ConfirmDelete(context.Id)"
+                                @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
 
 @code {
-    private List<SpecialtyDto> specialties { get; set; } = default!;
-    private UpsertModal upsertModal { get; set; } = new();
+    private List<SpecialtyDto> specialties { get; set; } = new();
+    private bool isLoading = false;
     private int? specialtyId;
 
     protected override async Task OnInitializedAsync()
     {
-
         SetBreadcrumbs();
         await LoadSpecialties();
     }
 
     private async Task LoadSpecialties()
     {
-        LoaderService.SetLoader(true);
+        isLoading = true;
         specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
-        await InvokeAsync(StateHasChanged);
-        LoaderService.SetLoader(false);
+        StateHasChanged();
+        isLoading = false;
     }
 
     private void SetBreadcrumbs()
@@ -80,17 +82,27 @@ else
 
     private void CreateSpecialty()
     {
-        specialtyId = null;
-        upsertModal.OpenModal();
+        ShowSpecialtyModal(null);
     }
 
     private void EditSpecialty(int specialtyId)
     {
-        specialtyId = specialtyId;
-        upsertModal.OpenModal();
+        ShowSpecialtyModal(specialtyId);
     }
 
-    private void ConfirmDelete(int specialtyId)
+    private void ShowSpecialtyModal(int? specialtyId)
+    {
+        var specialty = specialties.FirstOrDefault(s => s.Id == specialtyId) ?? new();
+
+        ModalService.Show<UpsertModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(UpsertModal.Specialty), specialty },
+               { nameof(UpsertModal.OnSpecialtySaved), EventCallback.Factory.Create<SpecialtyDto>(this, HandleResponse) }
+           });
+    }
+
+    private async Task ConfirmDelete(int specialtyId)
     {
         ModalService.Show<ConfirmDeleteModal>(
            new Dictionary<string, object?>
@@ -105,8 +117,27 @@ else
         await LoadSpecialties();
     }
 
-    private async Task HandleResponse()
+    private async Task HandleResponse(SpecialtyDto specialtyDto)
     {
+        isLoading = true;
+        if (specialtyDto.Id > 0)
+        {
+            var specialtyForUpdateDto = new SpecialtyUpdateDto
+            {
+                Id = specialtyDto.Id,
+                Name = specialtyDto.Name
+            };
+            await SpecialtyService.UpdateSpecialtyAsync(specialtyForUpdateDto);
+        }
+        else
+        {
+            var specialtyForCreationDto = new SpecialtyCreateDto
+            {
+                Name = specialtyDto.Name
+            };
+            await SpecialtyService.AddSpecialtyAsync(specialtyForCreationDto);
+        }
+        isLoading = false;
         ToastService.ShowToast(Resource.Success, "success");
         await LoadSpecialties();
     }

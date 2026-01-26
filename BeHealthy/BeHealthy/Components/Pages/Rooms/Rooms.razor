@@ -57,8 +57,7 @@
 </BeHealthyCard>
 
 @code {
-    private IEnumerable<RoomDto> rooms = default!;
-    private UpsertModal roomUpsertModal = new();
+    private IEnumerable<RoomDto> rooms = new List<RoomDto>();
     private bool isLoading = false;
 
     protected override void OnInitialized()
@@ -126,7 +125,8 @@
             var roomForCreate = roomDto.MapDtoToCreateDto();
             await RoomService.AddRoomAsync(roomForCreate);
         }
-        isLoading = true;
+        isLoading = false;
+        ToastService.ShowToast(Resource.Success, "success");
         await LoadRooms();
     }
 
