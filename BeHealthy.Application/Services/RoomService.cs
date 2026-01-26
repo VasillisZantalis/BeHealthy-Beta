@@ -1,7 +1,4 @@
 ﻿using BeHealthy.Application.Dtos.Room;
-using BeHealthy.Application.Interfaces;
-using BeHealthy.Application.Mappings;
-using BeHealthy.Application.Services.Interfaces;
 
 namespace BeHealthy.Application.Services;
 
@@ -32,7 +29,7 @@ public class RoomService : IRoomService
         await _unitOfWork.RoomRepository.AddAsync(room);
     }
 
-    public async Task UpdateRoomAsync(int id, RoomUpdateDto roomDto)
+    public async Task UpdateRoomAsync(RoomUpdateDto roomDto)
     {
         var room = roomDto.MapToDomain();
         await _unitOfWork.RoomRepository.UpdateAsync(room);

@@ -53,8 +53,11 @@
 </BeHealthyModal>
 
 @code {
+    [Parameter, EditorRequired]
+    public RoomDto Room { get; set; } = new();
+
     [Parameter]
-    public int? RoomId { get; set; }
+    public EventCallback<RoomDto> OnRoomSaved { get; set; }
 
     [SupplyParameterFromForm]
     private RoomDto roomDto { get; set; } = new();
@@ -62,8 +65,7 @@
     private FluentValidationValidator fluentValidationValidator = new();
 
     private bool showModal = false;
-    private bool isEditMode => RoomId.HasValue;
-    private string ModalTitle => isEditMode ? Resource.Edit : Resource.Create;
+    private bool isEditMode => Room.Id > 0;
     private List<SelectItem> departmentSelect = new();
 
     protected override async Task OnInitializedAsync()
@@ -80,11 +82,9 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        roomDto = new();
-
-        if (isEditMode && RoomId.HasValue)
+        if (isEditMode)
         {
-            roomDto = await RoomService.GetRoomByIdAsync(RoomId.Value) ?? new();
+            roomDto = Room;
         }
     }
 
@@ -92,19 +92,8 @@
     {
         if (await fluentValidationValidator.ValidateAsync())
         {
-            if (isEditMode && RoomId.HasValue)
-            {
-                var roomForUpdate = roomDto.MapDtoToUpdateDto();
-                await RoomService.UpdateRoomAsync(roomForUpdate.Id, roomForUpdate);
-            }
-            else 
-            {
-                var roomForCreate = roomDto.MapDtoToCreateDto();
-                await RoomService.AddRoomAsync(roomForCreate);
-            }
-
+            await OnRoomSaved.InvokeAsync(roomDto);
             Close();
-            NavigationManager.Refresh(true);
         }
     }
 }

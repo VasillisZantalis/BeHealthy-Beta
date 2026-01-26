@@ -103,11 +103,31 @@
 
     private void ShowRoomUpsertModal(int? id)
     {
+        var room = rooms.FirstOrDefault(r => r.Id == id) ?? new();
+
         ModalService.Show<UpsertModal>(
             new Dictionary<string, object?>
             {
-                    { nameof(UpsertModal.RoomId), id }
+                { nameof(UpsertModal.Room), room },
+                { nameof(UpsertModal.OnRoomSaved), EventCallback.Factory.Create<RoomDto>(this, HandleSavedRoom) }
             });
+    }
+
+    private async Task HandleSavedRoom(RoomDto roomDto)
+    {
+        isLoading = true;
+        if (roomDto.Id > 0)
+        {
+            var roomForUpdate = roomDto.MapDtoToUpdateDto();
+            await RoomService.UpdateRoomAsync(roomForUpdate);
+        }
+        else
+        {
+            var roomForCreate = roomDto.MapDtoToCreateDto();
+            await RoomService.AddRoomAsync(roomForCreate);
+        }
+        isLoading = true;
+        await LoadRooms();
     }
 
     public async Task DeleteRoom(int roomId)

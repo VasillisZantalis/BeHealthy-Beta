@@ -52,7 +52,7 @@ public static class RoomEndpoints
             if (roomDto is null)
                 return TypedResults.BadRequest();
 
-            await roomService.UpdateRoomAsync(id, roomDto);
+            await roomService.UpdateRoomAsync(roomDto);
 
             return TypedResults.NoContent();
         });
