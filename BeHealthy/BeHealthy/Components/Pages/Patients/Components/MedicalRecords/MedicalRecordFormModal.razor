@@ -1,0 +1,47 @@
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+@inherits ModalBase
+
+<BeHealthyModal BodyClass="">
+    <Header>
+        <h5 class="modal-title">@Resource.MedicalRecord</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+    <Body>
+        <EditForm Model="Model" OnValidSubmit="HandleSave">
+            <FluentValidationValidator />
+            <ValidationSummary />
+            
+            <BeHealthyFormGroup Label="@Resource.Notes" InputId="notes">
+                <InputTextArea id="notes" @bind-Value="Model.Notes" class="form-control" rows="3" />
+                <ValidationMessage For="() => Model.Notes" class="text-danger" />
+            </BeHealthyFormGroup>
+            
+            <div class="d-flex flex-row justify-content-end gap-2 mt-3">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="Close">
+                    @Resource.Cancel
+                </button>
+                <button type="submit" class="btn btn-success rounded-pill px-4">
+                    @Resource.Save
+                </button>
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyModal>
+
+@code {
+    [Parameter, EditorRequired]
+    public MedicalRecordDto Model { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<MedicalRecordDto> OnSave { get; set; }
+
+    private async Task HandleSave()
+    {
+        if (OnSave.HasDelegate)
+        {
+            await OnSave.InvokeAsync(Model);
+        }
+        
+        Close();
+    }
+}

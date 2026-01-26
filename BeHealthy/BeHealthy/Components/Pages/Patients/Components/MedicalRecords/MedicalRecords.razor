@@ -5,125 +5,121 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-<div class="py-3">
-    <CreateButton OnClick="CreateMedicalRecord" />
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap" RemoveCardStyle=true>
+    <Header>
+        <CreateButton OnClick="CreateMedicalRecord" />
+    </Header>
+    <Body>
+        <BeHealthyTable TItem="MedicalRecordDto"
+                        Items="medicalRecords"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.MedicalRecords)">
 
-    @if (medicalRecords.Any())
-    {
-        <QuickGrid Items="medicalRecords.AsQueryable()"
-                   ItemKey="@(x => x.Id)"
-                   Class="table table-responsive">
-            <PropertyColumn Title="@Resource.Date"
-                            Property="@(x => x.RecordDate.ToShortHumanizedDateString())"
-                            IsDefaultSortColumn="true"
-                            InitialSortDirection="SortDirection.Descending" />
-            <PropertyColumn Title="@Resource.Created"
-                            Property="@(x => x.CreatedBy)" />
-            <PropertyColumn Title="@Resource.Notes"
-                            Property="@(x => x.Notes)" />
-            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                <div class="d-flex justify-content-end">
-                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditRecord(context.Id))">
-                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                    </button>
-                    <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
-                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                    </button>
-                </div>
-            </TemplateColumn>
-        </QuickGrid>
 
-        // TODO fix passing MedicalRecordId to VisitModal OR remove this functionality
-        @* <VisitModal @ref="visitModal" PatientId="PatientId"/> *@
-    }
-    else
-    {
-        <p>@string.Format(Resource.NoAvailable, Resource.MedicalRecords)</p>
-    }
-</div>
+            <BeHealthyColumn TItem="MedicalRecordDto"
+                             Title="@Resource.Date"
+                             Property="@(x => x.RecordDate.ToShortHumanizedDateString())" />
 
-<GenericModal @ref="genericModal"
-              Title="@Resource.MedicalRecord"
-              OnSave="SaveMedicalRecord">
+            <BeHealthyColumn TItem="MedicalRecordDto"
+                             Title="@Resource.CreatedBy"
+                             Property="@(x => x.CreatedBy)" />
 
-    <EditForm Model="medicalRecordDto" FormName="MedicalRecordForm">
-        <div class="form-floating">
-            <InputText id="notes" @bind-Value="medicalRecordDto.Notes" class="form-control" />
-            <label for="notes">@Resource.Notes</label>
-        </div>
-    </EditForm>
+            <BeHealthyColumn TItem="MedicalRecordDto"
+                             Title="@Resource.Notes"
+                             Property="@(x => x.Notes)" />
 
-</GenericModal>
+            <BeHealthyActionsColumn TItem="MedicalRecordDto"
+                                    HeaderClass="text-end"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditMedicalRecord(context.Id))" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
 
+        </BeHealthyTable>
+    </Body>
+
+    @* TODO fix passing MedicalRecordId to VisitModal OR remove this functionality
+    <VisitModal @ref="visitModal" PatientId="PatientId"/> *@
+</BeHealthyCard>
 
 @code {
     [Parameter, EditorRequired]
     public int PatientId { get; set; }
 
-    private GenericModal genericModal { get; set; } = new();
-
     private List<MedicalRecordDto> medicalRecords { get; set; } = new();
-
-    [SupplyParameterFromForm]
-    private MedicalRecordDto medicalRecordDto { get; set; } = new();
-
     private AuthenticationState? authState;
+    private bool isLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        isLoading = true;
         await LoadMedicalRecords();
         authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-        LoaderService.SetLoader(false);
+        isLoading = false;
     }
 
     private async Task LoadMedicalRecords()
     {
-        LoaderService.SetLoader(true);
+        isLoading = true;
         medicalRecords = (await MedicalRecordService.GetMedicalRecordsByPatientIdAsync(PatientId)).ToList();
         await InvokeAsync(StateHasChanged);
-        LoaderService.SetLoader(false);
+        isLoading = false;
     }
 
-    private async Task SaveMedicalRecord()
+    private async Task SaveMedicalRecord(MedicalRecordDto dto)
     {
-        medicalRecordDto.PatientId = PatientId;
-        medicalRecordDto.CreatedBy = authState?.User.GetUserName();
+        isLoading = true;
 
-        if (medicalRecordDto.Id > 0)
+        dto.PatientId = PatientId;
+        dto.CreatedBy = authState?.User.GetUserName();
+
+        if (dto.Id > 0)
         {
-            var medicalRecordUpdateDto = medicalRecordDto.MapToMedicalRecordUpdateDto();
+            var medicalRecordUpdateDto = dto.MapToMedicalRecordUpdateDto();
             await MedicalRecordService.UpdateMedicalRecordAsync(medicalRecordUpdateDto);
         }
         else
         {
-            medicalRecordDto.RecordDate = DateTime.UtcNow;
-            var medicalRecordCreateDto = medicalRecordDto.MapToMedicalRecordCreateDto();
+            dto.RecordDate = DateTime.UtcNow;
+            var medicalRecordCreateDto = dto.MapToMedicalRecordCreateDto();
             await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
         }
 
-        await ToastService.EnqueueToastAsync(Resource.Success, "success");
-        NavigationManager.Refresh(true);
-    }
-
-    private void EditRecord(int medicalRecordId)
-    {
-        NavigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/{PatientId}{RoutingEndpoints.MEDICALRECORDS_PAGE}/{medicalRecordId}");
-    }
-
-    private async Task EditMedicalRecord(int medicalRecordId)
-    {
-        medicalRecordDto = await MedicalRecordService.GetMedicalRecordByIdAsync(medicalRecordId) ?? new();
-        genericModal.OpenModal();
+        isLoading = false;
+        ToastService.ShowToast(Resource.Success, "success");
+        await LoadMedicalRecords();
     }
 
     private void CreateMedicalRecord()
     {
-        medicalRecordDto = new();
-        genericModal.OpenModal();
+        ShowMedicalRecordFormModal(null);
     }
 
+    private async Task EditMedicalRecord(int medicalRecordId)
+    {
+        ShowMedicalRecordFormModal(medicalRecordId);
+    }
+
+    private void ShowMedicalRecordFormModal(int? medicalRecordId)
+    {
+        var medicalRecordDto = medicalRecords.FirstOrDefault(mr => mr.Id == medicalRecordId) ?? new();
+
+        ModalService.Show<MedicalRecordFormModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(MedicalRecordFormModal.Model), medicalRecordDto },
+                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordDto>(this, SaveMedicalRecord) },
+            });
+    }
 
     private void ConfirmDelete(int medicalRecordId)
     {
