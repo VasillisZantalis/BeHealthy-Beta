@@ -37,11 +37,11 @@
         });
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            ToastService.FlushToasts();
+            await ToastService.FlushToastsAsync();
         }
     }
 }

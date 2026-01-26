@@ -75,7 +75,7 @@ builder.Services.AddScoped<NavMenuState>();
 builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<AlertModalStateService>();
-builder.Services.AddScoped<ToastService>();
+builder.Services.AddSingleton<ToastService>();
 builder.Services.AddScoped<ISeedingService, SeedingService>();
 
 var app = builder.Build();
