@@ -40,10 +40,6 @@
         </NavLink>
     </AuthorizeView>
     <AuthorizeView Roles="@(new[] { UserRole.Admin }.ToRoleString())">
-        <NavLink class="nav-link" href="@(RoutingEndpoints.SETTINGS_PAGE)">
-            <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />
-            <span class="menu-name">@Resource.Settings</span>
-        </NavLink>
 
        @*  <NavLink class="nav-link" href="@(RoutingEndpoints.ROLES_PRIVILEGES_PAGE)">
             <Icon IconClass="@FAIcon.Fingerprint" SizeClass="fs-5" />
@@ -58,6 +54,11 @@
         <NavLink class="nav-link" href="@(RoutingEndpoints.SPECIALTIES_PAGE)">
             <Icon IconClass="@FAIcon.Stethoscope" SizeClass="fs-5" />
             <span class="menu-name">@Resource.Specialties</span>
+        </NavLink>
+
+        <NavLink class="nav-link" href="@(RoutingEndpoints.SETTINGS_PAGE)">
+            <Icon IconClass="@FAIcon.Gear" SizeClass="fs-5" />
+            <span class="menu-name">@Resource.Settings</span>
         </NavLink>
     </AuthorizeView>
 </div>
