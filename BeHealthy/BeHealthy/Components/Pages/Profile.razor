@@ -6,40 +6,58 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IDoctorService DoctorService
 @inject INurseService NurseService
-@inject IPatientService PatientServic
+@inject IPatientService PatientService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
 <PageTitle>@Resource.Profile</PageTitle>
 
-<div id="profile-container" class="container-fluid p-5 border rounded shadow">
-    <EditForm id="profileForm" Model="profileDto" OnValidSubmit="UpdateProfile">
-        <div>
-            <button type="submit" class="btn btn-success px-5">@Resource.Save</button>
-        </div>
-        <div class="row">
-            <ImagePreview ImageUrl="@profileDto.Image" />
-            <ImageUpload OnImageChanged="image => profileDto.Image = image" />
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="profileDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                    <label for="firstName">@Resource.FirstName</label>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6">
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="profileDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                    <label for="lastName">@Resource.LastName</label>
-                </div>
-            </div>
-        </div>
-    </EditForm>
-</div>
+<BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
+    <Body>
+        <EditForm id="profileForm" Model="profileDto" OnValidSubmit="UpdateProfile">
+
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+                @if (inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
+
+            @if (userRole != UserRole.Admin)
+            {
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(profileDto.Image != null)" OnDeleteImage="@(() => profileDto.Image = null)">
+                    <ImagePreview ImageUrl="@profileDto.Image" />
+                </ImageUploadContainer>
+            }
+
+            <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
+                <InputText id="firstName"
+                            @bind-Value="profileDto.FirstName"
+                            class="form-control"
+                            aria-required="true" />
+
+                <ValidationMessage For="() => profileDto.FirstName" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            <BeHealthyFormGroup Label="@Resource.LastName" IsRequired="true" InputId="lastName">
+                <InputText id="lastName"
+                            @bind-Value="profileDto.LastName"
+                            class="form-control"
+                            aria-required="true" />
+
+                <ValidationMessage For="() => profileDto.LastName" class="text-danger" />
+            </BeHealthyFormGroup>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
 
 @code {
     private ProfileDto profileDto { get; set; } = new();
+    private ApplicationUser? user { get; set; }
     private UserRole? userRole;
     private string? userId;
+    private bool inProgress = false;
 
     protected override void OnInitialized()
     {
@@ -53,7 +71,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userId = authState.User.GetUserId() ?? string.Empty;
 
-        var user = await UserManager.FindByIdAsync(userId);
+        user = await UserManager.FindByIdAsync(userId);
 
         if (user is null)
             NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
@@ -68,8 +86,12 @@
             case UserRole.Nurse when userId is not null:
                 break;
             case UserRole.Patient when userId is not null:
+                profileDto = await GetPatientProfileByUserId(userId);
                 break;
             default:
+                profileDto.UserId = user!.Id;
+                profileDto.FirstName = user!.FirstName;
+                profileDto.LastName = user!.LastName;
                 break;
         }
 
@@ -85,44 +107,53 @@
         });
     }
 
-    private async Task<ProfileDto> GetDoctorProfileByUserId(string userId) => await DoctorService.GetDoctorProfileByUserIdAsync(userId) ?? new();
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        profileDto.Image = imageData;
+        StateHasChanged();
+    }
+
+    private async Task<ProfileDto> GetDoctorProfileByUserId(string userId) 
+        => await DoctorService.GetDoctorProfileByUserIdAsync(userId) ?? new();
+
+    private async Task<ProfileDto> GetPatientProfileByUserId(string userId) 
+        => await PatientService.GetPatientProfileByUserIdAsync(userId) ?? new();
 
     private async Task UpdateProfile()
     {
-        var user = await UserManager.FindByIdAsync(userId ?? string.Empty);
+        inProgress = true;
 
-        if (user != null)
+        switch (userRole)
         {
-            user.FirstName = profileDto.FirstName;
-            user.LastName = profileDto.LastName;
-            user.PhoneNumber = profileDto.PhoneNumber;
-
-            var result = await UserManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                //inProgress = false;
-                //alert.ShowSuccess(Resource.SomethingWentWrong);
-            }
-            else
-            {
-                switch (userRole)
-                {
-                    case UserRole.Doctor:
-                        var doctorForUpdate = profileDto.MapToDoctorForUpdateDto();
-                        await DoctorService.UpdateDoctorAsync(doctorForUpdate);
-                        break;
-                    case UserRole.Nurse:
-                        AlertModalStateService.Show(null, "Not implemented yet", false);
-                        break;
-                    case UserRole.Patient:
-                        AlertModalStateService.Show(null, "Not implemented yet", false);
-                        break;
-                    default:
-                        AlertModalStateService.Show(null, "Not implemented yet", false);
-                        break;
-                }
-            }
+            case UserRole.Doctor:
+                var doctorForUpdate = profileDto.MapToDoctorForUpdateDto();
+                await DoctorService.UpdateDoctorAsync(doctorForUpdate);
+                break;
+            case UserRole.Nurse:
+                ToastService.ShowToast(Resource.NotImplementedYet, "danger");
+                break;
+            case UserRole.Patient:
+                var patientUpdate = profileDto.MapToPatientForUpdateDto();
+                await PatientService.UpdatePatientAsync(patientUpdate);
+                break;
+            default:
+                ToastService.ShowToast(Resource.NotImplementedYet, "danger");
+                break;
         }
+
+        inProgress = false;
+        NavigationManager.Refresh(true);
     }
 }

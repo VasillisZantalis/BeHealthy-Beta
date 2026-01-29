@@ -14,4 +14,16 @@ public static class ProfileMapper
             UserId = profile.UserId
         };
     }
+
+    public static PatientUpdateDto MapToPatientForUpdateDto(this ProfileDto profile)
+    {
+        return new PatientUpdateDto
+        {
+            Id = profile.Id,
+            FirstName = profile.FirstName,
+            LastName = profile.LastName,
+            Image = profile.Image,
+            UserId = profile.UserId
+        };
+    }
 }

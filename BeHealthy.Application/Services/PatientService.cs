@@ -95,7 +95,7 @@ public class PatientService : IPatientService
             return ServiceResponse.Failed(Resource.NotFound);
 
         patient.FirstName = patientDto.FirstName;
-        patient.FirstName = patientDto.FirstName;
+        patient.LastName = patientDto.LastName;
         patient.Image = patientDto.Image;
         patient.DepartmentId = patientDto.DepartmentId;
 
@@ -147,8 +147,28 @@ public class PatientService : IPatientService
         return doctors.MapToDto();
     }
 
-    public Task<int> GetPatientCountAsync()
+    public async Task<int> GetPatientCountAsync()
     {
-        return _unitOfWork.PatientRepository.GetCountAsync();
+        return await _unitOfWork.PatientRepository.GetCountAsync();
+    }
+
+    public async Task<ProfileDto?> GetPatientProfileByUserIdAsync(string userId)
+    {
+        var patient = await _unitOfWork.PatientRepository.GetPatientByUserIdAsync(userId);
+
+        if (patient is null) return null;
+
+        var profile = new ProfileDto
+        {
+            Id = patient.Id,
+            UserId = patient.UserId,
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            Image = patient.Image,
+            Email = patient.User?.Email,
+            PhoneNumber = patient.User?.PhoneNumber,
+        };
+
+        return profile;
     }
 }

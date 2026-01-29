@@ -66,4 +66,13 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
             .Include(i => i.User)
             .ToListAsync();
     }
+
+    public async Task<Patient?> GetPatientByUserIdAsync(string userId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        return await context.Patients
+            .Include(i => i.User)
+            .FirstOrDefaultAsync(w => w.UserId == userId);
+    }
 }
