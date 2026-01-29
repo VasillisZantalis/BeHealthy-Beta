@@ -6,62 +6,55 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-<div class="py-3">
-    <CreateButton OnClick="CreateAllergy" />
-    @if (allergies.Any())
-    {
-        <QuickGrid Items="allergies.AsQueryable()"
-                   ItemKey="@(x => x.Id)"
-                   Class="table table-responsive">
-            <PropertyColumn Title="@Resource.Allergy"
-                            Property="@(x => x.AllergyName)"
-                            IsDefaultSortColumn="true"
-                            InitialSortDirection="SortDirection.Ascending" />
-            <PropertyColumn Title="@Resource.Allergen"
-                            Property="@(x => x.Allergen)" />
-            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                <div class="d-flex justify-content-end">
-                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditAllergy(context.Id))">
-                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                    </button>
-                    <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
-                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                    </button>
-                </div>
-            </TemplateColumn>
-        </QuickGrid>
-    }
-    else
-    {
-        <p>@string.Format(Resource.NoAvailable, Resource.Allergies)</p>
-    }
-</div>
 
-<GenericModal @ref="genericModal"
-              Title="@Resource.Allergy"
-              OnSave="SaveAllergy">
-    <EditForm Model="allergyDto" FormName="AllergyForm">
-        <div class="form-group">
-            <label for="notes" class="form-label fw-bold required">@Resource.Allergy</label>
-            <InputText id="notes" @bind-Value="allergyDto.AllergyName" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label for="notes" class="form-label fw-bold">@Resource.Allergen</label>
-            <InputText id="notes" @bind-Value="allergyDto.Allergen" class="form-control" />
-        </div>
-    </EditForm>
-</GenericModal>
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap" RemoveCardStyle=true>
+    <Header>
+        <CreateButton OnClick="CreateAllergy" />
+    </Header>
+
+    <Body>
+        <BeHealthyTable TItem="AllergyDto"
+                        Items="allergies"
+                        IsLoading="isLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Allergies)">
+
+            <BeHealthyColumn TItem="AllergyDto"
+                             Title="@Resource.Allergy"
+                             Property="@(x => x.AllergyName)" />
+
+            <BeHealthyColumn TItem="AllergyDto"
+                             Title="@Resource.Allergen"
+                             Property="@(x => x.Allergen)" />
+
+            <BeHealthyActionsColumn TItem="AllergyDto"
+                                    HeaderClass="text-end"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditAllergy(context.Id))" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
 
 @code {
-    private List<AllergyDto> allergies = new();
+    [CascadingParameter] public int PatientId { get; set; }
 
     [SupplyParameterFromForm]
     private AllergyDto allergyDto { get; set; } = new();
 
-    [Parameter, EditorRequired]
-    public int PatientId { get; set; }
-
-    private GenericModal genericModal { get; set; } = new();
+    private List<AllergyDto> allergies = new();
+    private bool isLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,17 +63,27 @@
 
     private void CreateAllergy()
     {
-        allergyDto = new();
-        genericModal.OpenModal();
+        ShowAllergiesModal(null);
     }
 
-    private async Task EditAllergy(int id)
+    private void EditAllergy(int id)
     {
-        allergyDto = await AllergyService.GetAllergyByIdAsync(id) ?? new();
-        genericModal.OpenModal();
+        ShowAllergiesModal(id);
     }
 
-    private async Task SaveAllergy()
+    private void ShowAllergiesModal(int? allergyId)
+    {
+        var allergy = allergies.FirstOrDefault(a => a.Id == allergyId) ?? new();
+
+        ModalService.Show<AllergiesModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(AllergiesModal.Allergy), allergy },
+                { nameof(AllergiesModal.OnSave), EventCallback.Factory.Create<AllergyDto>(this, SaveAllergy) },
+            });
+    }
+
+    private async Task SaveAllergy(AllergyDto allergyDto)
     {
         allergyDto.PatientId = PatientId;
 
@@ -119,16 +122,15 @@
         {
             ToastService.ShowToast(Resource.Success, "success");
             await LoadAllergies();
-            genericModal.CloseModal();
-            StateHasChanged();
         }
     }
 
     private async Task LoadAllergies()
     {
-        LoaderService.SetLoader(true);
+        isLoading = true;
         allergies = (await AllergyService.GetAllergiesByPatientIdAsync(PatientId)).ToList();
-        LoaderService.SetLoader(false);
+        isLoading = false;
+        StateHasChanged();
     }
 
     private void ConfirmDelete(int allergyId)
@@ -147,7 +149,6 @@
         {
             ToastService.ShowToast(Resource.Success, "success");
             await LoadAllergies();
-            StateHasChanged();
         }
     }
 }

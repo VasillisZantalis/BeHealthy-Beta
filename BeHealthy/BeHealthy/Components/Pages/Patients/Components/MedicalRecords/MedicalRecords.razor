@@ -34,7 +34,7 @@
                                     CellClass="text-end">
                 <Template>
                     <div class="d-flex justify-content-end">
-                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditMedicalRecord(context.Id))" @onclick:stopPropagation="true">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditRecord(context.Id))" @onclick:stopPropagation="true">
                             <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
                         </button>
                         <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
@@ -46,14 +46,10 @@
 
         </BeHealthyTable>
     </Body>
-
-    @* TODO fix passing MedicalRecordId to VisitModal OR remove this functionality
-    <VisitModal @ref="visitModal" PatientId="PatientId"/> *@
 </BeHealthyCard>
 
 @code {
-    [Parameter, EditorRequired]
-    public int PatientId { get; set; }
+    [CascadingParameter] public int PatientId { get; set; }
 
     private List<MedicalRecordDto> medicalRecords { get; set; } = new();
     private AuthenticationState? authState;
@@ -81,18 +77,10 @@
 
         dto.PatientId = PatientId;
         dto.CreatedBy = authState?.User.GetUserName();
+        dto.RecordDate = DateTime.UtcNow;
 
-        if (dto.Id > 0)
-        {
-            var medicalRecordUpdateDto = dto.MapToMedicalRecordUpdateDto();
-            await MedicalRecordService.UpdateMedicalRecordAsync(medicalRecordUpdateDto);
-        }
-        else
-        {
-            dto.RecordDate = DateTime.UtcNow;
-            var medicalRecordCreateDto = dto.MapToMedicalRecordCreateDto();
-            await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
-        }
+        var medicalRecordCreateDto = dto.MapToMedicalRecordCreateDto();
+        await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
 
         isLoading = false;
         ToastService.ShowToast(Resource.Success, "success");
@@ -101,12 +89,17 @@
 
     private void CreateMedicalRecord()
     {
-        ShowMedicalRecordFormModal(null);
+        ModalService.Show<MedicalRecordFormModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(MedicalRecordFormModal.Model), new MedicalRecordDto() },
+                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordDto>(this, SaveMedicalRecord) },
+            });
     }
 
-    private async Task EditMedicalRecord(int medicalRecordId)
+    private void EditRecord(int medicalRecordId)
     {
-        ShowMedicalRecordFormModal(medicalRecordId);
+        NavigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/{PatientId}{RoutingEndpoints.MEDICALRECORDS_PAGE}/{medicalRecordId}");
     }
 
     private void ShowMedicalRecordFormModal(int? medicalRecordId)

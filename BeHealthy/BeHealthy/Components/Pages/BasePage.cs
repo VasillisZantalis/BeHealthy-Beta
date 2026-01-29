@@ -10,7 +10,7 @@ public class BasePage : ComponentBase
     [Inject]
     protected LoaderServiceState LoaderService { get; set; } = default!;
 
-    public bool IsLoading { get; set; } = true;
+    public bool IsLoading { get; set; } = false;
 
     [Inject]
     protected BreadcrumbServiceState Breadcrumbs { get; set; } = default!;

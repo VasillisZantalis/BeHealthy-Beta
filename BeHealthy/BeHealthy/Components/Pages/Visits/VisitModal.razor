@@ -1,78 +1,72 @@
 ﻿@rendermode @(new InteractiveServerRenderMode(false))
-@inherits BasePage
+@inherits ModalBase
 
 @inject IVisitService VisitService
 @inject IDoctorService DoctorService
 @inject IPatientService PatientService
+@inject ToastService ToastService
 @inject NavigationManager NavigationManager
 
-@if (showModal)
-{
-    <div class="modal fade show" tabindex="-1" style="display: block;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title">@ModalTitle</h5>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <EditForm Model="visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit" Enhance>
-                        <ValidationComponent @ref="validationComponent" />
-                        <div class="d-flex flex-column gap-2">
-                            <div class="form-group">
-                                <label for="reason" class="form-label fw-bold required">@Resource.Reason</label>
-                                <InputText id="reason" @bind-Value="visitDto.Reason" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label for="notes" class="form-label fw-bold">@Resource.Notes</label>
-                                <InputText id="notes" @bind-Value="visitDto.Notes" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label for="doctor" class="form-label fw-bold required">@Resource.Doctor</label>
-                                <InputSelect id="doctor" class="form-select" @bind-Value="visitDto.Doctor.Id">
-                                    @foreach (var doctor in doctorsSelect)
-                                    {
-                                        <option value="@doctor.Value">@doctor.Text</option>
-                                    }
-                                </InputSelect>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-row justify-content-end m-3 gap-2">
-                            <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
-                            <button type="submit" class="btn btn-success">@Resource.Save</button>
-                        </div>
-                    </EditForm>
-                </div>
+<BeHealthyModal BodyClass="">
+    <Header>
+        <h5 class="modal-title">@Resource.Visit</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+    <Body>
+        <EditForm Model="visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit" Enhance>
+            <ValidationComponent @ref="validationComponent" />
+
+            <BeHealthyFormGroup Label="@Resource.Reason" InputId="reason" IsRequired="true">
+                <InputText id="reason" @bind-Value="visitDto.Reason" class="form-control" />
+                <ValidationMessage For="() => visitDto.Reason" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            <BeHealthyFormGroup Label="@Resource.Allergen" InputId="notes">
+                <InputText id="notes" @bind-Value="visitDto.Notes" class="form-control" />
+                <ValidationMessage For="() => visitDto.Notes" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            <BeHealthyFormGroup Label="@Resource.Doctors" InputId="doctors" IsRequired="true">
+                <InputSelect id="doctors" class="form-select" @bind-Value="visitDto.Doctor.Id">
+                    @foreach (var doctor in doctorsSelect)
+                    {
+                        <option value="@doctor.Value">@doctor.Text</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => visitDto.Doctor.Id" class="text-danger" />
+            </BeHealthyFormGroup>
+
+             <div class="d-flex flex-row justify-content-end gap-2 mt-3">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="Close">
+                    @Resource.Cancel
+                </button>
+                <button type="submit" class="btn btn-success rounded-pill px-4">
+                    @Resource.Save
+                </button>
             </div>
-        </div>
-    </div>
-    <div class="modal-backdrop fade show"></div>
-}
+        </EditForm>
+    </Body>
+</BeHealthyModal>
+
 @code {
-    [CascadingParameter] 
+    [Parameter] 
     public int MedicalRecordId { get; set; }
 
-    [CascadingParameter]
+    [Parameter]
     public int PatientId { get; set; }
 
     [SupplyParameterFromForm]
     private VisitDto visitDto { get; set; } = new();
     private ValidationComponent? validationComponent;
 
-    private int? visitId { get; set; }
-    private bool showModal { get; set; }
-    private bool isEditMode => visitId.HasValue;
     private List<SelectItem> doctorsSelect = new();
     private List<SelectItem> patientsSelect = new();
-
-    private string ModalTitle => isEditMode ? Resource.Edit : Resource.Create;
 
     protected override async Task OnInitializedAsync()
     {
         doctorsSelect = (await DoctorService.GetAllDoctorsAsync())
             .Select(d => new SelectItem { Value = d.Id, Text = d.FullName })
             .ToList();
-
         doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
     }
 
@@ -83,28 +77,13 @@
         visitDto.MedicalRecordId = MedicalRecordId;
     }
 
-    private void Close()
-    {
-        showModal = false;
-        visitId = null;
-        StateHasChanged();
-        NavigationManager.Refresh(true);
-    }
-
-    public void Show(int? visitId = null)
-    {
-        this.visitId = visitId;
-        showModal = true;
-        StateHasChanged();
-    }
-
     private async Task SaveVisit()
     {
         validationComponent?.ClearErrors();
 
         ServiceResponse response;
 
-        if (isEditMode)
+        if (visitDto.Id > 0)
         {
             var visitUpdateDto = visitDto.MapToUpdateDto();
 
@@ -137,11 +116,14 @@
             response = await VisitService.AddVisitAsync(visitCreateDto);
         }
 
-        if (HandleServiceResponse(response))
+        if (!response.Success)
         {
-            Close();
-            ToastService.ShowToast(Resource.Success, "success");
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
         }
+
+        await ToastService.EnqueueToastAsync(Resource.Success, "success");
+        Close();
+        NavigationManager.Refresh(true);
     }
 
     private void HandleValidationErrors(Dictionary<string, List<string>> errors) 

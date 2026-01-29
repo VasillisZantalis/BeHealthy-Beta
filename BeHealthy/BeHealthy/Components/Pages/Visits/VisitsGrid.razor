@@ -4,63 +4,89 @@
 @inject IVisitService VisitService
 @inject NavigationManager NavigationManager
 
-<div class="py-3">
-    <CreateButton OnClick="CreateVisit" />
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap" RemoveCardStyle=true>
+    <Header>
+        <CreateButton OnClick="CreateVisit" />
+    </Header>
 
-    @if (visits.Any())
-    {
-        <QuickGrid Items="visits.AsQueryable()"
-                   ItemKey="@(x => x.Id)"
-                   Class="table table-responsive">
-            <PropertyColumn Title="@Resource.Date"
-                            Property="@(x => x.VisitDate)"
-                            Format="dd MMM yyyy"
-                            IsDefaultSortColumn="true"
-                            InitialSortDirection="SortDirection.Descending" />
-            <PropertyColumn Title="@Resource.Reason"
+    <Body>
+        <BeHealthyTable TItem="VisitDto"
+                        Items="visits"
+                        IsLoading="this.IsLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Visits)">
+            
+            <BeHealthyColumn Title="@Resource.Date"
+                            Property="@(x => x.VisitDate.ToShortHumanizedDateString())"
+                            TItem="VisitDto" />
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Reason"
                             Property="@(x => x.Reason)" />
-            <PropertyColumn Title="@Resource.Doctor"
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Doctor"
                             Property="@(x => x.Doctor.FullName)" />
-            <PropertyColumn Title="@Resource.Patient"
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Patient"
                             Property="@(x => x.Patient.FullName)" />
-            <PropertyColumn Title="@Resource.Notes"
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Notes"
                             Property="@(x => x.Notes)" />
 
-            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                <div class="d-flex justify-content-end">
-                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditVisit(context.Id))">
-                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                    </button>
-                    <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
-                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                    </button>
-                </div>
-            </TemplateColumn>
-        </QuickGrid>
-    }
-    else
-    {
-        <p>@string.Format(Resource.NoAvailable, Resource.Visits)</p>
-    }
-
-    <VisitModal @ref="visitModal" />
-</div>
-
+            <BeHealthyActionsColumn TItem="VisitDto"
+                                    HeaderClass="text-end"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditVisit(context.Id))" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
 
 @code {
 
     [CascadingParameter] public int PatientId { get; set; }
+    [CascadingParameter] public int MedicalRecordId { get; set; }
 
-    private VisitModal visitModal { get; set; } = new();
-    
     private List<VisitDto> visits { get; set; } = new List<VisitDto>();
 
     protected override async Task OnInitializedAsync()
     {
-        visits = (await VisitService.GetVisitsByPatientIdAsync(PatientId)).ToList();
+        await LoadVisits();
     }
 
-    private void CreateVisit() => visitModal.Show();
+    private async Task LoadVisits()
+    {
+        IsLoading = true;
+
+        visits = (await VisitService.GetVisitsByPatientIdAsync(PatientId)).ToList();
+        StateHasChanged();
+
+        IsLoading = false;
+    }
+
+    private void CreateVisit()
+    {
+        ModalService.Show<VisitModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(VisitModal.PatientId), PatientId },
+                { nameof(VisitModal.MedicalRecordId), MedicalRecordId }
+            }
+        );
+    }
 
     private void EditVisit(int visitId) => NavigationManager.NavigateTo($"{RoutingEndpoints.VISITS_PAGE}/{visitId}");
 

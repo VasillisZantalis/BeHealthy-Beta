@@ -7,14 +7,19 @@
         <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
     </Header>
     <Body>
-        <EditForm Model="Model" OnValidSubmit="HandleSave">
-            <FluentValidationValidator />
-            
-            <BeHealthyFormGroup Label="@Resource.Notes" InputId="notes">
-                <InputTextArea id="notes" @bind-Value="Model.Notes" class="form-control" rows="3" />
-                <ValidationMessage For="() => Model.Notes" class="text-danger" />
+        <EditForm Model="Allergy" FormName="AllergyForm" OnValidSubmit="HandleSave">
+
+            <BeHealthyFormGroup Label="@Resource.Allergy" InputId="allergyname">
+
+                <InputText id="allergyname" @bind-Value="Allergy.AllergyName" class="form-control" />
+                <ValidationMessage For="() => Allergy.AllergyName" class="text-danger" />
             </BeHealthyFormGroup>
-            
+
+            <BeHealthyFormGroup Label="@Resource.Allergen" InputId="allergen">
+                <InputText id="allergen" @bind-Value="Allergy.Allergen" class="form-control" />
+                <ValidationMessage For="() => Allergy.Allergen" class="text-danger" />
+            </BeHealthyFormGroup>
+
             <div class="d-flex flex-row justify-content-end gap-2 mt-3">
                 <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="Close">
                     @Resource.Cancel
@@ -28,19 +33,15 @@
 </BeHealthyModal>
 
 @code {
-    [Parameter, EditorRequired]
-    public MedicalRecordDto Model { get; set; } = new();
-
-    [Parameter]
-    public EventCallback<MedicalRecordDto> OnSave { get; set; }
+    [Parameter] public AllergyDto Allergy { get; set; } = new();
+    [Parameter] public EventCallback<AllergyDto> OnSave { get; set; }
 
     private async Task HandleSave()
     {
         if (OnSave.HasDelegate)
         {
-            await OnSave.InvokeAsync(Model);
+            await OnSave.InvokeAsync(Allergy);
         }
-        
         Close();
     }
 }

@@ -23,10 +23,14 @@
                                  OnValidSubmit="UpdatePatient" />
             </Tab>
             <Tab TTabKey="PatientTabs" Title="@Resource.MedicalRecords" Key="PatientTabs.MedicalRecords">
-                <MedicalRecords PatientId="PatientId" />
+                <CascadingValue Value="PatientId">
+                    <MedicalRecords />
+                </CascadingValue>
             </Tab>
             <Tab TTabKey="PatientTabs" Title="@Resource.Allergies" Key="PatientTabs.Allergies">
-                <AllergiesGrid PatientId="PatientId" />
+                <CascadingValue Value="PatientId">
+                    <AllergiesGrid />
+                </CascadingValue>
             </Tab>
             <Tab TTabKey="PatientTabs" Title="@Resource.Appointments" Key="PatientTabs.Appointments">
             </Tab>
