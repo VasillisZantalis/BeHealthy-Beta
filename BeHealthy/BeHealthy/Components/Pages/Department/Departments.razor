@@ -3,61 +3,109 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
+@inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
+
 <PageTitle>@Resource.Departments</PageTitle>
 
-<div class="">
-    <CreateButton OnClick="Create" />
-</div>
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Header>
+        <CreateButton OnClick="Create" />
+    </Header>
 
-@if (departments is null || !departments.Any())
-{
-    <p>@string.Format(Resource.NoAvailable, Resource.Departments)</p>
-}
-else
-{
-    <div class="departments-container mt-3">
-        <div class="card">
-            <div class="card-header d-flex flex-row justify-content-end">
-                <div class="px-1">
-                    <InputSelect class="form-select form-select-sm" @bind-Value="paginationState.ItemsPerPage">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </InputSelect>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <div class="card-body pb-2 px-0 m-0">
-                    <QuickGrid Class="table rounded"
-                               Items="@departments.AsQueryable()"
-                               ItemKey="@(x => x.Id)"
-                               Pagination="paginationState">
-                        <PropertyColumn Title="@Resource.Name"
-                                        Property="@(x => x.Name)" />
-                        <PropertyColumn Title="@Resource.Location"
-                                        Property="@(x => x.Location)" />
-                        <PropertyColumn Title="@Resource.HeadΟfDepartment"
-                                        Property="@(x => x.HeadOfDepartment != null ? x.HeadOfDepartment.FullName : string.Empty)" />
-                        <TemplateColumn Title="@Resource.Actions" Align="Align.End">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDepartment(context.Id))">
-                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
-                                </button>
-                                <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)">
-                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                </button>
-                            </div>
-                        </TemplateColumn>
-                    </QuickGrid>
+    <Body>  
+        <BeHealthyTable TItem="DepartmentDto"
+                        Items="departments"
+                        IsLoading="this.IsLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Departments)">
 
-                </div>
+            <BeHealthyColumn TItem="DepartmentDto"
+                             Title="@Resource.Name"
+                             Property="@(x => x.Name)" />
 
-            </div>
-            <div id="paginatorDiv" class="px-3">
-                <Paginator State="paginationState" />
-            </div>
-        </div>
-    </div>    
+            <BeHealthyColumn TItem="DepartmentDto"
+                             Title="@Resource.Location"
+                             Property="@(x => x.Location)" />
+
+            <BeHealthyColumn TItem="DepartmentDto"
+                             Title="@Resource.HeadΟfDepartment"
+                             Property="@(x => x.HeadOfDepartment?.FullName ?? string.Empty)" />
+
+            <BeHealthyActionsColumn TItem="DepartmentDto"
+                                    HeaderClass="text-end"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditDepartment(context.Id))" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
+
+@code{
+    private List<DepartmentDto> departments = new();
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDepartments();
+    }
+
+    private async Task LoadDepartments()
+    {
+        IsLoading = true;
+
+        departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        IsLoading = false;
+
+        StateHasChanged();
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Departments, Link = string.Empty, Active = true },
+        });
+    }
+
+    public void EditDepartment(int departmentId)
+    {
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/edit/{departmentId}");
+    }
+
+    private void ConfirmDelete(int departmentId)
+    {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(departmentId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int departmentId)
+    {
+        await DepartmentService.DeleteDepartmentAsync(departmentId);
+        await LoadDepartments();
+    }
+
+    private void Create()
+    {
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DEPARTMENTS_PAGE}/create");
+    }
 }

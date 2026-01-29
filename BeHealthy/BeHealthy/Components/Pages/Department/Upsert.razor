@@ -1,33 +1,83 @@
 ﻿@page "/departments/create"
 @page "/departments/edit/{id:int}"
+@using BeHealthy.Components.Pages.Department.Components
 
 @attribute [Authorize(Roles = nameof(UserRole.Admin))]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
-@using BeHealthy.Components.Pages.Department.Components
+@inject IDepartmentService DepartmentService
+@inject IDoctorService DoctorService
 
 <PageTitle>@(IsEditMode ? Resource.Edit : Resource.Create)</PageTitle>
 
-<div class="container-fluid my-3 p-3 border rounded">
-    <Tabs TTabKey="DepartmentTabs" @bind-ActiveTab="activeTab">
-        <Tab TTabKey="DepartmentTabs" Title="@Resource.GeneralData" Key="DepartmentTabs.GeneralData">
-            <GeneralData IsEditMode="IsEditMode" DepartmentDto="DepartmentDto" Doctors="Doctors" />
-        </Tab>
-         @if (IsEditMode)
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Body>
+        <Tabs TTabKey="DepartmentTabs" @bind-ActiveTab="activeTab">
+            <Tab TTabKey="DepartmentTabs" Title="@Resource.GeneralData" Key="DepartmentTabs.GeneralData">
+                <GeneralData IsEditMode="IsEditMode" DepartmentDto="DepartmentDto" Doctors="Doctors" />
+            </Tab>
+            @if (IsEditMode)
+            {
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Doctors" Key="DepartmentTabs.Doctors">
+                    <DepartmentDoctors Doctors="DepartmentDto.Doctors.ToList()" />
+                </Tab>
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Patients" Key="DepartmentTabs.Patients">
+                    <DepartmentPatients Patients="DepartmentDto.Patients.ToList()" />
+                </Tab>
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Nurses" Key="DepartmentTabs.Nurses">
+                    <DepartmentNurses Nurses="DepartmentDto.Nurses.ToList()" />
+                </Tab>
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Rooms" Key="DepartmentTabs.Rooms">
+                    <DepartmentRooms Rooms="DepartmentDto.Rooms.ToList()" />
+                </Tab>
+            }
+        </Tabs>
+    </Body>
+</BeHealthyCard>
+
+@code {
+    [Parameter]
+    public int? id { get; set; }
+
+    private bool IsEditMode => id.HasValue;
+    private DepartmentTabs activeTab = DepartmentTabs.GeneralData;
+    private DepartmentDto DepartmentDto = new();
+    private List<DoctorDto> Doctors = new();
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoaderService.SetLoader(true);
+
+        Doctors = (await DoctorService.GetAllDoctorsAsync()).ToList();
+
+        if (IsEditMode && id.HasValue)
         {
-            <Tab TTabKey="DepartmentTabs" Title="@Resource.Doctors" Key="DepartmentTabs.Doctors">
-                <DepartmentDoctors Doctors="DepartmentDto.Doctors.ToList()" />
-            </Tab>
-            <Tab TTabKey="DepartmentTabs" Title="@Resource.Patients" Key="DepartmentTabs.Patients">
-                <DepartmentPatients Patients="DepartmentDto.Patients.ToList()" />
-            </Tab>
-            <Tab TTabKey="DepartmentTabs" Title="@Resource.Nurses" Key="DepartmentTabs.Nurses">
-                <DepartmentNurses Nurses="DepartmentDto.Nurses.ToList()" />
-            </Tab>
-            <Tab TTabKey="DepartmentTabs" Title="@Resource.Rooms" Key="DepartmentTabs.Rooms">
-                <DepartmentRooms Rooms="DepartmentDto.Rooms.ToList()" />
-            </Tab>
+            var department = await DepartmentService.GetDepartmentByIdAsync(id.Value);
+            DepartmentDto = department;
         }
-    </Tabs>
-</div>
+
+        LoaderService.SetLoader(false);
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Departments, Link = RoutingEndpoints.DEPARTMENTS_PAGE, Active = false },
+            new Breadcrumb(){ Text = !IsEditMode ? Resource.Create : Resource.Edit, Link = string.Empty, Active = true },
+        });
+
+        if (IsEditMode && id.HasValue)
+        {
+            Breadcrumbs.AddBreadcrumb(new Breadcrumb() { Text = id.Value.ToString(), Link = string.Empty, Active = true });
+        }
+            
+    }
+}
