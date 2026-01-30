@@ -27,6 +27,18 @@ public static class ProfileMapper
         };
     }
 
+    public static NurseUpdateDto MapToNurseForUpdateDto(this ProfileDto profile)
+    {
+        return new NurseUpdateDto
+        {
+            Id = profile.Id,
+            FirstName = profile.FirstName,
+            LastName = profile.LastName,
+            Image = profile.Image,
+            UserId = profile.UserId
+        };
+    }
+
     public static ApplicationUser MapToUserForUpdateDto(this ProfileDto profile, ApplicationUser user)
     {
         user.FirstName = profile.FirstName;

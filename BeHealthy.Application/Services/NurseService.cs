@@ -137,9 +137,29 @@ public class NurseService : INurseService
         return distinctNurses.MapToDto();
     }
 
-    public Task<int> GetNurseCountAsync()
+    public async Task<int> GetNurseCountAsync()
     {
-        return _unitOfWork.NurseRepository.GetCountAsync();
+        return await _unitOfWork.NurseRepository.GetCountAsync();
+    }
+
+    public async Task<ProfileDto?> GetNurseProfileByUserIdAsync(string userId)
+    {
+        var nurse = await _unitOfWork.NurseRepository.GetNurseByUserIdAsync(userId);
+
+        if (nurse is null) return null;
+
+        var profile = new ProfileDto
+        {
+            Id = nurse.Id,
+            UserId = nurse.UserId,
+            FirstName = nurse.FirstName,
+            LastName = nurse.LastName,
+            Image = nurse.Image,
+            Email = nurse.User?.Email,
+            PhoneNumber = nurse.User?.PhoneNumber,
+        };
+
+        return profile;
     }
 }
 

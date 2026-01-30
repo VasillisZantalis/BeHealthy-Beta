@@ -37,4 +37,13 @@ public class NurseRepository : GenericRepository<Nurse>, INurseRepository
             await context.SaveChangesAsync();
         }
     }
+
+    public async Task<Nurse?> GetNurseByUserIdAsync(string userId)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        
+        return context.Nurses
+            .Include(n => n.User)
+            .FirstOrDefault(n => n.UserId == userId);
+    }
 }

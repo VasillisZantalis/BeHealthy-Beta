@@ -96,6 +96,7 @@
                 profileDto = await GetDoctorProfileByUserId(userId);
                 break;
             case UserRole.Nurse when userId is not null:
+                profileDto = await GetNurseProfileByUserId(userId);
                 break;
             case UserRole.Patient when userId is not null:
                 profileDto = await GetPatientProfileByUserId(userId);
@@ -145,30 +146,44 @@
     private async Task<ProfileDto> GetPatientProfileByUserId(string userId) 
         => await PatientService.GetPatientProfileByUserIdAsync(userId) ?? new();
 
+    private async Task<ProfileDto> GetNurseProfileByUserId(string userId) 
+        => await NurseService.GetNurseProfileByUserIdAsync(userId) ?? new();
+
     private async Task UpdateProfile()
     {
         inProgress = true;
+
+        ServiceResponse? response = null;
 
         switch (userRole)
         {
             case UserRole.Doctor:
                 var doctorForUpdate = profileDto.MapToDoctorForUpdateDto();
-                await DoctorService.UpdateDoctorAsync(doctorForUpdate);
+                response = await DoctorService.UpdateDoctorAsync(doctorForUpdate);
                 break;
             case UserRole.Nurse:
-                ToastService.ShowToast(Resource.NotImplementedYet, "danger");
+                var nurseUpdate = profileDto.MapToNurseForUpdateDto();
+                response = await NurseService.UpdateNurseAsync(nurseUpdate);
                 break;
             case UserRole.Patient:
                 var patientUpdate = profileDto.MapToPatientForUpdateDto();
-                await PatientService.UpdatePatientAsync(patientUpdate);
+                response = await PatientService.UpdatePatientAsync(patientUpdate);
                 break;
             case UserRole.Admin:
                 var userUpdate = profileDto.MapToUserForUpdateDto(user!);
-                await UserService.UpdateUserAsync(userUpdate);
+                response = await UserService.UpdateUserAsync(userUpdate);
                 break;
         }
 
         inProgress = false;
+
+        if (response is null || !response.Success)
+        {
+            var errorMessage = response?.ErrorMessage ?? Resource.SomethingWentWrong;
+            await ToastService.EnqueueToastAsync(errorMessage, "error");
+            return;
+        }
+
         await ToastService.EnqueueToastAsync(Resource.Success, "success");
         NavigationManager.Refresh(true);
     }
