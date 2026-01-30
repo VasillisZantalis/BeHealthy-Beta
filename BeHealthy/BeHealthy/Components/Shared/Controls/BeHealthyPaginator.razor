@@ -58,7 +58,7 @@
 
     <div class="d-flex align-items-center gap-2">
         <label class="small mb-0">Items per page:</label>
-        <select class="form-select form-select-sm" style="width: auto;" @bind="PageSize" @bind:after="OnPageSizeChanged">
+        <select class="form-select form-select-sm" style="width: auto;" value="@PageSize" @onchange="OnPageSizeChangedHandler">
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
@@ -85,11 +85,14 @@
         await CurrentPageChanged.InvokeAsync(page);
     }
 
-    private async Task OnPageSizeChanged()
+    private async Task OnPageSizeChangedHandler(ChangeEventArgs e)
     {
-        // Reset to first page when page size changes
-        await CurrentPageChanged.InvokeAsync(1);
-        await PageSizeChanged.InvokeAsync(PageSize);
+        if (int.TryParse(e.Value?.ToString(), out int newPageSize))
+        {
+            // Reset to first page when page size changes
+            await PageSizeChanged.InvokeAsync(newPageSize);
+            await CurrentPageChanged.InvokeAsync(1);
+        }
     }
 
     private IEnumerable<int> GetPageNumbers()
