@@ -25,6 +25,8 @@ public class DoctorService : IDoctorService
                              (!parameters.SpecialtyId.HasValue || d.SpecialtyId == parameters.SpecialtyId),
 
             Includes = { d => d.User!, d => d.Specialty! },
+            PageSize = parameters.PageSize,
+            PageNumber = parameters.PageNumber
         };
 
         var doctors = await _unitOfWork.DoctorRepository.QueryAsync(queryOptions);

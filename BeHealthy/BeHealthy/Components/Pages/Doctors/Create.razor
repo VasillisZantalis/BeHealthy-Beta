@@ -156,6 +156,7 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
+        specialtiesSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
         LoaderService.SetLoader(false);
     }

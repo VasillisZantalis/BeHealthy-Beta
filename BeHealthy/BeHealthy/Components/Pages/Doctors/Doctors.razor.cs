@@ -46,7 +46,7 @@ public partial class Doctors : BasePage
         userRole = authState.User.GetUserRoleEnum();
         currentUserId = authState.User.GetUserId();
 
-        await LoadDoctors(currentUserId, userRole);
+        await LoadDoctors();
         await LoadSpecialties();
 
         hasActionRights = userRole == UserRole.Admin;
@@ -68,13 +68,26 @@ public partial class Doctors : BasePage
     private async Task HandleSearch(string term)
     {
         QueryParameters.SearchTerm = term;
-        await LoadDoctors(currentUserId, userRole);
+        await LoadDoctors();
     }
 
     private async Task HandleSpecialtyFilter(int? specialtyId)
     {
         QueryParameters.SpecialtyId = specialtyId;
-        await LoadDoctors(currentUserId, userRole);
+        await LoadDoctors();
+    }
+
+    private async Task HandlePageChanged(int page)
+    {
+        QueryParameters.PageNumber = page;
+        await LoadDoctors();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        QueryParameters.PageSize = pageSize;
+        QueryParameters.PageNumber = 1;
+        await LoadDoctors();
     }
 
     private async Task HandleClearFilters()
@@ -84,7 +97,7 @@ public partial class Doctors : BasePage
 
         QueryParameters.SearchTerm = "";
         QueryParameters.SpecialtyId = null;
-        await LoadDoctors(currentUserId, userRole);
+        await LoadDoctors();
     }
 
     private void SetBreadcrumbs()
@@ -96,14 +109,17 @@ public partial class Doctors : BasePage
         });
     }
 
-    private async Task LoadDoctors(string? userId, UserRole? userRole = UserRole.Admin)
+    private async Task LoadDoctors()
     {
+        var role = userRole ?? UserRole.Admin;
+        var userId = currentUserId;
+
         isLoading = true;
-        doctors = (userRole switch
+        doctors = (role switch
         {
             UserRole.Patient when userId is not null => await PatientsService.GetMyDoctorsAsync(userId),
             _ => await DoctorService.GetAllDoctorsAsync(QueryParameters)
-        }).ToArray();
+        }).ToList();
 
         selectedDoctorIds.Clear();
         isLoading = false;
@@ -158,7 +174,7 @@ public partial class Doctors : BasePage
             }
         }
         
-        await LoadDoctors(currentUserId, userRole);
+        await LoadDoctors();
         isLoading = false;
     }
 
@@ -199,7 +215,7 @@ public partial class Doctors : BasePage
             await DoctorService.DeleteDoctorAsync(doctorId);
         }
 
-        await LoadDoctors(currentUserId, userRole);
+        await LoadDoctors();
         isLoading = false;
     }
 }

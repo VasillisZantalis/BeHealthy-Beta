@@ -37,4 +37,8 @@ public static class FAIcon
     public static string SuitcaseMedical => "fa-solid fa-suitcase-medical";
     public static string XMark => "fa-solid fa-xmark";
     public static string Check => "fa-solid fa-check";
+    public static string AngleLeft => "fa-solid fa-angle-left";
+    public static string AngleDoubleLeft => "fa-solid fa-angles-left";
+    public static string AngleRight => "fa-solid fa-angle-right";
+    public static string AngleDoubleRight => "fa-solid fa-angles-right";
 }
