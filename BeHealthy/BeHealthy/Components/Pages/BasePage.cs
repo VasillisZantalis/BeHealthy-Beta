@@ -33,7 +33,7 @@ public class BasePage : ComponentBase
 
     protected bool HandleServiceResponse(ServiceResponse response)
     {
-        LoaderService.SetLoader(false);
+        IsLoading = false;
 
         if (!response.Success)
         {

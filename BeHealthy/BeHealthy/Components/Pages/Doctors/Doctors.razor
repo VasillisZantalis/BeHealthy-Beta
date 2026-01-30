@@ -37,7 +37,6 @@
                     <InputSelect class="form-select"
                                  @bind-Value="QueryParameters.SpecialtyId"
                                  @bind-Value:after="@(() => HandleSpecialtyFilter(QueryParameters.SpecialtyId))">
-                        <option value="">All Specialties</option>
                         @foreach (var specialty in specialties)
                         {
                             <option value="@specialty.Value">@specialty.Text</option>

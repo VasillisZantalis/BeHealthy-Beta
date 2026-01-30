@@ -23,8 +23,8 @@ public partial class Doctors : BasePage
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
     [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
-    private List<DoctorDto> doctors = new();
     private DoctorQueryParameters QueryParameters { get; set; } = new();
+    private List<DoctorDto> doctors = new();
     private List<SelectItem> specialties = new();
     private HashSet<int> selectedDoctorIds = new();
 
@@ -62,6 +62,7 @@ public partial class Doctors : BasePage
             Value = s.Id,
             Text = s.Name,
         }).ToList();
+        specialties.Insert(0, new SelectItem { Value = 0, Text = Resource.All });
     }
 
     private async Task HandleSearch(string term)
@@ -98,11 +99,11 @@ public partial class Doctors : BasePage
     private async Task LoadDoctors(string? userId, UserRole? userRole = UserRole.Admin)
     {
         isLoading = true;
-        doctors = userRole switch
+        doctors = (userRole switch
         {
-            UserRole.Patient when userId is not null => (await PatientsService.GetMyDoctorsAsync(userId)).ToList(),
-            _ => (await DoctorService.GetAllDoctorsAsync(QueryParameters)).ToList()
-        };
+            UserRole.Patient when userId is not null => await PatientsService.GetMyDoctorsAsync(userId),
+            _ => await DoctorService.GetAllDoctorsAsync(QueryParameters)
+        }).ToArray();
 
         selectedDoctorIds.Clear();
         isLoading = false;
@@ -183,12 +184,10 @@ public partial class Doctors : BasePage
 
     private void ConfirmDelete(IEnumerable<int> doctorIds)
     {
-        var doctorIdsList = doctorIds.ToList();
-
         ModalService.Show<ConfirmDeleteModal>(
            new Dictionary<string, object?>
            {
-               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(doctorIdsList) },
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(doctorIds) },
            });
     }
 
