@@ -16,36 +16,33 @@
             <div class="d-flex flex-column gap-3">
 
                 <BeHealthyFormGroup Label="@Resource.Name" IsRequired="true" InputId="name">
-
-                    <InputText id="name" class="form-control" @bind-Value="roomDto.Name" />
-                    <ValidationMessage For="@(() => roomDto.Name)" />
-                
+                    <InputText id="name" class="form-control" @bind-Value="roomDto.Name" disabled="@IsReadOnly" />
+                    <ValidationMessage For="@(() => roomDto.Name)" />                
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.Number" InputId="number">
-
-                    <InputNumber id="number" class="form-control" @bind-Value="roomDto.Number" />
-                    <ValidationMessage For="@(() => roomDto.Number)" />
-                
+                    <InputNumber id="number" class="form-control" @bind-Value="roomDto.Number" disabled="@IsReadOnly" />
+                    <ValidationMessage For="@(() => roomDto.Number)" />                
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.Department" IsRequired="true" InputId="department">
-
-                    <InputSelect id="department" class="form-select" @bind-Value="roomDto.DepartmentId">
+                    <InputSelect id="department" class="form-select" @bind-Value="roomDto.DepartmentId" disabled="@IsReadOnly">
                         @foreach (var department in departmentSelect)
                         {
                             <option value="@department.Value">@department.Text</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="@(() => roomDto.DepartmentId)" />
-
                 </BeHealthyFormGroup>
             </div>
 
-            <div class="d-flex flex-row justify-content-end m-3 gap-2">
-                <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
-                <button type="submit" class="btn btn-success">@Resource.Save</button>
-            </div>
+            @if (!IsReadOnly)
+            {                
+                <div class="d-flex flex-row justify-content-end m-3 gap-2">
+                    <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
+                    <button type="submit" class="btn btn-success">@Resource.Save</button>
+                </div>
+            }
         </EditForm>
     </Body>
 </BeHealthyModal>
@@ -57,12 +54,14 @@
     [Parameter]
     public EventCallback<RoomDto> OnRoomSaved { get; set; }
 
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
     [SupplyParameterFromForm]
     private RoomDto roomDto { get; set; } = new();
 
     private FluentValidationValidator fluentValidationValidator = new();
 
-    private bool showModal = false;
     private bool isEditMode => Room.Id > 0;
     private List<SelectItem> departmentSelect = new();
 

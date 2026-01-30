@@ -1,4 +1,5 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using BeHealthy.Components.Pages.Rooms
+@inject IModalService ModalService
 
 @if (Rooms.Any())
 {
@@ -31,6 +32,11 @@ else
 
     private void OnRoomClick(RoomDto room)
     {
-        NavigationManager.NavigateTo($"{RoutingEndpoints.ROOMS_PAGE}");
+        ModalService.Show<UpsertModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(UpsertModal.Room), room },
+                { nameof(UpsertModal.IsReadOnly), true },
+            });        
     }
 }
