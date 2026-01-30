@@ -1177,6 +1177,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} should be maximum of {1} characters..
+        /// </summary>
+        public static string PropertyMaxCharacters {
+            get {
+                return ResourceManager.GetString("PropertyMaxCharacters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} should have at least {1} characters..
         /// </summary>
         public static string PropertyMinimumCharacters {

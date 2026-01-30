@@ -606,4 +606,7 @@
   <data name="All" xml:space="preserve">
     <value>Ολα</value>
   </data>
+  <data name="PropertyMaxCharacters" xml:space="preserve">
+    <value>{0} μπορεί να είναι μέχρι  {1} χαρακτήρες.</value>
+  </data>
 </root>

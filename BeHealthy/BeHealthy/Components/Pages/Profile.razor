@@ -1,5 +1,6 @@
 ﻿@page "/profile"
 @using BeHealthy.Application.Dtos.User
+@using BeHealthy.Application.Validations.User
 @rendermode @(new InteractiveServerRenderMode(false))
 @inherits BasePage
 
@@ -24,6 +25,8 @@
                 }
                 <span>@Resource.Save</span>
             </button>
+
+            <ValidationComponent @ref="validationComponent" />
 
             <div class="mt-3 d-flex flex-column gap-3">
 
@@ -67,6 +70,7 @@
 @code {
     private ProfileDto profileDto { get; set; } = new();
     private ApplicationUser? user { get; set; }
+    private ValidationComponent? validationComponent;
     private UserRole? userRole;
     private string? userId;
     private bool inProgress = false;
@@ -152,6 +156,18 @@
     private async Task UpdateProfile()
     {
         inProgress = true;
+        validationComponent?.ClearErrors();
+
+        var validator = new ProfileDtoValidator();
+        var validationResult = await validator.ValidateAsync(profileDto);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.GetErrorsGroupedByProperty();
+            validationComponent?.DisplayErrors(errors);
+            inProgress = false;
+            return;
+        }
 
         ServiceResponse? response = null;
 

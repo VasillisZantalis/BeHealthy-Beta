@@ -607,4 +607,7 @@
   <data name="All" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="PropertyMaxCharacters" xml:space="preserve">
+    <value>{0} should be maximum of {1} characters.</value>
+  </data>
 </root>
