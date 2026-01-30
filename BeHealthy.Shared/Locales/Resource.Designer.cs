@@ -313,6 +313,15 @@ namespace BeHealthy.Shared.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot delete {0}. It is connected to: {1}.
+        /// </summary>
+        public static string CannotDeleteEntityWithRelationships {
+            get {
+                return ResourceManager.GetString("CannotDeleteEntityWithRelationships", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Card.
         /// </summary>
         public static string Card {

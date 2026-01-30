@@ -116,4 +116,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         return await query.ToListAsync();
     }
+
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await context.Set<T>().AnyAsync(predicate);
+    }
 }

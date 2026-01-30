@@ -1,6 +1,5 @@
 ﻿using BeHealthy.Application.Dtos.Department;
 using BeHealthy.Shared.Locales;
-using BeHealthy.Application.Interfaces;
 
 namespace BeHealthy.Application.Services;
 
@@ -57,6 +56,30 @@ public class DepartmentService : IDepartmentService
     {
         try
         {
+            List<string> entitiesConnectedToDepartment = new();
+
+            if (await _unitOfWork.DoctorRepository.AnyAsync(d => d.DepartmentId == id))
+                entitiesConnectedToDepartment.Add(Resource.Doctors);
+
+            if (await _unitOfWork.NurseRepository.AnyAsync(n => n.DepartmentId == id))
+                entitiesConnectedToDepartment.Add(Resource.Nurses);
+
+            if (await _unitOfWork.PatientRepository.AnyAsync(p => p.DepartmentId == id))
+                entitiesConnectedToDepartment.Add(Resource.Patients);
+
+            if (await _unitOfWork.RoomRepository.AnyAsync(r => r.DepartmentId == id))
+                entitiesConnectedToDepartment.Add(Resource.Rooms);
+
+            if (entitiesConnectedToDepartment.Any())
+            {
+                var connectedEntities = string.Join(", ", entitiesConnectedToDepartment);
+                return ServiceResponse.Failed(
+                    string.Format(Resource.CannotDeleteEntityWithRelationships, 
+                                Resource.Department,
+                                connectedEntities)
+                );
+            }
+
             await _unitOfWork.DepartmentRepository.DeleteAsync(id);
             return ServiceResponse.Successful();
         }

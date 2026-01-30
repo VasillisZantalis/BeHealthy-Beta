@@ -1,7 +1,4 @@
-﻿using BeHealthy.Application.Common.Models;
-using System.Linq.Expressions;
-
-namespace BeHealthy.Application.Interfaces.Repositories;
+﻿namespace BeHealthy.Application.Interfaces.Repositories;
 
 public interface IGenericRepository<T> where T : class
 {
@@ -16,4 +13,5 @@ public interface IGenericRepository<T> where T : class
     Task DeleteEntityAsync(T entity);
     Task<bool> ExistsAsync(int id);
     Task<int> GetCountAsync();
+    Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
 }

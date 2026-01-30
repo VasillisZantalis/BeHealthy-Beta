@@ -100,7 +100,14 @@
 
     private async Task OnConfirmDeleteAsync(int departmentId)
     {
-        await DepartmentService.DeleteDepartmentAsync(departmentId);
+        var response = await DepartmentService.DeleteDepartmentAsync(departmentId);
+
+        if (!response.Success)
+        {
+            AlertModalStateService.Show(Resource.Error, response.ErrorMessage!);
+            return;
+        }
+
         await LoadDepartments();
     }
 

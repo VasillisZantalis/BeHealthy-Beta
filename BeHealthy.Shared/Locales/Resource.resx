@@ -609,4 +609,7 @@
   <data name="PropertyMaxCharacters" xml:space="preserve">
     <value>{0} should be maximum of {1} characters.</value>
   </data>
+  <data name="CannotDeleteEntityWithRelationships" xml:space="preserve">
+    <value>Cannot delete {0}. It is connected to: {1}</value>
+  </data>
 </root>

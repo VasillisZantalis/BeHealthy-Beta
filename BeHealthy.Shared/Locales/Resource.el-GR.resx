@@ -609,4 +609,7 @@
   <data name="PropertyMaxCharacters" xml:space="preserve">
     <value>{0} μπορεί να είναι μέχρι  {1} χαρακτήρες.</value>
   </data>
+  <data name="CannotDeleteEntityWithRelationships" xml:space="preserve">
+    <value>{0} δεν μπορεί να διαγραφεί. Είναι συνδεδεμένο με: {1}</value>
+  </data>
 </root>
