@@ -67,8 +67,8 @@
     {
         isLoading = true;
         specialties = (await SpecialtyService.GetSpecialtiesAsync()).ToList();
-        StateHasChanged();
         isLoading = false;
+        StateHasChanged();
     }
 
     private void SetBreadcrumbs()
