@@ -7,12 +7,13 @@
 @inject IDoctorService DoctorService
 @inject INurseService NurseService
 @inject IPatientService PatientService
+@inject IUserService UserService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
 <PageTitle>@Resource.Profile</PageTitle>
 
-<BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
+<BeHealthyCard BodyClass="p-3">
     <Body>
         <EditForm id="profileForm" Model="profileDto" OnValidSubmit="UpdateProfile">
 
@@ -24,30 +25,41 @@
                 <span>@Resource.Save</span>
             </button>
 
-            @if (userRole != UserRole.Admin)
-            {
-                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(profileDto.Image != null)" OnDeleteImage="@(() => profileDto.Image = null)">
-                    <ImagePreview ImageUrl="@profileDto.Image" />
-                </ImageUploadContainer>
-            }
+            <div class="mt-3 d-flex flex-column gap-3">
 
-            <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
-                <InputText id="firstName"
-                            @bind-Value="profileDto.FirstName"
-                            class="form-control"
-                            aria-required="true" />
+                @if (userRole != UserRole.Admin)
+                {
+                    <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(profileDto.Image != null)" OnDeleteImage="@(() => profileDto.Image = null)">
+                        <ImagePreview ImageUrl="@profileDto.Image" />
+                    </ImageUploadContainer>
+                }
 
-                <ValidationMessage For="() => profileDto.FirstName" class="text-danger" />
-            </BeHealthyFormGroup>
+                <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
+                    <InputText id="firstName"
+                                @bind-Value="profileDto.FirstName"
+                                class="form-control"
+                                aria-required="true" />
 
-            <BeHealthyFormGroup Label="@Resource.LastName" IsRequired="true" InputId="lastName">
-                <InputText id="lastName"
-                            @bind-Value="profileDto.LastName"
-                            class="form-control"
-                            aria-required="true" />
+                    <ValidationMessage For="() => profileDto.FirstName" class="text-danger" />
+                </BeHealthyFormGroup>
 
-                <ValidationMessage For="() => profileDto.LastName" class="text-danger" />
-            </BeHealthyFormGroup>
+                <BeHealthyFormGroup Label="@Resource.LastName" IsRequired="true" InputId="lastName">
+                    <InputText id="lastName"
+                                @bind-Value="profileDto.LastName"
+                                class="form-control"
+                                aria-required="true" />
+
+                    <ValidationMessage For="() => profileDto.LastName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.Email" InputId="email">
+                    <InputText id="email"
+                                @bind-Value="profileDto.Email"
+                                class="form-control"
+                                aria-required="true"
+                                disabled/>
+                </BeHealthyFormGroup>
+            </div>
         </EditForm>
     </Body>
 </BeHealthyCard>
@@ -71,7 +83,7 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userId = authState.User.GetUserId() ?? string.Empty;
 
-        user = await UserManager.FindByIdAsync(userId);
+        user = await UserService.GetUserByIdAsync(userId);
 
         if (user is null)
             NavigationManager.NavigateTo(RoutingEndpoints.HOME_PAGE);
@@ -92,6 +104,8 @@
                 profileDto.UserId = user!.Id;
                 profileDto.FirstName = user!.FirstName;
                 profileDto.LastName = user!.LastName;
+                profileDto.PhoneNumber = user!.PhoneNumber;
+                profileDto.Email = user!.Email;
                 break;
         }
 
@@ -148,12 +162,14 @@
                 var patientUpdate = profileDto.MapToPatientForUpdateDto();
                 await PatientService.UpdatePatientAsync(patientUpdate);
                 break;
-            default:
-                ToastService.ShowToast(Resource.NotImplementedYet, "danger");
+            case UserRole.Admin:
+                var userUpdate = profileDto.MapToUserForUpdateDto(user!);
+                await UserService.UpdateUserAsync(userUpdate);
                 break;
         }
 
         inProgress = false;
+        await ToastService.EnqueueToastAsync(Resource.Success, "success");
         NavigationManager.Refresh(true);
     }
 }

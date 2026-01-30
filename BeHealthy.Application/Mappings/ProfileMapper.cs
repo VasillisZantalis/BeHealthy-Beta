@@ -26,4 +26,12 @@ public static class ProfileMapper
             UserId = profile.UserId
         };
     }
+
+    public static ApplicationUser MapToUserForUpdateDto(this ProfileDto profile, ApplicationUser user)
+    {
+        user.FirstName = profile.FirstName;
+        user.LastName = profile.LastName;
+
+        return user;
+    }
 }
