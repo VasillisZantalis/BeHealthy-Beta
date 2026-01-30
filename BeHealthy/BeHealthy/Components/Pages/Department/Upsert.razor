@@ -54,7 +54,8 @@
     {
         LoaderService.SetLoader(true);
 
-        Doctors = (await DoctorService.GetAllDoctorsAsync()).ToList();
+        var result = await DoctorService.GetAllDoctorsAsync();
+        Doctors = result.Items.ToList();
 
         if (IsEditMode && id.HasValue)
         {

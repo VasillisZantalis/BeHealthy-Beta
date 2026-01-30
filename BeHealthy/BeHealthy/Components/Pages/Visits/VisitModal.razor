@@ -64,7 +64,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        doctorsSelect = (await DoctorService.GetAllDoctorsAsync())
+        doctorsSelect = (await DoctorService.GetAllDoctorsSimpleAsync())
             .Select(d => new SelectItem { Value = d.Id, Text = d.FullName })
             .ToList();
         doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });

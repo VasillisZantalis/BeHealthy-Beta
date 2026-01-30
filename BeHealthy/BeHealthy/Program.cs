@@ -131,13 +131,5 @@ app.MapRazorComponents<App>()
 
 app.MapAdditionalIdentityEndpoints();
 app.MapCultureEndpoints();
-//app.MapAppointmentsEndpoints();
-//app.MapDepartmentEndpoints();
-//app.MapDoctorsEndpoints();
-//app.MapNursesEndpoints();
-//app.MapPatientEndpoints();
-//app.MapPrescriptionsEndpoints();
-//app.MapRoomsEndpoints();
-//app.MapUsersEndpoints();
 
 app.Run();

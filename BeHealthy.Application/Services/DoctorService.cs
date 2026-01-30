@@ -14,23 +14,40 @@ public class DoctorService : IDoctorService
         _userService = userService;
     }
 
-    public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null)
+    public async Task<PaginatedResult<DoctorDto>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null)
     {
         parameters ??= new DoctorQueryParameters();
+        
+        var predicate = (Expression<Func<Doctor, bool>>)(d => 
+            (string.IsNullOrEmpty(parameters.SearchTerm) ||
+             d.FirstName.Contains(parameters.SearchTerm) ||
+             d.LastName.Contains(parameters.SearchTerm)) &&
+             (!parameters.SpecialtyId.HasValue || d.SpecialtyId == parameters.SpecialtyId));
+
         var queryOptions = new QueryOptions<Doctor>
         {
-            Predicate = d => (string.IsNullOrEmpty(parameters.SearchTerm) ||
-                             d.FirstName.Contains(parameters.SearchTerm) ||
-                             d.LastName.Contains(parameters.SearchTerm)) &&
-                             (!parameters.SpecialtyId.HasValue || d.SpecialtyId == parameters.SpecialtyId),
-
+            Predicate = predicate,
             Includes = { d => d.User!, d => d.Specialty! },
             PageSize = parameters.PageSize,
             PageNumber = parameters.PageNumber
         };
 
         var doctors = await _unitOfWork.DoctorRepository.QueryAsync(queryOptions);
-        return doctors.MapToDto();
+        
+        var countOptions = new QueryOptions<Doctor>
+        {
+            Predicate = predicate
+        };
+        var allDoctors = await _unitOfWork.DoctorRepository.QueryAsync(countOptions);
+        var totalCount = await _unitOfWork.DoctorRepository.GetCountAsync();
+
+        return new PaginatedResult<DoctorDto>
+        {
+            Items = doctors.MapToDto(),
+            PageNumber = parameters.PageNumber,
+            PageSize = parameters.PageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<DoctorDto?> GetDoctorByIdAsync(int id)

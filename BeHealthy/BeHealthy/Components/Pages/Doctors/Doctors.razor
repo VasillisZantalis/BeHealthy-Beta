@@ -163,7 +163,7 @@
      <Footer>
         <BeHealthyPaginator CurrentPage="@QueryParameters.PageNumber"
                            PageSize="@QueryParameters.PageSize"
-                           TotalItems="@doctors.Count"
+                           TotalItems="@totalCount"
                            CurrentPageChanged="@HandlePageChanged"
                            PageSizeChanged="@HandlePageSizeChanged" />
     </Footer>

@@ -25,6 +25,7 @@ public partial class Doctors : BasePage
 
     private DoctorQueryParameters QueryParameters { get; set; } = new();
     private List<DoctorDto> doctors = new();
+    private int totalCount = 0;
     private List<SelectItem> specialties = new();
     private HashSet<int> selectedDoctorIds = new();
 
@@ -115,11 +116,18 @@ public partial class Doctors : BasePage
         var userId = currentUserId;
 
         isLoading = true;
-        doctors = (role switch
+        
+        if (role == UserRole.Patient && userId is not null)
         {
-            UserRole.Patient when userId is not null => await PatientsService.GetMyDoctorsAsync(userId),
-            _ => await DoctorService.GetAllDoctorsAsync(QueryParameters)
-        }).ToList();
+            doctors = (await PatientsService.GetMyDoctorsAsync(userId)).ToList();
+            totalCount = doctors.Count;
+        }
+        else
+        {
+            var paginatedResult = await DoctorService.GetAllDoctorsAsync(QueryParameters);
+            doctors = paginatedResult.Items.ToList();
+            totalCount = paginatedResult.TotalCount;
+        }
 
         selectedDoctorIds.Clear();
         isLoading = false;

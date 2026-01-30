@@ -59,7 +59,6 @@
     <div class="d-flex align-items-center gap-2">
         <label class="small mb-0">Items per page:</label>
         <select class="form-select form-select-sm" style="width: auto;" @bind="PageSize" @bind:after="OnPageSizeChanged">
-            <option value="5">5</option>
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
@@ -70,7 +69,7 @@
 
 @code {
     [Parameter] public int CurrentPage { get; set; } = 1;
-    [Parameter] public int PageSize { get; set; } = 5;
+    [Parameter] public int PageSize { get; set; } = 10;
     [Parameter] public int TotalItems { get; set; }
     [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
     [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
