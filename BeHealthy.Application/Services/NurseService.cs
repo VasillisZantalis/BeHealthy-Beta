@@ -32,7 +32,7 @@ public class NurseService : INurseService
 
     public async Task<NurseDto?> GetNurseByIdAsync(int id)
     {
-        var nurse = await _unitOfWork.NurseRepository.GetByIdAsync(id);
+        var nurse = await _unitOfWork.NurseRepository.GetByIdWithIncludes(id, d => d.User!);
         return nurse?.MapToDto();
     }
 

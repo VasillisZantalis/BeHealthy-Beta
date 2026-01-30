@@ -147,6 +147,7 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
+        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
         var specialties = await SpecialtyService.GetSpecialtiesAsync();
 
