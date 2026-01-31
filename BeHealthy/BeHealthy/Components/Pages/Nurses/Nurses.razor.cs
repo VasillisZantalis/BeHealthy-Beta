@@ -40,7 +40,7 @@ public partial class Nurses : BasePage
         ModalService.Show<MassImportWizard<NurseCreateDto>>(
             new Dictionary<string, object?>
             {
-                { nameof(MassImportWizard<NurseCreateDto>.Entity), ImportEntity.Doctor },
+                { nameof(MassImportWizard<NurseCreateDto>.Entity), ImportEntity.Nurse },
                 { nameof(MassImportWizard<NurseCreateDto>.OnSave), EventCallback.Factory.Create<(List<NurseCreateDto> nurseCreateDtos, bool UseValidation)>(this, BulkCreateNurses) },
             });
     }
