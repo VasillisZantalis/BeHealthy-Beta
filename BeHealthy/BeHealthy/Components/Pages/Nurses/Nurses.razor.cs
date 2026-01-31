@@ -4,6 +4,7 @@ using BeHealthy.Application.Services;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Application.Validations.Nurse;
 using BeHealthy.Common;
+using BeHealthy.Components.Pages.Doctors;
 using BeHealthy.Components.Shared.Modals;
 using BeHealthy.Components.Shared.Wizards;
 using BeHealthy.Domain;
@@ -32,6 +33,7 @@ public partial class Nurses : BasePage
     private bool hasActionRights;
     private UserRole? userRole;
     private string? currentUserId;
+    private int totalCount = 0;
 
     void ShowImportWizard()
     {
@@ -56,7 +58,7 @@ public partial class Nurses : BasePage
         userRole = authState.User.GetUserRoleEnum();
         currentUserId = authState.User.GetUserId();
 
-        await LoadNurses(currentUserId, userRole);
+        await LoadNurses();
 
         hasActionRights = userRole == UserRole.Admin;
 
@@ -72,15 +74,23 @@ public partial class Nurses : BasePage
         });
     }
 
-    private async Task LoadNurses(string? userId, UserRole? userRole = UserRole.Admin)
+    private async Task LoadNurses()
     {
+        var role = userRole ?? UserRole.Admin;
+        var userId = currentUserId;
+
         IsLoading = true;
 
-        nurses = userRole switch
+        if (role == UserRole.Patient && userId is not null)
         {
-            UserRole.Patient when userId is not null => (await NurseService.GetNursesOfPatientByUserId(userId)).ToList(),
-            _ => (await NurseService.GetAllNursesAsync(QueryParameters)).ToList()
-        };
+            nurses = (await NurseService.GetNursesOfPatientByUserId(userId)).ToList();
+        }
+        else
+        {
+            var paginatedResult = await NurseService.GetAllNursesAsync(QueryParameters);
+            nurses = paginatedResult.Items.ToList();
+            totalCount = paginatedResult.TotalCount;
+        }
 
         selectedNurseIds.Clear();
 
@@ -133,14 +143,35 @@ public partial class Nurses : BasePage
             var response = await NurseService.AddNurseAsync(nurse);
             if (HandleServiceResponse(response)) continue;
         }
-        await LoadNurses(currentUserId, userRole);
+        await LoadNurses();
         IsLoading = false;
     }
 
     private async Task HandleSearch(string term)
     {
         QueryParameters.SearchTerm = term;
-        await LoadNurses(currentUserId, userRole);
+        await LoadNurses();
+    }
+
+    private async Task HandlePageChanged(int page)
+    {
+        QueryParameters.PageNumber = page;
+        await LoadNurses();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        QueryParameters.PageSize = pageSize;
+        QueryParameters.PageNumber = 1;
+        await LoadNurses();
+    }
+
+    private async Task HandleSortChanged((string? sortProperty, bool sortDescending) sortInfo)
+    {
+        QueryParameters.OrderBy = sortInfo.sortProperty;
+        QueryParameters.OrderDescending = sortInfo.sortDescending;
+        QueryParameters.PageNumber = 1;
+        await LoadNurses();
     }
 
     private async Task HandleClearFilters()
@@ -148,7 +179,7 @@ public partial class Nurses : BasePage
         if (string.IsNullOrEmpty(QueryParameters.SearchTerm)) return;
 
         QueryParameters.SearchTerm = "";
-        await LoadNurses(currentUserId, userRole);
+        await LoadNurses();
     }
 
     private void ConfirmDelete(int nurseId)
@@ -182,7 +213,7 @@ public partial class Nurses : BasePage
         }
 
         selectedNurseIds.Clear();
-        await LoadNurses(currentUserId, userRole);
+        await LoadNurses();
 
         IsLoading = false;
     }

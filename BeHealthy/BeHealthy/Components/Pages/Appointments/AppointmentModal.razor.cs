@@ -79,7 +79,7 @@ public partial class AppointmentModal : ModalBase
         IsLoading = true;
 
         var rooms = (await roomService.GetAllRoomsAsync()).ToList();
-        var nurses = (await NurseService.GetAllNursesAsync()).ToList();
+        var nurses = (await NurseService.GetAllNursesSimpleAsync()).ToList();
 
         await GetAppSettings();
        

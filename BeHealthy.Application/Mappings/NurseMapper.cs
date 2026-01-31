@@ -75,6 +75,18 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
+        public static NurseSimpleDto MapToSimpleDto(this Nurse nurse)
+        {
+            return new NurseSimpleDto
+            {
+                Id = nurse.Id,
+                FirstName = nurse.FirstName,
+                LastName = nurse.LastName,
+                UserId = nurse.UserId,
+                Image = nurse.Image
+            };
+        }
+
         public static IEnumerable<NurseDto> MapToDto(this IEnumerable<Nurse> nurses)
         {
             return nurses.Select(n => n.MapToDto());

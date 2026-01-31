@@ -66,7 +66,10 @@
                             Items="@nurses"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
-                            EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Nurses)">
+                            EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Nurses)"
+                            CurrentSortProperty="@QueryParameters.OrderBy"
+                            IsSortDescending="@QueryParameters.OrderDescending"
+                            OnSortChanged="HandleSortChanged" >
 
                 <BeHealthyColumn TItem="NurseDto">
                     <Template>
@@ -93,15 +96,21 @@
 
                 <BeHealthyColumn TItem="NurseDto"
                                  Title="@Resource.FirstName"
-                                 Property="@(x => x.FirstName)"/>
+                                 Property="@(x => x.FirstName)"
+                                 Sortable="true"
+                                 SortProperty="FirstName" />
 
                 <BeHealthyColumn TItem="NurseDto"
                                  Title="@Resource.LastName"
-                                 Property="@(x => x.LastName)"/>
+                                 Property="@(x => x.LastName)"
+                                 Sortable="true"
+                                 SortProperty="LastName" />
 
                 <BeHealthyColumn TItem="NurseDto"
                                  Title="@Resource.Created"
-                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())"/>
+                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())"
+                                 Sortable="true"
+                                 SortProperty="CreatedAt" />
 
                 <BeHealthyColumn TItem="NurseDto"
                                  Title="@Resource.Email"
@@ -137,5 +146,12 @@
             </BeHealthyTable>
         }
     </Body>
+    <Footer>
+        <BeHealthyPaginator CurrentPage="@QueryParameters.PageNumber"
+                            PageSize="@QueryParameters.PageSize"
+                            TotalItems="@totalCount"
+                            CurrentPageChanged="@HandlePageChanged"
+                            PageSizeChanged="@HandlePageSizeChanged" />
+    </Footer>
 </BeHealthyCard>
     

@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Application.Common.Helpers;
+using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
 
 namespace BeHealthy.Application.Services;
@@ -14,7 +15,7 @@ public class NurseService : INurseService
         _userService = userService;
     }
 
-    public async Task<IEnumerable<NurseDto>> GetAllNursesAsync(QueryParameters? parameters = null)
+    public async Task<PaginatedResult<NurseDto>> GetAllNursesAsync(QueryParameters? parameters = null)
     {
         parameters ??= new QueryParameters();
         var queryOptions = new QueryOptions<Nurse>
@@ -23,11 +24,28 @@ public class NurseService : INurseService
                              n.FirstName.Contains(parameters.SearchTerm) ||
                              n.LastName.Contains(parameters.SearchTerm),
 
-            Includes = [n => n.User!]
+            Includes = [n => n.User!],
+            PageNumber = parameters.PageNumber,
+            PageSize = parameters.PageSize
         };
 
+        if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
+        {
+            queryOptions.OrderBy = OrderByHelper.GetOrderByExpression<Nurse>(parameters.OrderBy);
+            queryOptions.OrderDescending = parameters.OrderDescending;
+        }
+
         var nurses = await _unitOfWork.NurseRepository.QueryAsync(queryOptions);
-        return nurses.MapToDto();
+        var totalCount = await _unitOfWork.NurseRepository.GetCountAsync();
+
+        return new PaginatedResult<NurseDto>
+        {
+            Items = nurses.MapToDto(),
+            PageNumber = parameters.PageNumber,
+            PageSize = parameters.PageSize,
+            TotalCount = totalCount
+        };
+
     }
 
     public async Task<NurseDto?> GetNurseByIdAsync(int id)
@@ -160,6 +178,12 @@ public class NurseService : INurseService
         };
 
         return profile;
+    }
+
+    public async Task<IEnumerable<NurseSimpleDto>> GetAllNursesSimpleAsync()
+    {
+        var nurses = await _unitOfWork.NurseRepository.GetAllAsync();
+        return nurses.Select(x => x.MapToSimpleDto()).ToList();
     }
 }
 
