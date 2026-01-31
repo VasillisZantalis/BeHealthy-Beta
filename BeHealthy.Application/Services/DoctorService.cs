@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Locales;
+﻿using BeHealthy.Application.Common.Helpers;
+using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
 
 namespace BeHealthy.Application.Services;
@@ -29,8 +30,14 @@ public class DoctorService : IDoctorService
             Predicate = predicate,
             Includes = { d => d.User!, d => d.Specialty! },
             PageSize = parameters.PageSize,
-            PageNumber = parameters.PageNumber
+            PageNumber = parameters.PageNumber,
         };
+
+        if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
+        {
+            queryOptions.OrderBy = OrderByHelper.GetOrderByExpression<Doctor>(parameters.OrderBy);
+            queryOptions.OrderDescending = parameters.OrderDescending;
+        }
 
         var doctors = await _unitOfWork.DoctorRepository.QueryAsync(queryOptions);
         

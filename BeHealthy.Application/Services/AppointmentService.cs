@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Common.Extensions;
+using BeHealthy.Application.Common.Helpers;
 using BeHealthy.Shared.Locales;
 using BeHealthy.Shared.Parameters;
 
@@ -42,6 +43,12 @@ public class AppointmentService : IAppointmentService
         }
 
         queryOptions.Predicate = predicate;
+
+        if (!string.IsNullOrWhiteSpace(parameters.OrderBy))
+        {
+            queryOptions.OrderBy = OrderByHelper.GetOrderByExpression<Appointment>(parameters.OrderBy);
+            queryOptions.OrderDescending = parameters.OrderDescending;
+        }
 
         var appointments = await _unitOfWork.AppointmentRepository.QueryAsync(queryOptions);
         var totalCount = await _unitOfWork.AppointmentRepository.GetCountAsync();

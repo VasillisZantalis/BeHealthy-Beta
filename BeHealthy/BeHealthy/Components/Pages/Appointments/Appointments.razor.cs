@@ -185,6 +185,14 @@ public partial class Appointments : BasePage
         await LoadAppointments();
     }
 
+    private async Task HandleSortChanged((string? sortProperty, bool sortDescending) sortInfo)
+    {
+        QueryParameters.OrderBy = sortInfo.sortProperty;
+        QueryParameters.OrderDescending = sortInfo.sortDescending;
+        QueryParameters.PageNumber = 1;
+        await LoadAppointments();
+    }
+
 
     private void CreateAppointment()
     {

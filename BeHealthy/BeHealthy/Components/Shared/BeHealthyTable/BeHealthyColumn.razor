@@ -8,6 +8,10 @@
     [Parameter] public Func<TItem, object?>? Property { get; set; }
     [Parameter] public RenderFragment<TItem>? Template { get; set; }
 
+    // Sorting parameters
+    [Parameter] public bool Sortable { get; set; } = false;
+    [Parameter] public string? SortProperty { get; set; }
+
     // Styling parameters
     [Parameter] public string HeaderClass { get; set; } = "";
     [Parameter] public string HeaderStyle { get; set; } = "";

@@ -13,8 +13,30 @@
                 <tr>
                     @foreach (var column in Columns)
                     {
-                        <th class="@column.HeaderClass" style="@column.HeaderStyle">
-                            @column.Title
+                        <th class="@GetHeaderClass(column)" style="@column.HeaderStyle" @onclick="() => HandleSort(column)">
+                            <div class="d-flex align-items-center gap-2">
+                                <span>@column.Title</span>
+                                @if (column.Sortable)
+                                {
+                                    <span class="sort-icon">
+                                        @if (CurrentSortProperty == column.SortProperty)
+                                        {
+                                            @if (IsSortDescending)
+                                            {
+                                                <i class="fas fa-sort-down"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-sort-up"></i>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-sort text-muted"></i>
+                                        }
+                                    </span>
+                                }
+                            </div>
                         </th>
                     }
                     @if (ActionsColumn != null)
@@ -95,9 +117,12 @@
     [Parameter] public RenderFragment? EmptyContent { get; set; }
     [Parameter] public RenderFragment? FooterContent { get; set; }
     [Parameter] public string EmptyMessage { get; set; } = Resource.DataNotFound;
-
-    // Add this:
     [Parameter] public bool IsLoading { get; set; }
+
+    // Sorting parameters
+    [Parameter] public string? CurrentSortProperty { get; set; }
+    [Parameter] public bool IsSortDescending { get; set; }
+    [Parameter] public EventCallback<(string? sortProperty, bool sortDescending)> OnSortChanged { get; set; }
 
     // Styling parameters
     [Parameter] public string WrapperClass { get; set; } = "";
@@ -142,6 +167,26 @@
     private string GetRowClass(TItem item)
     {
         return RowClassFunc?.Invoke(item) ?? "";
+    }
+
+    private string GetHeaderClass(BeHealthyColumn<TItem> column)
+    {
+        var classes = column.HeaderClass;
+        if (column.Sortable)
+        {
+            classes += " sortable-header";
+        }
+        return classes;
+    }
+
+    private async Task HandleSort(BeHealthyColumn<TItem> column)
+    {
+        if (!column.Sortable || string.IsNullOrEmpty(column.SortProperty))
+            return;
+
+        bool newSortDescending = CurrentSortProperty == column.SortProperty ? !IsSortDescending : false;
+        
+        await OnSortChanged.InvokeAsync((column.SortProperty, newSortDescending));
     }
 
     private async Task OnRowClick(TItem item)

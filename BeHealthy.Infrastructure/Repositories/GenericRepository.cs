@@ -106,6 +106,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (options.Predicate != null) 
             query = query.Where(options.Predicate);
 
+        if (options.OrderBy != null)
+        {
+            query = options.OrderDescending 
+                ? query.OrderByDescending(options.OrderBy) 
+                : query.OrderBy(options.OrderBy);
+        }
+
         if (options.PageNumber.HasValue && options.PageSize.HasValue)
         {
             var skip = (options.PageNumber.Value - 1) * options.PageSize.Value;

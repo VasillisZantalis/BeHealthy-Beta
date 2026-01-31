@@ -90,6 +90,14 @@ public partial class Doctors : BasePage
         await LoadDoctors();
     }
 
+    private async Task HandleSortChanged((string? sortProperty, bool sortDescending) sortInfo)
+    {
+        QueryParameters.OrderBy = sortInfo.sortProperty;
+        QueryParameters.OrderDescending = sortInfo.sortDescending;
+        QueryParameters.PageNumber = 1;
+        await LoadDoctors();
+    }
+
     private async Task HandleClearFilters()
     {
         if (string.IsNullOrEmpty(QueryParameters.SearchTerm) && QueryParameters.SpecialtyId is null)

@@ -51,7 +51,10 @@
                         Items="@appointments"
                         TableClass="table table-responsive"
                         WrapperClass="table-wrapper"
-                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Appointments)">
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Appointments)"
+                        CurrentSortProperty="@QueryParameters.OrderBy"
+                        IsSortDescending="@QueryParameters.OrderDescending"
+                        OnSortChanged="HandleSortChanged">
 
            <BeHealthyColumn TItem="AppointmentDto">
                 <Template> 
@@ -68,7 +71,9 @@
 
             <BeHealthyColumn TItem="AppointmentDto"
                              Title="@Resource.Date"
-                             Property="@(x => x.AppointmentDate.ToString("dd MMM yyyy"))" />
+                             Property="@(x => x.AppointmentDate.ToString("dd MMM yyyy"))" 
+                             Sortable="true"
+                             SortProperty="AppointmentDate" />
 
             <BeHealthyColumn TItem="AppointmentDto"
                              Title="@Resource.Patient"
@@ -84,11 +89,15 @@
 
             <BeHealthyColumn TItem="AppointmentDto"
                              Title="@Resource.StartTime"
-                             Property="@(x => x.AppointmentStartTime.ToString())" />
+                             Property="@(x => x.AppointmentStartTime.ToString())" 
+                             Sortable="true"
+                             SortProperty="AppointmentStartTime" />
 
             <BeHealthyColumn TItem="AppointmentDto"
                              Title="@Resource.EndTime"
-                             Property="@(x => x.AppointmentEndTime.ToString())" />
+                             Property="@(x => x.AppointmentEndTime.ToString())" 
+                             Sortable="true"
+                             SortProperty="AppointmentEndTime" />
 
             <BeHealthyColumn TItem="AppointmentDto"
                              Title="@Resource.Reason"

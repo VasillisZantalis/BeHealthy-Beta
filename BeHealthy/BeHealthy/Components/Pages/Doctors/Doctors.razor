@@ -84,7 +84,10 @@
                             IsLoading="IsLoading"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
-                            EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)">
+                            EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)"
+                            CurrentSortProperty="@QueryParameters.OrderBy"
+                            IsSortDescending="@QueryParameters.OrderDescending"
+                            OnSortChanged="HandleSortChanged" >
 
                 <BeHealthyColumn TItem="DoctorDto">
                     <Template>
@@ -111,11 +114,15 @@
 
                 <BeHealthyColumn TItem="DoctorDto"
                                  Title="@Resource.FirstName"
-                                 Property="@(x => x.FirstName)" />
+                                 Property="@(x => x.FirstName)"
+                                 Sortable="true"
+                                 SortProperty="FirstName" />
 
                 <BeHealthyColumn TItem="DoctorDto"
                                  Title="@Resource.LastName"
-                                 Property="@(x => x.LastName)" />
+                                 Property="@(x => x.LastName)"
+                                 Sortable="true"
+                                 SortProperty="LastName" />
 
                 <BeHealthyColumn TItem="DoctorDto"
                                  Title="@Resource.Specialty"
@@ -123,7 +130,9 @@
 
                 <BeHealthyColumn TItem="DoctorDto"
                                  Title="@Resource.Created"
-                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())" />
+                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())"
+                                 Sortable="true"
+                                 SortProperty="CreatedAt" />
 
                 <BeHealthyColumn TItem="DoctorDto"
                                  Title="@Resource.Email"
