@@ -29,7 +29,7 @@ public partial class Settings : BasePage
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         settings = (await AppSettingsService.GetAppSettingsAsync()).ToList();
         settingsGroupedByArea = settings
@@ -50,7 +50,7 @@ public partial class Settings : BasePage
         }
 
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void SetBreadcrumbs()
@@ -64,9 +64,9 @@ public partial class Settings : BasePage
 
     private async Task UpdateSettingValue(AppSetting setting)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
         await AppSettingsService.UpdateSettingAsync(setting);
-        LoaderService.SetLoader(false);
+        IsLoading = false;
         ToastService.ShowToast(Resource.Success, "success");
     }
 }

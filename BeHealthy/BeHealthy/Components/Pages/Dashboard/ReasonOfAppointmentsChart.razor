@@ -24,7 +24,7 @@
     {
         try
         {
-            LoaderService.SetLoader(true);
+            IsLoading = true;
 
             config = new BarConfig
             {
@@ -78,7 +78,7 @@
         }
         finally
         {
-            LoaderService.SetLoader(false);
+            IsLoading = false;
         }
     }
    

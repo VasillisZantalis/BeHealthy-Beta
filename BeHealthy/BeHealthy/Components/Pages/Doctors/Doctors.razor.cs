@@ -25,15 +25,14 @@ public partial class Doctors : BasePage
 
     private DoctorQueryParameters QueryParameters { get; set; } = new();
     private List<DoctorDto> doctors = new();
-    private int totalCount = 0;
     private List<SelectItem> specialties = new();
     private HashSet<int> selectedDoctorIds = new();
+    private int totalCount = 0;
 
     private string selectedView = "Grid";
     private bool hasActionRights;
     private UserRole? userRole;
     private string? currentUserId;
-    private bool isLoading = false;
 
     protected override void OnInitialized()
     {
@@ -42,7 +41,7 @@ public partial class Doctors : BasePage
 
     protected override async Task OnInitializedAsync()
     {
-        isLoading = true;
+        IsLoading = true;
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userRole = authState.User.GetUserRoleEnum();
         currentUserId = authState.User.GetUserId();
@@ -51,7 +50,7 @@ public partial class Doctors : BasePage
         await LoadSpecialties();
 
         hasActionRights = userRole == UserRole.Admin;
-        isLoading = false;
+        IsLoading = false;
     }
 
     private async Task LoadSpecialties()
@@ -115,7 +114,7 @@ public partial class Doctors : BasePage
         var role = userRole ?? UserRole.Admin;
         var userId = currentUserId;
 
-        isLoading = true;
+        IsLoading = true;
         
         if (role == UserRole.Patient && userId is not null)
         {
@@ -130,7 +129,7 @@ public partial class Doctors : BasePage
         }
 
         selectedDoctorIds.Clear();
-        isLoading = false;
+        IsLoading = false;
         StateHasChanged();
     }
 
@@ -158,7 +157,7 @@ public partial class Doctors : BasePage
 
     private async Task BulkCreateDoctors((List<DoctorCreateDto> doctorCreateDtos, bool UseValidation) result)
     {
-        isLoading = true;
+        IsLoading = true;
         var validator = result.UseValidation ? new DoctorCreateDtoValidator(false) : null;
 
         foreach (var doctor in result.doctorCreateDtos)
@@ -169,7 +168,7 @@ public partial class Doctors : BasePage
                 if (!validationResult.IsValid)
                 {
                     AlertModalStateService.Show(null, validationResult.Errors.FirstOrDefault()?.ErrorMessage);
-                    isLoading = false;
+                    IsLoading = false;
                     return;
                 }
             }
@@ -177,13 +176,13 @@ public partial class Doctors : BasePage
             var response = await DoctorService.AddDoctorAsync(doctor);
             if (!HandleServiceResponse(response))
             {
-                isLoading = false;
+                IsLoading = false;
                 return;
             }
         }
         
         await LoadDoctors();
-        isLoading = false;
+        IsLoading = false;
     }
 
     void ShowImportWizard()
@@ -217,13 +216,13 @@ public partial class Doctors : BasePage
 
     private async Task OnConfirmDeleteAsync(IEnumerable<int> doctorIds)
     {
-        isLoading = true;
+        IsLoading = true;
         foreach (var doctorId in doctorIds)
         {
             await DoctorService.DeleteDoctorAsync(doctorId);
         }
 
         await LoadDoctors();
-        isLoading = false;
+        IsLoading = false;
     }
 }

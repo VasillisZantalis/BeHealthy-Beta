@@ -139,4 +139,11 @@
 
         </BeHealthyTable>
     </Body>
+    <Footer>
+        <BeHealthyPaginator CurrentPage="@QueryParameters.PageNumber"
+                            PageSize="@QueryParameters.PageSize"
+                            TotalItems="@totalCount"
+                            CurrentPageChanged="@HandlePageChanged"
+                            PageSizeChanged="@HandlePageSizeChanged" />
+    </Footer>
 </BeHealthyCard>

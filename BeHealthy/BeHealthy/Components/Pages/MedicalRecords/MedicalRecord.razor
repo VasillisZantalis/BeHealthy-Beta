@@ -86,11 +86,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         medicalRecord = await MedicalRecordService.GetMedicalRecordByIdAsync(MedicalRecordId) ?? new();
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void SetBreadCrumbs()
@@ -119,7 +119,7 @@
 
     private async Task SaveNotesAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         isEditing = false;
 
@@ -129,6 +129,6 @@
             notesBackup = medicalRecord.Notes;
         }
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 }

@@ -51,7 +51,7 @@
 
         var appointments = await AppointmentService.GetAllAppointmentsAsync();
 
-        upcomingAppointments = appointments
+        upcomingAppointments = appointments.Items
             .Where(a =>
                 a.AppointmentDate >= today &&
                 a.AppointmentDate <= threeDaysFromNow &&

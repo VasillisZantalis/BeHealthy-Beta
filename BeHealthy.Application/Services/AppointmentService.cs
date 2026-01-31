@@ -13,7 +13,7 @@ public class AppointmentService : IAppointmentService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null)
+    public async Task<PaginatedResult<AppointmentDto>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null)
     {
         parameters ??= new();
         var queryOptions = new QueryOptions<Appointment>
@@ -22,7 +22,9 @@ public class AppointmentService : IAppointmentService
             {
                 a => a.Doctor!,
                 a => a.Patient!
-            }
+            },
+            PageSize = parameters.PageSize,
+            PageNumber = parameters.PageNumber
         };
 
         Expression<Func<Appointment, bool>> predicate = a => true;
@@ -42,7 +44,15 @@ public class AppointmentService : IAppointmentService
         queryOptions.Predicate = predicate;
 
         var appointments = await _unitOfWork.AppointmentRepository.QueryAsync(queryOptions);
-        return appointments.MapToDto();
+        var totalCount = await _unitOfWork.AppointmentRepository.GetCountAsync();
+
+        return new PaginatedResult<AppointmentDto>
+        {
+            Items = appointments.MapToDto(),
+            PageNumber = parameters.PageNumber,
+            PageSize = parameters.PageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(int doctorId)

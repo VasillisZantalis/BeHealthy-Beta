@@ -45,7 +45,7 @@ public partial class Patients : BasePage
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userRole = authState.User.GetUserRoleEnum();
@@ -56,7 +56,7 @@ public partial class Patients : BasePage
         hasEditRight = authState.User.GetUserRoleEnum() == UserRole.Admin;
         hasDeleteRight = authState.User.GetUserRoleEnum() == UserRole.Admin; 
         hasActionRights = hasEditRight || hasDeleteRight;
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void SetBreadcrumbs()
@@ -70,7 +70,7 @@ public partial class Patients : BasePage
 
     private async Task LoadPatients(string? doctorId, UserRole? userRole = UserRole.Admin)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         patients = userRole switch
         {
@@ -81,7 +81,7 @@ public partial class Patients : BasePage
         selectedPatientIds.Clear();
 
         StateHasChanged();
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void TogglePatientSelection(int patientId)
@@ -131,7 +131,7 @@ public partial class Patients : BasePage
 
     private async Task BulkCreatePatients((List<PatientCreateDto> patientForCreationDtos, bool UseValidation) result)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var useValidation = result.UseValidation;
         var validator = new PatientForCreationDtoValidator();
@@ -144,7 +144,7 @@ public partial class Patients : BasePage
                 if (!validationResponse.IsValid)
                 {
                     AlertModalStateService.Show(null, validationResponse.Errors.FirstOrDefault()?.ErrorMessage);
-                    LoaderService.SetLoader(false);
+                    IsLoading = false;
                     return;
                 }
             }
@@ -153,7 +153,7 @@ public partial class Patients : BasePage
             if (HandleServiceResponse(response)) continue;
         }
         await LoadPatients(currentUserId, userRole);
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void ConfirmDelete(int patientId)
@@ -179,14 +179,14 @@ public partial class Patients : BasePage
 
     private async Task OnConfirmDeleteAsync(IEnumerable<int> patientIds)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         foreach (var patientId in patientIds)
         {
             await PatientService.DeletePatientAsync(patientId);
         }
         
-        LoaderService.SetLoader(false);
+        IsLoading = false;
 
         await LoadPatients(currentUserId, userRole);
     }

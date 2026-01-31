@@ -50,8 +50,6 @@ public partial class AppointmentModal : ModalBase
     [Inject]
     private IAppointmentService AppointmentService { get; set; } = default!;
 
-    [Inject] LoaderServiceState LoaderService { get; set; } = default!;
-
     private List<SelectItem> doctorsSelect = new();
     private List<SelectItem> patientsSelect = new();
     private List<SelectItem> roomsSelect = new();
@@ -64,6 +62,7 @@ public partial class AppointmentModal : ModalBase
     private bool isEdit => AppointmentId.HasValue;
     private bool showRooms;
     private bool showNurses;
+    private bool IsLoading = false;
 
     private ValidationComponent? validationComponent;
 
@@ -77,7 +76,7 @@ public partial class AppointmentModal : ModalBase
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var rooms = (await roomService.GetAllRoomsAsync()).ToList();
         var nurses = (await NurseService.GetAllNursesAsync()).ToList();
@@ -102,7 +101,7 @@ public partial class AppointmentModal : ModalBase
         // Even thought we set currect hours, still are converted to UTC
         // Leave it like this for now
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     protected override void OnParametersSet()

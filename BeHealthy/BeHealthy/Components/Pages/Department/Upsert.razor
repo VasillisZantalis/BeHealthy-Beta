@@ -52,7 +52,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var result = await DoctorService.GetAllDoctorsAsync();
         Doctors = result.Items.ToList();
@@ -63,7 +63,7 @@
             DepartmentDto = department;
         }
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void SetBreadcrumbs()

@@ -4,7 +4,7 @@ namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IAppointmentService
 {
-    Task<IEnumerable<AppointmentDto>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null);
+    Task<PaginatedResult<AppointmentDto>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null);
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(int doctorId);
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(int patientId);
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByUserIdAsync(string userId);

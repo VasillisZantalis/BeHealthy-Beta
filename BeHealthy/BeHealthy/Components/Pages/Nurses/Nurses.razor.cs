@@ -50,7 +50,7 @@ public partial class Nurses : BasePage
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userRole = authState.User.GetUserRoleEnum();
@@ -60,7 +60,7 @@ public partial class Nurses : BasePage
 
         hasActionRights = userRole == UserRole.Admin;
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void SetBreadcrumbs()
@@ -74,7 +74,7 @@ public partial class Nurses : BasePage
 
     private async Task LoadNurses(string? userId, UserRole? userRole = UserRole.Admin)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         nurses = userRole switch
         {
@@ -85,7 +85,7 @@ public partial class Nurses : BasePage
         selectedNurseIds.Clear();
 
         await InvokeAsync(StateHasChanged);
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void ToggleNurseSelection(int nurseId)
@@ -112,7 +112,7 @@ public partial class Nurses : BasePage
 
     private async Task BulkCreateNurses((List<NurseCreateDto> nurseForCreationDtos, bool UseValidation) result)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var useValidation = result.UseValidation;
         var validator = new NurseForCreationDtoValidator();
@@ -125,7 +125,7 @@ public partial class Nurses : BasePage
                 if (!validationResult.IsValid)
                 {
                     AlertModalStateService.Show(null, validationResult.Errors.FirstOrDefault()?.ErrorMessage);
-                    LoaderService.SetLoader(false);
+                    IsLoading = false;
                     return;
                 }
             }
@@ -134,7 +134,7 @@ public partial class Nurses : BasePage
             if (HandleServiceResponse(response)) continue;
         }
         await LoadNurses(currentUserId, userRole);
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private async Task HandleSearch(string term)
@@ -174,7 +174,7 @@ public partial class Nurses : BasePage
 
     private async Task OnConfirmDeleteAsync(IEnumerable<int> nurseIds)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         foreach (var nurseId in nurseIds)
         {
@@ -184,6 +184,6 @@ public partial class Nurses : BasePage
         selectedNurseIds.Clear();
         await LoadNurses(currentUserId, userRole);
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 }

@@ -92,13 +92,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         //hasActionRights = hasEditRight || hasDeleteRight;
 
         prescriptions = (await PrescriptionService.GetPrescriptionsByPatientIdAsync(PatientId)).ToList();
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void CreatePrescription()

@@ -21,7 +21,7 @@
     {
         try
         {
-            LoaderService.SetLoader(true);
+            IsLoading = true;
 
             config = new PieConfig
             {
@@ -42,7 +42,7 @@
         }
         finally
         {
-            LoaderService.SetLoader(false);
+            IsLoading = false;
         }
     }
 
@@ -54,7 +54,7 @@
         {
             try
             {
-                LoaderService.SetLoader(true);
+                IsLoading = true;
 
                 foreach (string role in new[] { Resource.Doctors, Resource.Patients, Resource.Nurses })
                 {
@@ -81,7 +81,7 @@
             }
             finally
             {
-                LoaderService.SetLoader(false);
+                IsLoading = false;
             }
         }
     }

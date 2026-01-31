@@ -116,7 +116,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
         departmentsSelect = departments.Select(s => new SelectItem
@@ -126,7 +126,7 @@
         }).ToList();
         departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void SetBreadcrumbs()

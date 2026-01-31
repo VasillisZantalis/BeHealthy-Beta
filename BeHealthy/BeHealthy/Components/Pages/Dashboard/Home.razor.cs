@@ -32,7 +32,7 @@ public partial class Home : BasePage
 
     private async Task CheckAndPromptSeeding()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var needsSeeding = await seedingService.NeedsSeedingAsync();
         
@@ -45,7 +45,7 @@ public partial class Home : BasePage
                 });
         }
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private void OnSeedingCompleted()

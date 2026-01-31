@@ -38,7 +38,7 @@ public partial class Appointments : BasePage
     private bool hasActionRights;
     private bool hasEditRight;
     private bool hasDeleteRight;
-
+    private int totalCount = 0;
     private UserRole? userRole;
 
     protected override void OnInitialized()
@@ -48,7 +48,7 @@ public partial class Appointments : BasePage
 
     protected override async Task OnInitializedAsync()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         currentUserId = authState.User.GetUserId();
@@ -63,25 +63,35 @@ public partial class Appointments : BasePage
 
         hasActionRights = hasEditRight || hasDeleteRight;
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
     }
 
     private async Task LoadAppointments()
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
         StateHasChanged();
 
-        appointments = (userRole, currentUserId) switch
+        if (userRole == UserRole.Admin)
         {
-            (UserRole.Doctor, not null) => (await DoctorService.GetDoctorAppointmentsByUserIdAsync(currentUserId)).ToList(),
-            (UserRole.Patient, not null) => (await PatientService.GetPatientAppointmentsByUserIdAsync(currentUserId)).ToList(),
-            _ => (await AppointmentService.GetAllAppointmentsAsync(QueryParameters)).ToList()
-        };
+            var paginatedResult = await AppointmentService.GetAllAppointmentsAsync(QueryParameters);
+            appointments = paginatedResult.Items.ToList();
+            totalCount = paginatedResult.TotalCount;
+        }
+        else
+        {
+            appointments = (userRole, currentUserId) switch
+            {
+                (UserRole.Doctor, not null) => (await DoctorService.GetDoctorAppointmentsByUserIdAsync(currentUserId)).ToList(),
+                (UserRole.Patient, not null) => (await PatientService.GetPatientAppointmentsByUserIdAsync(currentUserId)).ToList(),
+                _ => []
+            };
+        }
+
 
         selectedAppointmentIds.Clear();
-        StateHasChanged();
+        IsLoading = false;
 
-        LoaderService.SetLoader(false);
+        StateHasChanged();
     }
 
     private void SetBreadcrumbs()
@@ -162,6 +172,20 @@ public partial class Appointments : BasePage
         await LoadAppointments();
     }
 
+    private async Task HandlePageChanged(int page)
+    {
+        QueryParameters.PageNumber = page;
+        await LoadAppointments();
+    }
+
+    private async Task HandlePageSizeChanged(int pageSize)
+    {
+        QueryParameters.PageSize = pageSize;
+        QueryParameters.PageNumber = 1;
+        await LoadAppointments();
+    }
+
+
     private void CreateAppointment()
     {
         ShowAppointmentModal(null);
@@ -209,14 +233,14 @@ public partial class Appointments : BasePage
 
     private async Task OnConfirmDeleteAsync(IEnumerable<int> appointmentIds)
     {
-        LoaderService.SetLoader(true);
+        IsLoading = true;
 
         foreach (var appointmentId in appointmentIds)
         {
             await AppointmentService.DeleteAppointmentAsync(appointmentId);
         }
 
-        LoaderService.SetLoader(false);
+        IsLoading = false;
         await LoadAppointments();
     }
 
@@ -256,29 +280,14 @@ public partial class Appointments : BasePage
 
     private async Task BulkCreateAppointments((List<AppointmentCreateDto> AppointmentCreateDtos, bool UseValidation) result)
     {
-        LoaderService.SetLoader(true);
-
+        IsLoading = true;
         foreach (var appointment in result.AppointmentCreateDtos)
         {
             await CreateAppointmentAsync(appointment, true);
         }
 
+        IsLoading = false;
         await LoadAppointments();
-        LoaderService.SetLoader(false);
-    }
-
-    private async Task HandleSearch(string term)
-    {
-        QueryParameters.SearchTerm = term;
-        await LoadAppointments();
-    }
-
-    private async Task HandleClearFilters()
-    {
-        if (string.IsNullOrEmpty(QueryParameters.SearchTerm)) return;
-
-        QueryParameters.SearchTerm = "";
-        await LoadPatients();
     }
 
     void ShowImportWizard()

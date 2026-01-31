@@ -32,7 +32,8 @@
                 appointments = (await AppointmentService.GetAllAppointmentsByUserIdAsync(userId)).ToList();
                 break;
             default:
-                appointments = (await AppointmentService.GetAllAppointmentsAsync()).ToList();
+                var paginatedResult = await AppointmentService.GetAllAppointmentsAsync();
+                appointments = paginatedResult.Items.ToList();
                 break;
         }
     }
