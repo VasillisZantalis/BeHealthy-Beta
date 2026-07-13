@@ -18,8 +18,7 @@ public class MedicalRecordConfiguration : IEntityTypeConfiguration<MedicalRecord
             .IsRequired(false);
 
         builder.Property(p => p.RecordDate)
-            .IsRequired()
-            .HasColumnType("timestamptz");
+            .IsRequired();
 
         builder.Property(mr => mr.Notes)
             .IsRequired(false)

@@ -20,7 +20,7 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("Default");
 
         services.AddDbContextFactory<ApplicationDbContext>(options =>
-            options.UseNpgsql(connectionString));
+            options.UseSqlite(connectionString));
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IPatientRepository, PatientRepository>();

@@ -88,10 +88,8 @@ if (app.Environment.IsDevelopment())
     {
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<ApplicationDbContext>();
-        if (context.Database.GetPendingMigrations().Any())
-        {
-            context.Database.Migrate();
-        }
+        context.Database.EnsureDeleted();
+        context.Database.Migrate();
 
         // Seed default admin user
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
