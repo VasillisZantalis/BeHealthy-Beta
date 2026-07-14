@@ -43,8 +43,7 @@ public static class DependencyInjection
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
-            .AddSignInManager<SignInManager<ApplicationUser>>()
-            .AddDefaultTokenProviders();
+            .AddSignInManager<SignInManager<ApplicationUser>>();
 
         return services;
     }
