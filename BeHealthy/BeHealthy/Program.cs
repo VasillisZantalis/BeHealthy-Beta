@@ -60,9 +60,6 @@ if (provider != null)
     localizationOptions.RequestCultureProviders.Remove(provider);
 }
 
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -76,7 +73,6 @@ builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<AlertModalStateService>();
 builder.Services.AddSingleton<ToastService>();
-builder.Services.AddScoped<ISeedingService, SeedingService>();
 
 var app = builder.Build();
 
