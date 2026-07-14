@@ -11,6 +11,14 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("BlazorClient", policy =>
+        policy.WithOrigins("https://localhost:7209")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
+
 
 var app = builder.Build();
 
