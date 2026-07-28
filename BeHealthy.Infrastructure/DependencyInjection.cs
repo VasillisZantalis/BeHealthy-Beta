@@ -47,4 +47,33 @@ public static class DependencyInjection
 
         return services;
     }
+
+    public static async Task InitializeDatabaseAsync(this IServiceProvider services)
+    {
+        using (var scope = services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            context.Database.EnsureDeleted();
+            context.Database.Migrate();
+
+            // Seed default admin user
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            var adminEmail = "admin@gmail.com";
+            var admin = await userManager.FindByEmailAsync(adminEmail);
+            if (admin == null)
+            {
+                admin = new ApplicationUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    FirstName = "Admin",
+                    LastName = "User"
+                };
+                await userManager.CreateAsync(admin, "123456aA@");
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
+        }
+    }
 }
