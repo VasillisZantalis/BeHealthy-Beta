@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{89
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.API", "BeHealthy.API\BeHealthy.API.csproj", "{867A0F0F-B280-48EA-B5D2-53C7E808196E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeHealthy.Frontend", "BeHealthy.Frontend\BeHealthy.Frontend.csproj", "{222A8B19-31C2-4FA3-9F71-0F293871E014}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{867A0F0F-B280-48EA-B5D2-53C7E808196E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{867A0F0F-B280-48EA-B5D2-53C7E808196E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{867A0F0F-B280-48EA-B5D2-53C7E808196E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{222A8B19-31C2-4FA3-9F71-0F293871E014}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{222A8B19-31C2-4FA3-9F71-0F293871E014}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{222A8B19-31C2-4FA3-9F71-0F293871E014}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{222A8B19-31C2-4FA3-9F71-0F293871E014}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +71,7 @@ Global
 		{DCD9C815-314E-4D7B-9425-0FA5C95AFC3E} = {AD379C04-0194-4791-9F7A-DC300A14E084}
 		{6B727CCE-5B24-4C14-8EB9-F75AF5EC9FDE} = {AD379C04-0194-4791-9F7A-DC300A14E084}
 		{867A0F0F-B280-48EA-B5D2-53C7E808196E} = {AD379C04-0194-4791-9F7A-DC300A14E084}
+		{222A8B19-31C2-4FA3-9F71-0F293871E014} = {899C444E-B11D-4B62-A414-E86A4A0ACB9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {859F73D2-3566-4C4B-ACD7-C562A0409B75}
