@@ -1,4 +1,4 @@
-﻿using BeHealthy.Domain;
+﻿using BeHealthy.Shared;
 
 namespace BeHealthy.Domain.Entities;
 

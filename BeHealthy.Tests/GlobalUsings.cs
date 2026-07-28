@@ -15,6 +15,7 @@ global using BeHealthy.Application.Dtos.Doctor;
 global using BeHealthy.Application.Interfaces;
 global using BeHealthy.Application.Interfaces.Repositories;
 global using BeHealthy.Domain;
+global using BeHealthy.Shared;
 global using BeHealthy.Shared.Locales;
 global using BeHealthy.Application.Common.Models;
 global using BeHealthy.Application.Dtos.Patient;

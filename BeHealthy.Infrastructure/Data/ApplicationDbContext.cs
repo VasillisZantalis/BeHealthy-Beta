@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
+using BeHealthy.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

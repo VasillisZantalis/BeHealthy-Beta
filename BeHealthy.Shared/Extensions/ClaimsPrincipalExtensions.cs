@@ -1,7 +1,6 @@
-﻿using BeHealthy.Domain;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
-namespace BeHealthy.Application.Extensions;
+namespace BeHealthy.Shared.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {

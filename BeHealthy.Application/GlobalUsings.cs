@@ -10,4 +10,5 @@ global using BeHealthy.Application.Interfaces;
 global using BeHealthy.Application.Common.Models;
 global using BeHealthy.Domain;
 global using BeHealthy.Domain.Entities;
+global using BeHealthy.Shared;
 global using System.Linq.Expressions;
