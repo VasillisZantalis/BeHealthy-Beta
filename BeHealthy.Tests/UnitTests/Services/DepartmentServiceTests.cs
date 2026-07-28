@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Department;
+﻿using BeHealthy.Shared.Dtos.Department;
 using BeHealthy.Application.Interfaces;
 using BeHealthy.Application.Interfaces.Repositories;
 

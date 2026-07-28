@@ -1,4 +1,4 @@
-using BeHealthy.Application.Dtos.Allergy;
+using BeHealthy.Shared.Dtos.Allergy;
 
 namespace BeHealthy.Application.Services.Interfaces;
 

@@ -1,4 +1,4 @@
-using BeHealthy.Application.Dtos.Common;
+using BeHealthy.Shared.Dtos.Common;
 
 namespace BeHealthy.Application.Services.Interfaces;
 

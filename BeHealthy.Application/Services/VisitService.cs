@@ -1,4 +1,4 @@
-using BeHealthy.Application.Dtos.Visit;
+using BeHealthy.Shared.Dtos.Visit;
 using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Shared.Locales;
 

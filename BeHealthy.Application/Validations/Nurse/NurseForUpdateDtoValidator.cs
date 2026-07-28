@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Nurse;
+﻿using BeHealthy.Shared.Dtos.Nurse;
 using BeHealthy.Shared.Locales;
 using FluentValidation;
 using System;

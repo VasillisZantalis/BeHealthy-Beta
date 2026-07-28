@@ -1,4 +1,4 @@
-using BeHealthy.Application.Dtos.Allergy;
+using BeHealthy.Shared.Dtos.Allergy;
 using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Application.Mappings;
 using BeHealthy.Shared.Locales;

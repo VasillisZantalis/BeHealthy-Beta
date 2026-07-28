@@ -1,7 +1,7 @@
-using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Dtos.Nurse;
-using BeHealthy.Application.Dtos.Patient;
+using BeHealthy.Shared.Dtos.Appointment;
+using BeHealthy.Shared.Dtos.Doctor;
+using BeHealthy.Shared.Dtos.Nurse;
+using BeHealthy.Shared.Dtos.Patient;
 using BeHealthy.Application.Interfaces;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain;

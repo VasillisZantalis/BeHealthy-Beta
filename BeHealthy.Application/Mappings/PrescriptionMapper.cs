@@ -1,6 +1,6 @@
-﻿using BeHealthy.Application.Dtos.Doctor;
-using BeHealthy.Application.Dtos.Patient;
-using BeHealthy.Application.Dtos.Prescription;
+﻿using BeHealthy.Shared.Dtos.Doctor;
+using BeHealthy.Shared.Dtos.Patient;
+using BeHealthy.Shared.Dtos.Prescription;
 using BeHealthy.Domain.Entities;
 
 namespace BeHealthy.Application.Mappings;

@@ -1,4 +1,4 @@
-using BeHealthy.Application.Dtos.Visit;
+using BeHealthy.Shared.Dtos.Visit;
 
 namespace BeHealthy.Application.Services.Interfaces;
 

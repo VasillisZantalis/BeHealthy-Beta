@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.MedicalRecord;
+﻿using BeHealthy.Shared.Dtos.MedicalRecord;
 using BeHealthy.Domain.Entities;
 
 namespace BeHealthy.Application.Mappings;

@@ -1,5 +1,5 @@
-﻿using BeHealthy.Application.Dtos.Common;
-using BeHealthy.Application.Dtos.Department;
+﻿using BeHealthy.Shared.Dtos.Common;
+using BeHealthy.Shared.Dtos.Department;
 
 namespace BeHealthy.Application.Services.Interfaces;
 
