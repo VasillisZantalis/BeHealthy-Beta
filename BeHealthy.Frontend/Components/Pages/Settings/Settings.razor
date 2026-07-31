@@ -1,0 +1,21 @@
+﻿@page "/settings"
+@using BeHealthy.Frontend.Components.Layout
+@using BeHealthy.Frontend.Components.Pages.Settings.Components
+@inherits BasePage
+
+<PageTitle>@Resource.Settings</PageTitle>
+
+@if (settingsGroupedByArea is not null)
+{
+    foreach (var areaGroup in settingsGroupedByArea)
+    {
+        <div class="mb-3">
+            <h4>@areaGroup.Key</h4>
+            @foreach (var setting in areaGroup)
+            {
+                <SettingInput Setting="setting" OnSettingChanged="UpdateSettingValue" SelectItems="doctorsSelect"/>                
+            }
+        </div>
+    }
+}
+

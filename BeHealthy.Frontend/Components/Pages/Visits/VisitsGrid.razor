@@ -1,0 +1,107 @@
+@inherits BasePage
+
+@inject IVisitService VisitService
+@inject NavigationManager NavigationManager
+
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap" RemoveCardStyle=true>
+    <Header>
+        <CreateButton OnClick="CreateVisit" />
+    </Header>
+
+    <Body>
+        <BeHealthyTable TItem="VisitDto"
+                        Items="visits"
+                        IsLoading="this.IsLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Visits)">
+            
+            <BeHealthyColumn Title="@Resource.Date"
+                            Property="@(x => x.VisitDate.ToShortHumanizedDateString())"
+                            TItem="VisitDto" />
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Reason"
+                            Property="@(x => x.Reason)" />
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Doctor"
+                            Property="@(x => x.Doctor.FullName)" />
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Patient"
+                            Property="@(x => x.Patient.FullName)" />
+
+            <BeHealthyColumn TItem="VisitDto"
+                            Title="@Resource.Notes"
+                            Property="@(x => x.Notes)" />
+
+            <BeHealthyActionsColumn TItem="VisitDto"
+                                    HeaderClass="text-end"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditVisit(context.Id))" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
+
+@code {
+
+    [CascadingParameter] public int PatientId { get; set; }
+    [CascadingParameter] public int MedicalRecordId { get; set; }
+
+    private List<VisitDto> visits { get; set; } = new List<VisitDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadVisits();
+    }
+
+    private async Task LoadVisits()
+    {
+        IsLoading = true;
+
+        visits = (await VisitService.GetVisitsByPatientIdAsync(PatientId)).ToList();
+        StateHasChanged();
+
+        IsLoading = false;
+    }
+
+    private void CreateVisit()
+    {
+        ModalService.Show<VisitModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(VisitModal.PatientId), PatientId },
+                { nameof(VisitModal.MedicalRecordId), MedicalRecordId }
+            }
+        );
+    }
+
+    private void EditVisit(int visitId) => NavigationManager.NavigateTo($"{RoutingEndpoints.VISITS_PAGE}/{visitId}");
+
+    private void ConfirmDelete(int doctorId)
+    {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(doctorId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int doctorId)
+    {
+        await VisitService.DeleteVisitAsync(doctorId);
+        await ToastService.EnqueueToastAsync(Resource.Success, "success");
+        NavigationManager.Refresh(true);
+    }
+}

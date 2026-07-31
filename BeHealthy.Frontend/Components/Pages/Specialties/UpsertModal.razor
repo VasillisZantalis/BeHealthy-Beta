@@ -1,0 +1,51 @@
+@inherits ModalBase
+
+<BeHealthyModal BodyClass="">
+    <Header>
+        <h5 class="modal-title">@Resource.Room</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+
+    <Body>
+        <EditForm Model="specialtyDto" FormName="SpecialtyForm" OnValidSubmit="SaveSpecialty">
+            <FluentValidationValidator @ref="fluentValidationValidator" />
+
+            <BeHealthyFormGroup Label="@Resource.Name" IsRequired="true" InputId="name">
+                <InputText id="name" class="form-control" @bind-Value="specialtyDto.Name" />
+                <ValidationMessage For="@(() => specialtyDto.Name)" />
+            </BeHealthyFormGroup>
+
+            <div class="d-flex flex-row justify-content-end m-3 gap-2">
+                <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
+                <button type="submit" class="btn btn-success">@Resource.Save</button>
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyModal>
+
+@code {
+    [Parameter, EditorRequired]
+    public SpecialtyDto Specialty { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<SpecialtyDto> OnSpecialtySaved { get; set; }
+
+    [SupplyParameterFromForm]
+    private SpecialtyDto specialtyDto { get; set; } = new();
+
+    private FluentValidationValidator fluentValidationValidator = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        specialtyDto = Specialty;
+    }
+
+    private async Task SaveSpecialty()
+    {
+        if (await fluentValidationValidator.ValidateAsync())
+        {
+            await OnSpecialtySaved.InvokeAsync(specialtyDto);
+            Close();
+        }
+    }
+}

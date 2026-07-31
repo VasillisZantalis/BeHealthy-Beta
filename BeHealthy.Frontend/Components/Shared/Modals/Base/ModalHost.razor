@@ -1,0 +1,19 @@
+@inject IModalService ModalService
+
+@if (ModalService.CurrentModal is not null)
+{
+    <DynamicComponent Type="ModalService.CurrentModal"
+                      Parameters="ModalService.Parameters" />
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        ModalService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ModalService.OnChange -= StateHasChanged;
+    }
+}

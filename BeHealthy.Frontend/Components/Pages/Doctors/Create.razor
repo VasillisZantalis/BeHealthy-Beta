@@ -1,0 +1,227 @@
+﻿@page "/doctors/create"
+@using BeHealthy.Frontend.Validations.Doctor
+@inherits BasePage
+
+@inject IDoctorService DoctorService
+@inject IDepartmentService DepartmentService
+@inject ISpecialtyService SpecialtyService
+@inject IAppSettingsService AppSettingsService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@Resource.Create</PageTitle>
+
+<BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
+    <Body>
+        <EditForm Model="DoctorCreateDto" method="post" OnValidSubmit="RegisterDoctor" FormName="RegisterForm" Enhance>
+
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+                @if (inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
+
+            <ValidationComponent @ref="validationComponent"/>
+
+            <Alert @ref="alert" />
+
+            <div class="d-flex flex-column gap-3 p-3">
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(DoctorCreateDto.Image != null)" OnDeleteImage="@(() => DoctorCreateDto.Image = null)">
+                    <ImagePreview ImageUrl="@DoctorCreateDto.Image" />
+                </ImageUploadContainer>
+
+                <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
+
+                    <InputText id="firstName" 
+                                @bind-Value="DoctorCreateDto.FirstName" 
+                                class="form-control"
+                                aria-required="true" />
+
+                    <ValidationMessage For="() => DoctorCreateDto.FirstName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                    <InputText id="lastName"
+                                class="form-control"
+                                @bind-Value="DoctorCreateDto.LastName"
+                                aria-required="true" />
+                    <ValidationMessage For="() => DoctorCreateDto.LastName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
+                        <InputText id="email"
+                                    class="form-control"
+                                    @bind-Value="DoctorCreateDto.Email"
+                                    aria-required="true" />
+                        <ValidationMessage For="() => DoctorCreateDto.Email" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
+                    <InputText id="password"
+                                type="password"
+                                class="form-control"
+                                @bind-Value="DoctorCreateDto.Password"
+                                aria-required="true" />
+                    <ValidationMessage For="() => DoctorCreateDto.Password" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
+                    <InputText id="confirmPassword"
+                                type="password"
+                                class="form-control"
+                                @bind-Value="DoctorCreateDto.ConfirmPassword"
+                                aria-required="true" />
+                    <ValidationMessage For="() => DoctorCreateDto.ConfirmPassword" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
+                    <InputText id="phoneNumber"
+                                class="form-control"
+                                @bind-Value="DoctorCreateDto.PhoneNumber"
+                                aria-required="true" />
+                    <ValidationMessage For="() => DoctorCreateDto.PhoneNumber" class="text-danger" />
+                </BeHealthyFormGroup>
+             
+                @if (departmentsSelect is not null && departmentsSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
+                        <InputSelect id="department" @bind-Value="DoctorCreateDto.DepartmentId" class="form-control">
+                            @foreach (var department in departmentsSelect)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </InputSelect>
+                    </BeHealthyFormGroup>
+                }
+
+                @if (specialtiesSelect is not null && specialtiesSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="doNotAllowDoctorWithoutSpecialty">
+                        <InputSelect id="specialty" @bind-Value="DoctorCreateDto.SpecialtyId" class="form-control">
+                            @foreach (var specialty in specialtiesSelect)
+                            {
+                                <option value="@specialty.Value">@specialty.Text</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => DoctorCreateDto.SpecialtyId" class="text-danger" />
+                    </BeHealthyFormGroup>
+                }
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
+
+@code {
+
+    [SupplyParameterFromForm]
+    private DoctorCreateDto DoctorCreateDto { get; set; } = new();
+
+    private ValidationComponent? validationComponent;
+
+    private bool inProgress = false;
+    private bool doNotAllowDoctorWithoutSpecialty = false;
+
+    private Alert alert = new();
+
+    private List<SelectItem>? departmentsSelect = new();
+    private List<SelectItem>? specialtiesSelect = new();
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        await GetSettings();
+
+        var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        departmentsSelect = departments.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+
+        var specialties = await SpecialtyService.GetSpecialtiesAsync();
+
+        specialtiesSelect = specialties?.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        specialtiesSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+
+        IsLoading = false;
+    }
+
+    private async Task GetSettings()
+    {
+        AppSettingDto? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
+        doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.ResetBreadcrumb();
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){Text = Resource.Doctors, Link = RoutingEndpoints.DOCTORS_PAGE, Active = false},
+            new Breadcrumb(){Text = Resource.Create, Link = RoutingEndpoints.DOCTORS_PAGE, Active = true}
+        });
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        DoctorCreateDto.Image = imageData;
+        StateHasChanged();
+    }
+
+    public async Task RegisterDoctor(EditContext editContext)
+    {
+        inProgress = true;
+
+        validationComponent?.ClearErrors();
+
+        var validator = new DoctorCreateDtoValidator(doNotAllowDoctorWithoutSpecialty);
+        var validationResult = await validator.ValidateAsync(DoctorCreateDto);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.GetErrorsGroupedByProperty();
+            validationComponent?.DisplayErrors(errors);
+            inProgress = false;
+            return;
+        }
+
+        var doctorCreationResult = await DoctorService.AddDoctorAsync(DoctorCreateDto);
+        inProgress = false;
+
+        if (!doctorCreationResult.Success)
+        {
+            alert.ShowFailed(Resource.SomethingWentWrong);
+        }
+        else
+        {
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE);
+        }
+
+    }
+}

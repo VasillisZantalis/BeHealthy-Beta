@@ -1,0 +1,42 @@
+﻿@using BeHealthy.Frontend.Components.Pages.Rooms
+@inject IModalService ModalService
+
+@if (Rooms.Any())
+{
+    <ul class="list-group">
+        <Virtualize Items="Rooms" Context="room">
+            <li class="list-group-item my-2 border rounded-pill clickable" @onclick="() => OnRoomClick(room)">
+                <div class="d-flex justify-content-evenly px-3">
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">@Resource.Name</span>
+                        <h6>@room.Name</h6>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">@Resource.Number</span>
+                        <h6>@room.Number</h6>
+                    </div>
+                </div>
+            </li>
+        </Virtualize>
+    </ul>
+}
+else
+{
+    <p>@string.Format(Resource.ThereAreNo, Resource.Rooms)</p>
+}
+
+
+@code {
+    [Parameter]
+    public List<RoomDto> Rooms { get; set; } = new();
+
+    private void OnRoomClick(RoomDto room)
+    {
+        ModalService.Show<UpsertModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(UpsertModal.Room), room },
+                { nameof(UpsertModal.IsReadOnly), true },
+            });        
+    }
+}

@@ -1,0 +1,26 @@
+﻿<div>
+
+    <label for="@InputId" class="form-label">
+        @Label
+        @if (IsRequired)
+        {
+            <span class="text-danger">*</span>
+        }
+    </label>
+
+    @ChildContent
+
+    @if (!string.IsNullOrWhiteSpace(Hint))
+    {
+        <div class="form-text">@Hint</div>
+    }
+
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Label { get; set; } = default!;
+    [Parameter, EditorRequired] public string InputId { get; set; } = default!;
+    [Parameter] public bool IsRequired { get; set; }
+    [Parameter] public string? Hint { get; set; }
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = default!;
+}

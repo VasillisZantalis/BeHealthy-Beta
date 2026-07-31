@@ -1,0 +1,82 @@
+﻿@page "/departments/create"
+@page "/departments/edit/{id:int}"
+@using BeHealthy.Frontend.Components.Pages.Department.Components
+
+@inherits BasePage
+
+@inject IDepartmentService DepartmentService
+@inject IDoctorService DoctorService
+
+<PageTitle>@(IsEditMode ? Resource.Edit : Resource.Create)</PageTitle>
+
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Body>
+        <Tabs TTabKey="DepartmentTabs" @bind-ActiveTab="activeTab">
+            <Tab TTabKey="DepartmentTabs" Title="@Resource.GeneralData" Key="DepartmentTabs.GeneralData">
+                <GeneralData IsEditMode="IsEditMode" DepartmentDto="DepartmentDto" Doctors="Doctors" />
+            </Tab>
+            @if (IsEditMode)
+            {
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Doctors" Key="DepartmentTabs.Doctors">
+                    <DepartmentDoctors Doctors="DepartmentDto.Doctors.ToList()" />
+                </Tab>
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Patients" Key="DepartmentTabs.Patients">
+                    <DepartmentPatients Patients="DepartmentDto.Patients.ToList()" />
+                </Tab>
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Nurses" Key="DepartmentTabs.Nurses">
+                    <DepartmentNurses Nurses="DepartmentDto.Nurses.ToList()" />
+                </Tab>
+                <Tab TTabKey="DepartmentTabs" Title="@Resource.Rooms" Key="DepartmentTabs.Rooms">
+                    <DepartmentRooms Rooms="DepartmentDto.Rooms.ToList()" />
+                </Tab>
+            }
+        </Tabs>
+    </Body>
+</BeHealthyCard>
+
+@code {
+    [Parameter]
+    public int? id { get; set; }
+
+    private bool IsEditMode => id.HasValue;
+    private DepartmentTabs activeTab = DepartmentTabs.GeneralData;
+    private DepartmentDto DepartmentDto = new();
+    private List<DoctorDto> Doctors = new();
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        var result = await DoctorService.GetAllDoctorsAsync();
+        Doctors = result.Items.ToList();
+
+        if (IsEditMode && id.HasValue)
+        {
+            var department = await DepartmentService.GetDepartmentByIdAsync(id.Value);
+            DepartmentDto = department;
+        }
+
+        IsLoading = false;
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Departments, Link = RoutingEndpoints.DEPARTMENTS_PAGE, Active = false },
+            new Breadcrumb(){ Text = !IsEditMode ? Resource.Create : Resource.Edit, Link = string.Empty, Active = true },
+        });
+
+        if (IsEditMode && id.HasValue)
+        {
+            Breadcrumbs.AddBreadcrumb(new Breadcrumb() { Text = id.Value.ToString(), Link = string.Empty, Active = true });
+        }
+            
+    }
+}

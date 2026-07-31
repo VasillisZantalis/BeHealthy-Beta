@@ -1,0 +1,319 @@
+﻿@using BeHealthy.Frontend.Models.Enums
+@inherits ModalBase
+@typeparam TEntity
+
+@inject IDoctorService DoctorService
+@inject IPatientService PatientService
+@inject IDepartmentService DepartmentService
+
+<BeHealthyModal BodyClass="@string.Empty" Size="ModalSize.ExtraLarge">
+    <Header>
+        <h5 class="modal-title">Mass Import</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+
+    <Body>
+        <button class="btn main-color text-white rounded-pill px-3" @onclick="Save">
+            @Resource.Save
+        </button>
+        <button class="btn btn-outline-secondary rounded-pill" @onclick="AddRow">
+            <Icon IconClass="@FAIcon.Plus" /> @Resource.AddRow
+        </button>
+        <table class="table">
+            <thead>
+                <tr>
+                    @foreach (var field in FieldDefinitions)
+                    {
+                        <th>@field.DisplayName</th>
+                    }
+                    <th>@Resource.Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Rows.Count; i++)
+                {
+                    var idx = i; // Capture the current index for the lambda expression
+                                 <tr>
+                        @foreach (var field in FieldDefinitions)
+                        {
+                            <td>
+                                @RenderCell(field, Rows[idx])
+                            </td>
+                        }
+                        <td>
+                            <button class="btn" @onclick="@(() => RemoveRow(idx))">
+                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (Entity != ImportEntity.Appointment)
+        {
+            <label class="form-label">
+                <InputCheckbox @bind-Value="useValidation" class="form-check-input" id="useValidation" />
+                @Resource.UseValidation
+            </label>
+
+            @if (useValidation)
+            {
+                <div class="alert alert-warning" role="alert">
+                    @Resource.DisabledValidationMessage
+                </div>
+            }
+        }
+    </Body>
+</BeHealthyModal>
+
+@code {
+    [Parameter] public ImportEntity Entity { get; set; }
+    [Parameter] public EventCallback<(List<TEntity> Items, bool UseValidation)> OnSave { get; set; }
+
+    private List<FieldDefinition> FieldDefinitions = [];
+    private List<Dictionary<string, object>> Rows = new();
+
+    private List<SelectItem> doctorsSelect = new();
+    private List<SelectItem> patientsSelect = new();
+    private List<SelectItem> departmentsSelect = new();
+    private bool useValidation;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var doctorsTask = DoctorService.GetAllDoctorsSimpleAsync();
+        var patientsTask = PatientService.GetAllPatientsSimpleAsync();
+        var departmentsTask = DepartmentService.GetAllDepartmentsAsync();
+
+        await Task.WhenAll(doctorsTask, patientsTask, departmentsTask);
+
+        var doctors = await doctorsTask;
+        var patients = await patientsTask;
+        var departments = await departmentsTask;
+
+        doctorsSelect = doctors.Select(d => new SelectItem { Value = d.Id, Text = d.FullName }).ToList();
+        doctorsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        patientsSelect = patients.Select(p => new SelectItem { Value = p.Id, Text = p.FullName }).ToList();
+        patientsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        departmentsSelect = departments.Select(d => new SelectItem { Value = d.Id, Text = d.Name }).ToList();
+        departmentsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+
+        FieldDefinitions = FieldMapper.GetFields(Entity, doctorsSelect, departmentsSelect, patientsSelect);
+        AddRow();
+    }
+
+    private void AddRow()
+    {
+        var row = new Dictionary<string, object>();
+        foreach (var field in FieldDefinitions)
+        {
+            row[field.Name] = field.Type switch
+            {
+                FieldType.Number => 0,
+                FieldType.Date => DateTime.Today,
+                FieldType.Time => TimeSpan.Zero,
+                _ => string.Empty
+            };
+        }
+        Rows.Add(row);
+    }
+
+    private void RemoveRow(int index)
+    {
+        if (!Rows.Any()) return;
+
+        Rows.RemoveAt(index);
+    }
+
+    private async Task Save()
+    {
+        if (!Rows.Any()) return;
+
+        switch (Entity)
+        {
+            case ImportEntity.Doctor:
+                await ConvertToDoctors();
+                break;
+            case ImportEntity.Patient:
+                await ConvertToPatients();
+                break;
+            case ImportEntity.Nurse:
+                await ConvertToNurses();
+                break;
+            case ImportEntity.Appointment:
+                await ConvertToAppointments();
+                break;
+        }
+    }
+
+    private async Task ConvertToDoctors()
+    {
+        var doctors = Rows.Select(row => new DoctorCreateDto
+        {
+            FirstName = row.GetValueOrDefault<string>(nameof(DoctorCreateDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(DoctorCreateDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(DoctorCreateDto.Email)) ?? string.Empty,
+            Password = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(DoctorCreateDto.DepartmentId))
+        }).ToList();
+
+        if (!doctors.Any() || doctors is null) return;
+
+        await OnSave.InvokeAsync((doctors.Cast<TEntity>().ToList(), useValidation));
+
+        Close();
+    }
+
+    private async Task ConvertToPatients()
+    {
+        var patients = Rows.Select(row => new PatientCreateDto
+        {
+            FirstName = row.GetValueOrDefault<string>(nameof(PatientCreateDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(PatientCreateDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(PatientCreateDto.Email)) ?? string.Empty,
+            Password = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(PatientCreateDto.DepartmentId))
+        }).ToList();
+
+        if (!patients.Any() || patients is null) return;
+
+        await OnSave.InvokeAsync((patients.Cast<TEntity>().ToList(), useValidation));
+
+        Close();
+    }
+
+    private async Task ConvertToNurses()
+    {
+        var nurses = Rows.Select(row => new NurseCreateDto
+        {
+            FirstName = row.GetValueOrDefault<string>(nameof(NurseCreateDto.FirstName)) ?? string.Empty,
+            LastName = row.GetValueOrDefault<string>(nameof(NurseCreateDto.LastName)) ?? string.Empty,
+            Email = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Email)) ?? string.Empty,
+            Password = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            ConfirmPassword = row.GetValueOrDefault<string>(nameof(NurseCreateDto.Password)) ?? string.Empty,
+            DepartmentId = row.GetValueOrDefault<int?>(nameof(NurseCreateDto.DepartmentId))
+        }).ToList();
+
+        if (!nurses.Any() || nurses is null) return;
+
+        await OnSave.InvokeAsync((nurses.Cast<TEntity>().ToList(), useValidation));
+
+        Close();
+    }
+
+    private async Task ConvertToAppointments()
+    {
+        var appointments = Rows.Select(row => new AppointmentCreateDto
+        {
+            AppointmentDate = row.GetValueOrDefault<DateOnly>(nameof(AppointmentCreateDto.AppointmentDate)),
+            Notes = row.GetValueOrDefault<string>(nameof(AppointmentCreateDto.Notes)) ?? string.Empty,
+            PatientId = row.GetValueOrDefault<int>(nameof(AppointmentCreateDto.PatientId)),
+            DoctorId = row.GetValueOrDefault<int>(nameof(AppointmentCreateDto.DoctorId)),
+            RoomId = row.GetValueOrDefault<int?>(nameof(AppointmentCreateDto.RoomId)),
+            AppointmentStartTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentCreateDto.AppointmentStartTime)),
+            AppointmentEndTime = row.GetValueOrDefault<TimeOnly>(nameof(AppointmentCreateDto.AppointmentEndTime)),
+            Reason = row.GetValueOrDefault<AppointmentReason>(nameof(AppointmentCreateDto.Reason)),
+        }).ToList();
+
+        if (!appointments.Any() || appointments is null) return;
+
+        await OnSave.InvokeAsync((appointments.Cast<TEntity>().ToList(), useValidation));
+
+        Close();
+    }
+
+    private RenderFragment RenderCell(FieldDefinition field, Dictionary<string, object> row) => builder =>
+    {
+        int seq = 0;
+        switch (field.Type)
+        {
+            case FieldType.Text:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
+                builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Password:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
+                builder.AddAttribute(seq++, "type", "password");
+                builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Number:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
+                builder.AddAttribute(seq++, "type", "number");
+                builder.AddAttribute(seq++, "value", row[field.Name]);
+                builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = Convert.ToInt32(e.Value)));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Date:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
+                builder.AddAttribute(seq++, "type", "date");
+                builder.AddAttribute(seq++, "value",
+                    (row[field.Name] as DateTime?)?.ToString("yyyy-MM-dd") ?? "");
+                builder.AddAttribute(seq++, "oninput",
+                    EventCallback.Factory.Create<ChangeEventArgs>(this, e =>
+                    {
+                        if (DateTime.TryParse(e.Value?.ToString(), out var parsedDate))
+                        {
+                            row[field.Name] = parsedDate;
+                        }
+                        else
+                        {
+                            row[field.Name] = null!;
+                        }
+                    }));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Time:
+                builder.OpenElement(seq++, "input");
+                builder.AddAttribute(seq++, "class", "form-control");
+                builder.AddAttribute(seq++, "type", "time");
+                builder.AddAttribute(seq++, "value",
+                    (row[field.Name] as TimeSpan?)?.ToString(@"hh\:mm") ?? string.Empty);
+                builder.AddAttribute(seq++, "oninput",
+                    EventCallback.Factory.Create<ChangeEventArgs>(this, e =>
+                    {
+                        if (TimeSpan.TryParse(e.Value?.ToString(), out var parsedTime))
+                        {
+                            row[field.Name] = parsedTime;
+                        }
+                        else
+                        {
+                            row[field.Name] = null!;
+                        }
+                    }));
+                builder.CloseElement();
+                break;
+
+            case FieldType.Dropdown:
+                builder.OpenElement(seq++, "select");
+                builder.AddAttribute(seq++, "class", "form-select");
+                builder.AddAttribute(seq++, "value", row[field.Name]?.ToString());
+                builder.AddAttribute(seq++, "onchange", EventCallback.Factory.Create<ChangeEventArgs>(this, e => row[field.Name] = e.Value));
+
+                foreach (var option in field.Options)
+                {
+                    builder.OpenElement(seq++, "option");
+                    builder.AddAttribute(seq++, "value", option.Value);
+                    builder.AddContent(seq++, option.Text);
+                    builder.CloseElement();
+                }
+
+                builder.CloseElement();
+                break;
+        }
+    };
+}

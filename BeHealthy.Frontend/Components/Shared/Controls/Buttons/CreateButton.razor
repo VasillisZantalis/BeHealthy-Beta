@@ -1,0 +1,13 @@
+﻿<button class="btn btn-outline-secondary rounded-pill px-3" @onclick="OnClick">
+    <Icon IconClass="@FAIcon.Plus" /> @LabelText
+</button>
+
+@code {
+    [Inject] private IStringLocalizer<Resource> Localizer { get; set; } = default!;
+
+    [Parameter] public string LabelKey { get; set; } = nameof(Resource.Create);
+
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private string LabelText => Localizer[LabelKey];
+}

@@ -1,0 +1,39 @@
+@page "/profile"
+@using BeHealthy.Shared.Dtos.User
+@inherits BasePage
+
+@inject ICurrentUserService CurrentUser
+
+<PageTitle>@Resource.Profile</PageTitle>
+
+@*
+    NOTE: The original profile page edited the signed-in user's record via ASP.NET Identity
+    (UserManager / IUserService). Authentication is intentionally out of scope for the initial
+    WASM migration, so this page currently shows the (stubbed) current user read-only.
+    Re-introduce the edit form once real authentication is wired in.
+*@
+
+<BeHealthyCard BodyClass="p-3">
+    <Body>
+        <div class="d-flex flex-column gap-3">
+            <BeHealthyFormGroup Label="@Resource.FirstName" InputId="userName">
+                <input id="userName" class="form-control" value="@CurrentUser.UserName" disabled />
+            </BeHealthyFormGroup>
+
+            <BeHealthyFormGroup Label="@Resource.Role" InputId="role">
+                <input id="role" class="form-control" value="@CurrentUser.Role" disabled />
+            </BeHealthyFormGroup>
+        </div>
+    </Body>
+</BeHealthyCard>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Profile, Link = string.Empty, Active = true },
+        });
+    }
+}

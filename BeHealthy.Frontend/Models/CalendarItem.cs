@@ -1,0 +1,23 @@
+using System.Text.Json.Serialization;
+
+namespace BeHealthy.Frontend.Models;
+
+public class CalendarItem
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
+    [JsonPropertyName("start")]
+    public string Start { get; set; } = string.Empty;
+    [JsonPropertyName("end")]
+    public string End { get; set; } = string.Empty;
+    [JsonPropertyName("description")]
+    public string Description { get; set; } = string.Empty;
+    [JsonPropertyName("backgroundColor")]
+    public string? BackgroundColor { get; set; } = null;
+    [JsonPropertyName("borderColor")]
+    public string? BorderColor { get; set; } = null;
+    [JsonPropertyName("color")]
+    public string? Color { get; set; }
+}

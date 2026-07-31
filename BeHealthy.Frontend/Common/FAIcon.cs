@@ -1,0 +1,44 @@
+namespace BeHealthy.Frontend.Common;
+
+public static class FAIcon
+{
+    public static string Ban => "fa-solid fa-ban";
+    public static string Globe => "fa-solid fa-globe";
+    public static string RightFromBracket => "fa-solid fa-right-from-bracket";
+    public static string Hospital => "fa-regular fa-hospital";
+    public static string BedPulse => "fa-solid fa-bed-pulse";
+    public static string CalendarDays => "fa-solid fa-calendar-days";
+    public static string Gear => "fa-solid fa-gear";
+    public static string House => "fa-solid fa-house";
+    public static string UserDoctor => "fa-solid fa-user-doctor";
+    public static string UserLock => "fa-solid fa-user-lock";
+    public static string UserNurse => "fa-solid fa-user-nurse";
+    public static string Viruses => "fa-solid fa-viruses";
+    public static string Pencil => "fa-solid fa-pencil";
+    public static string Plus => "fa-solid fa-plus";
+    public static string TrashCan => "fa-solid fa-trash-can";
+    public static string CircleInfo => "fa-solid fa-circle-info";
+    public static string EllipsisVertical => "fa-solid fa-ellipsis-vertical";
+    public static string CircleCheck => "fa-regular fa-circle-check";
+    public static string CircleXmark => "fa-regular fa-circle-xmark";
+    public static string TriangleExclamation => "fa-solid fa-triangle-exclamation";
+    public static string ChevronLeft => "fa-solid fa-chevron-left";
+    public static string ChevronRight => "fa-solid fa-chevron-right";
+    public static string ChevronDown => "fa-solid fa-chevron-down";
+    public static string Envelope => "fa-regular fa-envelope";
+    public static string MobileScreenButton => "fa-solid fa-mobile-screen-button";
+    public static string Search => "fa-solid fa-magnifying-glass";
+    public static string RolePrivilege => "fa-solid fa-address-card";
+    public static string Bars => "fa-solid fa-bars";
+    public static string EditSquare => "fa-solid fa-pen-to-square";
+    public static string Stethoscope => "fa-solid fa-stethoscope";
+    public static string Fingerprint => "fa-solid fa-fingerprint";
+    public static string Import => "fa-solid fa-file-import";
+    public static string SuitcaseMedical => "fa-solid fa-suitcase-medical";
+    public static string XMark => "fa-solid fa-xmark";
+    public static string Check => "fa-solid fa-check";
+    public static string AngleLeft => "fa-solid fa-angle-left";
+    public static string AngleDoubleLeft => "fa-solid fa-angles-left";
+    public static string AngleRight => "fa-solid fa-angle-right";
+    public static string AngleDoubleRight => "fa-solid fa-angles-right";
+}

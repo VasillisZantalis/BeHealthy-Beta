@@ -1,0 +1,70 @@
+
+@inject IAppointmentService AppointmentService
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+
+<div id="upcomingAppointmentsDiv">
+
+    <div class="card shadow border-0 rounded p-3 mb-3">
+        <h5 class="card-title">@Resource.UpcomingAppointments</h5>
+
+        <div class="d-flex flex-column">
+            @if (upcomingAppointments is not null && upcomingAppointments.Any())
+            {
+                foreach (var appointment in upcomingAppointments)
+                {
+                    <div class="list-group">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex flex-row align-items-center justify-content-between border-bottom">
+                                <span><strong>Date:</strong> @appointment.AppointmentDate</span>
+                                <div class="d-flex flex-column">
+                                    <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
+                                    <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
+                                </div>
+                                <div><span class="badge @EnumExtensions.GetBadgeClass(appointment!.Status)">@appointment.Status</span></div>
+                                <button class="btn" title="@(Resource.Delete)" @onclick="() => DeleteAppointment(appointment.Id)">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                }
+            }
+            else
+            {
+                <div class="text-center"><label>@string.Format(Resource.NoAvailable, Resource.Appointments)</label></div>
+            }
+        </div>
+
+    </div>
+</div>
+
+@code {
+    private List<AppointmentDto> upcomingAppointments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var threeDaysFromNow = today.AddDays(3);
+
+        var appointments = await AppointmentService.GetAllAppointmentsAsync();
+
+        upcomingAppointments = appointments.Items
+            .Where(a =>
+                a.AppointmentDate >= today &&
+                a.AppointmentDate <= threeDaysFromNow &&
+                a.Status != AppointmentStatus.Cancelled &&
+                a.Status != AppointmentStatus.Completed)
+            .OrderBy(a => a.AppointmentDate)
+            .ThenBy(a => a.AppointmentStartTime)
+            .Take(5)
+            .ToList();
+    }
+
+    private async Task DeleteAppointment(int appointmentId)
+    {
+        await AppointmentService.DeleteAppointmentAsync(appointmentId);
+        NavigationManager.Refresh(forceReload: true);
+    }
+}

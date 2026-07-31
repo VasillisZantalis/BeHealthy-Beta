@@ -1,0 +1,131 @@
+@using BeHealthy.Frontend.Validations.Visit
+@inherits ModalBase
+
+@inject IVisitService VisitService
+@inject IDoctorService DoctorService
+@inject IPatientService PatientService
+@inject ToastService ToastService
+@inject NavigationManager NavigationManager
+
+<BeHealthyModal BodyClass="">
+    <Header>
+        <h5 class="modal-title">@Resource.Visit</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+    <Body>
+        <EditForm Model="visitDto" FormName="VisitForm" OnValidSubmit="SaveVisit" Enhance>
+            <ValidationComponent @ref="validationComponent" />
+
+            <BeHealthyFormGroup Label="@Resource.Reason" InputId="reason" IsRequired="true">
+                <InputText id="reason" @bind-Value="visitDto.Reason" class="form-control" />
+                <ValidationMessage For="() => visitDto.Reason" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            <BeHealthyFormGroup Label="@Resource.Allergen" InputId="notes">
+                <InputText id="notes" @bind-Value="visitDto.Notes" class="form-control" />
+                <ValidationMessage For="() => visitDto.Notes" class="text-danger" />
+            </BeHealthyFormGroup>
+
+            <BeHealthyFormGroup Label="@Resource.Doctors" InputId="doctors" IsRequired="true">
+                <InputSelect id="doctors" class="form-select" @bind-Value="visitDto.Doctor.Id">
+                    @foreach (var doctor in doctorsSelect)
+                    {
+                        <option value="@doctor.Value">@doctor.Text</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => visitDto.Doctor.Id" class="text-danger" />
+            </BeHealthyFormGroup>
+
+             <div class="d-flex flex-row justify-content-end gap-2 mt-3">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="Close">
+                    @Resource.Cancel
+                </button>
+                <button type="submit" class="btn btn-success rounded-pill px-4">
+                    @Resource.Save
+                </button>
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyModal>
+
+@code {
+    [Parameter] 
+    public int MedicalRecordId { get; set; }
+
+    [Parameter]
+    public int PatientId { get; set; }
+
+    [SupplyParameterFromForm]
+    private VisitDto visitDto { get; set; } = new();
+    private ValidationComponent? validationComponent;
+
+    private List<SelectItem> doctorsSelect = new();
+    private List<SelectItem> patientsSelect = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        doctorsSelect = (await DoctorService.GetAllDoctorsSimpleAsync())
+            .Select(d => new SelectItem { Value = d.Id, Text = d.FullName })
+            .ToList();
+        doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+    }
+
+    protected override void OnParametersSet()
+    {
+        visitDto.Patient.Id = PatientId;
+        visitDto.VisitDate = DateTime.UtcNow;
+        visitDto.MedicalRecordId = MedicalRecordId;
+    }
+
+    private async Task SaveVisit()
+    {
+        validationComponent?.ClearErrors();
+
+        ServiceResponse response;
+
+        if (visitDto.Id > 0)
+        {
+            var visitUpdateDto = visitDto.MapToUpdateDto();
+
+            var validator = new VisitUpdateDtoValidator();
+            var validationResult = validator.Validate(visitUpdateDto);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.GetErrorsGroupedByProperty();
+                HandleValidationErrors(errors);
+                return;
+            }
+
+            response = await VisitService.UpdateVisitAsync(visitUpdateDto);
+        }
+        else
+        {
+            var visitCreateDto = visitDto.MapToCreateDto();
+
+            var validator = new VisitCreateDtoValidator();
+            var validationResult = validator.Validate(visitCreateDto);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.GetErrorsGroupedByProperty();
+                HandleValidationErrors(errors);
+                return;
+            }
+
+            response = await VisitService.AddVisitAsync(visitCreateDto);
+        }
+
+        if (!response.Success)
+        {
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
+        }
+
+        await ToastService.EnqueueToastAsync(Resource.Success, "success");
+        Close();
+        NavigationManager.Refresh(true);
+    }
+
+    private void HandleValidationErrors(Dictionary<string, List<string>> errors) 
+        => validationComponent?.DisplayErrors(errors);
+}

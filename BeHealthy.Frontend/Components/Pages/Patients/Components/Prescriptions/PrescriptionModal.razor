@@ -1,0 +1,154 @@
+@inject IPrescriptionService PrescriptionService
+@inject NavigationManager NavigationManager
+
+@if (showModal)
+{
+    <div class="modal fade show" tabindex="-1" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">@ModalTitle</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="prescriptionDto" FormName="PrescriptionForm" OnValidSubmit="SavePrescription">
+                        <DataAnnotationsValidator />
+
+                        <div class="d-flex flex-column gap-3">
+                            <div class="form">
+                                <label class="fw-bold" for="medication">@Resource.Medication</label>
+                                <InputText id="medication" class="form-control" @bind-Value="prescriptionDto.Medication" />
+                                <ValidationMessage For="@(() => prescriptionDto.Medication)" />
+                            </div>
+                            <div class="form">
+                                <label class="fw-bold" for="dosage">@Resource.Dosage</label>
+                                <InputText id="dosage" class="form-control" @bind-Value="prescriptionDto.Dosage" />
+                                <ValidationMessage For="@(() => prescriptionDto.Dosage)" />
+                            </div>
+                            <div class="form">
+                                <label class="fw-bold" for="datePrescribed">@Resource.DatePrescribed</label>
+                                <InputDate id="datePrescribed" class="form-control" @bind-Value="prescriptionDto.DatePrescribed" disabled="@lockDatePrescribed" />
+                                <ValidationMessage For="@(() => prescriptionDto.DatePrescribed)" />
+                            </div>
+                            <div class="">
+                                <label class="fw-bold" for="doctorIdSelect">@Resource.Doctor</label>
+                                <InputSelect id="doctorIdSelect" class="form-select" @bind-Value="prescriptionDto.DoctorId" disabled="@lockDoctorsDropdown">
+                                    @foreach (var doctor in doctorsSelect)
+                                    {
+                                        <option value="@doctor.Value">@doctor.Text</option>
+                                    }
+                                </InputSelect>
+                                <ValidationMessage For="@(() => prescriptionDto.DoctorId)" />
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row justify-content-end m-3 gap-2">
+                            <button type="button" class="btn btn-outline-secondary" @onclick="CloseModal">@Resource.Cancel</button>
+                            <button type="submit" class="btn btn-success">@Resource.Save</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+
+@code {
+    [Parameter, EditorRequired]
+    public EventCallback<bool> Successful { get; set; }
+
+    [SupplyParameterFromForm]
+    private PrescriptionDto prescriptionDto { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public int? PrescriptionId { get; set; }
+
+    [Inject] ICurrentUserService CurrentUser { get; set; } = default!;
+
+    private bool showModal { get; set; }
+    private bool isEditMode => PrescriptionId.HasValue;
+
+    private List<DoctorDto> doctors { get; set; } = default!;
+    private string ModalTitle => isEditMode ? Resource.Edit : Resource.Create;
+    private List<SelectItem> doctorsSelect = new();
+
+    private UserRole? userRole;
+    private string? userId;
+
+    private bool lockDoctorsDropdown => userRole == UserRole.Doctor;
+    private bool lockDatePrescribed => PrescriptionId.HasValue;
+
+
+
+    [Inject]
+    private IDoctorService DoctorService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userId = CurrentUser.UserId;
+        userRole = CurrentUser.Role;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        prescriptionDto = new();
+
+        var doctors = (await DoctorService.GetAllDoctorsSimpleAsync()).ToList();
+
+        doctorsSelect = doctors.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.FullName
+        }).ToList();
+
+        prescriptionDto.DatePrescribed = !isEditMode ? DateTime.Now : DateTime.Now;
+
+        if (PrescriptionId.HasValue)
+        {
+            prescriptionDto = await PrescriptionService.GetPrescriptionByIdAsync(PrescriptionId.Value) ?? new();
+        }
+
+        if (prescriptionDto != null && userRole == UserRole.Doctor && doctors.Any())
+        {
+            prescriptionDto.DoctorId = doctors.FirstOrDefault(w => w.UserId == userId)!.Id;
+        }
+    }
+
+    public void OpenModal()
+    {
+        showModal = true;
+    }
+
+    public void CloseModal()
+    {
+        showModal = false;
+    }
+
+    private async Task SavePrescription()
+    {
+        var patientId = NavigationManager.Uri.Split("/").LastOrDefault();
+
+        prescriptionDto.PatientId = Convert.ToInt32(patientId);
+
+        if (isEditMode && PrescriptionId.HasValue)
+        {
+            var prescriptionForUpdate = prescriptionDto.MapDtoToUpdateDto();
+
+            var response = await PrescriptionService.UpdatePrescriptionAsync(prescriptionForUpdate);
+
+            CloseModal();
+            await Successful.InvokeAsync(response.Success);
+        }
+        else
+        {
+            var prescriptionForCreation = prescriptionDto.MapDtoToCreateDto();
+
+            var response = await PrescriptionService.AddPrescriptionAsync(prescriptionForCreation);
+
+            CloseModal();
+            await Successful.InvokeAsync(response.Success);
+        }
+    }
+}

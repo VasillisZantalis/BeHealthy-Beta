@@ -1,0 +1,45 @@
+﻿.sidebar-container2 {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    color: white;
+    border-radius: 0 10px 10px 0;
+    max-height: 30rem;
+    position: sticky;
+    top: 15%;
+}
+
+.sidebar-expand {
+    width: 14rem;
+}
+
+.sidebar-collapse {
+    width: 3rem;
+}
+
+.menu-name {
+    visibility: hidden;
+    position: absolute;
+    margin-left: 0.4rem;
+}
+
+.sidebar-expand .menu-name {
+    visibility: visible;
+}
+
+.nav-item a.active {
+    background-color: rgba(255, 255, 255, 0.37);
+    color: white;
+}
+
+.nav-item .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+
+@media (max-width: 640px) {
+    .sidebar-container2 {
+        width: 100%;
+    }
+}

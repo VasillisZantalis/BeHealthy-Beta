@@ -1,0 +1,56 @@
+﻿@inherits ModalBase
+<div class="modal fade show custom-modal-overlay"
+     tabindex="-1"
+     style="display: block;"
+     @onmousedown="HandleBackdropClick">
+
+    <div class="modal-dialog @ModalSizeToClass[Size]"
+         @onmousedown:stopPropagation="true">
+
+        <div class="modal-content">
+
+            @if (Header is not null)
+            {
+                <div class="modal-header border-0">
+                    @Header
+                </div>
+            }
+
+            @if (Body is not null)
+            {
+                <div class="modal-body @BodyClass">
+                    @Body
+                </div>
+            }
+
+            @if (Footer is not null)
+            {
+                <div class="modal-footer border-0">
+                    @Footer
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? Header { get; set; }
+    [Parameter] public RenderFragment? Body { get; set; }
+    [Parameter] public RenderFragment? Footer { get; set; }
+    [Parameter] public string? BodyClass { get; set; } = "text-center d-flex flex-column";
+    [Parameter] public ModalSize Size { get; set; } = ModalSize.Normal;
+
+    private static readonly IDictionary<ModalSize, string> ModalSizeToClass = new Dictionary<ModalSize, string>
+    {
+        { ModalSize.Small, "modal-sm" },
+        { ModalSize.Normal, string.Empty },
+        { ModalSize.Large, "modal-lg" },
+        { ModalSize.ExtraLarge, "modal-xl" },
+    };
+
+    private void HandleBackdropClick()
+    {
+        Close();
+    }
+}

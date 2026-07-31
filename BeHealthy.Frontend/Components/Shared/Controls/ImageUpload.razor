@@ -1,0 +1,59 @@
+﻿<div class="form-control mb-3">
+    <InputFile class="form-control" OnChange="HandleFileChange" />
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="text-danger mt-1">@ErrorMessage</div>
+    }
+</div>
+
+@code {
+    [Parameter] public EventCallback<string> OnImageChanged { get; set; }
+
+    [Parameter] public int MaxFileSizeInKB { get; set; } = 1024; // default 1MB
+
+    [Parameter] public string[] AllowedFormats { get; set; } = new[] { "image/jpeg", "image/png", "image/jpg" };
+
+    [Parameter] public int? ResizeWidth { get; set; } = 200;
+    [Parameter] public int? ResizeHeight { get; set; } = 200;
+
+    private string? ErrorMessage;
+
+    private async Task HandleFileChange(InputFileChangeEventArgs e)
+    {
+        ErrorMessage = null;
+        var file = e.File;
+
+        if (file.Size > MaxFileSizeInKB * 1024)
+        {
+            ErrorMessage = $"File size cannot exceed {MaxFileSizeInKB} KB.";
+            return;
+        }
+
+        if (!AllowedFormats.Contains(file.ContentType))
+        {
+            ErrorMessage = $"Only {string.Join(", ", AllowedFormats.Select(f => f.Split('/')[1]))} are allowed.";
+            return;
+        }
+
+        try
+        {
+            IBrowserFile? processedFile = file;
+
+            if (ResizeWidth.HasValue && ResizeHeight.HasValue)
+            {
+                processedFile = await file.RequestImageFileAsync(file.ContentType, ResizeWidth.Value, ResizeHeight.Value);
+            }
+
+            var buffer = new byte[processedFile.Size];
+            await processedFile.OpenReadStream(MaxFileSizeInKB * 1024).ReadAsync(buffer);
+
+            var base64String = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+            await OnImageChanged.InvokeAsync(base64String);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error processing file: {ex.Message}";
+        }
+    }
+}

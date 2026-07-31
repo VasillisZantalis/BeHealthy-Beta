@@ -1,0 +1,177 @@
+﻿@page "/doctors"
+@inherits BasePage
+
+<PageTitle>@Resource.Doctors</PageTitle>
+
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Header>
+        <div class="d-flex gap-3">
+            @if (userRole == UserRole.Admin)
+            {
+                <div class="">
+                    <CreateButton OnClick="CreateDoctor" />
+                    <MassImportButton OnClick="ShowImportWizard" />
+                    @if (selectedDoctorIds.Any())
+                    {
+                        <button class="btn btn-danger rounded-pill mx-1" @onclick="ConfirmBulkDelete">
+                            <Icon IconClass="@FAIcon.TrashCan" />
+                            @string.Format(Resource.BulkDeleteNumber, selectedDoctorIds.Count)
+                        </button>
+                    }
+                </div>
+            }
+            <div>
+                <ViewSelect @bind-Value="selectedView" />
+            </div>
+        </div>
+
+        <div>
+            <BeHealthySearch OnSearch="HandleSearch"
+                            OnClear="HandleClearFilters"
+                            DebounceMilliseconds="500">
+
+                <Filters>
+                    <!-- Specialty Filter -->
+                    <InputSelect class="form-select"
+                                 @bind-Value="QueryParameters.SpecialtyId"
+                                 @bind-Value:after="@(() => HandleSpecialtyFilter(QueryParameters.SpecialtyId))">
+                        @foreach (var specialty in specialties)
+                        {
+                            <option value="@specialty.Value">@specialty.Text</option>
+                        }
+                    </InputSelect>
+                </Filters>
+            </BeHealthySearch>
+        </div>
+    </Header>
+    <Body>
+
+        @if (selectedView == "Card")
+        {
+            @if (doctors is null || !doctors.Any())
+            {
+                <p>@string.Format(Resource.NoAvailable, Resource.Doctors)</p>
+            }
+            else
+            {
+                <div class="row">
+                    <Virtualize Items="@doctors" Context="doctor" ItemSize="100">
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3">
+                            <div class="mb-3">
+                                <UserCard Id="@doctor.Id"
+                                          Image="@doctor.Image"
+                                          FullName="@doctor.FullName"
+                                          Email="@doctor.Email"
+                                          Role="@UserRole.Doctor"
+                                          Phone="@doctor.PhoneNumber"
+                                          Specialty="@doctor.Specialty?.Name"
+                                          CanEdit="hasActionRights"
+                                          CanDelete="hasActionRights"
+                                          Edit="() => EditDoctor(doctor.Id)"
+                                          Delete="() => ConfirmDelete(doctor.Id)" />
+                            </div>
+                        </div>
+                    </Virtualize>
+                </div>
+            }
+        }
+        else if (selectedView == "Grid")
+        {
+            <BeHealthyTable TItem="DoctorDto"
+                            Items="@doctors"
+                            IsLoading="IsLoading"
+                            TableClass="table table-responsive"
+                            WrapperClass="table-wrapper"
+                            EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Doctors)"
+                            CurrentSortProperty="@QueryParameters.OrderBy"
+                            IsSortDescending="@QueryParameters.OrderDescending"
+                            OnSortChanged="HandleSortChanged" >
+
+                <BeHealthyColumn TItem="DoctorDto">
+                    <Template>
+                        @if (hasActionRights)
+                        {
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   checked="@selectedDoctorIds.Contains(context.Id)"
+                                   @onchange="@(() => ToggleDoctorSelection(context.Id))"
+                                   @onclick:stopPropagation="true" />
+                        }
+                    </Template>
+                </BeHealthyColumn>
+
+                <BeHealthyColumn TItem="DoctorDto">
+                    <Template>
+                        <img class="rounded-circle"
+                             src="@(context.Image ?? "images/generic.jpg")"
+                             alt="@context.FullName"
+                             width="25"
+                             height="25" />
+                    </Template>
+                </BeHealthyColumn>
+
+                <BeHealthyColumn TItem="DoctorDto"
+                                 Title="@Resource.FirstName"
+                                 Property="@(x => x.FirstName)"
+                                 Sortable="true"
+                                 SortProperty="FirstName" />
+
+                <BeHealthyColumn TItem="DoctorDto"
+                                 Title="@Resource.LastName"
+                                 Property="@(x => x.LastName)"
+                                 Sortable="true"
+                                 SortProperty="LastName" />
+
+                <BeHealthyColumn TItem="DoctorDto"
+                                 Title="@Resource.Specialty"
+                                 Property="@(x => x.Specialty?.Name ?? string.Empty)" />
+
+                <BeHealthyColumn TItem="DoctorDto"
+                                 Title="@Resource.Created"
+                                 Property="@(x => x.CreatedAt.ToFullDateTimeString())"
+                                 Sortable="true"
+                                 SortProperty="CreatedAt" />
+
+                <BeHealthyColumn TItem="DoctorDto"
+                                 Title="@Resource.Email"
+                                 Property="@(x => x.Email)" />
+
+                <BeHealthyColumn TItem="DoctorDto"
+                                 Title="@Resource.PhoneNumber"
+                                 Property="@(x => x.PhoneNumber)" />
+
+                @if (hasActionRights)
+                {
+                    <BeHealthyActionsColumn TItem="DoctorDto"
+                                            Title="@Resource.Actions"
+                                            CellClass="text-end">
+                        <Template>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn"
+                                        title="@(Resource.Edit)"
+                                        @onclick="@(() => EditDoctor(context.Id))"
+                                        @onclick:stopPropagation="true">
+                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                                </button>
+                                <button class="btn"
+                                        title="@(Resource.Delete)"
+                                        @onclick="() => ConfirmDelete(context.Id)"
+                                        @onclick:stopPropagation="true">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                </button>
+                            </div>
+                        </Template>
+                    </BeHealthyActionsColumn>
+                }
+
+            </BeHealthyTable>
+        }
+    </Body>
+     <Footer>
+        <BeHealthyPaginator CurrentPage="@QueryParameters.PageNumber"
+                           PageSize="@QueryParameters.PageSize"
+                           TotalItems="@totalCount"
+                           CurrentPageChanged="@HandlePageChanged"
+                           PageSizeChanged="@HandlePageSizeChanged" />
+    </Footer>
+</BeHealthyCard>

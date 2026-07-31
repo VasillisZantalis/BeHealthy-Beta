@@ -1,0 +1,204 @@
+﻿@typeparam TItem
+@using Microsoft.AspNetCore.Components
+
+<div class="@WrapperClass">
+    <CascadingValue Value="this" IsFixed="true">
+        @ChildContent
+    </CascadingValue>
+
+    <table class="@TableClass">
+        @if (ShowHeader)
+        {
+            <thead class="@HeaderClass">
+                <tr>
+                    @foreach (var column in Columns)
+                    {
+                        <th class="@GetHeaderClass(column)" style="@column.HeaderStyle" @onclick="() => HandleSort(column)">
+                            <div class="d-flex align-items-center gap-2">
+                                <span>@column.Title</span>
+                                @if (column.Sortable)
+                                {
+                                    <span class="sort-icon">
+                                        @if (CurrentSortProperty == column.SortProperty)
+                                        {
+                                            @if (IsSortDescending)
+                                            {
+                                                <i class="fas fa-sort-down"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-sort-up"></i>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-sort text-muted"></i>
+                                        }
+                                    </span>
+                                }
+                            </div>
+                        </th>
+                    }
+                    @if (ActionsColumn != null)
+                    {
+                        <th class="@ActionsColumn.HeaderClass" style="@ActionsColumn.HeaderStyle">
+                            @ActionsColumn.Title
+                        </th>
+                    }
+                </tr>
+            </thead>
+        }
+        <tbody class="@BodyClass">
+            @if (IsLoading)
+            {
+                <tr>
+                    <td colspan="@GetColumnCount()" class="text-center">
+                        <SmallLoader />
+                    </td>
+                </tr>
+            }
+            else if (Items != null && Items.Any())
+            {
+                @foreach (var item in Items)
+                {
+                    var rowClass = GetRowClass(item);
+                    <tr class="@rowClass" @onclick="() => OnRowClick(item)">
+                        @foreach (var column in Columns)
+                        {
+                            <td class="@column.CellClass" style="@column.CellStyle">
+                                @if (column.Template != null)
+                                {
+                                    @column.Template(item)
+                                }
+                                else if (column.Property != null)
+                                {
+                                    @column.Property(item)
+                                }
+                            </td>
+                        }
+                        @if (ActionsColumn != null)
+                        {
+                            <td class="@ActionsColumn.CellClass" style="@ActionsColumn.CellStyle">
+                                @ActionsColumn.Template(item)
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+            else if (EmptyContent != null)
+            {
+                <tr>
+                    <td colspan="@GetColumnCount()" class="@EmptyRowClass">
+                        @EmptyContent
+                    </td>
+                </tr>
+            }
+            else if (!string.IsNullOrEmpty(EmptyMessage))
+            {
+                <tr>
+                    <td colspan="@GetColumnCount()" class="@EmptyRowClass">
+                        @EmptyMessage
+                    </td>
+                </tr>
+            }
+        </tbody>
+        @if (FooterContent != null)
+        {
+            <tfoot class="@FooterClass">
+                @FooterContent
+            </tfoot>
+        }
+    </table>
+</div>
+
+@code {
+    [Parameter] public IEnumerable<TItem>? Items { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? EmptyContent { get; set; }
+    [Parameter] public RenderFragment? FooterContent { get; set; }
+    [Parameter] public string EmptyMessage { get; set; } = Resource.DataNotFound;
+    [Parameter] public bool IsLoading { get; set; }
+
+    // Sorting parameters
+    [Parameter] public string? CurrentSortProperty { get; set; }
+    [Parameter] public bool IsSortDescending { get; set; }
+    [Parameter] public EventCallback<(string? sortProperty, bool sortDescending)> OnSortChanged { get; set; }
+
+    // Styling parameters
+    [Parameter] public string WrapperClass { get; set; } = "";
+    [Parameter] public string TableClass { get; set; } = "";
+    [Parameter] public string HeaderClass { get; set; } = "";
+    [Parameter] public string BodyClass { get; set; } = "";
+    [Parameter] public string FooterClass { get; set; } = "";
+    [Parameter] public string EmptyRowClass { get; set; } = "text-center";
+    [Parameter] public Func<TItem, string>? RowClassFunc { get; set; }
+
+    // Behavior parameters
+    [Parameter] public bool ShowHeader { get; set; } = true;
+    [Parameter] public EventCallback<TItem> OnRowClicked { get; set; }
+
+    internal List<BeHealthyColumn<TItem>> Columns { get; } = new();
+    internal BeHealthyActionsColumn<TItem>? ActionsColumn { get; set; }
+
+    internal void AddColumn(BeHealthyColumn<TItem> column)
+    {
+        Columns.Add(column);
+        StateHasChanged();
+    }
+
+    internal void RemoveColumn(BeHealthyColumn<TItem> column)
+    {
+        Columns.Remove(column);
+        StateHasChanged();
+    }
+
+    internal void SetActionsColumn(BeHealthyActionsColumn<TItem> column)
+    {
+        ActionsColumn = column;
+        StateHasChanged();
+    }
+
+    internal void RemoveActionsColumn()
+    {
+        ActionsColumn = null;
+        StateHasChanged();
+    }
+
+    private string GetRowClass(TItem item)
+    {
+        return RowClassFunc?.Invoke(item) ?? "";
+    }
+
+    private string GetHeaderClass(BeHealthyColumn<TItem> column)
+    {
+        var classes = column.HeaderClass;
+        if (column.Sortable)
+        {
+            classes += " sortable-header";
+        }
+        return classes;
+    }
+
+    private async Task HandleSort(BeHealthyColumn<TItem> column)
+    {
+        if (!column.Sortable || string.IsNullOrEmpty(column.SortProperty))
+            return;
+
+        bool newSortDescending = CurrentSortProperty == column.SortProperty ? !IsSortDescending : false;
+        
+        await OnSortChanged.InvokeAsync((column.SortProperty, newSortDescending));
+    }
+
+    private async Task OnRowClick(TItem item)
+    {
+        if (OnRowClicked.HasDelegate)
+        {
+            await OnRowClicked.InvokeAsync(item);
+        }
+    }
+
+    private int GetColumnCount()
+    {
+        return Columns.Count + (ActionsColumn != null ? 1 : 0);
+    }
+}

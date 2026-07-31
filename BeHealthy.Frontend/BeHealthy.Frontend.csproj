@@ -10,6 +10,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.6" />
+    <PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="ChartJs.Blazor.Fork" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeHealthy.Shared\BeHealthy.Shared.csproj" />
   </ItemGroup>
 
 </Project>

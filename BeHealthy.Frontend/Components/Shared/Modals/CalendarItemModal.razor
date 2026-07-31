@@ -1,0 +1,23 @@
+@inherits ModalBase
+
+<BeHealthyModal>
+    <Header>
+        <Icon IconClass="@FAIcon.CalendarDays"/>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+
+    <Body>
+        <div class="d-flex flex-column justify-content-center">
+            <span class="h5 fw-normal">@CalendarItem.Title</span>
+            <small>@DateTime.Parse(CalendarItem.Start).ToString("HH:mm") - @DateTime.Parse(CalendarItem.End).ToString("HH:mm")</small>
+        </div>
+    </Body>
+
+    <Footer>
+        <button type="button" class="btn main-color text-white px-4 me-2" @onclick="Close">@Resource.OK</button>
+    </Footer>
+</BeHealthyModal>
+
+@code {
+    [Parameter] public CalendarItem CalendarItem { get; set; } = new();
+}

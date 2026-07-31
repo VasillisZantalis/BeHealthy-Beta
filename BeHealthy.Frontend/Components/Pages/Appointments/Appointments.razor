@@ -1,0 +1,156 @@
+﻿@page "/appointments"
+@inherits BasePage
+
+<PageTitle>@Resource.Appointments</PageTitle>
+
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Header>
+        <div class="d-flex gap-3">
+            <div>
+                <CreateButton OnClick="CreateAppointment" />
+                <MassImportButton OnClick="ShowImportWizard" />
+                @if (selectedAppointmentIds.Any() && hasDeleteRight)
+                {
+                    <button class="btn btn-danger rounded-pill mx-1" @onclick="ConfirmBulkDelete">
+                        <Icon IconClass="@FAIcon.TrashCan" />
+                        @string.Format(Resource.BulkDeleteNumber, selectedAppointmentIds.Count)
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div>
+            <BeHealthySearch ShowSearchBox="false">
+                <Filters>
+                    <InputSelect class="form-select" 
+                                 @bind-Value="QueryParameters.DoctorId"
+                                 @bind-Value:after="@(() => HandleDoctorFilter(QueryParameters.DoctorId))">
+                        @foreach(var doctor in doctorsSelect)
+                        {
+                            <option value="@doctor.Value">@doctor.Text</option>
+                        }
+)
+                    </InputSelect>
+
+                    <InputSelect class="form-select"
+                                 @bind-Value="QueryParameters.PatientId"
+                                 @bind-Value:after="@(() => HandlePatientFilter(QueryParameters.PatientId))">
+                        @foreach (var patient in patientsSelect)
+                        {
+                            <option value="@patient.Value">@patient.Text</option>
+                        }
+                    </InputSelect>
+                </Filters>
+            </BeHealthySearch>
+        </div>
+    </Header>
+    <Body>
+        <BeHealthyTable TItem="AppointmentDto"
+                        Items="@appointments"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Appointments)"
+                        CurrentSortProperty="@QueryParameters.OrderBy"
+                        IsSortDescending="@QueryParameters.OrderDescending"
+                        OnSortChanged="HandleSortChanged">
+
+           <BeHealthyColumn TItem="AppointmentDto">
+                <Template> 
+                    @if (hasDeleteRight)
+                    {
+                        <input type="checkbox"
+                            class="form-check-input"
+                            checked="@selectedAppointmentIds.Contains(context.Id)"
+                            @onchange="@(() => ToggleAppointmentSelection(context.Id))"
+                            @onclick:stopPropagation="true" />
+                    }
+                </Template>
+            </BeHealthyColumn>
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.Date"
+                             Property="@(x => x.AppointmentDate.ToString("dd MMM yyyy"))" 
+                             Sortable="true"
+                             SortProperty="AppointmentDate" />
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.Patient"
+                             Property="@(x => x.Patient != null ? x.Patient.FullName : string.Empty)" />
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.Doctor"
+                             Property="@(x => x.Doctor != null ? x.Doctor.FullName : string.Empty)" />
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.Room"
+                             Property="@(x => x.Room != null ? x.Room.Name : string.Empty)" />
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.StartTime"
+                             Property="@(x => x.AppointmentStartTime.ToString())" 
+                             Sortable="true"
+                             SortProperty="AppointmentStartTime" />
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.EndTime"
+                             Property="@(x => x.AppointmentEndTime.ToString())" 
+                             Sortable="true"
+                             SortProperty="AppointmentEndTime" />
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.Reason"
+                             Property="@(x => x.Reason.ToLocalizedString())" />
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.Status">
+                <Template>
+                    <span class="badge @context.Status.GetBadgeClass()">
+                        @context.Status.ToLocalizedString()
+                    </span>
+                </Template>
+            </BeHealthyColumn>
+
+            <BeHealthyColumn TItem="AppointmentDto"
+                             Title="@Resource.Notes"
+                             Property="@(x => string.IsNullOrEmpty(x.Notes) ? "-" : x.Notes)" />
+
+            @if (hasActionRights)
+            {
+                <BeHealthyActionsColumn TItem="AppointmentDto"
+                                        Title="@Resource.Actions"
+                                        CellClass="text-end">
+                    <Template>
+                        <div class="d-flex justify-content-end">
+                            @if (hasEditRight)
+                            {
+                                <button class="btn"
+                                        title="@(Resource.Edit)"
+                                        @onclick="@(() => EditAppointment(context.Id))"
+                                        @onclick:stopPropagation="true">
+                                    <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                                </button>
+                            }
+                            @if (hasDeleteRight)
+                            {
+                                <button class="btn"
+                                        title="@(Resource.Delete)"
+                                        @onclick="() => ConfirmDelete(context.Id)"
+                                        @onclick:stopPropagation="true">
+                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                                </button>
+                            }
+                        </div>
+                    </Template>
+                </BeHealthyActionsColumn>
+            }
+
+        </BeHealthyTable>
+    </Body>
+    <Footer>
+        <BeHealthyPaginator CurrentPage="@QueryParameters.PageNumber"
+                            PageSize="@QueryParameters.PageSize"
+                            TotalItems="@totalCount"
+                            CurrentPageChanged="@HandlePageChanged"
+                            PageSizeChanged="@HandlePageSizeChanged" />
+    </Footer>
+</BeHealthyCard>

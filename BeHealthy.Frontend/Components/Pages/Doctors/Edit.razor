@@ -1,0 +1,193 @@
+﻿@page "/doctors/edit/{DoctorId:int}"
+@using BeHealthy.Frontend.Validations.Doctor
+@inherits BasePage
+
+@inject IDoctorService DoctorService
+@inject IDepartmentService DepartmentService
+@inject ISpecialtyService SpecialtyService
+@inject IAppSettingsService AppSettingsService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@Resource.Edit</PageTitle>
+
+<BeHealthyCard BodyClass="p-3">
+    <Body>
+        <EditForm Model="DoctorUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
+
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+                @if (inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
+
+            <ValidationComponent @ref="validationComponent"/>
+
+            <Alert @ref="alert" />
+
+            <div class="d-flex flex-column gap-3 p-3">
+
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(DoctorUpdateDto.Image != null)" OnDeleteImage="@(() => DoctorUpdateDto.Image = null)">
+                    <ImagePreview ImageUrl="@DoctorUpdateDto.Image" />
+                </ImageUploadContainer>
+
+                <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
+                    <InputText @bind-Value="DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <ValidationMessage For="() => DoctorUpdateDto.FirstName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                    <InputText @bind-Value="DoctorUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <ValidationMessage For="() => DoctorUpdateDto.LastName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
+                    <InputText id="phoneNumber" @bind-Value="DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                    <ValidationMessage For="() => DoctorUpdateDto.PhoneNumber" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                @if (departmentsSelect is not null && departmentsSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
+                        <InputSelect id="department" @bind-Value="DoctorUpdateDto.DepartmentId" class="form-control">
+                            @foreach (var department in departmentsSelect)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </InputSelect>
+                    </BeHealthyFormGroup>
+                }
+
+                @if (specialtiesSelect is not null && specialtiesSelect.Any())
+                {
+                    <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="doNotAllowDoctorWithoutSpecialty">
+                        <InputSelect id="specialty" @bind-Value="DoctorUpdateDto.SpecialtyId" class="form-control">
+                            @foreach (var specialty in specialtiesSelect)
+                            {
+                                <option value="@specialty.Value">@specialty.Text</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="() => DoctorUpdateDto.SpecialtyId" class="text-danger" />
+                    </BeHealthyFormGroup>
+                }
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
+
+
+@code {
+    [Parameter]
+    public int DoctorId { get; set; }
+
+    [SupplyParameterFromForm]
+    private DoctorUpdateDto DoctorUpdateDto { get; set; } = new();
+
+    private bool inProgress = false;
+    private bool doNotAllowDoctorWithoutSpecialty = false;
+    private Alert alert = new();
+    private ValidationComponent? validationComponent;
+
+    private List<SelectItem>? departmentsSelect = new();
+    private List<SelectItem>? specialtiesSelect = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSettings();
+
+        var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+
+        departmentsSelect = departments?.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+
+        var specialties = await SpecialtyService.GetSpecialtiesAsync();
+
+        specialtiesSelect = specialties?.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        specialtiesSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
+
+        DoctorUpdateDto = doctor?.MapToUpdateDto() ?? new();
+
+        SetBreadcrumbs();
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.ResetBreadcrumb();
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Doctors, Link = RoutingEndpoints.DOCTORS_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Edit, Link = RoutingEndpoints.DOCTORS_PAGE, Active = true },
+            new Breadcrumb(){ Text = DoctorId.ToString(), Link = string.Empty, Active = true },
+        });
+    }
+
+    private async Task GetSettings()
+    {
+        AppSettingDto? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
+        doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        DoctorUpdateDto.Image = imageData;
+        StateHasChanged();
+    }
+
+    private async Task UpdateDoctor()
+    {
+        inProgress = true;
+
+        validationComponent?.ClearErrors();
+
+        var validator = new DoctorForUpdateDtoValidator(doNotAllowDoctorWithoutSpecialty);
+        var validationResult = await validator.ValidateAsync(DoctorUpdateDto);
+
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.GetErrorsGroupedByProperty();
+            validationComponent?.DisplayErrors(errors);
+            inProgress = false;
+            return;
+        }
+
+        var result = await DoctorService.UpdateDoctorAsync(DoctorUpdateDto);
+        inProgress = false;
+
+        if (!result.Success)
+        {
+            alert.ShowSuccess(result.ErrorMessage);
+        }
+        else
+        {
+            await ToastService.EnqueueToastAsync(Resource.Success, "success");
+            NavigationManager.Refresh(true);
+        }
+    }
+}

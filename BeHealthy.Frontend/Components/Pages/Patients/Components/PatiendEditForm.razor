@@ -1,0 +1,100 @@
+@inject IModalService ModalService
+
+<EditForm Model="Model" OnValidSubmit="HandleValidSubmit" FormName="UpdateForm" Enhance>
+    <button type="submit" class="btn btn-success px-5 d-flex flex-row mb-3 mt-0" disabled="@InProgress">
+        @if (InProgress)
+        {
+            <SmallLoader />
+        }
+        <span>@Resource.Save</span>
+    </button>
+    <FluentValidationValidator @ref="fluentValidationValidator" />
+    <div class="d-flex flex-column gap-3">
+        @if (ShowAlert)
+        {
+            <Alert @ref="alert" />
+        }
+        
+        <ImageUploadContainer HasImage="!string.IsNullOrWhiteSpace(Model.Image)" 
+                              OnOpenImageUploadModal="OpenImageUploadModal"
+                              OnDeleteImage="@(() => Model.Image = null)">
+            <ImagePreview ImageUrl="@Model.Image" />
+        </ImageUploadContainer>
+       
+        <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
+            <InputText @bind-Value="Model.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="@Resource.FirstName" />
+            <ValidationMessage For="() => Model.FirstName" class="text-danger" />
+        </BeHealthyFormGroup>
+
+        <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+            <InputText @bind-Value="Model.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="@Resource.LastName" />
+            <ValidationMessage For="() => Model.LastName" class="text-danger" />
+        </BeHealthyFormGroup>
+    </div>
+
+    <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
+        <InputText id="phoneNumber" @bind-Value="Model.PhoneNumber" class="form-control" placeholder="@Resource.PhoneNumber" />
+        <ValidationMessage For="() => Model.PhoneNumber" class="text-danger" />
+    </BeHealthyFormGroup>
+
+    @if (Departments is not null && Departments.Any())
+    {
+        <BeHealthyFormGroup Label="@Resource.Department" InputId="Department">
+            <InputSelect id="Department" @bind-Value="Model.DepartmentId" class="form-control">
+                @foreach (var department in Departments)
+                {
+                    <option value="@department.Value">@department.Text</option>
+                }
+            </InputSelect>
+        </BeHealthyFormGroup>
+    }
+</EditForm>
+
+    @code {
+    [Parameter, EditorRequired]
+    public PatientUpdateDto Model { get; set; } = new();
+
+    [Parameter]
+    public List<SelectItem>? Departments { get; set; }
+
+    [Parameter]
+    public bool InProgress { get; set; }
+
+    [Parameter]
+    public bool ShowAlert { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<PatientUpdateDto> OnValidSubmit { get; set; }
+
+    private FluentValidationValidator fluentValidationValidator = new();
+    private Alert alert = new();
+
+    private async Task HandleValidSubmit()
+    {
+        if (await fluentValidationValidator.ValidateAsync())
+        {
+            await OnValidSubmit.InvokeAsync(Model);
+        }
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        Model.Image = imageData;
+        StateHasChanged();
+    }
+
+    public FluentValidationValidator GetValidator() => fluentValidationValidator;
+    public Alert GetAlert() => alert;
+}

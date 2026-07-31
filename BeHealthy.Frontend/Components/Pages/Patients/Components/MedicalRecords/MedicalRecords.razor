@@ -1,0 +1,128 @@
+@inherits BasePage
+
+@inject IMedicalRecordService MedicalRecordService
+@inject ICurrentUserService CurrentUser
+@inject NavigationManager NavigationManager
+
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap" RemoveCardStyle=true>
+    <Header>
+        <CreateButton OnClick="CreateMedicalRecord" />
+    </Header>
+    <Body>
+        <BeHealthyTable TItem="MedicalRecordDto"
+                        Items="medicalRecords"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.MedicalRecords)">
+
+
+            <BeHealthyColumn TItem="MedicalRecordDto"
+                             Title="@Resource.Date"
+                             Property="@(x => x.RecordDate.ToShortHumanizedDateString())" />
+
+            <BeHealthyColumn TItem="MedicalRecordDto"
+                             Title="@Resource.CreatedBy"
+                             Property="@(x => x.CreatedBy)" />
+
+            <BeHealthyColumn TItem="MedicalRecordDto"
+                             Title="@Resource.Notes"
+                             Property="@(x => x.Notes)" />
+
+            <BeHealthyActionsColumn TItem="MedicalRecordDto"
+                                    HeaderClass="text-end"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditRecord(context.Id))" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
+
+@code {
+    [CascadingParameter] public int PatientId { get; set; }
+
+    private List<MedicalRecordDto> medicalRecords { get; set; } = new();
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        await LoadMedicalRecords();
+        isLoading = false;
+    }
+
+    private async Task LoadMedicalRecords()
+    {
+        isLoading = true;
+        medicalRecords = (await MedicalRecordService.GetMedicalRecordsByPatientIdAsync(PatientId)).ToList();
+        await InvokeAsync(StateHasChanged);
+        isLoading = false;
+    }
+
+    private async Task SaveMedicalRecord(MedicalRecordDto dto)
+    {
+        isLoading = true;
+
+        dto.PatientId = PatientId;
+        dto.CreatedBy = CurrentUser.UserName;
+        dto.RecordDate = DateTime.UtcNow;
+
+        var medicalRecordCreateDto = dto.MapToMedicalRecordCreateDto();
+        await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
+
+        isLoading = false;
+        ToastService.ShowToast(Resource.Success, "success");
+        await LoadMedicalRecords();
+    }
+
+    private void CreateMedicalRecord()
+    {
+        ModalService.Show<MedicalRecordFormModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(MedicalRecordFormModal.Model), new MedicalRecordDto() },
+                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordDto>(this, SaveMedicalRecord) },
+            });
+    }
+
+    private void EditRecord(int medicalRecordId)
+    {
+        NavigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/{PatientId}{RoutingEndpoints.MEDICALRECORDS_PAGE}/{medicalRecordId}");
+    }
+
+    private void ShowMedicalRecordFormModal(int? medicalRecordId)
+    {
+        var medicalRecordDto = medicalRecords.FirstOrDefault(mr => mr.Id == medicalRecordId) ?? new();
+
+        ModalService.Show<MedicalRecordFormModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(MedicalRecordFormModal.Model), medicalRecordDto },
+                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordDto>(this, SaveMedicalRecord) },
+            });
+    }
+
+    private void ConfirmDelete(int medicalRecordId)
+    {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(medicalRecordId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int medicalRecordId)
+    {
+        await MedicalRecordService.DeleteMedicalRecordAsync(medicalRecordId);
+        await LoadMedicalRecords();
+    }
+}
