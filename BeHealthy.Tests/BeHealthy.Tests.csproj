@@ -43,7 +43,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\BeHealthy.Application\BeHealthy.Application.csproj" />
-	  <ProjectReference Include="..\BeHealthy\BeHealthy\BeHealthy.csproj" />
 	</ItemGroup>
 
 
