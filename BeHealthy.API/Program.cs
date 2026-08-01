@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using BeHealthy.API.Middleware;
 using BeHealthy.Application;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Infrastructure;
@@ -9,8 +11,14 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
+
+// RFC 7807 problem details for every non-2xx response (validation failures, explicit
+// Problem()/NotFound()/etc. calls, and unhandled exceptions via GlobalExceptionHandler).
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services
     .AddApplication()
@@ -28,6 +36,8 @@ builder.Services.AddCors(options => {
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

@@ -11,18 +11,18 @@ namespace BeHealthy.Frontend.Services.Api;
 /// </summary>
 public abstract class ApiClientBase
 {
-    protected readonly HttpClient Http;
+    protected readonly HttpClient httpClient;
 
     protected ApiClientBase(IHttpClientFactory httpClientFactory)
     {
-        Http = httpClientFactory.CreateClient("API");
+        httpClient = httpClientFactory.CreateClient("API");
     }
 
     protected async Task<T?> GetAsync<T>(string url)
     {
         try
         {
-            return await Http.GetFromJsonAsync<T>(url);
+            return await httpClient.GetFromJsonAsync<T>(url);
         }
         catch (HttpRequestException)
         {
@@ -37,7 +37,7 @@ public abstract class ApiClientBase
     {
         try
         {
-            var response = await Http.PostAsJsonAsync(url, body);
+            var response = await httpClient.PostAsJsonAsync(url, body);
             return await ReadServiceResponseAsync(response);
         }
         catch (HttpRequestException ex)
@@ -50,7 +50,7 @@ public abstract class ApiClientBase
     {
         try
         {
-            var response = await Http.PutAsJsonAsync(url, body);
+            var response = await httpClient.PutAsJsonAsync(url, body);
             return await ReadServiceResponseAsync(response);
         }
         catch (HttpRequestException ex)
@@ -63,7 +63,7 @@ public abstract class ApiClientBase
     {
         try
         {
-            var response = await Http.DeleteAsync(url);
+            var response = await httpClient.DeleteAsync(url);
             return await ReadServiceResponseAsync(response);
         }
         catch (HttpRequestException ex)
@@ -73,13 +73,13 @@ public abstract class ApiClientBase
     }
 
     protected async Task PostAsync<TBody>(string url, TBody body)
-        => await Http.PostAsJsonAsync(url, body);
+        => await httpClient.PostAsJsonAsync(url, body);
 
     protected async Task PutAsync<TBody>(string url, TBody body)
-        => await Http.PutAsJsonAsync(url, body);
+        => await httpClient.PutAsJsonAsync(url, body);
 
     protected async Task DeleteAsync(string url)
-        => await Http.DeleteAsync(url);
+        => await httpClient.DeleteAsync(url);
 
     private static async Task<ServiceResponse> ReadServiceResponseAsync(HttpResponseMessage response)
     {
