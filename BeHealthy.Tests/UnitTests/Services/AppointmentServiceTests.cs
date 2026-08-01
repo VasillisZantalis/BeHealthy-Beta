@@ -95,7 +95,7 @@ public class AppointmentServiceTests
         var result = await _sut.GetAllAppointmentsAsync();
 
         //Asser
-        result.ShouldBeEmpty();
+        result.Items.ShouldBeEmpty();
     }
 
     #endregion

@@ -70,7 +70,7 @@ public class DoctorServiceTests
         // Assert
         result.ShouldNotBeNull();
         result.ShouldBeAssignableTo<IEnumerable<DoctorDto>>();
-        result.Count().ShouldBe(doctors.Count);
+        result.Items.Count().ShouldBe(doctors.Count);
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class DoctorServiceTests
         var result = await _sut.GetAllDoctorsAsync();
 
         //Assert
-        result.ShouldBeEmpty();
+        result.Items.ShouldBeEmpty();
     }
 
     #endregion
