@@ -1,0 +1,155 @@
+﻿@page "/nurses/edit/{NurseId:int}"
+@inherits BasePage
+
+@inject INurseService NurseService
+@inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@Resource.Edit</PageTitle>
+
+
+<BeHealthyCard BodyClass="p-3">
+    <Body>
+        <EditForm Model="NurseUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
+
+            <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+                @if (inProgress)
+                {
+                    <SmallLoader />
+                }
+                <span>@Resource.Save</span>
+            </button>
+
+            <FluentValidationValidator @ref="fluentValidationValidator" />
+
+             <div class="d-flex flex-column gap-3 p-3">
+
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(NurseUpdateDto.Image != null)" OnDeleteImage="@(() => NurseUpdateDto.Image = null)">
+                    <ImagePreview ImageUrl="@NurseUpdateDto.Image" />
+                </ImageUploadContainer>
+
+                <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
+                    <InputText @bind-Value="NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" />
+                    <ValidationMessage For="() => NurseUpdateDto.FirstName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                    <InputText @bind-Value="NurseUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" />
+                    <ValidationMessage For="() => NurseUpdateDto.LastName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
+                    <InputText id="phoneNumber" @bind-Value="NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" />
+                    <ValidationMessage For="() => NurseUpdateDto.PhoneNumber" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                @if (departments is not null && departments.Any())
+                {
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Department" @bind-Value="NurseUpdateDto.DepartmentId" class="form-control">
+                            @foreach (var department in departmentsSelect)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </InputSelect>
+                        <label for="Department">@Resource.Department</label>
+                    </div>
+                }
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
+
+
+@code {
+    [Parameter]
+    public int NurseId { get; set; }
+
+    [SupplyParameterFromForm]
+    private NurseUpdateDto NurseUpdateDto { get; set; } = new();
+
+    private List<DepartmentDto>? departments { get; set; }
+
+    private bool inProgress = false;
+    private Alert alert = new();
+    private FluentValidationValidator fluentValidationValidator = new();
+
+    private List<SelectItem> departmentsSelect = new List<SelectItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+
+        departmentsSelect = departments.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+        
+        IsLoading = false;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var nurse = await NurseService.GetNurseByIdAsync(NurseId);
+        NurseUpdateDto = nurse?.MapToUpdateDto() ?? new();
+
+        SetBreadcrumbs();
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Nurses, Link = RoutingEndpoints.NURSES_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Edit, Link = RoutingEndpoints.NURSES_PAGE, Active = true },
+            new Breadcrumb(){ Text = NurseId.ToString(), Link = string.Empty, Active = true },
+        });
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        NurseUpdateDto.Image = imageData;
+        StateHasChanged();
+    }
+
+    private async Task UpdateNurse()
+    {
+        inProgress = true;
+
+        if (!await fluentValidationValidator.ValidateAsync())
+        {
+            inProgress = false;
+            return;
+        }
+
+        var result = await NurseService.UpdateNurseAsync(NurseUpdateDto);
+        inProgress = false;
+
+        if (!result.Success)
+        {
+            alert.ShowFailed(result.ErrorMessage);
+        }
+        else
+        {
+            await ToastService.EnqueueToastAsync(Resource.Success, "success");
+            NavigationManager.Refresh(true);
+        }
+    }
+}

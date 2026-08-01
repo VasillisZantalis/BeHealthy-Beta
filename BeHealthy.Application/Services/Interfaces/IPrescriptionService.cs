@@ -1,5 +1,5 @@
-﻿using BeHealthy.Application.Dtos.Common;
-using BeHealthy.Application.Dtos.Prescription;
+﻿using BeHealthy.Shared.Dtos.Common;
+using BeHealthy.Shared.Dtos.Prescription;
 
 namespace BeHealthy.Application.Services.Interfaces;
 

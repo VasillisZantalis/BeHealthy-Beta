@@ -1,0 +1,51 @@
+﻿@if (showModal)
+{
+    <div class="modal" tabindex="-1" style="display:block">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    @ChildContent
+                </div>
+                <div class="d-flex flex-row justify-content-end m-3">
+                    <button type="button" class="btn btn-outline-secondary px-4 me-2" @onclick="CloseModal">Close</button>
+                    <button type="button" class="btn btn-success px-4" @onclick="SaveAndClose">@ActionButtonText</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    [Parameter, EditorRequired] 
+    public string Title { get; set; }
+
+    [Parameter, EditorRequired]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnSave { get; set; }
+
+    [Parameter]
+    public string? ActionButtonText { get; set; } = Resource.OK;
+
+    private bool showModal;
+
+    protected override void OnParametersSet()
+    {
+    }
+
+    public void OpenModal() => showModal = true;
+
+    public void CloseModal() => showModal = false;
+
+    private void SaveAndClose()
+    {
+        OnSave.InvokeAsync(null);
+        CloseModal();
+    }
+}

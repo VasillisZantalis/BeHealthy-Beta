@@ -29,6 +29,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.6" />
@@ -37,8 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BeHealthy.Application\BeHealthy.Application.csproj" />
-    <ProjectReference Include="..\..\BeHealthy.Infrastructure\BeHealthy.Infrastructure.csproj" />
     <ProjectReference Include="..\..\BeHealthy.Shared\BeHealthy.Shared.csproj" />
   </ItemGroup>
 

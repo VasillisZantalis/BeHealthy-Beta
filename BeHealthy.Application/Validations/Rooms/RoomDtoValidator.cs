@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Room;
+﻿using BeHealthy.Shared.Dtos.Room;
 using BeHealthy.Shared.Locales;
 using FluentValidation;
 

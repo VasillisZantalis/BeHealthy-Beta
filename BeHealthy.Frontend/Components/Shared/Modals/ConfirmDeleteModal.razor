@@ -1,0 +1,33 @@
+@inherits ModalBase
+
+<BeHealthyModal>
+    <Header>
+        <h5 class="modal-title">@Resource.ConfirmDeletion</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="HandleCancel"></button>
+    </Header>
+
+    <Body>
+        <Icon IconClass="@FAIcon.TriangleExclamation" TextClass="text-danger" SizeClass="fs-1" />
+        <span class="fw-bold">@Resource.ThisActionCannotBeUndone</span>
+        <span class="text-muted">@Resource.AreYouSureYouWantToContinue</span>
+    </Body>
+
+    <Footer>
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" @onclick="HandleCancel">@Resource.Cancel</button>
+        <button type="button" class="btn btn-danger rounded-pill px-4" @onclick="HandleConfirm">@Resource.Delete</button>
+    </Footer>
+</BeHealthyModal>
+
+@code {
+    [Parameter] public Func<Task>? OnConfirm { get; set; }
+
+    private async Task HandleConfirm()
+    {
+        if (OnConfirm != null)
+            await OnConfirm();
+
+        Close();
+    }
+
+    private void HandleCancel() => Close();
+}

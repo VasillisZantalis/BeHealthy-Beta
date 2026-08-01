@@ -1,0 +1,153 @@
+﻿@using BeHealthy.Frontend.Validations.Allergy
+@inherits BasePage
+
+@inject IAllergyService AllergyService
+@inject ICurrentUserService CurrentUser
+@inject NavigationManager NavigationManager
+
+
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap" RemoveCardStyle=true>
+    <Header>
+        <CreateButton OnClick="CreateAllergy" />
+    </Header>
+
+    <Body>
+        <BeHealthyTable TItem="AllergyDto"
+                        Items="allergies"
+                        IsLoading="isLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Allergies)">
+
+            <BeHealthyColumn TItem="AllergyDto"
+                             Title="@Resource.Allergy"
+                             Property="@(x => x.AllergyName)" />
+
+            <BeHealthyColumn TItem="AllergyDto"
+                             Title="@Resource.Allergen"
+                             Property="@(x => x.Allergen)" />
+
+            <BeHealthyActionsColumn TItem="AllergyDto"
+                                    HeaderClass="text-end"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditAllergy(context.Id))" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn" title="@(Resource.Delete)" @onclick="() => ConfirmDelete(context.Id)" @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
+
+@code {
+    [CascadingParameter] public int PatientId { get; set; }
+
+    [SupplyParameterFromForm]
+    private AllergyDto allergyDto { get; set; } = new();
+
+    private List<AllergyDto> allergies = new();
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllergies();
+    }
+
+    private void CreateAllergy()
+    {
+        ShowAllergiesModal(null);
+    }
+
+    private void EditAllergy(int id)
+    {
+        ShowAllergiesModal(id);
+    }
+
+    private void ShowAllergiesModal(int? allergyId)
+    {
+        var allergy = allergies.FirstOrDefault(a => a.Id == allergyId) ?? new();
+
+        ModalService.Show<AllergiesModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(AllergiesModal.Allergy), allergy },
+                { nameof(AllergiesModal.OnSave), EventCallback.Factory.Create<AllergyDto>(this, SaveAllergy) },
+            });
+    }
+
+    private async Task SaveAllergy(AllergyDto allergyDto)
+    {
+        allergyDto.PatientId = PatientId;
+
+        ServiceResponse serviceResponse;
+
+        if (allergyDto.Id == 0)
+        {
+            var allergyCreateDto = allergyDto.MapToCreateDto();
+
+            var validator = new AllergyCreateDtoValidator();
+            var validationResult = await validator.ValidateAsync(allergyCreateDto);
+
+            if (!validationResult.IsValid)
+            {
+                ToastService.ShowToast(Resource.InvalidData, "danger");
+                return;
+            }
+            serviceResponse = await AllergyService.AddAllergyAsync(allergyCreateDto);
+        }
+        else
+        {
+            var allergyUpdateDto = allergyDto.MapToUpdateDto();
+
+            var validator = new AllergyUpdateDtoValidator();
+            var validationResult = await validator.ValidateAsync(allergyUpdateDto);
+
+            if (!validationResult.IsValid)
+            {
+                ToastService.ShowToast(Resource.InvalidData, "danger");
+                return;
+            }
+            serviceResponse = await AllergyService.UpdateAllergyAsync(allergyUpdateDto);
+        }
+
+        if (HandleServiceResponse(serviceResponse))
+        {
+            ToastService.ShowToast(Resource.Success, "success");
+            await LoadAllergies();
+        }
+    }
+
+    private async Task LoadAllergies()
+    {
+        isLoading = true;
+        allergies = (await AllergyService.GetAllergiesByPatientIdAsync(PatientId)).ToList();
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private void ConfirmDelete(int allergyId)
+    {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => ExecuteDeleteAllergyAsync(allergyId) }
+           });
+    }
+
+    private async Task ExecuteDeleteAllergyAsync(int allergyId)
+    {
+        var response = await AllergyService.DeleteAllergyAsync(allergyId);
+        if (HandleServiceResponse(response))
+        {
+            ToastService.ShowToast(Resource.Success, "success");
+            await LoadAllergies();
+        }
+    }
+}

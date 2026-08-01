@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Specialty;
+﻿using BeHealthy.Shared.Dtos.Specialty;
 
 namespace BeHealthy.Application.Services.Interfaces;
 

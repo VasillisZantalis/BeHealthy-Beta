@@ -1,5 +1,5 @@
-﻿using BeHealthy.Application.Dtos.Appointment;
-using BeHealthy.Application.Dtos.User;
+﻿using BeHealthy.Shared.Dtos.Appointment;
+using BeHealthy.Shared.Dtos.User;
 using System.Threading;
 
 namespace BeHealthy.Tests.UnitTests.Services;

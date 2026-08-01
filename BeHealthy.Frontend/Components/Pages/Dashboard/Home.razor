@@ -1,0 +1,31 @@
+﻿@page "/"
+@inherits BasePage
+
+<PageTitle>@Resource.Dashboard</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12 col-xl-6">
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+                <TotalDoctors />
+                <TotalNurses />
+                <TotalPatients />
+            </div>
+            @if (isAdminUser)
+            {
+                <UserDistributionChart />
+            }
+            <UpcomingAppointments />
+            <RecentlyAddedPatients />
+        </div>
+        <div class="col-12 col-xl-6">
+            <Calendar />
+            @if (isAdminUser)
+            {
+                <ReasonOfAppointmentsChart />
+            }
+        </div>
+    </div>
+    <div class="row">
+    </div>
+</div>

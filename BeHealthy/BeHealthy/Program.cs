@@ -1,12 +1,6 @@
-using BeHealthy.Application;
-using BeHealthy.Application.Services;
-using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Components;
 using BeHealthy.Components.Account;
-using BeHealthy.Domain.Entities;
 using BeHealthy.Endpoints.Culture;
-using BeHealthy.Infrastructure;
-using BeHealthy.Infrastructure.Data;
 using BeHealthy.Services;
 using BeHealthy.Services.Interfaces;
 using BeHealthy.States;
@@ -14,7 +8,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +38,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
 });
 
+builder.Services.AddHttpClient("API", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("API:BaseUrl")!);
+})
+.AddStandardResilienceHandler();
 
 builder.Services.AddLocalization();
 
@@ -60,9 +60,6 @@ if (provider != null)
     localizationOptions.RequestCultureProviders.Remove(provider);
 }
 
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -76,40 +73,12 @@ builder.Services.AddScoped<LoaderServiceState>();
 builder.Services.AddScoped<BreadcrumbServiceState>();
 builder.Services.AddScoped<AlertModalStateService>();
 builder.Services.AddSingleton<ToastService>();
-builder.Services.AddScoped<ISeedingService, SeedingService>();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
-
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<ApplicationDbContext>();
-        context.Database.EnsureDeleted();
-        context.Database.Migrate();
-
-        // Seed default admin user
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-        var adminEmail = "admin@gmail.com";
-        var admin = await userManager.FindByEmailAsync(adminEmail);
-        if (admin == null)
-        {
-            admin = new ApplicationUser
-            {
-                UserName = adminEmail,
-                Email = adminEmail,
-                FirstName = "Admin",
-                LastName = "User"
-            };
-            await userManager.CreateAsync(admin, "123456aA@");
-            await userManager.AddToRoleAsync(admin, "Admin");
-        }
-    }
 }
 else
 {

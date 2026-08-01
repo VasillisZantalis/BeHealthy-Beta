@@ -1,0 +1,60 @@
+﻿@implements IDisposable
+@inject AlertModalStateService AlertService
+@inject NavigationManager NavivationManager
+
+@if (showModal)
+{
+    <div class="modal" tabindex="-1" role="dialog" style="display:block">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">@AlertService.Title</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Hide"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="d-flex flex-column justify-content-center">
+                        <Icon IconClass="@(AlertService.Success ? FAIcon.CircleCheck : FAIcon.CircleXmark)"
+                              TextClass="@(AlertService.Success ? "text-success" : "text-danger")"
+                        SizeClass="fs-1" />
+                        <label class="h5 fw-normal">@AlertService.Message</label>
+                    </div>
+                </div>
+                <div class="d-flex flex-row justify-content-end m-3">
+                    <button type="button" class="btn btn-@(AlertService.Success ? "success" : "danger") px-4 me-2" @onclick="Hide">@Resource.OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code{
+
+    private bool showModal { get; set; }
+
+    protected override void OnInitialized()
+    {
+        AlertService.OnShow += Show;
+        AlertService.OnHide += Hide;
+    }
+
+    private void Show()
+    {
+        showModal = true;
+        StateHasChanged();
+    }
+
+    private void Hide()
+    {
+        showModal = false;
+        StateHasChanged();
+
+        NavivationManager.NavigateTo(NavivationManager.Uri, forceLoad: true);
+    }
+
+    public void Dispose()
+    {
+        AlertService.OnShow -= Show;
+        AlertService.OnHide -= Hide;
+    }
+}

@@ -1,0 +1,33 @@
+﻿@inject IDoctorService DoctorService
+@inject NavigationManager NavigationManager
+
+<div id="totalDoctorsDiv" class="clickable" @onclick="() => NavigationManager.NavigateTo(RoutingEndpoints.DOCTORS_PAGE)">
+    <div class="card rounded shadow border-0 border-start border-5 border-primary my-3">
+        <div class="card-body">
+            <div class="d-flex flex-row flex-wrap gap-2">
+                <Icon IconClass="@FAIcon.UserDoctor" SizeClass="fs-4"/>
+                <h5 class="align-self-center">@Resource.Doctors</h5>
+            </div>
+            @if (isLoading)
+            {
+                <SmallLoader />
+            }
+            else
+            {
+                <h5 class="text-muted text-center fs-2">@totalDoctorsCount</h5>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private int totalDoctorsCount;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        totalDoctorsCount = await DoctorService.GetDoctorCountAsync();
+        isLoading = false;
+    }
+}

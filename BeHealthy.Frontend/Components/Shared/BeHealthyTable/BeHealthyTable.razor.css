@@ -1,0 +1,12 @@
+﻿.sortable-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+    .sortable-header:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+.sort-icon {
+    font-size: 0.875rem;
+}

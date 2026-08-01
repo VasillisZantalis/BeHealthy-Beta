@@ -1,0 +1,145 @@
+﻿@page "/rooms"
+@inherits BasePage
+
+@inject IRoomService RoomService
+
+<PageTitle>@Resource.Rooms</PageTitle>
+
+<BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap">
+    <Header>
+        <CreateButton OnClick="CreateRoom" />
+    </Header>
+
+    <Body>
+        <BeHealthyTable TItem="RoomDto"
+                        Items="@rooms"
+                        IsLoading="isLoading"
+                        TableClass="table table-responsive"
+                        WrapperClass="table-wrapper"
+                        EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Rooms)">
+
+            <BeHealthyColumn TItem="RoomDto"
+                             Title="@Resource.Name"
+                             Property="@(x => x.Name)" />
+
+            <BeHealthyColumn TItem="RoomDto"
+                             Title="@Resource.Number"
+                             Property="@(x => x.Number)" />
+
+            <BeHealthyColumn TItem="RoomDto"
+                             Title="@Resource.Department"
+                             Property="@(x => x.Department)" />
+
+            <BeHealthyActionsColumn TItem="RoomDto"
+                                    Title="@Resource.Actions"
+                                    CellClass="text-end">
+                <Template>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn"
+                                title="@(Resource.Edit)"
+                                @onclick="@(() => EditRoom(context.Id))"
+                                @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                        </button>
+                        <button class="btn"
+                                title="@(Resource.Delete)"
+                                @onclick="async () => await DeleteRoom(context.Id)"
+                                @onclick:stopPropagation="true">
+                            <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                        </button>
+                    </div>
+                </Template>
+            </BeHealthyActionsColumn>
+        </BeHealthyTable>
+    </Body>
+</BeHealthyCard>
+
+@code {
+    private IEnumerable<RoomDto> rooms = new List<RoomDto>();
+    private bool isLoading = false;
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRooms();
+    }
+
+    private async Task LoadRooms()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        rooms = await RoomService.GetAllRoomsAsync();
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Rooms, Link = string.Empty, Active = true },
+        });
+    }
+
+    private void CreateRoom()
+    {
+        ShowRoomUpsertModal(null);
+    }
+
+    private void EditRoom(int roomId)
+    {
+        ShowRoomUpsertModal(roomId);
+    }
+
+    private void ShowRoomUpsertModal(int? id)
+    {
+        var room = rooms.FirstOrDefault(r => r.Id == id) ?? new();
+
+        ModalService.Show<UpsertModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(UpsertModal.Room), room },
+                { nameof(UpsertModal.OnRoomSaved), EventCallback.Factory.Create<RoomDto>(this, HandleSavedRoom) }
+            });
+    }
+
+    private async Task HandleSavedRoom(RoomDto roomDto)
+    {
+        isLoading = true;
+        if (roomDto.Id > 0)
+        {
+            var roomForUpdate = roomDto.MapDtoToUpdateDto();
+            await RoomService.UpdateRoomAsync(roomForUpdate);
+        }
+        else
+        {
+            var roomForCreate = roomDto.MapDtoToCreateDto();
+            await RoomService.AddRoomAsync(roomForCreate);
+        }
+        isLoading = false;
+        ToastService.ShowToast(Resource.Success, "success");
+        await LoadRooms();
+    }
+
+    public async Task DeleteRoom(int roomId)
+    {
+        ModalService.Show<ConfirmDeleteModal>(
+           new Dictionary<string, object?>
+           {
+               { nameof(ConfirmDeleteModal.OnConfirm), () => OnConfirmDeleteAsync(roomId) }
+           });
+    }
+
+    private async Task OnConfirmDeleteAsync(int roomId)
+    {
+        await RoomService.DeleteRoomAsync(roomId);
+        await LoadRooms();
+    }
+}

@@ -1,0 +1,87 @@
+﻿@using ChartJs.Blazor.Common
+@using ChartJs.Blazor.PieChart
+@using ChartJs.Blazor.Util
+@inherits BasePage
+
+@inject IDashboardService DashboardService
+
+@if (config != null)
+{
+    <div class="card border-0 rounded shadow mb-3">
+        <Chart Config="config"></Chart>
+    </div>
+}
+
+@code {
+    private PieConfig? config;
+    private Dictionary<string, int> rolesAndCounts = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+
+            config = new PieConfig
+            {
+                Options = new PieOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = Resource.UserDistribution
+                    }
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        rolesAndCounts = (await DashboardService.GetSummaryAsync()).UsersInRolesCount;
+
+        if (firstRender && rolesAndCounts.Any())
+        {
+            try
+            {
+                IsLoading = true;
+
+                foreach (string role in new[] { Resource.Doctors, Resource.Patients, Resource.Nurses })
+                {
+                    config?.Data.Labels.Add(role);
+                }
+
+                PieDataset<int> dataset = new PieDataset<int>(rolesAndCounts.Values)
+                {
+                    BackgroundColor = new[]
+                    {
+                        ColorUtil.ColorHexString(13, 110, 253),
+                        ColorUtil.ColorHexString(220, 53, 69),
+                        ColorUtil.ColorHexString(255, 193, 7),
+                    }
+                };
+
+                config?.Data.Datasets.Add(dataset);
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in OnAfterRenderAsync: {ex.Message}");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+    }
+}

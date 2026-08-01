@@ -1,5 +1,5 @@
 using BeHealthy.Domain.Entities;
-using BeHealthy.Application.Dtos.Visit;
+using BeHealthy.Shared.Dtos.Visit;
 
 namespace BeHealthy.Application.Mappings;
 

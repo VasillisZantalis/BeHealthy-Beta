@@ -1,0 +1,77 @@
+﻿@using System.Text.Json
+@implements IDisposable
+
+@inject IJSRuntime JS
+@inject IAppointmentService AppointmentService
+@inject IDoctorService DoctorService
+@inject IPatientService PatientService
+@inject ICurrentUserService CurrentUser
+@inject IModalService ModalService
+
+
+<div id="calendar"></div>
+
+@code {
+    private List<CalendarItem> calendarItems = new();
+    private DotNetObjectReference<Calendar>? dotNetRef;
+
+    List<AppointmentDto> appointments = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = CurrentUser.UserId;
+
+        switch (CurrentUser.Role)
+        {
+            case UserRole.Doctor when userId is not null:
+                appointments = (await AppointmentService.GetAllAppointmentsByUserIdAsync(userId)).ToList();
+                break;
+            case UserRole.Patient when userId is not null:
+                appointments = (await AppointmentService.GetAllAppointmentsByUserIdAsync(userId)).ToList();
+                break;
+            default:
+                var paginatedResult = await AppointmentService.GetAllAppointmentsAsync();
+                appointments = paginatedResult.Items.ToList();
+                break;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            calendarItems = appointments
+                .Select((a, index) => new CalendarItem
+                {
+                    Id = index + 1,
+                    Title = $"{a.Reason.ToLocalizedString()} - {a.Patient?.FullName ?? "Unknown"}",
+                    Start = a.AppointmentDate.ToDateTime(a.AppointmentStartTime).ToString("yyyy-MM-ddTHH:mm:ss"),
+                    End = a.AppointmentDate.ToDateTime(a.AppointmentEndTime).ToString("yyyy-MM-ddTHH:mm:ss"),
+                    Description = a.Notes,
+                    BackgroundColor = a.Status.GetStatusColor(),
+                    BorderColor = a.Status.GetStatusColor(),
+                    Color = a.Status.GetStatusColor()
+                }).ToList();
+
+            dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("initializeCalendar", dotNetRef, calendarItems);
+        }
+    }
+
+    [JSInvokable]
+    public void OpenEventModal(CalendarItem calendarItem)
+    {
+        var parameters = new Dictionary<string, object?>
+        {
+            { nameof(CalendarItem), calendarItem }
+        };
+
+        ModalService.Show<CalendarItemModal>(parameters);
+    }
+
+    public void Dispose()
+    {
+        JS.InvokeVoidAsync("destroyCalendar");
+        dotNetRef?.Dispose();
+    }
+}

@@ -1,4 +1,6 @@
-﻿namespace BeHealthy.Domain.Entities;
+﻿using BeHealthy.Shared;
+
+namespace BeHealthy.Domain.Entities;
 
 public class Allergy
 {

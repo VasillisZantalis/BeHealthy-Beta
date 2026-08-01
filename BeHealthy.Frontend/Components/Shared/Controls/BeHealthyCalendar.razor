@@ -1,0 +1,179 @@
+﻿@using System.Globalization
+@implements IDisposable
+
+<div class="calendar-dropdown">
+    <div class="calendar-input" @onclick="ToggleCalendar" @onclick:stopPropagation="true">
+        <input type="text"
+               readonly
+               value="@GetDisplayValue()"
+               placeholder="Select a date..."
+               class="date-input" />
+        <Icon IconClass="@FAIcon.CalendarDays" />
+    </div>
+
+    @if (isOpen)
+    {
+        <div class="calendar-overlay" @onclick="CloseCalendar" @onclick:stopPropagation="true"></div>
+        <div class="calendar-popup" @onclick:stopPropagation="true">
+            <div class="calendar-picker">
+                <div class="calendar-header">
+                    <button type="button" class="nav-button" @onclick="PreviousMonth" @onclick:stopPropagation="true">&lt;</button>
+                    <div class="month-year">
+                        @CurrentMonth.ToString("MMMM yyyy")
+                    </div>
+                    <button type="button" class="nav-button" @onclick="NextMonth" @onclick:stopPropagation="true">&gt;</button>
+                </div>
+
+                <div class="calendar-grid">
+                    <div class="day-names">
+                        @foreach (var day in DayNames)
+                        {
+                            <div class="day-name">@day</div>
+                        }
+                    </div>
+
+                    <div class="days">
+                        @foreach (var day in CalendarDays)
+                        {
+                            <button type="button" 
+                                    class="day-cell @GetDayClass(day)"
+                                    @onclick="() => SelectDate(day)"
+                                    @onclick:stopPropagation="true"
+                                    disabled="@(!day.IsCurrentMonth)">
+                                @day.Day
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="calendar-footer">
+                    <button type="button" class="btn-today" @onclick="SelectToday" @onclick:stopPropagation="true">Today</button>
+                    <button type="button" class="btn-clear" @onclick="ClearDate" @onclick:stopPropagation="true">Clear</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public DateOnly? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<DateOnly?> ValueChanged { get; set; }
+
+    [Parameter]
+    public string DateFormat { get; set; } = "MMM dd, yyyy";
+
+    private DateTime CurrentMonth { get; set; }
+    private List<CalendarDay> CalendarDays { get; set; } = new();
+    private string[] DayNames = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+    private bool isOpen = false;
+
+    protected override void OnInitialized()
+    {
+        CurrentMonth = Value?.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
+        CurrentMonth = new DateTime(CurrentMonth.Year, CurrentMonth.Month, 1);
+        GenerateCalendarDays();
+    }
+
+    private void ToggleCalendar()
+    {
+        isOpen = !isOpen;
+    }
+
+    private void CloseCalendar()
+    {
+        isOpen = false;
+    }
+
+    private string GetDisplayValue()
+    {
+        return Value?.ToString(DateFormat) ?? "";
+    }
+
+    private void GenerateCalendarDays()
+    {
+        CalendarDays.Clear();
+        var firstDay = CurrentMonth;
+        var startDate = firstDay.AddDays(-(int)firstDay.DayOfWeek);
+
+        for (int i = 0; i < 42; i++)
+        {
+            var date = startDate.AddDays(i);
+            var dateOnly = DateOnly.FromDateTime(date);
+            CalendarDays.Add(new CalendarDay
+            {
+                Date = dateOnly,
+                Day = date.Day,
+                IsCurrentMonth = date.Month == CurrentMonth.Month,
+                IsToday = dateOnly == DateOnly.FromDateTime(DateTime.Today),
+                IsSelected = Value.HasValue && dateOnly == Value.Value
+            });
+        }
+    }
+
+    private async Task SelectDate(CalendarDay day)
+    {
+        if (!day.IsCurrentMonth) return;
+
+        Value = day.Date;
+        await ValueChanged.InvokeAsync(Value);
+        GenerateCalendarDays();
+        isOpen = false;
+    }
+
+    private async Task SelectToday()
+    {
+        Value = DateOnly.FromDateTime(DateTime.Today);
+        CurrentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        await ValueChanged.InvokeAsync(Value);
+        GenerateCalendarDays();
+        isOpen = false;
+    }
+
+    private async Task ClearDate()
+    {
+        Value = null;
+        await ValueChanged.InvokeAsync(Value);
+        GenerateCalendarDays();
+        isOpen = false;
+    }
+
+    private void PreviousMonth()
+    {
+        CurrentMonth = CurrentMonth.AddMonths(-1);
+        GenerateCalendarDays();
+    }
+
+    private void NextMonth()
+    {
+        CurrentMonth = CurrentMonth.AddMonths(1);
+        GenerateCalendarDays();
+    }
+
+    private string GetDayClass(CalendarDay day)
+    {
+        var classes = new List<string>();
+
+        if (day.IsToday) classes.Add("today");
+        if (day.IsSelected) classes.Add("selected");
+        if (!day.IsCurrentMonth) classes.Add("other-month");
+
+        return string.Join(" ", classes);
+    }
+
+    public void Dispose()
+    {
+        // Cleanup if needed
+    }
+
+    private class CalendarDay
+    {
+        public DateOnly Date { get; set; }
+        public int Day { get; set; }
+        public bool IsCurrentMonth { get; set; }
+        public bool IsToday { get; set; }
+        public bool IsSelected { get; set; }
+    }
+}

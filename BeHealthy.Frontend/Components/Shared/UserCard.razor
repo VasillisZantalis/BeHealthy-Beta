@@ -1,0 +1,89 @@
+﻿<div class="card my-3 border @((isHovered ? "shadow" : "shadow-sm"))"
+    @onmouseover="() => isHovered = true"
+    @onmouseout="() => isHovered = false">
+
+    <div class="card-body px-4">
+        <div class="d-flex flex-column flex-xl-row text-truncate gap-2 gap-xl-5">
+
+            <ImagePreview ImageUrl="@Image" Size="60"/>
+            <div>
+                @if (!string.IsNullOrEmpty(FullName))
+                {
+                    <div class="form-group">
+                        <span class="text-muted small-text" for="fullName">@Resource.FullName</span>
+                        <h6 id="fullName" title="@FullName" class="clickable">@(FullName.Length > 20 ? FullName.Substring(0, 20) + "..." : FullName)</h6>
+                    </div>
+                }
+                @if (Role == UserRole.Doctor)
+                {
+                    <div class="form-group">
+                        <span class="text-muted small-text" for="specialty">@Resource.Specialty</span>
+                        <h6 class="" id="specialty">@(Specialty ?? "-")</h6>
+                    </div>
+                }
+            </div>
+        </div>
+        <hr/>
+        <div class="d-flex flex-column gap-2">
+            <div class="form-group d-flex align-items-center gap-2">
+                <Icon IconClass="@FAIcon.Envelope" />
+                <span class="fw-normal text-truncate" id="email" title="@Email">@(Email ?? "-")</span>
+            </div>
+
+            <div class="form-group d-flex align-items-center gap-2">
+                <Icon IconClass="@FAIcon.MobileScreenButton" />
+                <span class="fw-normal m-0" id="phone">@(Phone ?? "-")</span>
+            </div>
+        </div>
+       
+    </div>
+    <div class="d-flex flex-row gap-3 justify-content-center mb-2 px-5">
+        @if (CanEdit)
+        {
+            <button class="btn btn-outline-dark btn-sm w-100" @onclick="() => Edit.InvokeAsync(Id)">@Resource.Edit</button>
+        }
+
+        @if (CanDelete)
+        {
+            <button class="btn btn-danger btn-sm w-100" @onclick="() => Delete.InvokeAsync(Id)">@Resource.Delete</button>
+        }
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public string? FullName { get; set; }
+
+    [Parameter]
+    public UserRole? Role { get; set; }
+
+    [Parameter]
+    public string? Image { get; set; }
+
+    [Parameter]
+    public string? Email { get; set; }
+
+    [Parameter]
+    public string? Phone { get; set; }
+
+    [Parameter]
+    public string? Specialty { get; set; }
+
+    [Parameter]
+    public bool CanEdit { get; set; }
+
+    [Parameter]
+    public bool CanDelete { get;set; }
+
+    [Parameter]
+    public EventCallback<int> Edit { get; set; }
+
+    [Parameter]
+    public EventCallback<int> Delete { get; set; }
+
+    private bool isHovered;
+}

@@ -1,0 +1,35 @@
+﻿@typeparam TItem
+@implements IDisposable
+
+@code {
+    [CascadingParameter] private BeHealthyTable<TItem>? Table { get; set; }
+
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public Func<TItem, object?>? Property { get; set; }
+    [Parameter] public RenderFragment<TItem>? Template { get; set; }
+
+    // Sorting parameters
+    [Parameter] public bool Sortable { get; set; } = false;
+    [Parameter] public string? SortProperty { get; set; }
+
+    // Styling parameters
+    [Parameter] public string HeaderClass { get; set; } = "";
+    [Parameter] public string HeaderStyle { get; set; } = "";
+    [Parameter] public string CellClass { get; set; } = "";
+    [Parameter] public string CellStyle { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        if (Table == null)
+        {
+            throw new InvalidOperationException($"{nameof(BeHealthyColumn<TItem>)} must be used inside a {nameof(BeHealthyTable<TItem>)}");
+        }
+
+        Table.AddColumn(this);
+    }
+
+    public void Dispose()
+    {
+        Table?.RemoveColumn(this);
+    }
+}

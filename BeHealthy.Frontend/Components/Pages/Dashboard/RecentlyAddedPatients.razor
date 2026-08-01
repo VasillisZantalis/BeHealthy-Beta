@@ -1,0 +1,51 @@
+﻿@inject IPatientService PatientService
+
+<div id="recentlyAddedPatientsDiv" class="overflow-auto rounded shadow p-3">
+    <h5>@Resource.RecentlyAddedPatients</h5>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@Resource.FirstName</th>
+                    <th>@Resource.LastName</th>
+                    <th>@Resource.Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (patients != null)
+                {
+                    foreach (var patient in patients)
+                    {
+                        <tr>
+                            <td style="width: 50px;">
+                                <img class="rounded-circle" src="@(patient.Image ?? "images/generic.jpg")" height="35" width="35"/>
+                            </td>
+                            <td>@patient.FirstName</td>
+                            <td>@patient.LastName</td>
+                            <td>@patient.CreatedAt.ToShortDateString()</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="text-center"><td>@string.Format(Resource.NoUsersJoinedLately, Resource.Patients)</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<PatientDto> patients { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var today = DateTime.Now.Date;
+
+        patients = (await PatientService.GetAllPatientsAsync())
+            .Where(p => p.CreatedAt > today.AddDays(-10))
+            .Take(5)
+            .ToList();
+    }
+}

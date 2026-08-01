@@ -1,0 +1,38 @@
+@inherits LayoutComponentBase
+@inject ICurrentUserService CurrentUser
+
+<ErrorBoundary>
+    <ChildContent>
+        <div class="page">
+            <div class="top-row px-4" style="z-index: 10!important">
+                <Loader />
+                <ModalHost />
+                <Toastr />
+                <AlertModal />
+                <div class="d-flex flex-row align-items-center ms-auto gap-3">
+                    <CultureSelector />
+                    <a class="m-0 p-0 nav-link" href="/profile" title="profile">@Resource.Hello, @CurrentUser.UserName</a>
+                </div>
+            </div>
+
+            <main>
+                <Sidebar />
+                <article class="content">
+                    <Breadcrumbs />
+                    @Body
+                </article>
+            </main>
+        </div>
+    </ChildContent>
+    <ErrorContent>
+        <div class="d-flex justify-content-center align-items-center vh-100">
+            <h2 class="text-danger">@Resource.SomethingWentWrong</h2>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

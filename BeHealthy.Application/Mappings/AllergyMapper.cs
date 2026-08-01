@@ -1,4 +1,4 @@
-using BeHealthy.Application.Dtos.Allergy;
+using BeHealthy.Shared.Dtos.Allergy;
 
 namespace BeHealthy.Application.Mappings;
 
@@ -11,6 +11,8 @@ public static class AllergyMapper
             Id = allergy.Id,
             AllergyName = allergy.AllergyName,
             Allergen = allergy.Allergen,
+            Severity = allergy.Severity,
+            Notes = allergy.Notes,
             PatientId = allergy.PatientId
         };
     }
@@ -21,6 +23,8 @@ public static class AllergyMapper
         {
             AllergyName = dto.AllergyName,
             Allergen = dto.Allergen,
+            Severity = dto.Severity,
+            Notes = dto.Notes,
             PatientId = dto.PatientId
         };
     }
@@ -32,6 +36,8 @@ public static class AllergyMapper
             Id = dto.Id,
             AllergyName = dto.AllergyName,
             Allergen = dto.Allergen,
+            Severity = dto.Severity,
+            Notes = dto.Notes,
             PatientId = dto.PatientId
         };
     }
@@ -42,6 +48,8 @@ public static class AllergyMapper
         {
             AllergyName = dto.AllergyName,
             Allergen = dto.Allergen,
+            Severity = dto.Severity,
+            Notes = dto.Notes,
             PatientId = dto.PatientId
         };
     }
@@ -53,6 +61,8 @@ public static class AllergyMapper
             Id = dto.Id,
             AllergyName = dto.AllergyName,
             Allergen = dto.Allergen,
+            Severity = dto.Severity,
+            Notes = dto.Notes,
             PatientId = dto.PatientId
         };
     }

@@ -1,0 +1,114 @@
+﻿@page "/patients/edit/{PatientId:int}"
+@using BeHealthy.Frontend.Components.Pages.Patients.Components.Allergies
+@inherits BasePage
+
+@inject IPatientService PatientService
+@inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
+@inject ICurrentUserService CurrentUser
+
+<PageTitle>@Resource.Edit</PageTitle>
+
+<BeHealthyCard BodyClass="p-3">
+    <Body>
+        <Tabs TTabKey="PatientTabs" @bind-ActiveTab="activeTab">
+            <Tab TTabKey="PatientTabs" Title="@Resource.GeneralData" Key="PatientTabs.GeneralData">
+                <PatiendEditForm @ref="patientEditForm"
+                                 Model="PatientUpdateDto"
+                                 Departments="departmentsSelect"
+                                 InProgress="inProgress"
+                                 ShowAlert="true"
+                                 OnValidSubmit="UpdatePatient" />
+            </Tab>
+            <Tab TTabKey="PatientTabs" Title="@Resource.MedicalRecords" Key="PatientTabs.MedicalRecords">
+                <CascadingValue Value="PatientId">
+                    <MedicalRecords />
+                </CascadingValue>
+            </Tab>
+            <Tab TTabKey="PatientTabs" Title="@Resource.Allergies" Key="PatientTabs.Allergies">
+                <CascadingValue Value="PatientId">
+                    <AllergiesGrid />
+                </CascadingValue>
+            </Tab>
+            <Tab TTabKey="PatientTabs" Title="@Resource.Appointments" Key="PatientTabs.Appointments">
+            </Tab>
+        </Tabs>
+    </Body>
+</BeHealthyCard>
+
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+
+    [SupplyParameterFromForm]
+    private PatientUpdateDto PatientUpdateDto { get; set; } = new();
+
+    private List<DepartmentDto>? departments { get; set; }
+
+    private bool inProgress = false;
+    private Alert alert = new();
+    private FluentValidationValidator fluentValidationValidator = new();
+
+    private List<SelectItem> departmentsSelect = new List<SelectItem>();
+
+    private PatientTabs activeTab = PatientTabs.GeneralData;
+    private bool canSeePrecriptions;
+    private bool canSeeVisits;
+    private bool canCreatePrecriptions;
+
+    private PatiendEditForm? patientEditForm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userRole = CurrentUser.Role;
+
+        departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        departmentsSelect = departments.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+
+        canSeePrecriptions = true;
+        canCreatePrecriptions = true;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var patient = await PatientService.GetPatientByIdAsync(PatientId);
+        PatientUpdateDto = patient?.MapToDtoForUpdate() ?? new();
+
+        SetBreadcrumbs();
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        { 
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Patients, Link = RoutingEndpoints.PATIENTS_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Edit, Link = RoutingEndpoints.PATIENTS_PAGE, Active = true },
+            new Breadcrumb(){ Text = PatientId.ToString(), Link = string.Empty, Active = true },
+        });
+    }
+
+    private async Task UpdatePatient(PatientUpdateDto dto)
+    {
+        inProgress = true;
+
+        var result = await PatientService.UpdatePatientAsync(dto);
+        inProgress = false;
+
+        if (!result.Success)
+        {
+            patientEditForm?.GetAlert()?.ShowFailed(result.ErrorMessage);
+        }
+        else
+        {
+            await ToastService.EnqueueToastAsync(Resource.Success, "success");
+            NavigationManager.Refresh(true);
+        }
+    }
+}

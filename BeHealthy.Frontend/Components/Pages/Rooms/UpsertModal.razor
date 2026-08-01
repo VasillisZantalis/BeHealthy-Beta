@@ -1,0 +1,95 @@
+@inherits ModalBase
+
+@inject IDepartmentService DepartmentService
+
+<BeHealthyModal BodyClass="">
+    <Header>
+        <h5 class="modal-title">@Resource.Room</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+    </Header>
+    <Body>
+
+        <EditForm Model="roomDto" FormName="RoomForm" OnValidSubmit="SaveRoom">
+            <FluentValidationValidator @ref="fluentValidationValidator" />
+
+            <div class="d-flex flex-column gap-3">
+
+                <BeHealthyFormGroup Label="@Resource.Name" IsRequired="true" InputId="name">
+                    <InputText id="name" class="form-control" @bind-Value="roomDto.Name" disabled="@IsReadOnly" />
+                    <ValidationMessage For="@(() => roomDto.Name)" />                
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.Number" InputId="number">
+                    <InputNumber id="number" class="form-control" @bind-Value="roomDto.Number" disabled="@IsReadOnly" />
+                    <ValidationMessage For="@(() => roomDto.Number)" />                
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.Department" IsRequired="true" InputId="department">
+                    <InputSelect id="department" class="form-select" @bind-Value="roomDto.DepartmentId" disabled="@IsReadOnly">
+                        @foreach (var department in departmentSelect)
+                        {
+                            <option value="@department.Value">@department.Text</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => roomDto.DepartmentId)" />
+                </BeHealthyFormGroup>
+            </div>
+
+            @if (!IsReadOnly)
+            {                
+                <div class="d-flex flex-row justify-content-end m-3 gap-2">
+                    <button type="button" class="btn btn-outline-secondary" @onclick="Close">@Resource.Cancel</button>
+                    <button type="submit" class="btn btn-success">@Resource.Save</button>
+                </div>
+            }
+        </EditForm>
+    </Body>
+</BeHealthyModal>
+
+@code {
+    [Parameter, EditorRequired]
+    public RoomDto Room { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<RoomDto> OnRoomSaved { get; set; }
+
+    [Parameter]
+    public bool IsReadOnly { get; set; } = false;
+
+    [SupplyParameterFromForm]
+    private RoomDto roomDto { get; set; } = new();
+
+    private FluentValidationValidator fluentValidationValidator = new();
+
+    private bool isEditMode => Room.Id > 0;
+    private List<SelectItem> departmentSelect = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+
+        departmentSelect = departments.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        departmentSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (isEditMode)
+        {
+            roomDto = Room;
+        }
+    }
+
+    private async Task SaveRoom()
+    {
+        if (await fluentValidationValidator.ValidateAsync())
+        {
+            await OnRoomSaved.InvokeAsync(roomDto);
+            Close();
+        }
+    }
+}

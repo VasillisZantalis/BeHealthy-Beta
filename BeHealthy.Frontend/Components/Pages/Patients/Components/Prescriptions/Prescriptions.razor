@@ -1,0 +1,147 @@
+@inherits BasePage
+
+@inject IPrescriptionService PrescriptionService
+@inject NavigationManager NavigationManager
+
+
+<div class="py-3">
+    @if (CanCreatePrescription)
+    {
+        <CreateButton OnClick="CreatePrescription" />
+    }
+
+    <PrescriptionModal @ref="prescriptionModal"
+                       Successful="HandleResponse"
+                       PrescriptionId="prescriptionId" />
+
+    @if (prescriptions is not null && prescriptions.Any())
+    {
+        <QuickGrid @ref="quickGrid"
+        Class="table table-responsive"
+        Items="@prescriptions.AsQueryable()"
+        ItemKey="@(x => x.Id)">
+            <PropertyColumn Title="@Resource.Medication"
+            Property="@(x => x.Medication)" />
+            <PropertyColumn Title="@Resource.Dosage"
+            Property="@(x => x.Dosage)" />
+            <PropertyColumn Title="@Resource.Doctor"
+            Property="@(x => x.Doctor.FullName)" />
+            <PropertyColumn Title="@Resource.DatePrescribed"
+            Property="@(x => x.DatePrescribed)"
+            Format="dd MMM yyyy"
+            IsDefaultSortColumn="true"
+            InitialSortDirection="SortDirection.Descending" />
+
+            <TemplateColumn Title="@Resource.Actions" Align="Align.End">
+                <div class="d-flex justify-content-end">
+                    <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditPrescription(context.Id))">
+                        <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                    </button>
+                    <button class="btn" title="@(Resource.Delete)" @onclick="() => DeletePrescription(context.Id)">
+                        <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                    </button>
+                </div>
+            </TemplateColumn>
+
+            @*IMPLEMENT SETTINGS OR PRIVILEGES*@
+            @* @if (hasActionRights)
+            {
+                <TemplateColumn Title="@Resource.Actions" Align="Align.End">
+                    <div class="d-flex justify-content-end">
+                        @if (hasEditRight)
+                        {
+                            <button class="btn" title="@(Resource.Edit)" @onclick="@(() => EditPrescription(context.Id))">
+                                <Icon IconClass="@FAIcon.EditSquare" TextClass="text-warning" />
+                            </button>
+                        }
+                        @if (hasDeleteRight)
+                        {
+                            <button class="btn" title="@(Resource.Delete)" @onclick="() => DeletePrescription(context.Id)">
+                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                            </button>
+                        }
+                    </div>
+                </TemplateColumn>
+            } *@
+        </QuickGrid>
+    }
+    else
+    {
+        <p>@string.Format(Resource.NoAvailable, Resource.Prescriptions)</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int PatientId { get; set; }
+    [Parameter, EditorRequired]
+    public bool CanCreatePrescription { get; set; }
+
+    private List<PrescriptionDto> prescriptions { get; set; } = default!;
+
+
+    private bool hasActionRights;
+    private bool hasEditRight;
+    private bool hasDeleteRight;
+
+    private int? prescriptionId;
+
+    private PrescriptionModal prescriptionModal { get; set; } = new();
+    private QuickGrid<PrescriptionDto> quickGrid = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        //hasActionRights = hasEditRight || hasDeleteRight;
+
+        prescriptions = (await PrescriptionService.GetPrescriptionsByPatientIdAsync(PatientId)).ToList();
+
+        IsLoading = false;
+    }
+
+    private void CreatePrescription()
+    {
+        prescriptionId = null;
+        prescriptionModal.OpenModal();
+    }
+
+    private void EditPrescription(int prescriptionId)
+    {
+        prescriptionId = prescriptionId;
+        prescriptionModal.OpenModal();
+    }
+
+    private async Task DeletePrescription(int prescriptionId)
+    {
+        var response = await PrescriptionService.DeletePrescriptionAsync(prescriptionId);
+
+        if (response.Success)
+        {
+            var deletedPrescription = prescriptions.FirstOrDefault(p => p.Id == prescriptionId);
+            if (deletedPrescription != null)
+            {
+                prescriptions.Remove(deletedPrescription);
+            }
+
+            ToastService.ShowToast(Resource.Success, "success");
+        }
+        else
+        {
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
+        }
+    }
+
+    private async Task HandleResponse(bool successful)
+    {
+        if (successful)
+        {
+            await ToastService.EnqueueToastAsync(Resource.Success, "success");
+            NavigationManager.Refresh(true);
+        }
+        else
+        {
+            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
+        }
+    }
+}

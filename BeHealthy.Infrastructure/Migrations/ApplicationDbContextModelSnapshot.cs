@@ -15,7 +15,7 @@ namespace BeHealthy.Infrastructure.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
 
             modelBuilder.Entity("BeHealthy.Domain.Entities.Allergy", b =>
                 {
@@ -681,24 +681,28 @@ namespace BeHealthy.Infrastructure.Migrations
                         new
                         {
                             Id = "0",
+                            ConcurrencyStamp = "a1b2c3d4-0000-0000-0000-000000000000",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
+                            ConcurrencyStamp = "a1b2c3d4-0002-0000-0000-000000000000",
                             Name = "Doctor",
                             NormalizedName = "DOCTOR"
                         },
                         new
                         {
                             Id = "3",
+                            ConcurrencyStamp = "a1b2c3d4-0003-0000-0000-000000000000",
                             Name = "Nurse",
                             NormalizedName = "NURSE"
                         },
                         new
                         {
                             Id = "4",
+                            ConcurrencyStamp = "a1b2c3d4-0004-0000-0000-000000000000",
                             Name = "Patient",
                             NormalizedName = "PATIENT"
                         });

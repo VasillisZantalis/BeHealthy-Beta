@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Room;
+﻿using BeHealthy.Shared.Dtos.Room;
 
 namespace BeHealthy.Application.Services;
 

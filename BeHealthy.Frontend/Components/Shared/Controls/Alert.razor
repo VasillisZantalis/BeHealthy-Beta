@@ -1,0 +1,69 @@
+﻿@if (showAlert)
+{
+    <div class="alert alert-@severity.ToString().ToLower() alert-dismissible fade show" role="alert">
+        <div class="d-flex flex-row gap-2">
+            <span class="fs-5 @icon text-@severity.ToString().ToLower()"></span>
+            <span class="fw-bold">@Message</span>
+            @if (ShowCloseButton)
+            {
+                <button @onclick="CloseAlert" type="button" class="btn-close" aria-label="Close"></button>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? Message { get; set; }
+
+    [Parameter]
+    public bool ShowCloseButton { get; set; } = true;
+
+    private Severity severity { get; set; }
+
+    private bool showAlert = false;
+
+    private string? icon;
+
+    private void CloseAlert()
+    {
+        showAlert = false;
+        StateHasChanged();
+    }
+
+    public void ShowFailed(string? message)
+    {
+        showAlert = true;
+        severity = Severity.Danger;
+        icon = FAIcon.CircleXmark;
+        Message = message ?? Resource.SomethingWentWrong;
+        StateHasChanged();
+    }
+
+    public void ShowSuccess(string? message)
+    {
+        showAlert = true;
+        severity = Severity.Success;
+        icon = FAIcon.CircleCheck;
+        Message = message ?? Resource.Success;
+        StateHasChanged();
+    }
+
+    public void ShowInfo(string message)
+    {
+        showAlert = true;
+        severity = Severity.Info;
+        icon = FAIcon.CircleInfo;
+        Message = message;
+        StateHasChanged();
+    }
+
+    public void ShowWarning(string message)
+    {
+        showAlert = true;
+        severity = Severity.Warning;
+        icon = FAIcon.TriangleExclamation;
+        Message = message;
+        StateHasChanged();
+    }
+}

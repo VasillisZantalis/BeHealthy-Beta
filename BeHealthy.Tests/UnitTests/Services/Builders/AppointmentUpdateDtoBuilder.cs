@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Appointment;
+﻿using BeHealthy.Shared.Dtos.Appointment;
 
 namespace BeHealthy.Tests.UnitTests.Services.Builders;
 

@@ -1,0 +1,151 @@
+﻿@using BeHealthy.Shared.Dtos.Common
+@inherits BasePage
+
+<EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
+    <button type="submit" class="btn btn-success mb-3 px-4 text-end">
+        @if (inProgress)
+        {
+            <span class="spinner-border spinner-border-sm"></span>
+        }
+        @Resource.Save
+    </button>
+
+    <Alert @ref="alert" />
+    <ValidationComponent @ref="validationComponent" />
+
+    <div class="d-flex flex-column gap-3">
+        <BeHealthyFormGroup Label="@Resource.Name" InputId="name" IsRequired="true">
+            <InputText id="name" @bind-Value="DepartmentDto.Name" class="form-control" />
+            <ValidationMessage For="() => DepartmentDto.Name" class="text-danger" />
+        </BeHealthyFormGroup>
+
+        <BeHealthyFormGroup Label="@Resource.Location" InputId="location">
+            <InputText id="location" @bind-Value="DepartmentDto.Location" class="form-control" />
+            <ValidationMessage For="() => DepartmentDto.Location" class="text-danger" />
+        </BeHealthyFormGroup>
+
+        <BeHealthyFormGroup Label="@Resource.Doctors" InputId="doctors" IsRequired="isRequiredHeadOfDepartment">
+            <InputSelect id="doctors" class="form-select" @bind-Value="DepartmentDto.HeadOfDepartmentId">
+                @foreach (var doctor in doctorsSelect)
+                {
+                    <option value="@doctor.Value">@doctor.Text</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="() => DepartmentDto.HeadOfDepartmentId" class="text-danger" />
+        </BeHealthyFormGroup>
+    </div>
+</EditForm>
+
+@code{
+    [Parameter]
+    public bool IsEditMode { get; set; } = false;
+
+    [Parameter]
+    public List<DoctorDto> Doctors { get; set; } = new();
+
+    [Parameter]
+    public DepartmentDto DepartmentDto { get; set; } = new();
+
+    [Inject]
+    private IDepartmentService departmentService { get; set; } = default!;
+
+    [Inject]
+    private IAppSettingsService appSettingsService { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+
+    private bool inProgress = false;
+    private Alert alert = new();
+    private bool isRequiredHeadOfDepartment;
+
+    private List<SelectItem> doctorsSelect = new List<SelectItem>();
+
+    private ValidationComponent? validationComponent;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        doctorsSelect = Doctors.Select(s => new SelectItem
+            {
+                Value = s.Id,
+                Text = s.FullName
+            }).ToList();
+        doctorsSelect.Insert(0, new SelectItem { Value = 0, Text = Resource.PleaseSelect });
+
+        await GetSettings();
+    }
+
+    private async Task GetSettings()
+    {
+        var keys = new[] { "DepartmentRequiresSupervisor", "DefaultDepartmentSupervison" }.ToList();
+        var settings = await appSettingsService.GetMassAppSettingsAsync(keys);
+
+        var requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
+        var defaultSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DefaultDepartmentSupervison");
+
+        isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;
+        var defaultSupervisor = defaultSupervisorSetting?.GetIntValue();
+
+        if (!IsEditMode && defaultSupervisor.HasValue && (DepartmentDto.HeadOfDepartmentId == null || DepartmentDto.HeadOfDepartmentId == 0))
+        {
+            if (doctorsSelect.Any(d => d.Value == defaultSupervisor.Value))
+            {
+                DepartmentDto.HeadOfDepartmentId = defaultSupervisor.Value;
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        inProgress = true;
+        ServiceResponse result;
+
+        validationComponent?.ClearErrors();
+        var errors = new Dictionary<string, List<string>>();
+
+        if (string.IsNullOrEmpty(DepartmentDto.Name))
+        {
+            errors.Add(nameof(DepartmentDto.Name),
+                new() { string.Format(Resource.TheFieldIsRequired, Resource.Name) });
+        }
+
+        if (isRequiredHeadOfDepartment && !(DepartmentDto.HeadOfDepartmentId > 0))
+        {
+            errors.Add(nameof(DepartmentDto.HeadOfDepartmentId),
+                new() { string.Format(Resource.TheFieldIsRequired, Resource.HeadΟfDepartment) });
+        }
+
+        if (DepartmentDto.HeadOfDepartmentId == 0)
+            DepartmentDto.HeadOfDepartmentId = null;
+
+        inProgress = false;
+        
+        if (errors.Any())
+        {
+            validationComponent?.DisplayErrors(errors);
+        }
+        else 
+        {
+            if (IsEditMode)
+            {
+                var departmentForUpdateDto = DepartmentDto.MapToUpdateDto();
+                result = await departmentService.UpdateDepartmentAsync(departmentForUpdateDto);
+            }
+            else
+            {
+                var departmentForCreateDto = DepartmentDto.MapToCreationDto();
+                result = await departmentService.AddDepartmentAsync(departmentForCreateDto);
+            }
+
+            if (!result.Success)
+            {
+                alert.ShowFailed(result.ErrorMessage!);
+            }
+            else
+            {
+                ToastService.ShowToast(Resource.Success, "success");
+                NavigationManager.NavigateTo(RoutingEndpoints.DEPARTMENTS_PAGE);
+            }
+        }
+    }
+}

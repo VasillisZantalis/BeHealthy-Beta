@@ -1,0 +1,181 @@
+﻿@page "/nurses/create"
+@inherits BasePage
+
+@inject INurseService NurseService
+@inject IDepartmentService DepartmentService
+@inject NavigationManager NavigationManager
+
+<PageTitle>@Resource.Create</PageTitle>
+
+<BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
+    <Body>
+    <EditForm Model="NurseCreateDto" method="post" OnValidSubmit="SaveNurse" FormName="RegisterForm" Enhance>
+
+        <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
+            @if (inProgress)
+            {
+                <SmallLoader />
+            }
+            <span>@Resource.Save</span>
+        </button>
+
+        <FluentValidationValidator @ref="fluentValidationValidator" />
+
+         <div class="d-flex flex-column gap-3 p-3">
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage ="@(NurseCreateDto.Image !=null)" OnDeleteImage="@(() => NurseCreateDto.Image = null)">
+                    <ImagePreview ImageUrl="@NurseCreateDto.Image" />
+                </ImageUploadContainer>
+
+                <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
+
+                    <InputText id="firstName" 
+                                @bind-Value="NurseCreateDto.FirstName" 
+                                class="form-control"
+                                aria-required="true" />
+
+                    <ValidationMessage For="() => NurseCreateDto.FirstName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
+                    <InputText id="lastName"
+                                class="form-control"
+                                @bind-Value="NurseCreateDto.LastName"
+                                aria-required="true" />
+                    <ValidationMessage For="() => NurseCreateDto.LastName" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
+                        <InputText id="email"
+                                    class="form-control"
+                                    @bind-Value="NurseCreateDto.Email"
+                                    aria-required="true" />
+                        <ValidationMessage For="() => NurseCreateDto.Email" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
+                    <InputText id="password"
+                                type="password"
+                                class="form-control"
+                                @bind-Value="NurseCreateDto.Password"
+                                aria-required="true" />
+                    <ValidationMessage For="() => NurseCreateDto.Password" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
+                    <InputText id="confirmPassword"
+                                type="password"
+                                class="form-control"
+                                @bind-Value="NurseCreateDto.ConfirmPassword"
+                                aria-required="true" />
+                    <ValidationMessage For="() => NurseCreateDto.ConfirmPassword" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
+                    <InputText id="phoneNumber"
+                                class="form-control"
+                                @bind-Value="NurseCreateDto.PhoneNumber"
+                                aria-required="true" />
+                    <ValidationMessage For="() => NurseCreateDto.PhoneNumber" class="text-danger" />
+                </BeHealthyFormGroup>
+
+                @if (departments is not null && departments.Any())
+                {
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Department" @bind-Value="NurseCreateDto.DepartmentId" class="form-control">
+                            @foreach (var department in departmentsSelect)
+                            {
+                                <option value="@department.Value">@department.Text</option>
+                            }
+                        </InputSelect>
+                        <label for="Department">@Resource.Department</label>
+                    </div>
+                }
+            </div>
+        </EditForm>
+    </Body>
+</BeHealthyCard>
+
+@code {
+
+    [SupplyParameterFromForm]
+    private NurseCreateDto NurseCreateDto { get; set; } = new();
+    private bool inProgress = false;
+    private List<DepartmentDto>? departments { get; set; }
+
+    private Alert alert = new();
+    private FluentValidationValidator fluentValidationValidator = new();
+
+    private List<SelectItem> departmentsSelect = new List<SelectItem>();
+
+    protected override void OnInitialized()
+    {
+        SetBreadcrumbs();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        departments = (await DepartmentService.GetAllDepartmentsAsync()).ToList();
+        departmentsSelect = departments.Select(s => new SelectItem
+        {
+            Value = s.Id,
+            Text = s.Name
+        }).ToList();
+        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
+
+        IsLoading = false;
+    }
+
+    private void SetBreadcrumbs()
+    {
+        Breadcrumbs.SetBreadcrumbs(new List<Breadcrumb>()
+        {
+            new Breadcrumb(){ Text = Resource.Dashboard, Link = RoutingEndpoints.HOME_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Nurses, Link = RoutingEndpoints.NURSES_PAGE, Active = false },
+            new Breadcrumb(){ Text = Resource.Create, Link = string.Empty, Active = true }
+        });
+    }
+
+    private void OpenImageUploadModal()
+    {
+        ModalService.Show<FileUploadModal>(new Dictionary<string, object?>
+        {
+            { nameof(FileUploadModal.IsImage), true },
+            { nameof(FileUploadModal.MaxFileSizeInKB), 1024 },
+            { nameof(FileUploadModal.ResizeWidth), 200 },
+            { nameof(FileUploadModal.ResizeHeight), 200 },
+            { nameof(FileUploadModal.OnFileUploaded), EventCallback.Factory.Create<string>(this, HandleImageUploaded) }
+        });
+    }
+
+    private void HandleImageUploaded(string imageData)
+    {
+        NurseCreateDto.Image = imageData;
+        StateHasChanged();
+    }
+
+    public async Task SaveNurse(EditContext editContext)
+    {
+        inProgress = true;
+
+        if (!await fluentValidationValidator.ValidateAsync())
+        {
+            inProgress = false;
+            return;
+        }
+
+        var nurseCreationResult = await NurseService.AddNurseAsync(NurseCreateDto);
+        inProgress = false;
+
+        if (!nurseCreationResult.Success)
+        {
+            alert.ShowFailed(nurseCreationResult.ErrorMessage);
+        }
+        else
+        {
+            ToastService.ShowToast(Resource.Success, "success");
+            NavigationManager.NavigateTo(RoutingEndpoints.NURSES_PAGE);
+        }
+    }
+}

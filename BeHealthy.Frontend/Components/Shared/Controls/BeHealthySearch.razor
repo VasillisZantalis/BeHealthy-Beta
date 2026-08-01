@@ -1,0 +1,126 @@
+﻿@using Microsoft.AspNetCore.Components
+
+<div class="@WrapperClass">
+    <div class="d-flex gap-3 align-items-center flex-wrap">
+
+        @if (ShowSearchBox)
+        {
+            <div class="flex-grow-1" style="min-width: 250px;">
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text"
+                           class="form-control @SearchInputClass"
+                           placeholder="@Resource.Search"
+                           @bind="searchValue"
+                           @bind:event="oninput"
+                           @bind:after="OnSearchChanged" />
+                    @if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        <button class="btn btn-outline-secondary"
+                                type="button"
+                                @onclick="ClearSearch">
+                            ×
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Filters != null)
+        {
+            <div class="d-flex gap-2">
+                @Filters
+            </div>
+        }
+
+        @if (ShowClearButton && HasActiveFilters())
+        {
+            <button class="btn btn-outline-danger rounded-pill @ClearButtonClass"
+                    @onclick="ClearAll">
+                @ClearButtonText
+            </button>
+        }
+
+        @if (Actions != null)
+        {
+            <div class="ms-auto">
+                @Actions
+            </div>
+        }
+
+    </div>
+</div>
+
+@code {
+    // Search parameters
+    [Parameter] public bool ShowSearchBox { get; set; } = true;
+    [Parameter] public string SearchInputClass { get; set; } = "";
+    [Parameter] public EventCallback<string> OnSearch { get; set; }
+
+    // Filter section
+    [Parameter] public RenderFragment? Filters { get; set; }
+
+    // Actions section (for additional buttons)
+    [Parameter] public RenderFragment? Actions { get; set; }
+
+    // Clear button
+    [Parameter] public bool ShowClearButton { get; set; } = true;
+    [Parameter] public string ClearButtonText { get; set; } = Resource.ClearFilters;
+    [Parameter] public string ClearButtonClass { get; set; } = "";
+    [Parameter] public EventCallback OnClear { get; set; }
+
+    // Styling
+    [Parameter] public string WrapperClass { get; set; } = "p-3";
+
+    // Debouncing
+    [Parameter] public int DebounceMilliseconds { get; set; } = 500;
+
+    private string searchValue = "";
+    private System.Threading.Timer? debounceTimer;
+
+    private async Task OnSearchChanged()
+    {
+        if (DebounceMilliseconds > 0)
+        {
+            debounceTimer?.Dispose();
+            debounceTimer = new System.Threading.Timer(async _ =>
+            {
+                await InvokeAsync(async () =>
+                {
+                    await OnSearch.InvokeAsync(searchValue);
+                });
+            }, null, DebounceMilliseconds, System.Threading.Timeout.Infinite);
+        }
+        else
+        {
+            await OnSearch.InvokeAsync(searchValue);
+        }
+    }
+
+    private async Task ClearSearch()
+    {
+        searchValue = "";
+        await OnSearch.InvokeAsync(searchValue);
+    }
+
+    private async Task ClearAll()
+    {
+        searchValue = ""; 
+        if (OnClear.HasDelegate)
+        {
+            await OnClear.InvokeAsync();
+        }
+    }
+
+    private bool HasActiveFilters()
+    {
+        return !string.IsNullOrEmpty(searchValue) || OnClear.HasDelegate;
+    }
+
+    public void Dispose()
+    {
+        debounceTimer?.Dispose();
+    }
+}

@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Dtos.Allergy;
+﻿using BeHealthy.Shared.Dtos.Allergy;
 using BeHealthy.Shared.Locales;
 using FluentValidation;
 

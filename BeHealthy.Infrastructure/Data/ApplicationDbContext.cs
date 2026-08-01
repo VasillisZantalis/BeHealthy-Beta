@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
+using BeHealthy.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -39,27 +40,31 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<IdentityRole>().HasData(
             new IdentityRole
             {
-                Id = "0", // Admin
+                Id = "0",
                 Name = "Admin",
-                NormalizedName = "ADMIN"
+                NormalizedName = "ADMIN",
+                ConcurrencyStamp = "a1b2c3d4-0000-0000-0000-000000000000"
             },
             new IdentityRole
             {
-                Id = "2", // Doctor
+                Id = "2",
                 Name = "Doctor",
-                NormalizedName = "DOCTOR"
+                NormalizedName = "DOCTOR",
+                ConcurrencyStamp = "a1b2c3d4-0002-0000-0000-000000000000"
             },
             new IdentityRole
             {
-                Id = "3", // Nurse
+                Id = "3",
                 Name = "Nurse",
-                NormalizedName = "NURSE"
+                NormalizedName = "NURSE",
+                ConcurrencyStamp = "a1b2c3d4-0003-0000-0000-000000000000"
             },
             new IdentityRole
             {
-                Id = "4", // Patient
+                Id = "4",
                 Name = "Patient",
-                NormalizedName = "PATIENT"
+                NormalizedName = "PATIENT",
+                ConcurrencyStamp = "a1b2c3d4-0004-0000-0000-000000000000"
             }
         );
 

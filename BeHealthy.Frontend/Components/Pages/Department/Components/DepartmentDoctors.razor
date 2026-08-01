@@ -1,0 +1,49 @@
+﻿@inject NavigationManager NavigationManager
+
+@if (Doctors.Any())
+{
+    <ul class="list-group">
+        <Virtualize Items="Doctors" Context="doctor">
+            <li class="list-group-item my-2 border rounded-pill clickable" @onclick="() => OnDoctorClick(doctor)">
+                <div class="d-flex justify-content-between px-3">
+                    <img class="rounded-circle" src="images/generic.jpg" alt="@doctor.FullName" width="35" height="35" />
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">@Resource.Name</span>
+                        <h6>@doctor.FullName</h6>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">@Resource.Specialty</span>
+                        <h6>@doctor?.Specialty?.Name</h6>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">@Resource.Email</span>
+                        <h6>@doctor?.Email</h6>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">@Resource.PhoneNumber</span>
+                        <h6>@(doctor?.PhoneNumber ?? "-")</h6>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <span class="text-muted small-text">@Resource.Created</span>
+                        <h6>@doctor!.CreatedAt.ToFullDateTimeString()</h6>
+                    </div>
+                </div>
+            </li>
+        </Virtualize>
+    </ul>
+}
+else
+{
+    <p>@string.Format(Resource.ThereAreNo, Resource.Doctors)</p>
+}
+
+@code {
+    [Parameter]
+    public List<DoctorDto> Doctors { get; set; } = new ();
+
+    private void OnDoctorClick(DoctorDto doctor)
+    {
+        NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{doctor.Id}");
+    }
+}

@@ -1,0 +1,30 @@
+﻿<span class="@IconClass @TextClass @SizeClass" @attributes="GetStyleAttribute()"></span>
+
+@code {
+    [Parameter, EditorRequired]
+    public string IconClass { get; set; }
+
+    [Parameter]
+    public string? SizeClass { get; set; }
+
+    [Parameter]
+    public string? TextClass { get; set; }
+
+    [Parameter]
+    public string? Style { get; set; }
+
+    private Dictionary<string, object> GetStyleAttribute()
+    {
+        if (string.IsNullOrWhiteSpace(Style))
+        {
+            return new Dictionary<string, object>();
+        }
+        else
+        {
+            return new Dictionary<string, object>
+            {
+                { "style", Style }
+            };
+        }
+    }
+}
