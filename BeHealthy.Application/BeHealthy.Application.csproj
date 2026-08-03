@@ -25,12 +25,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Allergies\" />
-    <Folder Include="Features\Appointments\" />
+    <Folder Include="Features\Allergies\GetAllergyById\" />
+    <Folder Include="Features\Allergies\CreateAllergy\" />
+    <Folder Include="Features\Allergies\DeleteAllergy\" />
+    <Folder Include="Features\Allergies\UpdateAllergy\" />
+    <Folder Include="Features\Appointments\GetAppointments\" />
+    <Folder Include="Features\Appointments\GetAppointmentReasonCounts\" />
+    <Folder Include="Features\Appointments\GetAppointmentById\" />
+    <Folder Include="Features\Appointments\CreateAppointment\" />
+    <Folder Include="Features\Appointments\DeleteAppointment\" />
+    <Folder Include="Features\Appointments\UpdateAppointment\" />
     <Folder Include="Features\AppSettings\" />
     <Folder Include="Features\Dashboard\" />
-    <Folder Include="Features\Departments\" />
-    <Folder Include="Features\Doctors\" />
+    <Folder Include="Features\Departments\GetDepartments\" />
+    <Folder Include="Features\Departments\CreateDepartment\" />
+    <Folder Include="Features\Departments\DeleteDepartment\" />
+    <Folder Include="Features\Departments\UpdateDepartment\" />
+    <Folder Include="Features\Doctors\GetDoctors\" />
+    <Folder Include="Features\Doctors\GetDoctorsSimple\" />
+    <Folder Include="Features\Doctors\GetDoctorAppointmentsByUserId\" />
+    <Folder Include="Features\Doctors\GetDoctorPatients\" />
+    <Folder Include="Features\Doctors\GetDoctorById\" />
+    <Folder Include="Features\Doctors\CreateDoctor\" />
+    <Folder Include="Features\Doctors\DeleteDoctor\" />
+    <Folder Include="Features\Doctors\GetDoctorAppointments\" />
     <Folder Include="Features\MedicalRecords\" />
     <Folder Include="Features\Nurses\" />
     <Folder Include="Features\Patients\" />
