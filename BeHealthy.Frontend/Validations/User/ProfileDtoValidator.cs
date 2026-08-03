@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace BeHealthy.Frontend.Validations.User;
 
-public class ProfileDtoValidator : AbstractValidator<ProfileDto>
+public class ProfileDtoValidator : AbstractValidator<ProfileResponse>
 {
     public ProfileDtoValidator()
     {

@@ -7,16 +7,16 @@ public class RoomApiService : ApiClientBase, IRoomService
 {
     public RoomApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync()
-        => await GetListAsync<RoomDto>("rooms");
+    public async Task<IEnumerable<RoomResponse>> GetAllRoomsAsync()
+        => await GetListAsync<RoomResponse>("rooms");
 
-    public async Task<RoomDto?> GetRoomByIdAsync(int id)
-        => await GetAsync<RoomDto>($"rooms/{id}");
+    public async Task<RoomResponse?> GetRoomByIdAsync(int id)
+        => await GetAsync<RoomResponse>($"rooms/{id}");
 
-    public async Task AddRoomAsync(RoomCreateDto roomDto)
+    public async Task AddRoomAsync(RoomCreateRequest roomDto)
         => await PostAsync("rooms", roomDto);
 
-    public async Task UpdateRoomAsync(RoomUpdateDto roomDto)
+    public async Task UpdateRoomAsync(RoomUpdateRequest roomDto)
         => await PutAsync("rooms", roomDto);
 
     public async Task DeleteRoomAsync(int id)

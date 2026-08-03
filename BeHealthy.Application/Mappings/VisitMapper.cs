@@ -5,7 +5,7 @@ namespace BeHealthy.Application.Mappings;
 
 public static class VisitMapper
 {
-    public static Visit MapToDomain(this VisitCreateDto dto)
+    public static Visit MapToDomain(this VisitCreateRequest dto)
     {
         return new Visit
         {
@@ -18,7 +18,7 @@ public static class VisitMapper
         };
     }
 
-    public static void MapToEntity(this VisitUpdateDto dto, Visit entity)
+    public static void MapToEntity(this VisitUpdateRequest dto, Visit entity)
     {
         entity.VisitDate = dto.VisitDate;
         entity.Reason = dto.Reason;
@@ -28,26 +28,26 @@ public static class VisitMapper
         entity.MedicalRecordId = dto.MedicalRecordId;
     }
 
-    public static VisitDto MapToDto(this Visit visit)
+    public static VisitResponse MapToDto(this Visit visit)
     {
-        return new VisitDto
+        return new VisitResponse
         {
             Id = visit.Id,
             VisitDate = visit.VisitDate,
             Reason = visit.Reason,
             Notes = visit.Notes,
             MedicalRecordId = visit.MedicalRecordId,
-            Patient = visit.Patient != null ? visit.Patient.MapToSimpleDto() : new PatientSimpleDto(),
-            Doctor = visit.Doctor != null ? visit.Doctor.MapToSimpleDto() : new DoctorSimpleDto(),
+            Patient = visit.Patient != null ? visit.Patient.MapToSimpleDto() : new PatientSimpleResponse(),
+            Doctor = visit.Doctor != null ? visit.Doctor.MapToSimpleDto() : new DoctorSimpleResponse(),
         };
     }
 
-    public static IEnumerable<VisitDto> MapToDto(this IEnumerable<Visit> visits) 
+    public static IEnumerable<VisitResponse> MapToDto(this IEnumerable<Visit> visits) 
         => visits.Select(visit => visit.MapToDto());
 
-    public static VisitCreateDto MapToCreateDto(this VisitDto visit)
+    public static VisitCreateRequest MapToCreateDto(this VisitResponse visit)
     {
-        return new VisitCreateDto
+        return new VisitCreateRequest
         {
             VisitDate = visit.VisitDate,
             Reason = visit.Reason,
@@ -58,9 +58,9 @@ public static class VisitMapper
         };
     }
 
-    public static VisitUpdateDto MapToUpdateDto(this VisitDto visit)
+    public static VisitUpdateRequest MapToUpdateDto(this VisitResponse visit)
     {
-        return new VisitUpdateDto
+        return new VisitUpdateRequest
         {
             Id = visit.Id,
             VisitDate = visit.VisitDate,

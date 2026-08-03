@@ -8,16 +8,16 @@ public class DepartmentApiService : ApiClientBase, IDepartmentService
 {
     public DepartmentApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync()
-        => await GetListAsync<DepartmentDto>("departments");
+    public async Task<IEnumerable<DepartmentResponse>> GetAllDepartmentsAsync()
+        => await GetListAsync<DepartmentResponse>("departments");
 
-    public async Task<DepartmentDto> GetDepartmentByIdAsync(int id)
-        => await GetAsync<DepartmentDto>($"departments/{id}") ?? new();
+    public async Task<DepartmentResponse> GetDepartmentByIdAsync(int id)
+        => await GetAsync<DepartmentResponse>($"departments/{id}") ?? new();
 
-    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateDto departmentDto)
+    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateRequest departmentDto)
         => await PostForResponseAsync("departments", departmentDto);
 
-    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateDto departmentDto)
+    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateRequest departmentDto)
         => await PutForResponseAsync("departments", departmentDto);
 
     public async Task<ServiceResponse> DeleteDepartmentAsync(int id)

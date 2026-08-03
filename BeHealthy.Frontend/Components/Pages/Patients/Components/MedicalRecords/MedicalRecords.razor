@@ -9,26 +9,26 @@
         <CreateButton OnClick="CreateMedicalRecord" />
     </Header>
     <Body>
-        <BeHealthyTable TItem="MedicalRecordDto"
+        <BeHealthyTable TItem="MedicalRecordResponse"
                         Items="medicalRecords"
                         TableClass="table table-responsive"
                         WrapperClass="table-wrapper"
                         EmptyMessage="@string.Format(Resource.NoAvailable, Resource.MedicalRecords)">
 
 
-            <BeHealthyColumn TItem="MedicalRecordDto"
+            <BeHealthyColumn TItem="MedicalRecordResponse"
                              Title="@Resource.Date"
                              Property="@(x => x.RecordDate.ToShortHumanizedDateString())" />
 
-            <BeHealthyColumn TItem="MedicalRecordDto"
+            <BeHealthyColumn TItem="MedicalRecordResponse"
                              Title="@Resource.CreatedBy"
                              Property="@(x => x.CreatedBy)" />
 
-            <BeHealthyColumn TItem="MedicalRecordDto"
+            <BeHealthyColumn TItem="MedicalRecordResponse"
                              Title="@Resource.Notes"
                              Property="@(x => x.Notes)" />
 
-            <BeHealthyActionsColumn TItem="MedicalRecordDto"
+            <BeHealthyActionsColumn TItem="MedicalRecordResponse"
                                     HeaderClass="text-end"
                                     CellClass="text-end">
                 <Template>
@@ -50,7 +50,7 @@
 @code {
     [CascadingParameter] public int PatientId { get; set; }
 
-    private List<MedicalRecordDto> medicalRecords { get; set; } = new();
+    private List<MedicalRecordResponse> medicalRecords { get; set; } = new();
     private bool isLoading = false;
 
     protected override async Task OnInitializedAsync()
@@ -68,7 +68,7 @@
         isLoading = false;
     }
 
-    private async Task SaveMedicalRecord(MedicalRecordDto dto)
+    private async Task SaveMedicalRecord(MedicalRecordResponse dto)
     {
         isLoading = true;
 
@@ -89,8 +89,8 @@
         ModalService.Show<MedicalRecordFormModal>(
             new Dictionary<string, object?>
             {
-                { nameof(MedicalRecordFormModal.Model), new MedicalRecordDto() },
-                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordDto>(this, SaveMedicalRecord) },
+                { nameof(MedicalRecordFormModal.Model), new MedicalRecordResponse() },
+                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordResponse>(this, SaveMedicalRecord) },
             });
     }
 
@@ -107,7 +107,7 @@
             new Dictionary<string, object?>
             {
                 { nameof(MedicalRecordFormModal.Model), medicalRecordDto },
-                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordDto>(this, SaveMedicalRecord) },
+                { nameof(MedicalRecordFormModal.OnSave), EventCallback.Factory.Create<MedicalRecordResponse>(this, SaveMedicalRecord) },
             });
     }
 

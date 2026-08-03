@@ -29,7 +29,7 @@ public class DepartmentServiceTests
     public async Task AddDepartmentAsync_ValidDepartment_CreatesDepartment()
     {
         //Arrange
-        DepartmentCreateDto departmentForCreationDto = _fixture.Create<DepartmentCreateDto>();
+        DepartmentCreateRequest departmentForCreationDto = _fixture.Create<DepartmentCreateRequest>();
 
         _mockUnitOfWork.Setup(uow => uow.DepartmentRepository.AddAsync(It.IsAny<Department>()))
             .Returns(Task.CompletedTask);
@@ -59,7 +59,7 @@ public class DepartmentServiceTests
     public async Task AddDepartmentAsync_ValidHeadOfDepartmentId_CreatesDepartment()
     {
         // Arrange
-        DepartmentCreateDto departmentForCreationDto = _fixture.Build<DepartmentCreateDto>()
+        DepartmentCreateRequest departmentForCreationDto = _fixture.Build<DepartmentCreateRequest>()
             .With(w => w.HeadOfDepartmentId, 1)
             .Create();
 
@@ -77,7 +77,7 @@ public class DepartmentServiceTests
     public async Task AddDepartmentAsync_InvalidHeadOfDepartmentId_ReturnsFailedResponse()
     {
         // Arrange
-        DepartmentCreateDto departmentForCreationDto = _fixture.Build<DepartmentCreateDto>()
+        DepartmentCreateRequest departmentForCreationDto = _fixture.Build<DepartmentCreateRequest>()
             .With(w => w.HeadOfDepartmentId, 99999)
             .Create();
 

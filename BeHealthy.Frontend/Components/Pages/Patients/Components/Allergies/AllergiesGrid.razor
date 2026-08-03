@@ -12,22 +12,22 @@
     </Header>
 
     <Body>
-        <BeHealthyTable TItem="AllergyDto"
+        <BeHealthyTable TItem="AllergyResponse"
                         Items="allergies"
                         IsLoading="isLoading"
                         TableClass="table table-responsive"
                         WrapperClass="table-wrapper"
                         EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Allergies)">
 
-            <BeHealthyColumn TItem="AllergyDto"
+            <BeHealthyColumn TItem="AllergyResponse"
                              Title="@Resource.Allergy"
                              Property="@(x => x.AllergyName)" />
 
-            <BeHealthyColumn TItem="AllergyDto"
+            <BeHealthyColumn TItem="AllergyResponse"
                              Title="@Resource.Allergen"
                              Property="@(x => x.Allergen)" />
 
-            <BeHealthyActionsColumn TItem="AllergyDto"
+            <BeHealthyActionsColumn TItem="AllergyResponse"
                                     HeaderClass="text-end"
                                     CellClass="text-end">
                 <Template>
@@ -50,9 +50,9 @@
     [CascadingParameter] public int PatientId { get; set; }
 
     [SupplyParameterFromForm]
-    private AllergyDto allergyDto { get; set; } = new();
+    private AllergyResponse allergyDto { get; set; } = new();
 
-    private List<AllergyDto> allergies = new();
+    private List<AllergyResponse> allergies = new();
     private bool isLoading = false;
 
     protected override async Task OnInitializedAsync()
@@ -78,11 +78,11 @@
             new Dictionary<string, object?>
             {
                 { nameof(AllergiesModal.Allergy), allergy },
-                { nameof(AllergiesModal.OnSave), EventCallback.Factory.Create<AllergyDto>(this, SaveAllergy) },
+                { nameof(AllergiesModal.OnSave), EventCallback.Factory.Create<AllergyResponse>(this, SaveAllergy) },
             });
     }
 
-    private async Task SaveAllergy(AllergyDto allergyDto)
+    private async Task SaveAllergy(AllergyResponse allergyDto)
     {
         allergyDto.PatientId = PatientId;
 

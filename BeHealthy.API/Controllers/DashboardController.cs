@@ -14,10 +14,10 @@ public class DashboardController(
 {
     /// <summary>Gets the dashboard summary: entity counts, appointment reason distribution, and users per role.</summary>
     [HttpGet("summary")]
-    [ProducesResponseType<DashboardSummaryDto>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<DashboardSummaryDto>> GetSummary()
+    [ProducesResponseType<DashboardSummaryResponse>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<DashboardSummaryResponse>> GetSummary()
     {
-        var summary = new DashboardSummaryDto
+        var summary = new DashboardSummaryResponse
         {
             PatientCount = await patientService.GetPatientCountAsync(),
             DoctorCount = await doctorService.GetDoctorCountAsync(),

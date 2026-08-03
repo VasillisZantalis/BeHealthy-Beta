@@ -14,20 +14,20 @@ public class AllergyService : IAllergyService
         _allergyRepository = allergyRepository;
     }
 
-    public async Task<IEnumerable<AllergyDto>> GetAllergiesByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<AllergyResponse>> GetAllergiesByPatientIdAsync(int patientId)
     {
         var allergies = await _allergyRepository.GetAllergiesByPatientIdAsync(patientId);
         return allergies.Select(a => a.MapToDto());
     }
 
-    public async Task<ServiceResponse> AddAllergyAsync(AllergyCreateDto dto)
+    public async Task<ServiceResponse> AddAllergyAsync(AllergyCreateRequest dto)
     {
         var allergy = dto.MapToDomain();
         await _allergyRepository.AddAsync(allergy);
         return ServiceResponse.Successful();
     }
 
-    public async Task<ServiceResponse> UpdateAllergyAsync(AllergyUpdateDto dto)
+    public async Task<ServiceResponse> UpdateAllergyAsync(AllergyUpdateRequest dto)
     {
         var allergy = await _allergyRepository.GetByIdAsync(dto.Id);
         if (allergy == null)
@@ -44,7 +44,7 @@ public class AllergyService : IAllergyService
         return ServiceResponse.Successful();
     }
 
-    public async Task<AllergyDto?> GetAllergyByIdAsync(int id)
+    public async Task<AllergyResponse?> GetAllergyByIdAsync(int id)
     {
         var allergy = await _allergyRepository.GetByIdAsync(id);
         return allergy?.MapToDto();

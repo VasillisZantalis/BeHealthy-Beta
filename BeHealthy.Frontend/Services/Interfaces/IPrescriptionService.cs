@@ -5,10 +5,10 @@ namespace BeHealthy.Frontend.Services.Interfaces;
 
 public interface IPrescriptionService
 {
-    Task<IEnumerable<PrescriptionDto>> GetAllPrescriptionsAsync();
-    Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id);
-    Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByPatientIdAsync(int id);
-    Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateDto prescriptionDto);
-    Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateDto prescriptionDto);
+    Task<IEnumerable<PrescriptionResponse>> GetAllPrescriptionsAsync();
+    Task<PrescriptionResponse?> GetPrescriptionByIdAsync(int id);
+    Task<IEnumerable<PrescriptionResponse>> GetPrescriptionsByPatientIdAsync(int id);
+    Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateRequest prescriptionDto);
+    Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateRequest prescriptionDto);
     Task<ServiceResponse> DeletePrescriptionAsync(int id);
 }

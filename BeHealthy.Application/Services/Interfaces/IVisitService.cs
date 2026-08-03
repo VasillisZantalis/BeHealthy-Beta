@@ -9,8 +9,8 @@ public interface IVisitService
     Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId);
     Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId);
     Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId);
-    Task<IEnumerable<VisitDto>> GetVisitsByPatientIdAsync(int patientId);
-    Task<ServiceResponse> AddVisitAsync(VisitCreateDto dto);
-    Task<ServiceResponse> UpdateVisitAsync(VisitUpdateDto dto);
+    Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId);
+    Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto);
+    Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto);
     Task<ServiceResponse> DeleteVisitAsync(int id);
 }

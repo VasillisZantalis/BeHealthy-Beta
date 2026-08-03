@@ -7,6 +7,6 @@ public class DashboardApiService : ApiClientBase, IDashboardService
 {
     public DashboardApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<DashboardSummaryDto> GetSummaryAsync()
-        => await GetAsync<DashboardSummaryDto>("dashboard/summary") ?? new();
+    public async Task<DashboardSummaryResponse> GetSummaryAsync()
+        => await GetAsync<DashboardSummaryResponse>("dashboard/summary") ?? new();
 }

@@ -48,16 +48,16 @@
 
 @code {
     [Parameter, EditorRequired]
-    public RoomDto Room { get; set; } = new();
+    public RoomResponse Room { get; set; } = new();
 
     [Parameter]
-    public EventCallback<RoomDto> OnRoomSaved { get; set; }
+    public EventCallback<RoomResponse> OnRoomSaved { get; set; }
 
     [Parameter]
     public bool IsReadOnly { get; set; } = false;
 
     [SupplyParameterFromForm]
-    private RoomDto roomDto { get; set; } = new();
+    private RoomResponse roomDto { get; set; } = new();
 
     private FluentValidationValidator fluentValidationValidator = new();
 

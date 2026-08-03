@@ -5,9 +5,9 @@ namespace BeHealthy.Application.Mappings
 {
     public static class NurseMapper
     {
-        public static NurseDto MapToDto(this Nurse nurse)
+        public static NurseResponse MapToDto(this Nurse nurse)
         {
-            return new NurseDto
+            return new NurseResponse
             {
                 Id = nurse.Id,
                 UserId = nurse.UserId,
@@ -21,7 +21,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Nurse MapToDomain(this NurseDto dto)
+        public static Nurse MapToDomain(this NurseResponse dto)
         {
             return new Nurse
             {
@@ -35,7 +35,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Nurse MapToDomain(this NurseCreateDto dto)
+        public static Nurse MapToDomain(this NurseCreateRequest dto)
         {
             return new Nurse
             {
@@ -48,7 +48,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Nurse MapToDomain(this NurseUpdateDto dto)
+        public static Nurse MapToDomain(this NurseUpdateRequest dto)
         {
             return new Nurse
             {
@@ -61,9 +61,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static NurseUpdateDto MapToUpdateDto(this NurseDto dto)
+        public static NurseUpdateRequest MapToUpdateDto(this NurseResponse dto)
         {
-            return new NurseUpdateDto
+            return new NurseUpdateRequest
             {
                 Id = dto.Id,
                 FirstName = dto.FirstName,
@@ -75,9 +75,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static NurseSimpleDto MapToSimpleDto(this Nurse nurse)
+        public static NurseSimpleResponse MapToSimpleDto(this Nurse nurse)
         {
-            return new NurseSimpleDto
+            return new NurseSimpleResponse
             {
                 Id = nurse.Id,
                 FirstName = nurse.FirstName,
@@ -87,17 +87,17 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static IEnumerable<NurseDto> MapToDto(this IEnumerable<Nurse> nurses)
+        public static IEnumerable<NurseResponse> MapToDto(this IEnumerable<Nurse> nurses)
         {
             return nurses.Select(n => n.MapToDto());
         }
 
-        public static ICollection<NurseDto> MapToDto(this ICollection<Nurse> nurses)
+        public static ICollection<NurseResponse> MapToDto(this ICollection<Nurse> nurses)
         {
             return nurses.Select(d => d.MapToDto()).ToList();
         }
 
-        public static IEnumerable<Nurse> MapToDomain(this IEnumerable<NurseDto> dtos)
+        public static IEnumerable<Nurse> MapToDomain(this IEnumerable<NurseResponse> dtos)
         {
             return dtos.Select(dto => dto.MapToDomain());
         }

@@ -11,25 +11,25 @@ public class RoomService : IRoomService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync()
+    public async Task<IEnumerable<RoomResponse>> GetAllRoomsAsync()
     {
         var rooms = await _unitOfWork.RoomRepository.GetAllRoomsAsync();
         return rooms.MapToDto();
     }
 
-    public async Task<RoomDto?> GetRoomByIdAsync(int id)
+    public async Task<RoomResponse?> GetRoomByIdAsync(int id)
     {
         var room = await _unitOfWork.RoomRepository.GetRoomByIdAsync(id);
         return room?.MapToDto();
     }
 
-    public async Task AddRoomAsync(RoomCreateDto roomDto)
+    public async Task AddRoomAsync(RoomCreateRequest roomDto)
     {
         var room = roomDto.MapToDomain();
         await _unitOfWork.RoomRepository.AddAsync(room);
     }
 
-    public async Task UpdateRoomAsync(RoomUpdateDto roomDto)
+    public async Task UpdateRoomAsync(RoomUpdateRequest roomDto)
     {
         var room = roomDto.MapToDomain();
         await _unitOfWork.RoomRepository.UpdateAsync(room);

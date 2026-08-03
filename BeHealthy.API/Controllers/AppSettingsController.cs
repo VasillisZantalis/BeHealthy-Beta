@@ -8,15 +8,15 @@ public class AppSettingsController(IAppSettingsService appSettingsService) : Api
 {
     /// <summary>Gets every application setting.</summary>
     [HttpGet]
-    [ProducesResponseType<IEnumerable<AppSettingDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AppSettingDto>>> GetAll()
+    [ProducesResponseType<IEnumerable<AppSettingResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<AppSettingResponse>>> GetAll()
         => Ok((await appSettingsService.GetAppSettingsAsync()).Select(s => s.MapToDto()));
 
     /// <summary>Gets a single setting by key.</summary>
     [HttpGet("{key}")]
-    [ProducesResponseType<AppSettingDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<AppSettingResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<AppSettingDto>> GetByKey(string key)
+    public async Task<ActionResult<AppSettingResponse>> GetByKey(string key)
     {
         var setting = await appSettingsService.GetSettingByKeyAsync(key);
         return setting is null ? NotFoundProblem("Setting", key) : Ok(setting.MapToDto());
@@ -24,8 +24,8 @@ public class AppSettingsController(IAppSettingsService appSettingsService) : Api
 
     /// <summary>Gets multiple settings by key in one call.</summary>
     [HttpPost("bulk")]
-    [ProducesResponseType<IEnumerable<AppSettingDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AppSettingDto>>> GetBulk([FromBody] List<string> keys)
+    [ProducesResponseType<IEnumerable<AppSettingResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<AppSettingResponse>>> GetBulk([FromBody] List<string> keys)
         => Ok((await appSettingsService.GetMassAppSettingsAsync(keys)).Select(s => s.MapToDto()));
 
     /// <summary>Updates the value of a setting.</summary>
@@ -33,7 +33,7 @@ public class AppSettingsController(IAppSettingsService appSettingsService) : Api
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Update(string key, AppSettingUpdateDto dto)
+    public async Task<IActionResult> Update(string key, AppSettingUpdateRequest dto)
     {
         if (key != dto.Key)
             return Problem(

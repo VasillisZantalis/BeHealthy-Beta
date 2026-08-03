@@ -29,7 +29,7 @@ public class DoctorServiceTests
     #region GetAllDoctorsAsync
 
     [Fact]
-    public async Task GetAllDoctorsAsync_ListFilled_ReturnsListDoctorDto()
+    public async Task GetAllDoctorsAsync_ListFilled_ReturnsListDoctorResponse()
     {
         // Arrange
         var doctors = new List<Doctor>
@@ -69,12 +69,12 @@ public class DoctorServiceTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldBeAssignableTo<IEnumerable<DoctorDto>>();
+        result.ShouldBeAssignableTo<IEnumerable<DoctorResponse>>();
         result.Items.Count().ShouldBe(doctors.Count);
     }
 
     [Fact]
-    public async Task GetAllDoctorsAsync_EmptyList_ReturnsEmptyListOfDoctorDto()
+    public async Task GetAllDoctorsAsync_EmptyList_ReturnsEmptyListOfDoctorResponse()
     {
         //Arrange
         _mockDoctorRepository
@@ -117,7 +117,7 @@ public class DoctorServiceTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldBeOfType<DoctorDto>();
+        result.ShouldBeOfType<DoctorResponse>();
         result.Id.ShouldBe(doctor.Id);
         result.FirstName.ShouldBe(doctor.FirstName);
         result.LastName.ShouldBe(doctor.LastName);
@@ -146,7 +146,7 @@ public class DoctorServiceTests
     public async Task AddDoctorAsync_Successful_ReturnsSuccessfulResponse()
     {
         // Arrange
-        var doctorDto = new DoctorCreateDto
+        var doctorDto = new DoctorCreateRequest
         {
             FirstName = "Jane",
             LastName = "Smith",
@@ -188,7 +188,7 @@ public class DoctorServiceTests
     public async Task AddDoctorAsync_UserCreationFails_ReturnsFailedResponse()
     {
         // Arrange
-        var doctorDto = new DoctorCreateDto
+        var doctorDto = new DoctorCreateRequest
         {
             FirstName = "Jane",
             LastName = "Smith",
@@ -215,7 +215,7 @@ public class DoctorServiceTests
     public async Task AddDoctorAsync_AddToRoleFails_ReturnsFailedResponse()
     {
         // Arrange
-        var doctorDto = new DoctorCreateDto
+        var doctorDto = new DoctorCreateRequest
         {
             FirstName = "Jane",
             LastName = "Smith",
@@ -245,7 +245,7 @@ public class DoctorServiceTests
     public async Task AddDoctorAsync_ExceptionThrown_DeletesUserAndReturnsFailed()
     {
         // Arrange
-        var doctorDto = new DoctorCreateDto
+        var doctorDto = new DoctorCreateRequest
         {
             FirstName = "Jane",
             LastName = "Smith",
@@ -285,7 +285,7 @@ public class DoctorServiceTests
     public async Task UpdateDoctorAsync_UserNotFound_ReturnsFailed()
     {
         // Arrange
-        var updateDto = new DoctorUpdateDto { UserId = "user-1", Id = 1 };
+        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1 };
         _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId)).ReturnsAsync((ApplicationUser?)null);
 
         // Act
@@ -300,7 +300,7 @@ public class DoctorServiceTests
     public async Task UpdateDoctorAsync_UpdateUserFails_ReturnsFailed()
     {
         // Arrange
-        var updateDto = new DoctorUpdateDto { UserId = "user-1", Id = 1 };
+        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1 };
         var user = new ApplicationUser { Id = updateDto.UserId };
 
         _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId))
@@ -321,7 +321,7 @@ public class DoctorServiceTests
     public async Task UpdateDoctorAsync_DoctorNotExists_ReturnsFailed()
     {
         // Arrange
-        var updateDto = new DoctorUpdateDto { UserId = "user-1", Id = 1 };
+        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1 };
         var user = new ApplicationUser { Id = updateDto.UserId };
 
         _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId))
@@ -343,7 +343,7 @@ public class DoctorServiceTests
     public async Task UpdateDoctorAsync_SpecialtyNotExists_ReturnsFailed()
     {
         // Arrange
-        var updateDto = new DoctorUpdateDto { UserId = "user-1", Id = 1, SpecialtyId = 2 };
+        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1, SpecialtyId = 2 };
         var user = new ApplicationUser { Id = updateDto.UserId };
 
         _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId))
@@ -366,7 +366,7 @@ public class DoctorServiceTests
     public async Task UpdateDoctorAsync_Successful_ReturnsSuccessful()
     {
         // Arrange
-        var updateDto = new DoctorUpdateDto { UserId = "user-1", Id = 1, SpecialtyId = 2 };
+        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1, SpecialtyId = 2 };
         var user = new ApplicationUser { Id = updateDto.UserId };
 
         _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId))
@@ -426,7 +426,7 @@ public class DoctorServiceTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldBeAssignableTo<IEnumerable<AppointmentDto>>();
+        result.ShouldBeAssignableTo<IEnumerable<AppointmentResponse>>();
     }
 
     #endregion
@@ -434,7 +434,7 @@ public class DoctorServiceTests
     #region GetDoctorProfileByUserIdAsync
 
     [Fact]
-    public async Task GetDoctorProfileByUserIdAsync_DoctorExists_ReturnsProfileDto()
+    public async Task GetDoctorProfileByUserIdAsync_DoctorExists_ReturnsProfileResponse()
     {
         // Arrange
         var userId = "user-1";
@@ -454,7 +454,7 @@ public class DoctorServiceTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldBeOfType<ProfileDto>();
+        result.ShouldBeOfType<ProfileResponse>();
         result.Id.ShouldBe(doctor.Id);
         result.Email.ShouldBe(doctor.User.Email);
     }
@@ -528,7 +528,7 @@ public class DoctorServiceTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldBeAssignableTo<IEnumerable<DoctorSimpleDto>>();
+        result.ShouldBeAssignableTo<IEnumerable<DoctorSimpleResponse>>();
     }
 
     #endregion

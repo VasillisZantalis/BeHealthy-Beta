@@ -38,14 +38,14 @@ public class VisitService : IVisitService
         return await _visitRepository.GetLabResultsByVisitIdAsync(visitId);
     }
 
-    public async Task<ServiceResponse> AddVisitAsync(VisitCreateDto dto)
+    public async Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto)
     {
         var visit = dto.MapToDomain();
         await _visitRepository.AddAsync(visit);
         return ServiceResponse.Successful();
     }
 
-    public async Task<ServiceResponse> UpdateVisitAsync(VisitUpdateDto dto)
+    public async Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto)
     {
         var visit = await _visitRepository.GetByIdAsync(dto.Id);
         if (visit == null)
@@ -62,7 +62,7 @@ public class VisitService : IVisitService
         return ServiceResponse.Successful();
     }
 
-    public async Task<IEnumerable<VisitDto>> GetVisitsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId)
     {
         var visits = await _visitRepository.GetVisitsByPatientIdAsync(patientId);
         return visits.MapToDto();

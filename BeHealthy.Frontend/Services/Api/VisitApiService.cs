@@ -8,28 +8,28 @@ public class VisitApiService : ApiClientBase, IVisitService
 {
     public VisitApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<IEnumerable<VisitDto>> GetAllVisitsAsync()
-        => await GetListAsync<VisitDto>("visits");
+    public async Task<IEnumerable<VisitResponse>> GetAllVisitsAsync()
+        => await GetListAsync<VisitResponse>("visits");
 
-    public async Task<VisitDetailsDto?> GetVisitWithDetailsAsync(int visitId)
-        => await GetAsync<VisitDetailsDto>($"visits/{visitId}");
+    public async Task<VisitDetailsResponse?> GetVisitWithDetailsAsync(int visitId)
+        => await GetAsync<VisitDetailsResponse>($"visits/{visitId}");
 
-    public async Task<IEnumerable<DiagnosisDto>> GetDiagnosesByVisitIdAsync(int visitId)
-        => await GetListAsync<DiagnosisDto>($"visits/{visitId}/diagnoses");
+    public async Task<IEnumerable<DiagnosisResponse>> GetDiagnosesByVisitIdAsync(int visitId)
+        => await GetListAsync<DiagnosisResponse>($"visits/{visitId}/diagnoses");
 
-    public async Task<IEnumerable<TreatmentDto>> GetTreatmentsByVisitIdAsync(int visitId)
-        => await GetListAsync<TreatmentDto>($"visits/{visitId}/treatments");
+    public async Task<IEnumerable<TreatmentResponse>> GetTreatmentsByVisitIdAsync(int visitId)
+        => await GetListAsync<TreatmentResponse>($"visits/{visitId}/treatments");
 
-    public async Task<IEnumerable<LabResultDto>> GetLabResultsByVisitIdAsync(int visitId)
-        => await GetListAsync<LabResultDto>($"visits/{visitId}/lab-results");
+    public async Task<IEnumerable<LabResultResponse>> GetLabResultsByVisitIdAsync(int visitId)
+        => await GetListAsync<LabResultResponse>($"visits/{visitId}/lab-results");
 
-    public async Task<IEnumerable<VisitDto>> GetVisitsByPatientIdAsync(int patientId)
-        => await GetListAsync<VisitDto>($"visits/patient/{patientId}");
+    public async Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId)
+        => await GetListAsync<VisitResponse>($"visits/patient/{patientId}");
 
-    public async Task<ServiceResponse> AddVisitAsync(VisitCreateDto dto)
+    public async Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto)
         => await PostForResponseAsync("visits", dto);
 
-    public async Task<ServiceResponse> UpdateVisitAsync(VisitUpdateDto dto)
+    public async Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto)
         => await PutForResponseAsync("visits", dto);
 
     public async Task<ServiceResponse> DeleteVisitAsync(int id)

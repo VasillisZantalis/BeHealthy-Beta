@@ -12,19 +12,19 @@ public class DepartmentService : IDepartmentService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync()
+    public async Task<IEnumerable<DepartmentResponse>> GetAllDepartmentsAsync()
     {
         var departments = await _unitOfWork.DepartmentRepository.GetDepartmentsAsync();
         return departments.MapToDto();
     }
 
-    public async Task<DepartmentDto> GetDepartmentByIdAsync(int id)
+    public async Task<DepartmentResponse> GetDepartmentByIdAsync(int id)
     {
         var department = await _unitOfWork.DepartmentRepository.GetDepartmentByIdAsync(id);
         return department.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateDto departmentDto)
+    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateRequest departmentDto)
     {
         try
         {
@@ -38,7 +38,7 @@ public class DepartmentService : IDepartmentService
         }
     }
 
-    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateDto departmentDto)
+    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateRequest departmentDto)
     {
         try
         {

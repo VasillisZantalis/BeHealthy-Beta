@@ -11,26 +11,26 @@
     </Header>
 
     <Body>
-        <BeHealthyTable TItem="RoomDto"
+        <BeHealthyTable TItem="RoomResponse"
                         Items="@rooms"
                         IsLoading="isLoading"
                         TableClass="table table-responsive"
                         WrapperClass="table-wrapper"
                         EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Rooms)">
 
-            <BeHealthyColumn TItem="RoomDto"
+            <BeHealthyColumn TItem="RoomResponse"
                              Title="@Resource.Name"
                              Property="@(x => x.Name)" />
 
-            <BeHealthyColumn TItem="RoomDto"
+            <BeHealthyColumn TItem="RoomResponse"
                              Title="@Resource.Number"
                              Property="@(x => x.Number)" />
 
-            <BeHealthyColumn TItem="RoomDto"
+            <BeHealthyColumn TItem="RoomResponse"
                              Title="@Resource.Department"
                              Property="@(x => x.Department)" />
 
-            <BeHealthyActionsColumn TItem="RoomDto"
+            <BeHealthyActionsColumn TItem="RoomResponse"
                                     Title="@Resource.Actions"
                                     CellClass="text-end">
                 <Template>
@@ -55,7 +55,7 @@
 </BeHealthyCard>
 
 @code {
-    private IEnumerable<RoomDto> rooms = new List<RoomDto>();
+    private IEnumerable<RoomResponse> rooms = new List<RoomResponse>();
     private bool isLoading = false;
 
     protected override void OnInitialized()
@@ -106,11 +106,11 @@
             new Dictionary<string, object?>
             {
                 { nameof(UpsertModal.Room), room },
-                { nameof(UpsertModal.OnRoomSaved), EventCallback.Factory.Create<RoomDto>(this, HandleSavedRoom) }
+                { nameof(UpsertModal.OnRoomSaved), EventCallback.Factory.Create<RoomResponse>(this, HandleSavedRoom) }
             });
     }
 
-    private async Task HandleSavedRoom(RoomDto roomDto)
+    private async Task HandleSavedRoom(RoomResponse roomDto)
     {
         isLoading = true;
         if (roomDto.Id > 0)

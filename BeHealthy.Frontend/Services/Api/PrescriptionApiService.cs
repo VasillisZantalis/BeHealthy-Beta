@@ -8,19 +8,19 @@ public class PrescriptionApiService : ApiClientBase, IPrescriptionService
 {
     public PrescriptionApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<IEnumerable<PrescriptionDto>> GetAllPrescriptionsAsync()
-        => await GetListAsync<PrescriptionDto>("prescriptions");
+    public async Task<IEnumerable<PrescriptionResponse>> GetAllPrescriptionsAsync()
+        => await GetListAsync<PrescriptionResponse>("prescriptions");
 
-    public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id)
-        => await GetAsync<PrescriptionDto>($"prescriptions/{id}");
+    public async Task<PrescriptionResponse?> GetPrescriptionByIdAsync(int id)
+        => await GetAsync<PrescriptionResponse>($"prescriptions/{id}");
 
-    public async Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByPatientIdAsync(int id)
-        => await GetListAsync<PrescriptionDto>($"prescriptions/patient/{id}");
+    public async Task<IEnumerable<PrescriptionResponse>> GetPrescriptionsByPatientIdAsync(int id)
+        => await GetListAsync<PrescriptionResponse>($"prescriptions/patient/{id}");
 
-    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateDto prescriptionDto)
+    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateRequest prescriptionDto)
         => await PostForResponseAsync("prescriptions", prescriptionDto);
 
-    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateDto prescriptionDto)
+    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateRequest prescriptionDto)
         => await PutForResponseAsync("prescriptions", prescriptionDto);
 
     public async Task<ServiceResponse> DeletePrescriptionAsync(int id)

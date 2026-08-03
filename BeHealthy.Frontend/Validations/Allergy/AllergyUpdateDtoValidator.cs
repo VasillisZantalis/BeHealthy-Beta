@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace BeHealthy.Frontend.Validations.Allergy;
 
-public class AllergyUpdateDtoValidator : AbstractValidator<AllergyUpdateDto>
+public class AllergyUpdateDtoValidator : AbstractValidator<AllergyUpdateRequest>
 {
     public AllergyUpdateDtoValidator()
     {

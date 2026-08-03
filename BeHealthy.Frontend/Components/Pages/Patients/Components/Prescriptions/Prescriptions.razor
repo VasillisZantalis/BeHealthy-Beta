@@ -77,7 +77,7 @@
     [Parameter, EditorRequired]
     public bool CanCreatePrescription { get; set; }
 
-    private List<PrescriptionDto> prescriptions { get; set; } = default!;
+    private List<PrescriptionResponse> prescriptions { get; set; } = default!;
 
 
     private bool hasActionRights;
@@ -87,7 +87,7 @@
     private int? prescriptionId;
 
     private PrescriptionModal prescriptionModal { get; set; } = new();
-    private QuickGrid<PrescriptionDto> quickGrid = new();
+    private QuickGrid<PrescriptionResponse> quickGrid = new();
 
     protected override async Task OnInitializedAsync()
     {

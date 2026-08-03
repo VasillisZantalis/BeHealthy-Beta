@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace BeHealthy.Application.Validations.Visit;
 
-public class VisitCreateDtoValidator : AbstractValidator<VisitCreateDto>
+public class VisitCreateDtoValidator : AbstractValidator<VisitCreateRequest>
 {
     public VisitCreateDtoValidator()
     {

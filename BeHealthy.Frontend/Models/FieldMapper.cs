@@ -31,13 +31,13 @@ public static class FieldMapper
             case ImportEntity.Appointment:
                 return new List<FieldDefinition>
                 {
-                    new FieldDefinition { Name = nameof(AppointmentDto.DoctorId), DisplayName = Resource.Doctor, Type = FieldType.Dropdown, IsRequired = true, Options = doctors },
-                    new FieldDefinition { Name = nameof(AppointmentDto.PatientId), DisplayName = Resource.Patient, Type = FieldType.Dropdown, IsRequired = true, Options = patients },
-                    new FieldDefinition { Name = nameof(AppointmentDto.AppointmentDate), DisplayName = Resource.Date, Type = FieldType.Date, IsRequired = true },
-                    new FieldDefinition { Name = nameof(AppointmentDto.AppointmentStartTime), DisplayName = Resource.StartTime, Type = FieldType.Time, IsRequired = true },
-                    new FieldDefinition { Name = nameof(AppointmentDto.AppointmentEndTime), DisplayName = Resource.EndTime, Type = FieldType.Time, IsRequired = true },
-                    new FieldDefinition { Name = nameof(AppointmentDto.Reason), DisplayName = Resource.Reason, Type = FieldType.Dropdown, IsRequired = true, Options = GetReasons() },
-                    new FieldDefinition { Name = nameof(AppointmentDto.Notes), DisplayName = Resource.Notes, Type = FieldType.Text, IsRequired = false }
+                    new FieldDefinition { Name = nameof(AppointmentResponse.DoctorId), DisplayName = Resource.Doctor, Type = FieldType.Dropdown, IsRequired = true, Options = doctors },
+                    new FieldDefinition { Name = nameof(AppointmentResponse.PatientId), DisplayName = Resource.Patient, Type = FieldType.Dropdown, IsRequired = true, Options = patients },
+                    new FieldDefinition { Name = nameof(AppointmentResponse.AppointmentDate), DisplayName = Resource.Date, Type = FieldType.Date, IsRequired = true },
+                    new FieldDefinition { Name = nameof(AppointmentResponse.AppointmentStartTime), DisplayName = Resource.StartTime, Type = FieldType.Time, IsRequired = true },
+                    new FieldDefinition { Name = nameof(AppointmentResponse.AppointmentEndTime), DisplayName = Resource.EndTime, Type = FieldType.Time, IsRequired = true },
+                    new FieldDefinition { Name = nameof(AppointmentResponse.Reason), DisplayName = Resource.Reason, Type = FieldType.Dropdown, IsRequired = true, Options = GetReasons() },
+                    new FieldDefinition { Name = nameof(AppointmentResponse.Notes), DisplayName = Resource.Notes, Type = FieldType.Text, IsRequired = false }
                 };
 
             default:

@@ -56,7 +56,7 @@
     public int PatientId { get; set; }
 
     [SupplyParameterFromForm]
-    private VisitDto visitDto { get; set; } = new();
+    private VisitResponse visitDto { get; set; } = new();
     private ValidationComponent? validationComponent;
 
     private List<SelectItem> doctorsSelect = new();

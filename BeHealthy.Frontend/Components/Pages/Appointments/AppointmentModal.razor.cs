@@ -21,16 +21,16 @@ public partial class AppointmentModal : ModalBase
     public int? AppointmentId { get; set; }
 
     [Parameter]
-    public EventCallback<(AppointmentDto, int?)> OnFormSubmit { get; set; }
+    public EventCallback<(AppointmentResponse, int?)> OnFormSubmit { get; set; }
 
     [SupplyParameterFromForm]
-    private AppointmentDto appointmentDto { get; set; } = new();
+    private AppointmentResponse appointmentDto { get; set; } = new();
 
     [Parameter]
-    public List<DoctorSimpleDto> Doctors { get; set; } = default!;
+    public List<DoctorSimpleResponse> Doctors { get; set; } = default!;
 
     [Parameter]
-    public List<PatientSimpleDto> Patients { get; set; } = default!;
+    public List<PatientSimpleResponse> Patients { get; set; } = default!;
 
     [Parameter]
     public string CurrentUserId { get; set; } = default!;

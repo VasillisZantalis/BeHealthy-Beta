@@ -8,15 +8,15 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
 {
     /// <summary>Gets every allergy for a patient.</summary>
     [HttpGet("by-patient/{patientId:int}")]
-    [ProducesResponseType<IEnumerable<AllergyDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AllergyDto>>> GetByPatient(int patientId)
+    [ProducesResponseType<IEnumerable<AllergyResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<AllergyResponse>>> GetByPatient(int patientId)
         => Ok(await allergyService.GetAllergiesByPatientIdAsync(patientId));
 
     /// <summary>Gets a single allergy by id.</summary>
     [HttpGet("{id:int}")]
-    [ProducesResponseType<AllergyDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<AllergyResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<AllergyDto>> GetById(int id)
+    public async Task<ActionResult<AllergyResponse>> GetById(int id)
     {
         var allergy = await allergyService.GetAllergyByIdAsync(id);
         return allergy is null ? NotFoundProblem("Allergy", id) : Ok(allergy);
@@ -26,7 +26,7 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(AllergyCreateDto dto)
+    public async Task<IActionResult> Create(AllergyCreateRequest dto)
     {
         var response = await allergyService.AddAllergyAsync(dto);
         return response.Success ? StatusCode(StatusCodes.Status201Created) : ProblemFromServiceResponse(response);
@@ -36,7 +36,7 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(int id, AllergyUpdateDto dto)
+    public async Task<IActionResult> Update(int id, AllergyUpdateRequest dto)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;

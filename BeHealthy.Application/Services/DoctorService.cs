@@ -15,7 +15,7 @@ public class DoctorService : IDoctorService
         _userService = userService;
     }
 
-    public async Task<PaginatedResult<DoctorDto>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null)
+    public async Task<PaginatedResult<DoctorResponse>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null)
     {
         parameters ??= new DoctorQueryParameters();
         
@@ -48,7 +48,7 @@ public class DoctorService : IDoctorService
         var allDoctors = await _unitOfWork.DoctorRepository.QueryAsync(countOptions);
         var totalCount = await _unitOfWork.DoctorRepository.GetCountAsync();
 
-        return new PaginatedResult<DoctorDto>
+        return new PaginatedResult<DoctorResponse>
         {
             Items = doctors.MapToDto(),
             PageNumber = parameters.PageNumber,
@@ -57,13 +57,13 @@ public class DoctorService : IDoctorService
         };
     }
 
-    public async Task<DoctorDto?> GetDoctorByIdAsync(int id)
+    public async Task<DoctorResponse?> GetDoctorByIdAsync(int id)
     {
         var doctor = await _unitOfWork.DoctorRepository.GetByIdWithIncludes(id, d => d.User!);
         return doctor?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddDoctorAsync(DoctorCreateDto doctorDto)
+    public async Task<ServiceResponse> AddDoctorAsync(DoctorCreateRequest doctorDto)
     {
         var user = new ApplicationUser
         {
@@ -97,7 +97,7 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorUpdateDto doctorDto)
+    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorUpdateRequest doctorDto)
     {
         var existingUser = await _userService.GetUserByIdAsync(doctorDto.UserId);
         if (existingUser == null)
@@ -134,19 +134,19 @@ public class DoctorService : IDoctorService
         await _unitOfWork.DoctorRepository.DeleteDoctorAsync(id);
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetDoctorAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<AppointmentResponse>> GetDoctorAppointmentsByUserIdAsync(string userId)
     {
         var doctorAppointments = await _unitOfWork.DoctorRepository.GetDoctorAppointmentsByUserIdAsync(userId);
         return doctorAppointments.MapToDto();
     }
 
-    public async Task<ProfileDto?> GetDoctorProfileByUserIdAsync(string userId)
+    public async Task<ProfileResponse?> GetDoctorProfileByUserIdAsync(string userId)
     {
         var doctor = await _unitOfWork.DoctorRepository.GetDoctorByUserIdAsync(userId);
 
         if (doctor is null) return null;
 
-        var profile = new ProfileDto
+        var profile = new ProfileResponse
         {
             Id = doctor.Id,
             UserId = doctor.UserId,
@@ -161,14 +161,14 @@ public class DoctorService : IDoctorService
         return profile;
     }
 
-    public async Task<IEnumerable<PatientDto>> GetMyPatientsAsync(string userId)
+    public async Task<IEnumerable<PatientResponse>> GetMyPatientsAsync(string userId)
     {
         var patients = new List<Patient>();
 
         var doctor = await _unitOfWork.DoctorRepository.GetDoctorByUserIdAsync(userId);
 
         if (doctor is null)
-            return Enumerable.Empty<PatientDto>();
+            return Enumerable.Empty<PatientResponse>();
 
         var doctorAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctor.Id);
 
@@ -212,7 +212,7 @@ public class DoctorService : IDoctorService
         return _unitOfWork.DoctorRepository.GetCountAsync();
     }
 
-    public async Task<IEnumerable<DoctorSimpleDto>> GetAllDoctorsSimpleAsync()
+    public async Task<IEnumerable<DoctorSimpleResponse>> GetAllDoctorsSimpleAsync()
     {
         var doctors = await _unitOfWork.DoctorRepository.GetAllDoctorsSimpleAsync();
 

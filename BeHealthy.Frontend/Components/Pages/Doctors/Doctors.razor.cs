@@ -24,7 +24,7 @@ public partial class Doctors : BasePage
     [Inject] ICurrentUserService CurrentUser { get; set; } = default!;
 
     private DoctorQueryParameters QueryParameters { get; set; } = new();
-    private List<DoctorDto> doctors = new();
+    private List<DoctorResponse> doctors = new();
     private List<SelectItem> specialties = new();
     private HashSet<int> selectedDoctorIds = new();
     private int totalCount = 0;
@@ -162,7 +162,7 @@ public partial class Doctors : BasePage
         NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/create");
     }
 
-    private async Task BulkCreateDoctors((List<DoctorCreateDto> doctorCreateDtos, bool UseValidation) result)
+    private async Task BulkCreateDoctors((List<DoctorCreateRequest> doctorCreateDtos, bool UseValidation) result)
     {
         IsLoading = true;
         var validator = result.UseValidation ? new DoctorCreateDtoValidator(false) : null;
@@ -194,11 +194,11 @@ public partial class Doctors : BasePage
 
     void ShowImportWizard()
     {
-        ModalService.Show<MassImportWizard<DoctorCreateDto>>(
+        ModalService.Show<MassImportWizard<DoctorCreateRequest>>(
             new Dictionary<string, object?>
             {
-                { nameof(MassImportWizard<DoctorCreateDto>.Entity), ImportEntity.Doctor },
-                { nameof(MassImportWizard<DoctorCreateDto>.OnSave), EventCallback.Factory.Create<(List<DoctorCreateDto> doctorCreateDtos, bool UseValidation)>(this, BulkCreateDoctors) },
+                { nameof(MassImportWizard<DoctorCreateRequest>.Entity), ImportEntity.Doctor },
+                { nameof(MassImportWizard<DoctorCreateRequest>.OnSave), EventCallback.Factory.Create<(List<DoctorCreateRequest> doctorCreateDtos, bool UseValidation)>(this, BulkCreateDoctors) },
             });
     }
 

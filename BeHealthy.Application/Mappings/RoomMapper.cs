@@ -5,9 +5,9 @@ namespace BeHealthy.Application.Mappings;
 
 public static class RoomMapper
 {
-    public static RoomDto MapToDto(this Room room)
+    public static RoomResponse MapToDto(this Room room)
     {
-        return new RoomDto
+        return new RoomResponse
         {
             Id = room.Id,
             Name = room.Name,
@@ -17,7 +17,7 @@ public static class RoomMapper
         };
     }
 
-    public static Room MapToDomain(this RoomDto dto)
+    public static Room MapToDomain(this RoomResponse dto)
     {
         return new Room
         {
@@ -27,7 +27,7 @@ public static class RoomMapper
         };
     }
 
-    public static Room MapToDomain(this RoomCreateDto dto)
+    public static Room MapToDomain(this RoomCreateRequest dto)
     {
         return new Room
         {
@@ -37,7 +37,7 @@ public static class RoomMapper
         };
     }
 
-    public static Room MapToDomain(this RoomUpdateDto dto)
+    public static Room MapToDomain(this RoomUpdateRequest dto)
     {
         return new Room
         {
@@ -48,9 +48,9 @@ public static class RoomMapper
         };
     }
 
-    public static RoomUpdateDto MapToUpdateDto(this Room room)
+    public static RoomUpdateRequest MapToUpdateDto(this Room room)
     {
-        return new RoomUpdateDto
+        return new RoomUpdateRequest
         {
             Id = room.Id,
             Name = room.Name,
@@ -59,9 +59,9 @@ public static class RoomMapper
         };
     }
 
-    public static RoomDto MapToSelf(this RoomDto room)
+    public static RoomResponse MapToSelf(this RoomResponse room)
     {
-        return new RoomDto
+        return new RoomResponse
         {
             Id = room.Id,
             Name = room.Name,
@@ -70,9 +70,9 @@ public static class RoomMapper
         };
     }
 
-    public static RoomUpdateDto MapDtoToUpdateDto(this RoomDto room)
+    public static RoomUpdateRequest MapDtoToUpdateDto(this RoomResponse room)
     {
-        return new RoomUpdateDto
+        return new RoomUpdateRequest
         {
             Id = room.Id,
             Name = room.Name,
@@ -81,9 +81,9 @@ public static class RoomMapper
         };
     }
 
-    public static RoomCreateDto MapDtoToCreateDto(this RoomDto room)
+    public static RoomCreateRequest MapDtoToCreateDto(this RoomResponse room)
     {
-        return new RoomCreateDto
+        return new RoomCreateRequest
         {
             Name = room.Name,
             Number = room.Number,
@@ -91,22 +91,22 @@ public static class RoomMapper
         };
     }
 
-    public static IEnumerable<RoomDto> MapToDto(this IEnumerable<Room> rooms)
+    public static IEnumerable<RoomResponse> MapToDto(this IEnumerable<Room> rooms)
     {
         return rooms.Select(room => room.MapToDto());
     }
 
-    public static IEnumerable<Room> MapToDomain(this IEnumerable<RoomDto> dtos)
+    public static IEnumerable<Room> MapToDomain(this IEnumerable<RoomResponse> dtos)
     {
         return dtos.Select(dto => dto.MapToDomain());
     }
 
-    public static ICollection<RoomDto> MapToDto(this ICollection<Room> rooms)
+    public static ICollection<RoomResponse> MapToDto(this ICollection<Room> rooms)
     {
         return rooms.Select(room => room.MapToDto()).ToList();
     }
 
-    public static ICollection<Room> MapToDomain(this ICollection<RoomDto> dtos)
+    public static ICollection<Room> MapToDomain(this ICollection<RoomResponse> dtos)
     {
         return dtos.Select(dto => dto.MapToDomain()).ToList();
     }

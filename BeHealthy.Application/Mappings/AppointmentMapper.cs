@@ -5,7 +5,7 @@ namespace BeHealthy.Application.Mappings
 {
     public static class AppointmentMapper
     {
-        public static Appointment MapToDomain(this AppointmentDto dto)
+        public static Appointment MapToDomain(this AppointmentResponse dto)
         {
             return new Appointment
             {
@@ -23,9 +23,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static AppointmentDto MapToDto(this Appointment entity)
+        public static AppointmentResponse MapToDto(this Appointment entity)
         {
-            return new AppointmentDto
+            return new AppointmentResponse
             {
                 Id = entity.Id,
                 AppointmentDate = entity.AppointmentDate,
@@ -45,7 +45,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Appointment MapToDomain(this AppointmentCreateDto dto)
+        public static Appointment MapToDomain(this AppointmentCreateRequest dto)
         {
             return new Appointment
             {
@@ -62,7 +62,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static Appointment MapToDomain(this AppointmentUpdateDto dto)
+        public static Appointment MapToDomain(this AppointmentUpdateRequest dto)
         {
             return new Appointment
             {
@@ -80,9 +80,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static AppointmentCreateDto MapToCreationDto(this AppointmentDto dto)
+        public static AppointmentCreateRequest MapToCreationDto(this AppointmentResponse dto)
         {
-            return new AppointmentCreateDto
+            return new AppointmentCreateRequest
             {
                 DoctorId = dto.DoctorId,
                 PatientId = dto.PatientId,
@@ -97,9 +97,9 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static AppointmentUpdateDto MapToUpdateDto(this AppointmentDto dto)
+        public static AppointmentUpdateRequest MapToUpdateDto(this AppointmentResponse dto)
         {
-            return new AppointmentUpdateDto
+            return new AppointmentUpdateRequest
             {
                 Id = dto.Id,
                 DoctorId = dto.DoctorId,
@@ -115,10 +115,10 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static IEnumerable<Appointment> MapToDomain(this IEnumerable<AppointmentDto> dtos) 
+        public static IEnumerable<Appointment> MapToDomain(this IEnumerable<AppointmentResponse> dtos) 
             => dtos.Select(dto => dto.MapToDomain());
 
-        public static IEnumerable<AppointmentDto> MapToDto(this IEnumerable<Appointment> entities)
+        public static IEnumerable<AppointmentResponse> MapToDto(this IEnumerable<Appointment> entities)
             => entities.Select(entity => entity.MapToDto());
     }
 }

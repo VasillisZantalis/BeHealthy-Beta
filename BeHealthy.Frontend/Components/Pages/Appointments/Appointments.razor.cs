@@ -19,7 +19,7 @@ namespace BeHealthy.Frontend.Components.Pages.Appointments;
 
 public partial class Appointments : BasePage
 {
-    private List<AppointmentDto> appointments = new();
+    private List<AppointmentResponse> appointments = new();
 
     [Inject] IAppointmentService AppointmentService { get; set; } = default!;
     [Inject] IDoctorService DoctorService { get; set; } = default!;
@@ -27,8 +27,8 @@ public partial class Appointments : BasePage
     [Inject] IPatientService PatientService { get; set; } = default!;
     [Inject] ICurrentUserService CurrentUser { get; set; } = default!;
 
-    private List<DoctorSimpleDto>? doctors { get; set; }
-    private List<PatientSimpleDto>? patients { get; set; }
+    private List<DoctorSimpleResponse>? doctors { get; set; }
+    private List<PatientSimpleResponse>? patients { get; set; }
     private List<SelectItem> doctorsSelect { get; set; } = new();
     private List<SelectItem> patientsSelect { get; set; } = new();
     private HashSet<int> selectedAppointmentIds = new();
@@ -102,7 +102,7 @@ public partial class Appointments : BasePage
         });
     }
 
-    private async Task HandleAppointmentFormSubmission((AppointmentDto, int?) submission)
+    private async Task HandleAppointmentFormSubmission((AppointmentResponse, int?) submission)
     {
         var (appointmentDto, appointmentId) = submission;
 
@@ -209,7 +209,7 @@ public partial class Appointments : BasePage
             new Dictionary<string, object?>
             {
                 { nameof(AppointmentModal.AppointmentId), appointmentId },
-                { nameof(AppointmentModal.OnFormSubmit), EventCallback.Factory.Create<(AppointmentDto, int?)>(this, HandleAppointmentFormSubmission) },
+                { nameof(AppointmentModal.OnFormSubmit), EventCallback.Factory.Create<(AppointmentResponse, int?)>(this, HandleAppointmentFormSubmission) },
                 { nameof(AppointmentModal.Doctors), doctors! },
                 { nameof(AppointmentModal.Patients), patients! },
                 { nameof(AppointmentModal.Role), userRole },
@@ -267,9 +267,9 @@ public partial class Appointments : BasePage
         //return await privilegeService.HasPrivilegeAsync(role, privilege);
     }
 
-    private async Task CreateAppointmentAsync(AppointmentCreateDto AppointmentCreateDto, bool fromBulkCreation = false)
+    private async Task CreateAppointmentAsync(AppointmentCreateRequest AppointmentCreateRequest, bool fromBulkCreation = false)
     {
-        var response = await AppointmentService.AddAppointmentAsync(AppointmentCreateDto);
+        var response = await AppointmentService.AddAppointmentAsync(AppointmentCreateRequest);
         if (HandleServiceResponse(response))
         {
             if (!fromBulkCreation)
@@ -277,7 +277,7 @@ public partial class Appointments : BasePage
         }
     }
 
-    private async Task UpdateAppointmentAsync(AppointmentUpdateDto appointmentForUpdateDto)
+    private async Task UpdateAppointmentAsync(AppointmentUpdateRequest appointmentForUpdateDto)
     {
         var response = await AppointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
 
@@ -285,7 +285,7 @@ public partial class Appointments : BasePage
             await LoadAppointments();
     }
 
-    private async Task BulkCreateAppointments((List<AppointmentCreateDto> AppointmentCreateDtos, bool UseValidation) result)
+    private async Task BulkCreateAppointments((List<AppointmentCreateRequest> AppointmentCreateDtos, bool UseValidation) result)
     {
         IsLoading = true;
         foreach (var appointment in result.AppointmentCreateDtos)
@@ -299,11 +299,11 @@ public partial class Appointments : BasePage
 
     void ShowImportWizard()
     {
-        ModalService.Show<MassImportWizard<AppointmentCreateDto>>(
+        ModalService.Show<MassImportWizard<AppointmentCreateRequest>>(
             new Dictionary<string, object?>
             {
-                { nameof(MassImportWizard<DoctorCreateDto>.Entity), ImportEntity.Appointment },
-                { nameof(MassImportWizard<DoctorCreateDto>.OnSave), EventCallback.Factory.Create<(List<AppointmentCreateDto> appointmentCreateDtos, bool UseValidation)>(this, BulkCreateAppointments) },
+                { nameof(MassImportWizard<DoctorCreateRequest>.Entity), ImportEntity.Appointment },
+                { nameof(MassImportWizard<DoctorCreateRequest>.OnSave), EventCallback.Factory.Create<(List<AppointmentCreateRequest> appointmentCreateDtos, bool UseValidation)>(this, BulkCreateAppointments) },
             });
     }
 }

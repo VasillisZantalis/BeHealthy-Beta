@@ -14,7 +14,7 @@
         <Tabs TTabKey="PatientTabs" @bind-ActiveTab="activeTab">
             <Tab TTabKey="PatientTabs" Title="@Resource.GeneralData" Key="PatientTabs.GeneralData">
                 <PatiendEditForm @ref="patientEditForm"
-                                 Model="PatientUpdateDto"
+                                 Model="PatientUpdateRequest"
                                  Departments="departmentsSelect"
                                  InProgress="inProgress"
                                  ShowAlert="true"
@@ -42,9 +42,9 @@
     public int PatientId { get; set; }
 
     [SupplyParameterFromForm]
-    private PatientUpdateDto PatientUpdateDto { get; set; } = new();
+    private PatientUpdateRequest PatientUpdateRequest { get; set; } = new();
 
-    private List<DepartmentDto>? departments { get; set; }
+    private List<DepartmentResponse>? departments { get; set; }
 
     private bool inProgress = false;
     private Alert alert = new();
@@ -78,7 +78,7 @@
     protected override async Task OnParametersSetAsync()
     {
         var patient = await PatientService.GetPatientByIdAsync(PatientId);
-        PatientUpdateDto = patient?.MapToDtoForUpdate() ?? new();
+        PatientUpdateRequest = patient?.MapToDtoForUpdate() ?? new();
 
         SetBreadcrumbs();
     }
@@ -94,7 +94,7 @@
         });
     }
 
-    private async Task UpdatePatient(PatientUpdateDto dto)
+    private async Task UpdatePatient(PatientUpdateRequest dto)
     {
         inProgress = true;
 

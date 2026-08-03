@@ -8,15 +8,15 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
 {
     /// <summary>Gets every room.</summary>
     [HttpGet]
-    [ProducesResponseType<IEnumerable<RoomDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<RoomDto>>> GetAll()
+    [ProducesResponseType<IEnumerable<RoomResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAll()
         => Ok(await roomService.GetAllRoomsAsync());
 
     /// <summary>Gets a single room by id.</summary>
     [HttpGet("{id:int}")]
-    [ProducesResponseType<RoomDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<RoomResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<RoomDto>> GetById(int id)
+    public async Task<ActionResult<RoomResponse>> GetById(int id)
     {
         var room = await roomService.GetRoomByIdAsync(id);
         return room is null ? NotFoundProblem("Room", id) : Ok(room);
@@ -25,7 +25,7 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
     /// <summary>Creates a new room.</summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create(RoomCreateDto dto)
+    public async Task<IActionResult> Create(RoomCreateRequest dto)
     {
         await roomService.AddRoomAsync(dto);
         return StatusCode(StatusCodes.Status201Created);
@@ -35,7 +35,7 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(int id, RoomUpdateDto dto)
+    public async Task<IActionResult> Update(int id, RoomUpdateRequest dto)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;

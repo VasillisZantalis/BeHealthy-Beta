@@ -56,7 +56,7 @@ public class SeedingService : ISeedingService
         {
             for (int i = 1; i <= count; i++)
             {
-                var doctorDto = new DoctorCreateDto
+                var doctorDto = new DoctorCreateRequest
                 {
                     FirstName = $"Doctor{i}",
                     LastName = $"Sample{i}",
@@ -90,7 +90,7 @@ public class SeedingService : ISeedingService
         {
             for (int i = 1; i <= count; i++)
             {
-                var patientDto = new PatientCreateDto
+                var patientDto = new PatientCreateRequest
                 {
                     FirstName = $"Patient{i}",
                     LastName = $"Sample{i}",
@@ -123,7 +123,7 @@ public class SeedingService : ISeedingService
         {
             for (int i = 1; i <= count; i++)
             {
-                var nurseDto = new NurseCreateDto
+                var nurseDto = new NurseCreateRequest
                 {
                     FirstName = $"Nurse{i}",
                     LastName = $"Sample{i}",
@@ -172,7 +172,7 @@ public class SeedingService : ISeedingService
                 var appointmentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(i));
                 var startHour = 9 + (i % 8); // Between 9 AM and 5 PM
 
-                var appointmentDto = new AppointmentCreateDto
+                var appointmentDto = new AppointmentCreateRequest
                 {
                     DoctorId = doctorsList[random.Next(doctorsList.Count)].Id,
                     PatientId = patientsList[random.Next(patientsList.Count)].Id,
@@ -199,7 +199,7 @@ public class SeedingService : ISeedingService
         }
     }
 
-    public async Task<ServiceResponse> SeedAllAsync(SeedingOptionsDto options)
+    public async Task<ServiceResponse> SeedAllAsync(SeedingOptionsRequest options)
     {
         var results = new List<string>();
 

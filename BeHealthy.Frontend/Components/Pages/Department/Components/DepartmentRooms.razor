@@ -28,9 +28,9 @@ else
 
 @code {
     [Parameter]
-    public List<RoomDto> Rooms { get; set; } = new();
+    public List<RoomResponse> Rooms { get; set; } = new();
 
-    private void OnRoomClick(RoomDto room)
+    private void OnRoomClick(RoomResponse room)
     {
         ModalService.Show<UpsertModal>(
             new Dictionary<string, object?>

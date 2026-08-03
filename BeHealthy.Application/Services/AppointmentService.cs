@@ -14,7 +14,7 @@ public class AppointmentService : IAppointmentService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<PaginatedResult<AppointmentDto>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null)
+    public async Task<PaginatedResult<AppointmentResponse>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null)
     {
         parameters ??= new();
         var queryOptions = new QueryOptions<Appointment>
@@ -53,7 +53,7 @@ public class AppointmentService : IAppointmentService
         var appointments = await _unitOfWork.AppointmentRepository.QueryAsync(queryOptions);
         var totalCount = await _unitOfWork.AppointmentRepository.GetCountAsync();
 
-        return new PaginatedResult<AppointmentDto>
+        return new PaginatedResult<AppointmentResponse>
         {
             Items = appointments.MapToDto(),
             PageNumber = parameters.PageNumber,
@@ -62,31 +62,31 @@ public class AppointmentService : IAppointmentService
         };
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
+    public async Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
     {
         var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId);
         return appointments.MapToDto();
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
         var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId);
         return appointments.MapToDto();
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByUserIdAsync(string userId)
     {
         var appointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByUserIdAsync(userId);
         return appointments.MapToDto();
     }
 
-    public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id)
+    public async Task<AppointmentResponse?> GetAppointmentByIdAsync(int id)
     {
         var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id);
         return appointment?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateDto appointmentDto)
+    public async Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateRequest appointmentDto)
     {
         try
         {
@@ -125,7 +125,7 @@ public class AppointmentService : IAppointmentService
         }
     }
 
-    public async Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateDto appointmentDto)
+    public async Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateRequest appointmentDto)
     {
         try
         {

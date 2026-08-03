@@ -5,7 +5,7 @@ namespace BeHealthy.API.Mapping;
 
 public static class AppSettingMappingExtensions
 {
-    public static AppSettingDto MapToDto(this AppSetting setting) => new()
+    public static AppSettingResponse MapToDto(this AppSetting setting) => new()
     {
         Id = setting.Id,
         Key = setting.Key,

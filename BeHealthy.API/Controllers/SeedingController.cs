@@ -61,7 +61,7 @@ public class SeedingController(ISeedingService seedingService) : ApiControllerBa
     [HttpPost("all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SeedAll(SeedingOptionsDto options)
+    public async Task<IActionResult> SeedAll(SeedingOptionsRequest options)
     {
         var response = await seedingService.SeedAllAsync(options);
         return response.Success ? Ok() : ProblemFromServiceResponse(response);

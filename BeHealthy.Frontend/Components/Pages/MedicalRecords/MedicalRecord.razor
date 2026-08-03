@@ -71,7 +71,7 @@
     [Parameter]
     public int MedicalRecordId { get; set; }
 
-    private MedicalRecordDto medicalRecord { get; set; } = new();
+    private MedicalRecordResponse medicalRecord { get; set; } = new();
     private MedicalRecordTabs activeTab = MedicalRecordTabs.Visits;
 
     private bool isEditing = false;

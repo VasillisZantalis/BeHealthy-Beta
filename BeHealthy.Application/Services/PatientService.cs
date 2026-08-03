@@ -14,7 +14,7 @@ public class PatientService : IPatientService
         _userService = userService;
     }
 
-    public async Task<IEnumerable<PatientDto>> GetAllPatientsAsync(PatientQueryParameters? parameters = null)
+    public async Task<IEnumerable<PatientResponse>> GetAllPatientsAsync(PatientQueryParameters? parameters = null)
     {
         parameters ??= new PatientQueryParameters();
         var queryOptions = new QueryOptions<Patient>
@@ -30,19 +30,19 @@ public class PatientService : IPatientService
         return patients.MapToDto();
     }
 
-    public async Task<IEnumerable<PatientSimpleDto>> GetAllPatientsSimpleAsync()
+    public async Task<IEnumerable<PatientSimpleResponse>> GetAllPatientsSimpleAsync()
     {
         var patients = await _unitOfWork.PatientRepository.GetAllPatientsSimpleAsync();
         return patients.MapToSimpleDto();
     }
 
-    public async Task<PatientDto?> GetPatientByIdAsync(int id)
+    public async Task<PatientResponse?> GetPatientByIdAsync(int id)
     {
         var patient = await _unitOfWork.PatientRepository.GetByIdWithIncludes(id, w => w.User!);
         return patient?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddPatientAsync(PatientCreateDto patientDto)
+    public async Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patientDto)
     {
         var user = new ApplicationUser
         {
@@ -76,7 +76,7 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<ServiceResponse> UpdatePatientAsync(PatientUpdateDto patientDto)
+    public async Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patientDto)
     {
         var existingUser = await _userService.GetUserByIdAsync(patientDto.UserId);
         if (existingUser == null)
@@ -109,20 +109,20 @@ public class PatientService : IPatientService
         await _unitOfWork.PatientRepository.DeletePatientAsync(id);
     }
 
-    public async Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<AppointmentResponse>> GetPatientAppointmentsByUserIdAsync(string userId)
     {
         var patientAppointments = await _unitOfWork.PatientRepository.GetPatientAppointmentsByUserIdAsync(userId);
         return patientAppointments.MapToDto();
     }
 
-    public async Task<IEnumerable<DoctorDto>> GetMyDoctorsAsync(string userId)
+    public async Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId)
     {
         var doctors = new List<Doctor>();
 
         var patient = await _unitOfWork.PatientRepository.GetByUserIdAsync(userId);
 
         if (patient is null)
-            return Enumerable.Empty<DoctorDto>();
+            return Enumerable.Empty<DoctorResponse>();
 
         var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id);
 
@@ -152,13 +152,13 @@ public class PatientService : IPatientService
         return await _unitOfWork.PatientRepository.GetCountAsync();
     }
 
-    public async Task<ProfileDto?> GetPatientProfileByUserIdAsync(string userId)
+    public async Task<ProfileResponse?> GetPatientProfileByUserIdAsync(string userId)
     {
         var patient = await _unitOfWork.PatientRepository.GetPatientByUserIdAsync(userId);
 
         if (patient is null) return null;
 
-        var profile = new ProfileDto
+        var profile = new ProfileResponse
         {
             Id = patient.Id,
             UserId = patient.UserId,

@@ -60,7 +60,7 @@
     public EventCallback<bool> Successful { get; set; }
 
     [SupplyParameterFromForm]
-    private PrescriptionDto prescriptionDto { get; set; } = new();
+    private PrescriptionResponse prescriptionDto { get; set; } = new();
 
     [Parameter, EditorRequired]
     public int? PrescriptionId { get; set; }
@@ -70,7 +70,7 @@
     private bool showModal { get; set; }
     private bool isEditMode => PrescriptionId.HasValue;
 
-    private List<DoctorDto> doctors { get; set; } = default!;
+    private List<DoctorResponse> doctors { get; set; } = default!;
     private string ModalTitle => isEditMode ? Resource.Edit : Resource.Create;
     private List<SelectItem> doctorsSelect = new();
 

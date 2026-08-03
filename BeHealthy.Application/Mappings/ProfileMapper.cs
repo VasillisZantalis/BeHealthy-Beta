@@ -2,9 +2,9 @@
 
 public static class ProfileMapper
 {
-    public static DoctorUpdateDto MapToDoctorForUpdateDto(this ProfileDto profile)
+    public static DoctorUpdateRequest MapToDoctorForUpdateDto(this ProfileResponse profile)
     {
-        return new DoctorUpdateDto
+        return new DoctorUpdateRequest
         {
             Id = profile.Id,
             FirstName = profile.FirstName,
@@ -15,9 +15,9 @@ public static class ProfileMapper
         };
     }
 
-    public static PatientUpdateDto MapToPatientForUpdateDto(this ProfileDto profile)
+    public static PatientUpdateRequest MapToPatientForUpdateDto(this ProfileResponse profile)
     {
-        return new PatientUpdateDto
+        return new PatientUpdateRequest
         {
             Id = profile.Id,
             FirstName = profile.FirstName,
@@ -27,9 +27,9 @@ public static class ProfileMapper
         };
     }
 
-    public static NurseUpdateDto MapToNurseForUpdateDto(this ProfileDto profile)
+    public static NurseUpdateRequest MapToNurseForUpdateDto(this ProfileResponse profile)
     {
-        return new NurseUpdateDto
+        return new NurseUpdateRequest
         {
             Id = profile.Id,
             FirstName = profile.FirstName,
@@ -39,7 +39,7 @@ public static class ProfileMapper
         };
     }
 
-    public static ApplicationUser MapToUserForUpdateDto(this ProfileDto profile, ApplicationUser user)
+    public static ApplicationUser MapToUserForUpdateDto(this ProfileResponse profile, ApplicationUser user)
     {
         user.FirstName = profile.FirstName;
         user.LastName = profile.LastName;

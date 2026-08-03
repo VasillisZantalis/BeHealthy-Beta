@@ -25,13 +25,13 @@
 
 @code {
     [Parameter, EditorRequired]
-    public SpecialtyDto Specialty { get; set; }
+    public SpecialtyResponse Specialty { get; set; }
 
     [Parameter, EditorRequired]
-    public EventCallback<SpecialtyDto> OnSpecialtySaved { get; set; }
+    public EventCallback<SpecialtyResponse> OnSpecialtySaved { get; set; }
 
     [SupplyParameterFromForm]
-    private SpecialtyDto specialtyDto { get; set; } = new();
+    private SpecialtyResponse specialtyDto { get; set; } = new();
 
     private FluentValidationValidator fluentValidationValidator = new();
 

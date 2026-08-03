@@ -40,9 +40,9 @@ else
 
 @code {
     [Parameter]
-    public List<DoctorDto> Doctors { get; set; } = new ();
+    public List<DoctorResponse> Doctors { get; set; } = new ();
 
-    private void OnDoctorClick(DoctorDto doctor)
+    private void OnDoctorClick(DoctorResponse doctor)
     {
         NavigationManager.NavigateTo($"{RoutingEndpoints.DOCTORS_PAGE}/edit/{doctor.Id}");
     }

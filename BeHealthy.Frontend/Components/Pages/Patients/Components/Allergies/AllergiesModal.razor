@@ -32,8 +32,8 @@
 </BeHealthyModal>
 
 @code {
-    [Parameter] public AllergyDto Allergy { get; set; } = new();
-    [Parameter] public EventCallback<AllergyDto> OnSave { get; set; }
+    [Parameter] public AllergyResponse Allergy { get; set; } = new();
+    [Parameter] public EventCallback<AllergyResponse> OnSave { get; set; }
 
     private async Task HandleSave()
     {

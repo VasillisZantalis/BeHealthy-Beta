@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace BeHealthy.Application.Validations.Rooms;
 
-public class RoomDtoValidator : AbstractValidator<RoomDto>
+public class RoomDtoValidator : AbstractValidator<RoomResponse>
 {
     public RoomDtoValidator()
     {

@@ -8,21 +8,21 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
 {
     /// <summary>Gets every medical record.</summary>
     [HttpGet]
-    [ProducesResponseType<IEnumerable<MedicalRecordDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<MedicalRecordDto>>> GetAll()
+    [ProducesResponseType<IEnumerable<MedicalRecordResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<MedicalRecordResponse>>> GetAll()
         => Ok(await medicalRecordService.GetAllMedicalRecordsAsync());
 
     /// <summary>Gets every medical record for a patient.</summary>
     [HttpGet("by-patient/{patientId:int}")]
-    [ProducesResponseType<IEnumerable<MedicalRecordDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<MedicalRecordDto>>> GetByPatient(int patientId)
+    [ProducesResponseType<IEnumerable<MedicalRecordResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<MedicalRecordResponse>>> GetByPatient(int patientId)
         => Ok(await medicalRecordService.GetMedicalRecordsByPatientIdAsync(patientId));
 
     /// <summary>Gets a single medical record by id.</summary>
     [HttpGet("{id:int}")]
-    [ProducesResponseType<MedicalRecordDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<MedicalRecordResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<MedicalRecordDto>> GetById(int id)
+    public async Task<ActionResult<MedicalRecordResponse>> GetById(int id)
     {
         var record = await medicalRecordService.GetMedicalRecordByIdAsync(id);
         return record is null ? NotFoundProblem("Medical record", id) : Ok(record);
@@ -31,7 +31,7 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
     /// <summary>Creates a new medical record.</summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create(MedicalRecordCreateDto dto)
+    public async Task<IActionResult> Create(MedicalRecordCreateRequest dto)
     {
         await medicalRecordService.AddMedicalRecordAsync(dto);
         return StatusCode(StatusCodes.Status201Created);
@@ -41,7 +41,7 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(int id, MedicalRecordUpdateDto dto)
+    public async Task<IActionResult> Update(int id, MedicalRecordUpdateRequest dto)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;

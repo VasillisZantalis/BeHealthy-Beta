@@ -28,10 +28,10 @@
 
 @code {
     [Parameter, EditorRequired]
-    public MedicalRecordDto Model { get; set; } = new();
+    public MedicalRecordResponse Model { get; set; } = new();
 
     [Parameter]
-    public EventCallback<MedicalRecordDto> OnSave { get; set; }
+    public EventCallback<MedicalRecordResponse> OnSave { get; set; }
 
     private async Task HandleSave()
     {

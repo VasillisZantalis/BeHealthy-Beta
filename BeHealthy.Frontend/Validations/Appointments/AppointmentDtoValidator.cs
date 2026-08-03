@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace BeHealthy.Frontend.Validations.Appointments;
 
-public class AppointmentDtoValidator : AbstractValidator<AppointmentDto>
+public class AppointmentDtoValidator : AbstractValidator<AppointmentResponse>
 {
     public AppointmentDtoValidator(bool showNurses, bool showRooms)
     {

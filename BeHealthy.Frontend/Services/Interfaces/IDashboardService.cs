@@ -4,5 +4,5 @@ namespace BeHealthy.Frontend.Services.Interfaces;
 
 public interface IDashboardService
 {
-    Task<DashboardSummaryDto> GetSummaryAsync();
+    Task<DashboardSummaryResponse> GetSummaryAsync();
 }

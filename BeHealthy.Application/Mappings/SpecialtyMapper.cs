@@ -5,16 +5,16 @@ namespace BeHealthy.Application.Mappings;
 
 public static class SpecialtyMapper
 {
-    public static SpecialtyDto MapToDto(this Specialty specialty)
+    public static SpecialtyResponse MapToDto(this Specialty specialty)
     {
-        return new SpecialtyDto
+        return new SpecialtyResponse
         {
             Id = specialty.Id,
             Name = specialty.Name
         };
     }
 
-    public static Specialty MapToDomain(this SpecialtyDto specialty)
+    public static Specialty MapToDomain(this SpecialtyResponse specialty)
     {
         return new Specialty
         {
@@ -23,7 +23,7 @@ public static class SpecialtyMapper
         };
     }
 
-    public static Specialty MapToDomain(this SpecialtyCreateDto specialtyForCreationDto)
+    public static Specialty MapToDomain(this SpecialtyCreateRequest specialtyForCreationDto)
     {
         return new Specialty
         {
@@ -31,7 +31,7 @@ public static class SpecialtyMapper
         };
     }
 
-    public static Specialty MapToDomain(this SpecialtyUpdateDto specialtyForUpdateDto)
+    public static Specialty MapToDomain(this SpecialtyUpdateRequest specialtyForUpdateDto)
     {
         return new Specialty
         {
@@ -40,7 +40,7 @@ public static class SpecialtyMapper
         };
     }
 
-    public static IEnumerable<SpecialtyDto> MapToDto(this IEnumerable<Specialty> specialties)
+    public static IEnumerable<SpecialtyResponse> MapToDto(this IEnumerable<Specialty> specialties)
     {
         return specialties.Select(s => s.MapToDto());
     }

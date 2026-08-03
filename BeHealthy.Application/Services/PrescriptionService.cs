@@ -16,19 +16,19 @@ public class PrescriptionService : IPrescriptionService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<PrescriptionDto>> GetAllPrescriptionsAsync()
+    public async Task<IEnumerable<PrescriptionResponse>> GetAllPrescriptionsAsync()
     {
         var prescriptions = await _unitOfWork.PrescriptionRepository.GetAllAsync();
         return prescriptions.MapToDto();
     }
 
-    public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id)
+    public async Task<PrescriptionResponse?> GetPrescriptionByIdAsync(int id)
     {
         var prescription = await _unitOfWork.PrescriptionRepository.GetByIdAsync(id);
         return prescription?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateDto prescriptionDto)
+    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateRequest prescriptionDto)
     {
         try
         {
@@ -44,7 +44,7 @@ public class PrescriptionService : IPrescriptionService
         
     }
 
-    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateDto prescriptionDto)
+    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateRequest prescriptionDto)
     {
         try
         {
@@ -81,7 +81,7 @@ public class PrescriptionService : IPrescriptionService
         return ServiceResponse.Successful();
     }
 
-    public async Task<IEnumerable<PrescriptionDto>> GetPrescriptionsByPatientIdAsync(int id)
+    public async Task<IEnumerable<PrescriptionResponse>> GetPrescriptionsByPatientIdAsync(int id)
     {
         var prescriptions = await _unitOfWork.PrescriptionRepository.GetPrescriptionsByPatientIdAsync(id);
 

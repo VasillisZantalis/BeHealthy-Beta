@@ -35,10 +35,10 @@
 
 @code {
     [Parameter, EditorRequired]
-    public AppSettingDto Setting { get; set; }
+    public AppSettingResponse Setting { get; set; }
     
     [Parameter] 
-    public EventCallback<AppSettingDto> OnSettingChanged { get; set; }
+    public EventCallback<AppSettingResponse> OnSettingChanged { get; set; }
 
     [Parameter, EditorRequired] 
     public List<SelectItem> SelectItems { get; set; }

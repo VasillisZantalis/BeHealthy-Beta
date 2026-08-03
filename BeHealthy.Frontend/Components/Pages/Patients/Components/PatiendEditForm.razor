@@ -52,7 +52,7 @@
 
     @code {
     [Parameter, EditorRequired]
-    public PatientUpdateDto Model { get; set; } = new();
+    public PatientUpdateRequest Model { get; set; } = new();
 
     [Parameter]
     public List<SelectItem>? Departments { get; set; }
@@ -64,7 +64,7 @@
     public bool ShowAlert { get; set; } = false;
 
     [Parameter]
-    public EventCallback<PatientUpdateDto> OnValidSubmit { get; set; }
+    public EventCallback<PatientUpdateRequest> OnValidSubmit { get; set; }
 
     private FluentValidationValidator fluentValidationValidator = new();
     private Alert alert = new();

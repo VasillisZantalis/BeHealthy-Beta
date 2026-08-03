@@ -5,9 +5,9 @@ namespace BeHealthy.Application.Mappings;
 
 public static class MedicalRecordMapper
 {
-    public static MedicalRecordDto MapToDto(this MedicalRecord medicalRecord)
+    public static MedicalRecordResponse MapToDto(this MedicalRecord medicalRecord)
     {
-        return new MedicalRecordDto
+        return new MedicalRecordResponse
         {
             Id = medicalRecord.Id,
             PatientId = medicalRecord.PatientId,
@@ -17,7 +17,7 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static MedicalRecord MapToDomain(this MedicalRecordDto dto)
+    public static MedicalRecord MapToDomain(this MedicalRecordResponse dto)
     {
         return new MedicalRecord
         {
@@ -29,7 +29,7 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static MedicalRecord MapToDomain(this MedicalRecordCreateDto dto)
+    public static MedicalRecord MapToDomain(this MedicalRecordCreateRequest dto)
     {
         return new MedicalRecord
         {
@@ -40,7 +40,7 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static MedicalRecord MapToDomain(this MedicalRecordUpdateDto dto)
+    public static MedicalRecord MapToDomain(this MedicalRecordUpdateRequest dto)
     {
         return new MedicalRecord
         {
@@ -52,9 +52,9 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static MedicalRecordUpdateDto MapToMedicalRecordUpdateDto(this MedicalRecordDto medicalRecord)
+    public static MedicalRecordUpdateRequest MapToMedicalRecordUpdateDto(this MedicalRecordResponse medicalRecord)
     {
-        return new MedicalRecordUpdateDto
+        return new MedicalRecordUpdateRequest
         {
             Id = medicalRecord.Id,
             PatientId = medicalRecord.PatientId,
@@ -64,9 +64,9 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static MedicalRecordCreateDto MapToMedicalRecordCreateDto(this MedicalRecordDto medicalRecord)
+    public static MedicalRecordCreateRequest MapToMedicalRecordCreateDto(this MedicalRecordResponse medicalRecord)
     {
-        return new MedicalRecordCreateDto
+        return new MedicalRecordCreateRequest
         {
             PatientId = medicalRecord.PatientId,
             RecordDate = medicalRecord.RecordDate,
@@ -75,12 +75,12 @@ public static class MedicalRecordMapper
         };
     }
 
-    public static IEnumerable<MedicalRecordDto> MapToDto(this IEnumerable<MedicalRecord> medicalRecords)
+    public static IEnumerable<MedicalRecordResponse> MapToDto(this IEnumerable<MedicalRecord> medicalRecords)
     {
         return medicalRecords.Select(medicalRecord => medicalRecord.MapToDto()).ToList();
     }
 
-    public static IEnumerable<MedicalRecord> MapToDomain(this IEnumerable<MedicalRecordDto> dtos)
+    public static IEnumerable<MedicalRecord> MapToDomain(this IEnumerable<MedicalRecordResponse> dtos)
     {
         return dtos.Select(dto => dto.MapToDomain()).ToList();
     }

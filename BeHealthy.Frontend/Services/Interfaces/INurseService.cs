@@ -7,13 +7,13 @@ namespace BeHealthy.Frontend.Services.Interfaces;
 
 public interface INurseService
 {
-    Task<PaginatedResult<NurseDto>> GetAllNursesAsync(QueryParameters? parameters = null);
-    Task<NurseDto?> GetNurseByIdAsync(int id);
-    Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId);
-    Task<IEnumerable<NurseSimpleDto>> GetAllNursesSimpleAsync();
-    Task<ProfileDto?> GetNurseProfileByUserIdAsync(string userId);
-    Task<ServiceResponse> AddNurseAsync(NurseCreateDto nurse);
+    Task<PaginatedResult<NurseResponse>> GetAllNursesAsync(QueryParameters? parameters = null);
+    Task<NurseResponse?> GetNurseByIdAsync(int id);
+    Task<IEnumerable<NurseResponse>> GetNursesOfPatientByUserId(string userId);
+    Task<IEnumerable<NurseSimpleResponse>> GetAllNursesSimpleAsync();
+    Task<ProfileResponse?> GetNurseProfileByUserIdAsync(string userId);
+    Task<ServiceResponse> AddNurseAsync(NurseCreateRequest nurse);
     Task<int> GetNurseCountAsync();
-    Task<ServiceResponse> UpdateNurseAsync(NurseUpdateDto nurse);
+    Task<ServiceResponse> UpdateNurseAsync(NurseUpdateRequest nurse);
     Task DeleteNurseAsync(int id);
 }

@@ -9,7 +9,7 @@
 
 <BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
     <Body>
-    <EditForm Model="NurseCreateDto" method="post" OnValidSubmit="SaveNurse" FormName="RegisterForm" Enhance>
+    <EditForm Model="NurseCreateRequest" method="post" OnValidSubmit="SaveNurse" FormName="RegisterForm" Enhance>
 
         <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
             @if (inProgress)
@@ -22,66 +22,66 @@
         <FluentValidationValidator @ref="fluentValidationValidator" />
 
          <div class="d-flex flex-column gap-3 p-3">
-                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage ="@(NurseCreateDto.Image !=null)" OnDeleteImage="@(() => NurseCreateDto.Image = null)">
-                    <ImagePreview ImageUrl="@NurseCreateDto.Image" />
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage ="@(NurseCreateRequest.Image !=null)" OnDeleteImage="@(() => NurseCreateRequest.Image = null)">
+                    <ImagePreview ImageUrl="@NurseCreateRequest.Image" />
                 </ImageUploadContainer>
 
                 <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
 
                     <InputText id="firstName" 
-                                @bind-Value="NurseCreateDto.FirstName" 
+                                @bind-Value="NurseCreateRequest.FirstName" 
                                 class="form-control"
                                 aria-required="true" />
 
-                    <ValidationMessage For="() => NurseCreateDto.FirstName" class="text-danger" />
+                    <ValidationMessage For="() => NurseCreateRequest.FirstName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
                     <InputText id="lastName"
                                 class="form-control"
-                                @bind-Value="NurseCreateDto.LastName"
+                                @bind-Value="NurseCreateRequest.LastName"
                                 aria-required="true" />
-                    <ValidationMessage For="() => NurseCreateDto.LastName" class="text-danger" />
+                    <ValidationMessage For="() => NurseCreateRequest.LastName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
                         <InputText id="email"
                                     class="form-control"
-                                    @bind-Value="NurseCreateDto.Email"
+                                    @bind-Value="NurseCreateRequest.Email"
                                     aria-required="true" />
-                        <ValidationMessage For="() => NurseCreateDto.Email" class="text-danger" />
+                        <ValidationMessage For="() => NurseCreateRequest.Email" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
                     <InputText id="password"
                                 type="password"
                                 class="form-control"
-                                @bind-Value="NurseCreateDto.Password"
+                                @bind-Value="NurseCreateRequest.Password"
                                 aria-required="true" />
-                    <ValidationMessage For="() => NurseCreateDto.Password" class="text-danger" />
+                    <ValidationMessage For="() => NurseCreateRequest.Password" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
                     <InputText id="confirmPassword"
                                 type="password"
                                 class="form-control"
-                                @bind-Value="NurseCreateDto.ConfirmPassword"
+                                @bind-Value="NurseCreateRequest.ConfirmPassword"
                                 aria-required="true" />
-                    <ValidationMessage For="() => NurseCreateDto.ConfirmPassword" class="text-danger" />
+                    <ValidationMessage For="() => NurseCreateRequest.ConfirmPassword" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
                     <InputText id="phoneNumber"
                                 class="form-control"
-                                @bind-Value="NurseCreateDto.PhoneNumber"
+                                @bind-Value="NurseCreateRequest.PhoneNumber"
                                 aria-required="true" />
-                    <ValidationMessage For="() => NurseCreateDto.PhoneNumber" class="text-danger" />
+                    <ValidationMessage For="() => NurseCreateRequest.PhoneNumber" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 @if (departments is not null && departments.Any())
                 {
                     <div class="form-floating mb-3">
-                        <InputSelect id="Department" @bind-Value="NurseCreateDto.DepartmentId" class="form-control">
+                        <InputSelect id="Department" @bind-Value="NurseCreateRequest.DepartmentId" class="form-control">
                             @foreach (var department in departmentsSelect)
                             {
                                 <option value="@department.Value">@department.Text</option>
@@ -98,9 +98,9 @@
 @code {
 
     [SupplyParameterFromForm]
-    private NurseCreateDto NurseCreateDto { get; set; } = new();
+    private NurseCreateRequest NurseCreateRequest { get; set; } = new();
     private bool inProgress = false;
-    private List<DepartmentDto>? departments { get; set; }
+    private List<DepartmentResponse>? departments { get; set; }
 
     private Alert alert = new();
     private FluentValidationValidator fluentValidationValidator = new();
@@ -151,7 +151,7 @@
 
     private void HandleImageUploaded(string imageData)
     {
-        NurseCreateDto.Image = imageData;
+        NurseCreateRequest.Image = imageData;
         StateHasChanged();
     }
 
@@ -165,7 +165,7 @@
             return;
         }
 
-        var nurseCreationResult = await NurseService.AddNurseAsync(NurseCreateDto);
+        var nurseCreationResult = await NurseService.AddNurseAsync(NurseCreateRequest);
         inProgress = false;
 
         if (!nurseCreationResult.Success)

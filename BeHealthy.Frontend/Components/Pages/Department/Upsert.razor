@@ -13,21 +13,21 @@
     <Body>
         <Tabs TTabKey="DepartmentTabs" @bind-ActiveTab="activeTab">
             <Tab TTabKey="DepartmentTabs" Title="@Resource.GeneralData" Key="DepartmentTabs.GeneralData">
-                <GeneralData IsEditMode="IsEditMode" DepartmentDto="DepartmentDto" Doctors="Doctors" />
+                <GeneralData IsEditMode="IsEditMode" DepartmentResponse="DepartmentResponse" Doctors="Doctors" />
             </Tab>
             @if (IsEditMode)
             {
                 <Tab TTabKey="DepartmentTabs" Title="@Resource.Doctors" Key="DepartmentTabs.Doctors">
-                    <DepartmentDoctors Doctors="DepartmentDto.Doctors.ToList()" />
+                    <DepartmentDoctors Doctors="DepartmentResponse.Doctors.ToList()" />
                 </Tab>
                 <Tab TTabKey="DepartmentTabs" Title="@Resource.Patients" Key="DepartmentTabs.Patients">
-                    <DepartmentPatients Patients="DepartmentDto.Patients.ToList()" />
+                    <DepartmentPatients Patients="DepartmentResponse.Patients.ToList()" />
                 </Tab>
                 <Tab TTabKey="DepartmentTabs" Title="@Resource.Nurses" Key="DepartmentTabs.Nurses">
-                    <DepartmentNurses Nurses="DepartmentDto.Nurses.ToList()" />
+                    <DepartmentNurses Nurses="DepartmentResponse.Nurses.ToList()" />
                 </Tab>
                 <Tab TTabKey="DepartmentTabs" Title="@Resource.Rooms" Key="DepartmentTabs.Rooms">
-                    <DepartmentRooms Rooms="DepartmentDto.Rooms.ToList()" />
+                    <DepartmentRooms Rooms="DepartmentResponse.Rooms.ToList()" />
                 </Tab>
             }
         </Tabs>
@@ -40,8 +40,8 @@
 
     private bool IsEditMode => id.HasValue;
     private DepartmentTabs activeTab = DepartmentTabs.GeneralData;
-    private DepartmentDto DepartmentDto = new();
-    private List<DoctorDto> Doctors = new();
+    private DepartmentResponse DepartmentResponse = new();
+    private List<DoctorResponse> Doctors = new();
 
     protected override void OnInitialized()
     {
@@ -58,7 +58,7 @@
         if (IsEditMode && id.HasValue)
         {
             var department = await DepartmentService.GetDepartmentByIdAsync(id.Value);
-            DepartmentDto = department;
+            DepartmentResponse = department;
         }
 
         IsLoading = false;

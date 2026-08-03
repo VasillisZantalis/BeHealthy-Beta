@@ -10,5 +10,5 @@ public interface ISeedingService
     Task<ServiceResponse> SeedPatientsAsync(int count);
     Task<ServiceResponse> SeedNursesAsync(int count);
     Task<ServiceResponse> SeedAppointmentsAsync(int count);
-    Task<ServiceResponse> SeedAllAsync(SeedingOptionsDto options);
+    Task<ServiceResponse> SeedAllAsync(SeedingOptionsRequest options);
 }

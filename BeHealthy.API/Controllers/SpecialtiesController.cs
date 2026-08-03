@@ -8,15 +8,15 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
 {
     /// <summary>Gets every specialty.</summary>
     [HttpGet]
-    [ProducesResponseType<IEnumerable<SpecialtyDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<SpecialtyDto>>> GetAll()
+    [ProducesResponseType<IEnumerable<SpecialtyResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<SpecialtyResponse>>> GetAll()
         => Ok(await specialtyService.GetSpecialtiesAsync());
 
     /// <summary>Gets a single specialty by id.</summary>
     [HttpGet("{id:int}")]
-    [ProducesResponseType<SpecialtyDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<SpecialtyResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<SpecialtyDto>> GetById(int id)
+    public async Task<ActionResult<SpecialtyResponse>> GetById(int id)
     {
         var specialty = await specialtyService.GetSpecialtyByIdAsync(id);
         return specialty is null ? NotFoundProblem("Specialty", id) : Ok(specialty);
@@ -25,7 +25,7 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
     /// <summary>Creates a new specialty.</summary>
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> Create(SpecialtyCreateDto dto)
+    public async Task<IActionResult> Create(SpecialtyCreateRequest dto)
     {
         await specialtyService.AddSpecialtyAsync(dto);
         return StatusCode(StatusCodes.Status201Created);
@@ -35,7 +35,7 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(int id, SpecialtyUpdateDto dto)
+    public async Task<IActionResult> Update(int id, SpecialtyUpdateRequest dto)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;

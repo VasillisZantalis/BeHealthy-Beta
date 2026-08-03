@@ -5,9 +5,9 @@ namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IDepartmentService
 {
-    Task<IEnumerable<DepartmentDto>> GetAllDepartmentsAsync();
-    Task<DepartmentDto> GetDepartmentByIdAsync(int id);
-    Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateDto departmentDto);
-    Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateDto departmentDto);
+    Task<IEnumerable<DepartmentResponse>> GetAllDepartmentsAsync();
+    Task<DepartmentResponse> GetDepartmentByIdAsync(int id);
+    Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateRequest departmentDto);
+    Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateRequest departmentDto);
     Task<ServiceResponse> DeleteDepartmentAsync(int id);
 }

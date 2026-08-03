@@ -36,9 +36,9 @@ else
 
 @code {
     [Parameter]
-    public List<PatientDto> Patients { get; set; } = new();
+    public List<PatientResponse> Patients { get; set; } = new();
 
-    private void OnPatientClick(PatientDto patient)
+    private void OnPatientClick(PatientResponse patient)
     {
         //NavigationManager.NavigateTo(RoutingEndpoints.PATIENTS_PAGE);
         NavigationManager.NavigateTo($"{RoutingEndpoints.PATIENTS_PAGE}/edit/{patient.Id}");

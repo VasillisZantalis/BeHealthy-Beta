@@ -24,7 +24,7 @@ public partial class Nurses : BasePage
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
     [Inject] ICurrentUserService CurrentUser { get; set; } = default!;
 
-    private List<NurseDto> nurses { get; set; } = new();
+    private List<NurseResponse> nurses { get; set; } = new();
     private QueryParameters QueryParameters { get; set; } = new();
     private HashSet<int> selectedNurseIds = new();
 
@@ -36,11 +36,11 @@ public partial class Nurses : BasePage
 
     void ShowImportWizard()
     {
-        ModalService.Show<MassImportWizard<NurseCreateDto>>(
+        ModalService.Show<MassImportWizard<NurseCreateRequest>>(
             new Dictionary<string, object?>
             {
-                { nameof(MassImportWizard<NurseCreateDto>.Entity), ImportEntity.Nurse },
-                { nameof(MassImportWizard<NurseCreateDto>.OnSave), EventCallback.Factory.Create<(List<NurseCreateDto> nurseCreateDtos, bool UseValidation)>(this, BulkCreateNurses) },
+                { nameof(MassImportWizard<NurseCreateRequest>.Entity), ImportEntity.Nurse },
+                { nameof(MassImportWizard<NurseCreateRequest>.OnSave), EventCallback.Factory.Create<(List<NurseCreateRequest> nurseCreateDtos, bool UseValidation)>(this, BulkCreateNurses) },
             });
     }
 
@@ -118,7 +118,7 @@ public partial class Nurses : BasePage
         NavigationManager.NavigateTo($"{RoutingEndpoints.NURSES_PAGE}/create");
     }
 
-    private async Task BulkCreateNurses((List<NurseCreateDto> nurseForCreationDtos, bool UseValidation) result)
+    private async Task BulkCreateNurses((List<NurseCreateRequest> nurseForCreationDtos, bool UseValidation) result)
     {
         IsLoading = true;
 

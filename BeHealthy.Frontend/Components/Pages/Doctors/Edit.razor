@@ -12,7 +12,7 @@
 
 <BeHealthyCard BodyClass="p-3">
     <Body>
-        <EditForm Model="DoctorUpdateDto" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
+        <EditForm Model="DoctorUpdateRequest" method="post" OnValidSubmit="UpdateDoctor" FormName="UpdateForm" Enhance>
 
             <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
                 @if (inProgress)
@@ -28,29 +28,29 @@
 
             <div class="d-flex flex-column gap-3 p-3">
 
-                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(DoctorUpdateDto.Image != null)" OnDeleteImage="@(() => DoctorUpdateDto.Image = null)">
-                    <ImagePreview ImageUrl="@DoctorUpdateDto.Image" />
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(DoctorUpdateRequest.Image != null)" OnDeleteImage="@(() => DoctorUpdateRequest.Image = null)">
+                    <ImagePreview ImageUrl="@DoctorUpdateRequest.Image" />
                 </ImageUploadContainer>
 
                 <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
-                    <InputText @bind-Value="DoctorUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
-                    <ValidationMessage For="() => DoctorUpdateDto.FirstName" class="text-danger" />
+                    <InputText @bind-Value="DoctorUpdateRequest.FirstName" class="form-control" aria-required="true" id="firstName" placeholder="First Name" />
+                    <ValidationMessage For="() => DoctorUpdateRequest.FirstName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
-                    <InputText @bind-Value="DoctorUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
-                    <ValidationMessage For="() => DoctorUpdateDto.LastName" class="text-danger" />
+                    <InputText @bind-Value="DoctorUpdateRequest.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" placeholder="Last Name" />
+                    <ValidationMessage For="() => DoctorUpdateRequest.LastName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
-                    <InputText id="phoneNumber" @bind-Value="DoctorUpdateDto.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
-                    <ValidationMessage For="() => DoctorUpdateDto.PhoneNumber" class="text-danger" />
+                    <InputText id="phoneNumber" @bind-Value="DoctorUpdateRequest.PhoneNumber" class="form-control" aria-required="true" placeholder="Phone Number" />
+                    <ValidationMessage For="() => DoctorUpdateRequest.PhoneNumber" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 @if (departmentsSelect is not null && departmentsSelect.Any())
                 {
                     <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
-                        <InputSelect id="department" @bind-Value="DoctorUpdateDto.DepartmentId" class="form-control">
+                        <InputSelect id="department" @bind-Value="DoctorUpdateRequest.DepartmentId" class="form-control">
                             @foreach (var department in departmentsSelect)
                             {
                                 <option value="@department.Value">@department.Text</option>
@@ -62,13 +62,13 @@
                 @if (specialtiesSelect is not null && specialtiesSelect.Any())
                 {
                     <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="doNotAllowDoctorWithoutSpecialty">
-                        <InputSelect id="specialty" @bind-Value="DoctorUpdateDto.SpecialtyId" class="form-control">
+                        <InputSelect id="specialty" @bind-Value="DoctorUpdateRequest.SpecialtyId" class="form-control">
                             @foreach (var specialty in specialtiesSelect)
                             {
                                 <option value="@specialty.Value">@specialty.Text</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For="() => DoctorUpdateDto.SpecialtyId" class="text-danger" />
+                        <ValidationMessage For="() => DoctorUpdateRequest.SpecialtyId" class="text-danger" />
                     </BeHealthyFormGroup>
                 }
             </div>
@@ -82,7 +82,7 @@
     public int DoctorId { get; set; }
 
     [SupplyParameterFromForm]
-    private DoctorUpdateDto DoctorUpdateDto { get; set; } = new();
+    private DoctorUpdateRequest DoctorUpdateRequest { get; set; } = new();
 
     private bool inProgress = false;
     private bool doNotAllowDoctorWithoutSpecialty = false;
@@ -119,7 +119,7 @@
     {
         var doctor = await DoctorService.GetDoctorByIdAsync(DoctorId);
 
-        DoctorUpdateDto = doctor?.MapToUpdateDto() ?? new();
+        DoctorUpdateRequest = doctor?.MapToUpdateDto() ?? new();
 
         SetBreadcrumbs();
     }
@@ -138,7 +138,7 @@
 
     private async Task GetSettings()
     {
-        AppSettingDto? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
+        AppSettingResponse? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
         doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
     }
 
@@ -156,7 +156,7 @@
 
     private void HandleImageUploaded(string imageData)
     {
-        DoctorUpdateDto.Image = imageData;
+        DoctorUpdateRequest.Image = imageData;
         StateHasChanged();
     }
 
@@ -167,7 +167,7 @@
         validationComponent?.ClearErrors();
 
         var validator = new DoctorForUpdateDtoValidator(doNotAllowDoctorWithoutSpecialty);
-        var validationResult = await validator.ValidateAsync(DoctorUpdateDto);
+        var validationResult = await validator.ValidateAsync(DoctorUpdateRequest);
 
         if (!validationResult.IsValid)
         {
@@ -177,7 +177,7 @@
             return;
         }
 
-        var result = await DoctorService.UpdateDoctorAsync(DoctorUpdateDto);
+        var result = await DoctorService.UpdateDoctorAsync(DoctorUpdateRequest);
         inProgress = false;
 
         if (!result.Success)

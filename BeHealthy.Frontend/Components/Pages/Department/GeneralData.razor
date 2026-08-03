@@ -1,7 +1,7 @@
 ﻿@using BeHealthy.Shared.Dtos.Common
 @inherits BasePage
 
-<EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentDto">
+<EditForm FormName="DepartmentForm" OnValidSubmit="HandleSubmit" Model="DepartmentResponse">
     <button type="submit" class="btn btn-success mb-3 px-4 text-end">
         @if (inProgress)
         {
@@ -15,23 +15,23 @@
 
     <div class="d-flex flex-column gap-3">
         <BeHealthyFormGroup Label="@Resource.Name" InputId="name" IsRequired="true">
-            <InputText id="name" @bind-Value="DepartmentDto.Name" class="form-control" />
-            <ValidationMessage For="() => DepartmentDto.Name" class="text-danger" />
+            <InputText id="name" @bind-Value="DepartmentResponse.Name" class="form-control" />
+            <ValidationMessage For="() => DepartmentResponse.Name" class="text-danger" />
         </BeHealthyFormGroup>
 
         <BeHealthyFormGroup Label="@Resource.Location" InputId="location">
-            <InputText id="location" @bind-Value="DepartmentDto.Location" class="form-control" />
-            <ValidationMessage For="() => DepartmentDto.Location" class="text-danger" />
+            <InputText id="location" @bind-Value="DepartmentResponse.Location" class="form-control" />
+            <ValidationMessage For="() => DepartmentResponse.Location" class="text-danger" />
         </BeHealthyFormGroup>
 
         <BeHealthyFormGroup Label="@Resource.Doctors" InputId="doctors" IsRequired="isRequiredHeadOfDepartment">
-            <InputSelect id="doctors" class="form-select" @bind-Value="DepartmentDto.HeadOfDepartmentId">
+            <InputSelect id="doctors" class="form-select" @bind-Value="DepartmentResponse.HeadOfDepartmentId">
                 @foreach (var doctor in doctorsSelect)
                 {
                     <option value="@doctor.Value">@doctor.Text</option>
                 }
             </InputSelect>
-            <ValidationMessage For="() => DepartmentDto.HeadOfDepartmentId" class="text-danger" />
+            <ValidationMessage For="() => DepartmentResponse.HeadOfDepartmentId" class="text-danger" />
         </BeHealthyFormGroup>
     </div>
 </EditForm>
@@ -41,10 +41,10 @@
     public bool IsEditMode { get; set; } = false;
 
     [Parameter]
-    public List<DoctorDto> Doctors { get; set; } = new();
+    public List<DoctorResponse> Doctors { get; set; } = new();
 
     [Parameter]
-    public DepartmentDto DepartmentDto { get; set; } = new();
+    public DepartmentResponse DepartmentResponse { get; set; } = new();
 
     [Inject]
     private IDepartmentService departmentService { get; set; } = default!;
@@ -86,11 +86,11 @@
         isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;
         var defaultSupervisor = defaultSupervisorSetting?.GetIntValue();
 
-        if (!IsEditMode && defaultSupervisor.HasValue && (DepartmentDto.HeadOfDepartmentId == null || DepartmentDto.HeadOfDepartmentId == 0))
+        if (!IsEditMode && defaultSupervisor.HasValue && (DepartmentResponse.HeadOfDepartmentId == null || DepartmentResponse.HeadOfDepartmentId == 0))
         {
             if (doctorsSelect.Any(d => d.Value == defaultSupervisor.Value))
             {
-                DepartmentDto.HeadOfDepartmentId = defaultSupervisor.Value;
+                DepartmentResponse.HeadOfDepartmentId = defaultSupervisor.Value;
             }
         }
     }
@@ -103,20 +103,20 @@
         validationComponent?.ClearErrors();
         var errors = new Dictionary<string, List<string>>();
 
-        if (string.IsNullOrEmpty(DepartmentDto.Name))
+        if (string.IsNullOrEmpty(DepartmentResponse.Name))
         {
-            errors.Add(nameof(DepartmentDto.Name),
+            errors.Add(nameof(DepartmentResponse.Name),
                 new() { string.Format(Resource.TheFieldIsRequired, Resource.Name) });
         }
 
-        if (isRequiredHeadOfDepartment && !(DepartmentDto.HeadOfDepartmentId > 0))
+        if (isRequiredHeadOfDepartment && !(DepartmentResponse.HeadOfDepartmentId > 0))
         {
-            errors.Add(nameof(DepartmentDto.HeadOfDepartmentId),
+            errors.Add(nameof(DepartmentResponse.HeadOfDepartmentId),
                 new() { string.Format(Resource.TheFieldIsRequired, Resource.HeadΟfDepartment) });
         }
 
-        if (DepartmentDto.HeadOfDepartmentId == 0)
-            DepartmentDto.HeadOfDepartmentId = null;
+        if (DepartmentResponse.HeadOfDepartmentId == 0)
+            DepartmentResponse.HeadOfDepartmentId = null;
 
         inProgress = false;
         
@@ -128,12 +128,12 @@
         {
             if (IsEditMode)
             {
-                var departmentForUpdateDto = DepartmentDto.MapToUpdateDto();
+                var departmentForUpdateDto = DepartmentResponse.MapToUpdateDto();
                 result = await departmentService.UpdateDepartmentAsync(departmentForUpdateDto);
             }
             else
             {
-                var departmentForCreateDto = DepartmentDto.MapToCreationDto();
+                var departmentForCreateDto = DepartmentResponse.MapToCreationDto();
                 result = await departmentService.AddDepartmentAsync(departmentForCreateDto);
             }
 

@@ -105,7 +105,7 @@
     public EventCallback OnSeedingCompleted { get; set; }
 
     private bool isSeeding;
-    private SeedingOptionsDto seedingOptions = new();
+    private SeedingOptionsRequest seedingOptions = new();
     private bool disableAppointments = true;
 
     private void OnDoctorCheckChanged()

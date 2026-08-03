@@ -9,7 +9,7 @@
     </Header>
 
     <Body>
-        <BeHealthyTable TItem="VisitDto"
+        <BeHealthyTable TItem="VisitResponse"
                         Items="visits"
                         IsLoading="this.IsLoading"
                         TableClass="table table-responsive"
@@ -18,25 +18,25 @@
             
             <BeHealthyColumn Title="@Resource.Date"
                             Property="@(x => x.VisitDate.ToShortHumanizedDateString())"
-                            TItem="VisitDto" />
+                            TItem="VisitResponse" />
 
-            <BeHealthyColumn TItem="VisitDto"
+            <BeHealthyColumn TItem="VisitResponse"
                             Title="@Resource.Reason"
                             Property="@(x => x.Reason)" />
 
-            <BeHealthyColumn TItem="VisitDto"
+            <BeHealthyColumn TItem="VisitResponse"
                             Title="@Resource.Doctor"
                             Property="@(x => x.Doctor.FullName)" />
 
-            <BeHealthyColumn TItem="VisitDto"
+            <BeHealthyColumn TItem="VisitResponse"
                             Title="@Resource.Patient"
                             Property="@(x => x.Patient.FullName)" />
 
-            <BeHealthyColumn TItem="VisitDto"
+            <BeHealthyColumn TItem="VisitResponse"
                             Title="@Resource.Notes"
                             Property="@(x => x.Notes)" />
 
-            <BeHealthyActionsColumn TItem="VisitDto"
+            <BeHealthyActionsColumn TItem="VisitResponse"
                                     HeaderClass="text-end"
                                     CellClass="text-end">
                 <Template>
@@ -59,7 +59,7 @@
     [CascadingParameter] public int PatientId { get; set; }
     [CascadingParameter] public int MedicalRecordId { get; set; }
 
-    private List<VisitDto> visits { get; set; } = new List<VisitDto>();
+    private List<VisitResponse> visits { get; set; } = new List<VisitResponse>();
 
     protected override async Task OnInitializedAsync()
     {

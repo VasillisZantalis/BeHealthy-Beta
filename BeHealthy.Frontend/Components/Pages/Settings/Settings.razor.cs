@@ -10,9 +10,9 @@ namespace BeHealthy.Frontend.Components.Pages.Settings;
 
 public partial class Settings : BasePage
 {
-    private List<AppSettingDto> settings = default!;
+    private List<AppSettingResponse> settings = default!;
 
-    private IEnumerable<IGrouping<SettingGroup, AppSettingDto>>? settingsGroupedByArea;
+    private IEnumerable<IGrouping<SettingGroup, AppSettingResponse>>? settingsGroupedByArea;
 
     [Inject]
     IAppSettingsService AppSettingsService { get; set; } = default!;
@@ -61,10 +61,10 @@ public partial class Settings : BasePage
         });
     }
 
-    private async Task UpdateSettingValue(AppSettingDto setting)
+    private async Task UpdateSettingValue(AppSettingResponse setting)
     {
         IsLoading = true;
-        await AppSettingsService.UpdateSettingAsync(new AppSettingUpdateDto { Key = setting.Key, Value = setting.Value });
+        await AppSettingsService.UpdateSettingAsync(new AppSettingUpdateRequest { Key = setting.Key, Value = setting.Value });
         IsLoading = false;
         ToastService.ShowToast(Resource.Success, "success");
     }

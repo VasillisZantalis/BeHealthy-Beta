@@ -19,7 +19,7 @@ namespace BeHealthy.Frontend.Mappings;
 public static class DtoMappers
 {
     // ---- Allergy ----
-    public static AllergyCreateDto MapToCreateDto(this AllergyDto dto) => new()
+    public static AllergyCreateRequest MapToCreateDto(this AllergyResponse dto) => new()
     {
         AllergyName = dto.AllergyName,
         Allergen = dto.Allergen,
@@ -28,7 +28,7 @@ public static class DtoMappers
         PatientId = dto.PatientId
     };
 
-    public static AllergyUpdateDto MapToUpdateDto(this AllergyDto dto) => new()
+    public static AllergyUpdateRequest MapToUpdateDto(this AllergyResponse dto) => new()
     {
         Id = dto.Id,
         AllergyName = dto.AllergyName,
@@ -39,7 +39,7 @@ public static class DtoMappers
     };
 
     // ---- Appointment ----
-    public static AppointmentCreateDto MapToCreationDto(this AppointmentDto dto) => new()
+    public static AppointmentCreateRequest MapToCreationDto(this AppointmentResponse dto) => new()
     {
         DoctorId = dto.DoctorId,
         PatientId = dto.PatientId,
@@ -53,7 +53,7 @@ public static class DtoMappers
         NurseId = dto.NurseId
     };
 
-    public static AppointmentUpdateDto MapToUpdateDto(this AppointmentDto dto) => new()
+    public static AppointmentUpdateRequest MapToUpdateDto(this AppointmentResponse dto) => new()
     {
         Id = dto.Id,
         DoctorId = dto.DoctorId,
@@ -69,7 +69,7 @@ public static class DtoMappers
     };
 
     // ---- Department ----
-    public static DepartmentCreateDto MapToCreationDto(this DepartmentDto department) => new()
+    public static DepartmentCreateRequest MapToCreationDto(this DepartmentResponse department) => new()
     {
         Name = department.Name,
         Location = department.Location,
@@ -80,7 +80,7 @@ public static class DtoMappers
         Rooms = department.Rooms
     };
 
-    public static DepartmentUpdateDto MapToUpdateDto(this DepartmentDto department) => new()
+    public static DepartmentUpdateRequest MapToUpdateDto(this DepartmentResponse department) => new()
     {
         Id = department.Id,
         Name = department.Name,
@@ -93,7 +93,7 @@ public static class DtoMappers
     };
 
     // ---- Doctor ----
-    public static DoctorUpdateDto MapToUpdateDto(this DoctorDto dto) => new()
+    public static DoctorUpdateRequest MapToUpdateDto(this DoctorResponse dto) => new()
     {
         Id = dto.Id,
         FirstName = dto.FirstName,
@@ -105,7 +105,7 @@ public static class DtoMappers
         DepartmentId = dto.DepartmentId
     };
 
-    public static DoctorDto MapToDto(this DoctorUpdateDto dto) => new()
+    public static DoctorResponse MapToDto(this DoctorUpdateRequest dto) => new()
     {
         Id = dto.Id,
         UserId = dto.UserId,
@@ -119,7 +119,7 @@ public static class DtoMappers
     };
 
     // ---- MedicalRecord ----
-    public static MedicalRecordUpdateDto MapToMedicalRecordUpdateDto(this MedicalRecordDto medicalRecord) => new()
+    public static MedicalRecordUpdateRequest MapToMedicalRecordUpdateDto(this MedicalRecordResponse medicalRecord) => new()
     {
         Id = medicalRecord.Id,
         PatientId = medicalRecord.PatientId,
@@ -128,7 +128,7 @@ public static class DtoMappers
         CreatedBy = medicalRecord.CreatedBy
     };
 
-    public static MedicalRecordCreateDto MapToMedicalRecordCreateDto(this MedicalRecordDto medicalRecord) => new()
+    public static MedicalRecordCreateRequest MapToMedicalRecordCreateDto(this MedicalRecordResponse medicalRecord) => new()
     {
         PatientId = medicalRecord.PatientId,
         RecordDate = medicalRecord.RecordDate,
@@ -137,7 +137,7 @@ public static class DtoMappers
     };
 
     // ---- Nurse ----
-    public static NurseUpdateDto MapToUpdateDto(this NurseDto dto) => new()
+    public static NurseUpdateRequest MapToUpdateDto(this NurseResponse dto) => new()
     {
         Id = dto.Id,
         FirstName = dto.FirstName,
@@ -149,7 +149,7 @@ public static class DtoMappers
     };
 
     // ---- Patient ----
-    public static PatientUpdateDto MapToUpdateDto(this PatientDto dto) => new()
+    public static PatientUpdateRequest MapToUpdateDto(this PatientResponse dto) => new()
     {
         Id = dto.Id,
         FirstName = dto.FirstName,
@@ -160,9 +160,9 @@ public static class DtoMappers
         DepartmentId = dto.DepartmentId
     };
 
-    public static PatientUpdateDto MapToDtoForUpdate(this PatientDto dto) => dto.MapToUpdateDto();
+    public static PatientUpdateRequest MapToDtoForUpdate(this PatientResponse dto) => dto.MapToUpdateDto();
 
-    public static PatientDto MapToDto(this PatientUpdateDto dto) => new()
+    public static PatientResponse MapToDto(this PatientUpdateRequest dto) => new()
     {
         Id = dto.Id,
         UserId = dto.UserId,
@@ -175,7 +175,7 @@ public static class DtoMappers
     };
 
     // ---- Prescription ----
-    public static PrescriptionCreateDto MapDtoToCreateDto(this PrescriptionDto prescription) => new()
+    public static PrescriptionCreateRequest MapDtoToCreateDto(this PrescriptionResponse prescription) => new()
     {
         Medication = prescription.Medication,
         Dosage = prescription.Dosage,
@@ -184,7 +184,7 @@ public static class DtoMappers
         PatientId = prescription.PatientId
     };
 
-    public static PrescriptionUpdateDto MapDtoToUpdateDto(this PrescriptionDto prescription) => new()
+    public static PrescriptionUpdateRequest MapDtoToUpdateDto(this PrescriptionResponse prescription) => new()
     {
         Id = prescription.Id,
         Medication = prescription.Medication,
@@ -192,7 +192,7 @@ public static class DtoMappers
     };
 
     // ---- Room ----
-    public static RoomDto MapToSelf(this RoomDto room) => new()
+    public static RoomResponse MapToSelf(this RoomResponse room) => new()
     {
         Id = room.Id,
         Name = room.Name,
@@ -200,7 +200,7 @@ public static class DtoMappers
         Department = room.Department
     };
 
-    public static RoomUpdateDto MapDtoToUpdateDto(this RoomDto room) => new()
+    public static RoomUpdateRequest MapDtoToUpdateDto(this RoomResponse room) => new()
     {
         Id = room.Id,
         Name = room.Name,
@@ -208,7 +208,7 @@ public static class DtoMappers
         DepartmentId = room.DepartmentId
     };
 
-    public static RoomCreateDto MapDtoToCreateDto(this RoomDto room) => new()
+    public static RoomCreateRequest MapDtoToCreateDto(this RoomResponse room) => new()
     {
         Name = room.Name,
         Number = room.Number,
@@ -216,7 +216,7 @@ public static class DtoMappers
     };
 
     // ---- Visit ----
-    public static VisitCreateDto MapToCreateDto(this VisitDto visit) => new()
+    public static VisitCreateRequest MapToCreateDto(this VisitResponse visit) => new()
     {
         VisitDate = visit.VisitDate,
         Reason = visit.Reason,
@@ -226,7 +226,7 @@ public static class DtoMappers
         MedicalRecordId = visit.MedicalRecordId
     };
 
-    public static VisitUpdateDto MapToUpdateDto(this VisitDto visit) => new()
+    public static VisitUpdateRequest MapToUpdateDto(this VisitResponse visit) => new()
     {
         Id = visit.Id,
         VisitDate = visit.VisitDate,

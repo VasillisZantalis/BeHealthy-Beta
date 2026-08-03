@@ -8,23 +8,23 @@ public class AppSettingsApiService : ApiClientBase, IAppSettingsService
 {
     public AppSettingsApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<IEnumerable<AppSettingDto>> GetAppSettingsAsync()
-        => await GetListAsync<AppSettingDto>("appsettings");
+    public async Task<IEnumerable<AppSettingResponse>> GetAppSettingsAsync()
+        => await GetListAsync<AppSettingResponse>("appsettings");
 
-    public async Task<List<AppSettingDto>> GetMassAppSettingsAsync(List<string> keys)
-        => await GetAsync<List<AppSettingDto>>("appsettings/mass") is { } list ? list : await PostMassAsync(keys);
+    public async Task<List<AppSettingResponse>> GetMassAppSettingsAsync(List<string> keys)
+        => await GetAsync<List<AppSettingResponse>>("appsettings/mass") is { } list ? list : await PostMassAsync(keys);
 
-    private async Task<List<AppSettingDto>> PostMassAsync(List<string> keys)
+    private async Task<List<AppSettingResponse>> PostMassAsync(List<string> keys)
     {
         var response = await Http.PostAsJsonAsync("appsettings/mass", keys);
         if (!response.IsSuccessStatusCode)
             return new();
-        return await response.Content.ReadFromJsonAsync<List<AppSettingDto>>() ?? new();
+        return await response.Content.ReadFromJsonAsync<List<AppSettingResponse>>() ?? new();
     }
 
-    public async Task<AppSettingDto?> GetSettingByKeyAsync(string key)
-        => await GetAsync<AppSettingDto>($"appsettings/{Uri.EscapeDataString(key)}");
+    public async Task<AppSettingResponse?> GetSettingByKeyAsync(string key)
+        => await GetAsync<AppSettingResponse>($"appsettings/{Uri.EscapeDataString(key)}");
 
-    public async Task UpdateSettingAsync(AppSettingUpdateDto setting)
+    public async Task UpdateSettingAsync(AppSettingUpdateRequest setting)
         => await PutAsync("appsettings", setting);
 }

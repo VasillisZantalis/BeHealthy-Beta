@@ -2,9 +2,9 @@
 
 public static class PatientMapper
 {
-    public static PatientDto MapToDto(this Patient patient)
+    public static PatientResponse MapToDto(this Patient patient)
     {
-        return new PatientDto
+        return new PatientResponse
         {
             Id = patient.Id,
             UserId = patient.UserId,
@@ -18,7 +18,7 @@ public static class PatientMapper
         };
     }
 
-    public static Patient MapToDomain(this PatientDto dto)
+    public static Patient MapToDomain(this PatientResponse dto)
     {
         return new Patient
         {
@@ -32,7 +32,7 @@ public static class PatientMapper
         };
     }
 
-    public static Patient MapToDomain(this PatientCreateDto dto)
+    public static Patient MapToDomain(this PatientCreateRequest dto)
     {
         return new Patient
         {
@@ -45,7 +45,7 @@ public static class PatientMapper
         };
     }
 
-    public static Patient MapToDomain(this PatientUpdateDto dto)
+    public static Patient MapToDomain(this PatientUpdateRequest dto)
     {
         return new Patient
         {
@@ -58,9 +58,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientUpdateDto MapToUpdateDto(this Patient patient)
+    public static PatientUpdateRequest MapToUpdateDto(this Patient patient)
     {
-        return new PatientUpdateDto
+        return new PatientUpdateRequest
         {
             Id = patient.Id,
             FirstName = patient.FirstName,
@@ -72,9 +72,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientUpdateDto MapToUpdateDto(this PatientDto dto)
+    public static PatientUpdateRequest MapToUpdateDto(this PatientResponse dto)
     {
-        return new PatientUpdateDto
+        return new PatientUpdateRequest
         {
             Id = dto.Id,
             FirstName = dto.FirstName,
@@ -86,9 +86,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientUpdateDto MapToDtoForUpdate(this PatientDto dto)
+    public static PatientUpdateRequest MapToDtoForUpdate(this PatientResponse dto)
     {
-        return new PatientUpdateDto
+        return new PatientUpdateRequest
         {
             Id = dto.Id,
             FirstName = dto.FirstName,
@@ -100,9 +100,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientDto MapToDto(this PatientUpdateDto dto)
+    public static PatientResponse MapToDto(this PatientUpdateRequest dto)
     {
-        return new PatientDto
+        return new PatientResponse
         {
             Id = dto.Id,
             UserId = dto.UserId,
@@ -115,9 +115,9 @@ public static class PatientMapper
         };
     }
 
-    public static PatientSimpleDto MapToSimpleDto(this Patient patient)
+    public static PatientSimpleResponse MapToSimpleDto(this Patient patient)
     {
-        return new PatientSimpleDto
+        return new PatientSimpleResponse
         {
             Id = patient.Id,
             FirstName = patient.FirstName,
@@ -127,22 +127,22 @@ public static class PatientMapper
         };
     }
 
-    public static IEnumerable<PatientDto> MapToDto(this IEnumerable<Patient> patients)
+    public static IEnumerable<PatientResponse> MapToDto(this IEnumerable<Patient> patients)
     {
         return patients.Select(p => p.MapToDto());
     }
 
-    public static ICollection<PatientDto> MapToDto(this ICollection<Patient> patients)
+    public static ICollection<PatientResponse> MapToDto(this ICollection<Patient> patients)
     {
         return patients.Select(d => d.MapToDto()).ToList();
     }
 
-    public static IEnumerable<Patient> MapToDomain(this IEnumerable<PatientDto> dtos)
+    public static IEnumerable<Patient> MapToDomain(this IEnumerable<PatientResponse> dtos)
     {
         return dtos.Select(dto => dto.MapToDomain());
     }
 
-    public static IEnumerable<PatientSimpleDto> MapToSimpleDto(this IEnumerable<Patient> patients)
+    public static IEnumerable<PatientSimpleResponse> MapToSimpleDto(this IEnumerable<Patient> patients)
     {
         return patients.Select(p => p.MapToSimpleDto());
     }

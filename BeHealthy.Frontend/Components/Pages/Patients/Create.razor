@@ -10,7 +10,7 @@
 
 <BeHealthyCard BodyClass="d-flex flex-column gap-3 p-3">
     <Body>
-        <EditForm Model="PatientCreateDto" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
+        <EditForm Model="PatientCreateRequest" method="post" OnValidSubmit="RegisterPatient" FormName="RegisterForm" Enhance>
 
             <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
                 @if (inProgress)
@@ -24,66 +24,66 @@
        
             <Alert @ref="alert" />
                 <div class="d-flex flex-column gap-3 p-3">
-                    <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(PatientCreateDto.Image != null)" OnDeleteImage="@(() => PatientCreateDto.Image = null)">
-                        <ImagePreview ImageUrl="@PatientCreateDto.Image" />
+                    <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(PatientCreateRequest.Image != null)" OnDeleteImage="@(() => PatientCreateRequest.Image = null)">
+                        <ImagePreview ImageUrl="@PatientCreateRequest.Image" />
                     </ImageUploadContainer>
 
                     <BeHealthyFormGroup Label="@Resource.FirstName" IsRequired="true" InputId="firstName">
 
                         <InputText id="firstName"
-                                   @bind-Value="PatientCreateDto.FirstName"
+                                   @bind-Value="PatientCreateRequest.FirstName"
                                    class="form-control"
                                    aria-required="true" />
 
-                        <ValidationMessage For="() => PatientCreateDto.FirstName" class="text-danger" />
+                        <ValidationMessage For="() => PatientCreateRequest.FirstName" class="text-danger" />
                     </BeHealthyFormGroup>
 
                     <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
                         <InputText id="lastName"
                                    class="form-control"
-                                   @bind-Value="PatientCreateDto.LastName"
+                                   @bind-Value="PatientCreateRequest.LastName"
                                    aria-required="true" />
-                        <ValidationMessage For="() => PatientCreateDto.LastName" class="text-danger" />
+                        <ValidationMessage For="() => PatientCreateRequest.LastName" class="text-danger" />
                     </BeHealthyFormGroup>
 
                     <BeHealthyFormGroup Label="@Resource.Email" InputId="email" IsRequired="true">
                         <InputText id="email"
                                    class="form-control"
-                                   @bind-Value="PatientCreateDto.Email"
+                                   @bind-Value="PatientCreateRequest.Email"
                                    aria-required="true" />
-                        <ValidationMessage For="() => PatientCreateDto.Email" class="text-danger" />
+                        <ValidationMessage For="() => PatientCreateRequest.Email" class="text-danger" />
                     </BeHealthyFormGroup>
 
                     <BeHealthyFormGroup Label="@Resource.Password" InputId="password" IsRequired="true">
                         <InputText id="password"
                                    type="password"
                                    class="form-control"
-                                   @bind-Value="PatientCreateDto.Password"
+                                   @bind-Value="PatientCreateRequest.Password"
                                    aria-required="true" />
-                        <ValidationMessage For="() => PatientCreateDto.Password" class="text-danger" />
+                        <ValidationMessage For="() => PatientCreateRequest.Password" class="text-danger" />
                     </BeHealthyFormGroup>
 
                     <BeHealthyFormGroup Label="@Resource.ConfirmPassword" InputId="confirmPassword" IsRequired="true">
                         <InputText id="confirmPassword"
                                    type="password"
                                    class="form-control"
-                                   @bind-Value="PatientCreateDto.ConfirmPassword"
+                                   @bind-Value="PatientCreateRequest.ConfirmPassword"
                                    aria-required="true" />
-                        <ValidationMessage For="() => PatientCreateDto.ConfirmPassword" class="text-danger" />
+                        <ValidationMessage For="() => PatientCreateRequest.ConfirmPassword" class="text-danger" />
                     </BeHealthyFormGroup>
 
                     <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="PhoneNumber">
                         <InputText id="phoneNumber"
                                    class="form-control"
-                                   @bind-Value="PatientCreateDto.PhoneNumber"
+                                   @bind-Value="PatientCreateRequest.PhoneNumber"
                                    aria-required="true" />
-                        <ValidationMessage For="() => PatientCreateDto.PhoneNumber" class="text-danger" />
+                        <ValidationMessage For="() => PatientCreateRequest.PhoneNumber" class="text-danger" />
                     </BeHealthyFormGroup>
 
                     @if (departmentsSelect is not null && departmentsSelect.Any())
                     {
                         <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
-                            <InputSelect id="department" @bind-Value="PatientCreateDto.DepartmentId" class="form-control">
+                            <InputSelect id="department" @bind-Value="PatientCreateRequest.DepartmentId" class="form-control">
                                 @foreach (var department in departmentsSelect)
                                 {
                                     <option value="@department.Value">@department.Text</option>
@@ -100,9 +100,9 @@
 @code {
 
     [SupplyParameterFromForm]
-    private PatientCreateDto PatientCreateDto { get; set; } = new();
+    private PatientCreateRequest PatientCreateRequest { get; set; } = new();
     private bool inProgress = false;
-    private List<DepartmentDto>? departments { get; set; }
+    private List<DepartmentResponse>? departments { get; set; }
 
     private Alert alert = new();
     private FluentValidationValidator fluentValidationValidator = new();
@@ -149,7 +149,7 @@
             return;
         }
 
-        var patientCreationResult = await PatientService.AddPatientAsync(PatientCreateDto);
+        var patientCreationResult = await PatientService.AddPatientAsync(PatientCreateRequest);
         inProgress = false;
 
         if (!patientCreationResult.Success)
@@ -178,7 +178,7 @@
 
     private void HandleImageUploaded(string imageData)
     {
-        PatientCreateDto.Image = imageData;
+        PatientCreateRequest.Image = imageData;
         StateHasChanged();
     }
 }

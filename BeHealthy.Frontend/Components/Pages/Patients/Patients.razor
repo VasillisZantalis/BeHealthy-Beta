@@ -63,13 +63,13 @@
         }
         else if (selectedView == "Grid")
         {
-            <BeHealthyTable TItem="PatientDto"
+            <BeHealthyTable TItem="PatientResponse"
                             Items="@patients"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
                             EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Patients)">
              
-                 <BeHealthyColumn TItem="PatientDto">
+                 <BeHealthyColumn TItem="PatientResponse">
                     <Template>
                         @if (hasActionRights)
                         {
@@ -82,35 +82,35 @@
                     </Template>
                 </BeHealthyColumn>           
 
-                <BeHealthyColumn TItem="PatientDto">
+                <BeHealthyColumn TItem="PatientResponse">
                     <Template>
                         <img class="rounded-circle" src="@(context.Image ?? "images/generic.jpg")" alt="@context.FullName" width="25" height="25" />
                     </Template>
                 </BeHealthyColumn>
                     
-                <BeHealthyColumn TItem="PatientDto"
+                <BeHealthyColumn TItem="PatientResponse"
                                 Title="@Resource.FirstName"
                                 Property="@(x => x.FirstName)" />
                     
-                <BeHealthyColumn TItem="PatientDto"
+                <BeHealthyColumn TItem="PatientResponse"
                                 Title="@Resource.LastName"
                                 Property="@(x => x.LastName)" />
                     
-                <BeHealthyColumn TItem="PatientDto"
+                <BeHealthyColumn TItem="PatientResponse"
                                 Title="@Resource.Created"
                                 Property="@(x => x.CreatedAt.ToString("dd MMM yyyy HH:mm"))" />
                     
-                <BeHealthyColumn TItem="PatientDto"
+                <BeHealthyColumn TItem="PatientResponse"
                                 Title="@Resource.Email"
                                 Property="@(x => x.Email)" />
                     
-                <BeHealthyColumn TItem="PatientDto"
+                <BeHealthyColumn TItem="PatientResponse"
                                 Title="@Resource.PhoneNumber"
                                 Property="@(x => x.PhoneNumber)" />
                     
                 @if (hasActionRights)
                 {
-                    <BeHealthyActionsColumn TItem="PatientDto"
+                    <BeHealthyActionsColumn TItem="PatientResponse"
                                             Title="@Resource.Actions"
                                             CellClass="text-end">
                         <Template>

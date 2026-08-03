@@ -25,9 +25,9 @@ public class AppointmentUpdateDtoBuilder
     public AppointmentUpdateDtoBuilder WithStartTime(TimeOnly time) { _startTime = time; return this; }
     public AppointmentUpdateDtoBuilder WithEndTime(TimeOnly time) { _endTime = time; return this; }
 
-    public AppointmentUpdateDto Build()
+    public AppointmentUpdateRequest Build()
     {
-        return _fixture.Build<AppointmentUpdateDto>()
+        return _fixture.Build<AppointmentUpdateRequest>()
             .With(a => a.DoctorId, _doctorId)
             .With(a => a.PatientId, _patientId)
             .With(a => a.RoomId, _roomId)

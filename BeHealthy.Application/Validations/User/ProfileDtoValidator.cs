@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace BeHealthy.Application.Validations.User;
 
-public class ProfileDtoValidator : AbstractValidator<ProfileDto>
+public class ProfileDtoValidator : AbstractValidator<ProfileResponse>
 {
     public ProfileDtoValidator()
     {

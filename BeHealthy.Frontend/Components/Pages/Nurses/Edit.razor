@@ -10,7 +10,7 @@
 
 <BeHealthyCard BodyClass="p-3">
     <Body>
-        <EditForm Model="NurseUpdateDto" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
+        <EditForm Model="NurseUpdateRequest" method="post" OnValidSubmit="UpdateNurse" FormName="UpdateForm" Enhance>
 
             <button type="submit" class="btn btn-success px-5 d-flex flex-row" disabled="@inProgress">
                 @if (inProgress)
@@ -24,29 +24,29 @@
 
              <div class="d-flex flex-column gap-3 p-3">
 
-                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(NurseUpdateDto.Image != null)" OnDeleteImage="@(() => NurseUpdateDto.Image = null)">
-                    <ImagePreview ImageUrl="@NurseUpdateDto.Image" />
+                <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(NurseUpdateRequest.Image != null)" OnDeleteImage="@(() => NurseUpdateRequest.Image = null)">
+                    <ImagePreview ImageUrl="@NurseUpdateRequest.Image" />
                 </ImageUploadContainer>
 
                 <BeHealthyFormGroup Label="@Resource.FirstName" InputId="firstName" IsRequired="true">
-                    <InputText @bind-Value="NurseUpdateDto.FirstName" class="form-control" aria-required="true" id="firstName" />
-                    <ValidationMessage For="() => NurseUpdateDto.FirstName" class="text-danger" />
+                    <InputText @bind-Value="NurseUpdateRequest.FirstName" class="form-control" aria-required="true" id="firstName" />
+                    <ValidationMessage For="() => NurseUpdateRequest.FirstName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.LastName" InputId="lastName" IsRequired="true">
-                    <InputText @bind-Value="NurseUpdateDto.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" />
-                    <ValidationMessage For="() => NurseUpdateDto.LastName" class="text-danger" />
+                    <InputText @bind-Value="NurseUpdateRequest.LastName" class="form-control" autocomplete="username" aria-required="true" id="lastName" />
+                    <ValidationMessage For="() => NurseUpdateRequest.LastName" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 <BeHealthyFormGroup Label="@Resource.PhoneNumber" InputId="phoneNumber">
-                    <InputText id="phoneNumber" @bind-Value="NurseUpdateDto.PhoneNumber" class="form-control" aria-required="true" />
-                    <ValidationMessage For="() => NurseUpdateDto.PhoneNumber" class="text-danger" />
+                    <InputText id="phoneNumber" @bind-Value="NurseUpdateRequest.PhoneNumber" class="form-control" aria-required="true" />
+                    <ValidationMessage For="() => NurseUpdateRequest.PhoneNumber" class="text-danger" />
                 </BeHealthyFormGroup>
 
                 @if (departments is not null && departments.Any())
                 {
                     <div class="form-floating mb-3">
-                        <InputSelect id="Department" @bind-Value="NurseUpdateDto.DepartmentId" class="form-control">
+                        <InputSelect id="Department" @bind-Value="NurseUpdateRequest.DepartmentId" class="form-control">
                             @foreach (var department in departmentsSelect)
                             {
                                 <option value="@department.Value">@department.Text</option>
@@ -66,9 +66,9 @@
     public int NurseId { get; set; }
 
     [SupplyParameterFromForm]
-    private NurseUpdateDto NurseUpdateDto { get; set; } = new();
+    private NurseUpdateRequest NurseUpdateRequest { get; set; } = new();
 
-    private List<DepartmentDto>? departments { get; set; }
+    private List<DepartmentResponse>? departments { get; set; }
 
     private bool inProgress = false;
     private Alert alert = new();
@@ -95,7 +95,7 @@
     protected override async Task OnParametersSetAsync()
     {
         var nurse = await NurseService.GetNurseByIdAsync(NurseId);
-        NurseUpdateDto = nurse?.MapToUpdateDto() ?? new();
+        NurseUpdateRequest = nurse?.MapToUpdateDto() ?? new();
 
         SetBreadcrumbs();
     }
@@ -125,7 +125,7 @@
 
     private void HandleImageUploaded(string imageData)
     {
-        NurseUpdateDto.Image = imageData;
+        NurseUpdateRequest.Image = imageData;
         StateHasChanged();
     }
 
@@ -139,7 +139,7 @@
             return;
         }
 
-        var result = await NurseService.UpdateNurseAsync(NurseUpdateDto);
+        var result = await NurseService.UpdateNurseAsync(NurseUpdateRequest);
         inProgress = false;
 
         if (!result.Success)

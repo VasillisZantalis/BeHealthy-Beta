@@ -5,9 +5,9 @@ namespace BeHealthy.Application.Mappings;
 
 public static class DepartmentMapper
 {
-    public static DepartmentDto MapToDto(this Department department)
+    public static DepartmentResponse MapToDto(this Department department)
     {
-        return new DepartmentDto
+        return new DepartmentResponse
         {
             Id = department.Id,
             Name = department.Name,
@@ -22,7 +22,7 @@ public static class DepartmentMapper
         };
     }
 
-    public static Department MapToDomain(this DepartmentDto dto)
+    public static Department MapToDomain(this DepartmentResponse dto)
     {
         return new Department
         {
@@ -34,7 +34,7 @@ public static class DepartmentMapper
         };
     }
 
-    public static Department MapToDomain(this DepartmentCreateDto dto)
+    public static Department MapToDomain(this DepartmentCreateRequest dto)
     {
         return new Department
         {
@@ -45,7 +45,7 @@ public static class DepartmentMapper
         };
     }
 
-    public static Department MapToDomain(this DepartmentUpdateDto dto)
+    public static Department MapToDomain(this DepartmentUpdateRequest dto)
     {
         return new Department
         {
@@ -56,7 +56,7 @@ public static class DepartmentMapper
         };
     }
 
-    public static DepartmentCreateDto MapToCreationDto(this DepartmentDto department) => new DepartmentCreateDto
+    public static DepartmentCreateRequest MapToCreationDto(this DepartmentResponse department) => new DepartmentCreateRequest
         {
             Name = department.Name,
             Location = department.Location,
@@ -67,7 +67,7 @@ public static class DepartmentMapper
             Rooms = department.Rooms
         };
 
-    public static DepartmentUpdateDto MapToUpdateDto(this DepartmentDto department) => new DepartmentUpdateDto
+    public static DepartmentUpdateRequest MapToUpdateDto(this DepartmentResponse department) => new DepartmentUpdateRequest
         {
             Id = department.Id,
             Name = department.Name,
@@ -79,12 +79,12 @@ public static class DepartmentMapper
             Rooms = department.Rooms
         };
 
-    public static IEnumerable<DepartmentDto> MapToDto(this IEnumerable<Department> departments)
+    public static IEnumerable<DepartmentResponse> MapToDto(this IEnumerable<Department> departments)
     {
         return departments.Select(department => department.MapToDto()).ToList();
     }
 
-    public static IEnumerable<Department> MapToDomain(this IEnumerable<DepartmentDto> dtos)
+    public static IEnumerable<Department> MapToDomain(this IEnumerable<DepartmentResponse> dtos)
     {
         return dtos.Select(dto => dto.MapToDomain()).ToList();
     }

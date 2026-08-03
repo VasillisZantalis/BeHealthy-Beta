@@ -4,9 +4,9 @@ namespace BeHealthy.Application.Mappings;
 
 public static class AllergyMapper
 {
-    public static AllergyDto MapToDto(this Allergy allergy)
+    public static AllergyResponse MapToDto(this Allergy allergy)
     {
-        return new AllergyDto
+        return new AllergyResponse
         {
             Id = allergy.Id,
             AllergyName = allergy.AllergyName,
@@ -17,7 +17,7 @@ public static class AllergyMapper
         };
     }
 
-    public static Allergy MapToDomain(this AllergyCreateDto dto)
+    public static Allergy MapToDomain(this AllergyCreateRequest dto)
     {
         return new Allergy
         {
@@ -29,7 +29,7 @@ public static class AllergyMapper
         };
     }
 
-    public static Allergy MapToDomain(this AllergyUpdateDto dto)
+    public static Allergy MapToDomain(this AllergyUpdateRequest dto)
     {
         return new Allergy
         {
@@ -42,9 +42,9 @@ public static class AllergyMapper
         };
     }
 
-    public static AllergyCreateDto MapToCreateDto(this AllergyDto dto)
+    public static AllergyCreateRequest MapToCreateDto(this AllergyResponse dto)
     {
-        return new AllergyCreateDto
+        return new AllergyCreateRequest
         {
             AllergyName = dto.AllergyName,
             Allergen = dto.Allergen,
@@ -54,9 +54,9 @@ public static class AllergyMapper
         };
     }
 
-    public static AllergyUpdateDto MapToUpdateDto(this AllergyDto dto)
+    public static AllergyUpdateRequest MapToUpdateDto(this AllergyResponse dto)
     {
-        return new AllergyUpdateDto
+        return new AllergyUpdateRequest
         {
             Id = dto.Id,
             AllergyName = dto.AllergyName,

@@ -11,25 +11,25 @@ public class MedicalRecordService : IMedicalRecordService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<MedicalRecordDto>> GetAllMedicalRecordsAsync()
+    public async Task<IEnumerable<MedicalRecordResponse>> GetAllMedicalRecordsAsync()
     {
         var medicalRecords = await _unitOfWork.MedicalRecordRepository.GetAllAsync();
         return medicalRecords.MapToDto();
     }
 
-    public async Task<MedicalRecordDto?> GetMedicalRecordByIdAsync(int id)
+    public async Task<MedicalRecordResponse?> GetMedicalRecordByIdAsync(int id)
     {
         var medicalRecord = await _unitOfWork.MedicalRecordRepository.GetByIdAsync(id);
         return medicalRecord?.MapToDto();
     }
 
-    public async Task AddMedicalRecordAsync(MedicalRecordCreateDto medicalRecordDto)
+    public async Task AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto)
     {
         var medicalRecord = medicalRecordDto.MapToDomain();
         await _unitOfWork.MedicalRecordRepository.AddAsync(medicalRecord);
     }
 
-    public async Task UpdateMedicalRecordAsync(MedicalRecordUpdateDto medicalRecordDto)
+    public async Task UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto)
     {
         var medicalRecord = medicalRecordDto.MapToDomain();
         await _unitOfWork.MedicalRecordRepository.UpdateAsync(medicalRecord);
@@ -40,7 +40,7 @@ public class MedicalRecordService : IMedicalRecordService
         await _unitOfWork.MedicalRecordRepository.DeleteAsync(id);
     }
 
-    public async Task<IEnumerable<MedicalRecordDto>> GetMedicalRecordsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId)
     {
         var medicalRecords = await _unitOfWork.MedicalRecordRepository.GetMedicalRecordsByPatientIdAsync(patientId);
         return medicalRecords.MapToDto();

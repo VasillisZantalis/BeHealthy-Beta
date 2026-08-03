@@ -12,31 +12,31 @@ public class DoctorApiService : ApiClientBase, IDoctorService
 {
     public DoctorApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<PaginatedResult<DoctorDto>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null)
-        => await GetAsync<PaginatedResult<DoctorDto>>($"doctors{ToQueryString(parameters)}") ?? new();
+    public async Task<PaginatedResult<DoctorResponse>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null)
+        => await GetAsync<PaginatedResult<DoctorResponse>>($"doctors{ToQueryString(parameters)}") ?? new();
 
-    public async Task<IEnumerable<DoctorSimpleDto>> GetAllDoctorsSimpleAsync()
-        => await GetListAsync<DoctorSimpleDto>("doctors/simple");
+    public async Task<IEnumerable<DoctorSimpleResponse>> GetAllDoctorsSimpleAsync()
+        => await GetListAsync<DoctorSimpleResponse>("doctors/simple");
 
-    public async Task<DoctorDto?> GetDoctorByIdAsync(int id)
-        => await GetAsync<DoctorDto>($"doctors/{id}");
+    public async Task<DoctorResponse?> GetDoctorByIdAsync(int id)
+        => await GetAsync<DoctorResponse>($"doctors/{id}");
 
-    public async Task<IEnumerable<PatientDto>> GetMyPatientsAsync(string userId)
-        => await GetListAsync<PatientDto>($"doctors/{userId}/patients");
+    public async Task<IEnumerable<PatientResponse>> GetMyPatientsAsync(string userId)
+        => await GetListAsync<PatientResponse>($"doctors/{userId}/patients");
 
-    public async Task<ProfileDto?> GetDoctorProfileByUserIdAsync(string userId)
-        => await GetAsync<ProfileDto>($"doctors/{userId}/profile");
+    public async Task<ProfileResponse?> GetDoctorProfileByUserIdAsync(string userId)
+        => await GetAsync<ProfileResponse>($"doctors/{userId}/profile");
 
-    public async Task<IEnumerable<AppointmentDto>> GetDoctorAppointmentsByUserIdAsync(string userId)
-        => await GetListAsync<AppointmentDto>($"doctors/{userId}/appointments");
+    public async Task<IEnumerable<AppointmentResponse>> GetDoctorAppointmentsByUserIdAsync(string userId)
+        => await GetListAsync<AppointmentResponse>($"doctors/{userId}/appointments");
 
-    public async Task<ServiceResponse> AddDoctorAsync(DoctorCreateDto doctor)
+    public async Task<ServiceResponse> AddDoctorAsync(DoctorCreateRequest doctor)
         => await PostForResponseAsync("doctors", doctor);
 
     public async Task<int> GetDoctorCountAsync()
         => await GetAsync<int>("doctors/count");
 
-    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorUpdateDto doctor)
+    public async Task<ServiceResponse> UpdateDoctorAsync(DoctorUpdateRequest doctor)
         => await PutForResponseAsync("doctors", doctor);
 
     public async Task DeleteDoctorAsync(int id)

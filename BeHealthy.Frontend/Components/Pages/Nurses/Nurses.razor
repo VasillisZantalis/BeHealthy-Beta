@@ -60,7 +60,7 @@
         }
         else if (selectedView == "Grid")
         {
-            <BeHealthyTable TItem="NurseDto"
+            <BeHealthyTable TItem="NurseResponse"
                             Items="@nurses"
                             TableClass="table table-responsive"
                             WrapperClass="table-wrapper"
@@ -69,7 +69,7 @@
                             IsSortDescending="@QueryParameters.OrderDescending"
                             OnSortChanged="HandleSortChanged" >
 
-                <BeHealthyColumn TItem="NurseDto">
+                <BeHealthyColumn TItem="NurseResponse">
                     <Template>
                         @if (hasActionRights)
                         {
@@ -82,7 +82,7 @@
                     </Template>
                 </BeHealthyColumn>
                                 
-                <BeHealthyColumn TItem="NurseDto">
+                <BeHealthyColumn TItem="NurseResponse">
                     <Template>
                         <img class="rounded-circle"
                              src="@(context.Image ?? "images/generic.jpg")"
@@ -92,35 +92,35 @@
                     </Template>
                 </BeHealthyColumn>
 
-                <BeHealthyColumn TItem="NurseDto"
+                <BeHealthyColumn TItem="NurseResponse"
                                  Title="@Resource.FirstName"
                                  Property="@(x => x.FirstName)"
                                  Sortable="true"
                                  SortProperty="FirstName" />
 
-                <BeHealthyColumn TItem="NurseDto"
+                <BeHealthyColumn TItem="NurseResponse"
                                  Title="@Resource.LastName"
                                  Property="@(x => x.LastName)"
                                  Sortable="true"
                                  SortProperty="LastName" />
 
-                <BeHealthyColumn TItem="NurseDto"
+                <BeHealthyColumn TItem="NurseResponse"
                                  Title="@Resource.Created"
                                  Property="@(x => x.CreatedAt.ToFullDateTimeString())"
                                  Sortable="true"
                                  SortProperty="CreatedAt" />
 
-                <BeHealthyColumn TItem="NurseDto"
+                <BeHealthyColumn TItem="NurseResponse"
                                  Title="@Resource.Email"
                                  Property="@(x => x.Email)"/>
 
-                <BeHealthyColumn TItem="NurseDto"
+                <BeHealthyColumn TItem="NurseResponse"
                                  Title="@Resource.PhoneNumber"
                                  Property="@(x => x.PhoneNumber)"/>
             
                 @if (hasActionRights)
                 {
-                    <BeHealthyActionsColumn TItem="NurseDto"
+                    <BeHealthyActionsColumn TItem="NurseResponse"
                                             Title="@Resource.Actions"
                                             CellClass="text-end">
                         <Template>

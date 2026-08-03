@@ -10,28 +10,28 @@ public class NurseApiService : ApiClientBase, INurseService
 {
     public NurseApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<PaginatedResult<NurseDto>> GetAllNursesAsync(QueryParameters? parameters = null)
-        => await GetAsync<PaginatedResult<NurseDto>>($"nurses{ToQueryString(parameters)}") ?? new();
+    public async Task<PaginatedResult<NurseResponse>> GetAllNursesAsync(QueryParameters? parameters = null)
+        => await GetAsync<PaginatedResult<NurseResponse>>($"nurses{ToQueryString(parameters)}") ?? new();
 
-    public async Task<NurseDto?> GetNurseByIdAsync(int id)
-        => await GetAsync<NurseDto>($"nurses/{id}");
+    public async Task<NurseResponse?> GetNurseByIdAsync(int id)
+        => await GetAsync<NurseResponse>($"nurses/{id}");
 
-    public async Task<IEnumerable<NurseDto>> GetNursesOfPatientByUserId(string userId)
-        => await GetListAsync<NurseDto>($"nurses/patient/{userId}");
+    public async Task<IEnumerable<NurseResponse>> GetNursesOfPatientByUserId(string userId)
+        => await GetListAsync<NurseResponse>($"nurses/patient/{userId}");
 
-    public async Task<IEnumerable<NurseSimpleDto>> GetAllNursesSimpleAsync()
-        => await GetListAsync<NurseSimpleDto>("nurses/simple");
+    public async Task<IEnumerable<NurseSimpleResponse>> GetAllNursesSimpleAsync()
+        => await GetListAsync<NurseSimpleResponse>("nurses/simple");
 
-    public async Task<ProfileDto?> GetNurseProfileByUserIdAsync(string userId)
-        => await GetAsync<ProfileDto>($"nurses/{userId}/profile");
+    public async Task<ProfileResponse?> GetNurseProfileByUserIdAsync(string userId)
+        => await GetAsync<ProfileResponse>($"nurses/{userId}/profile");
 
-    public async Task<ServiceResponse> AddNurseAsync(NurseCreateDto nurse)
+    public async Task<ServiceResponse> AddNurseAsync(NurseCreateRequest nurse)
         => await PostForResponseAsync("nurses", nurse);
 
     public async Task<int> GetNurseCountAsync()
         => await GetAsync<int>("nurses/count");
 
-    public async Task<ServiceResponse> UpdateNurseAsync(NurseUpdateDto nurse)
+    public async Task<ServiceResponse> UpdateNurseAsync(NurseUpdateRequest nurse)
         => await PutForResponseAsync("nurses", nurse);
 
     public async Task DeleteNurseAsync(int id)

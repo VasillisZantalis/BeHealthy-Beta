@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace BeHealthy.Frontend.Validations.Patient;
 
-public class PatientForUpdateDtoValidator : AbstractValidator<PatientUpdateDto>
+public class PatientForUpdateDtoValidator : AbstractValidator<PatientUpdateRequest>
 {
     public PatientForUpdateDtoValidator()
     {

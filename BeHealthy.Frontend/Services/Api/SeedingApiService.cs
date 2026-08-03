@@ -25,6 +25,6 @@ public class SeedingApiService : ApiClientBase, ISeedingService
     public async Task<ServiceResponse> SeedAppointmentsAsync(int count)
         => await PostForResponseAsync($"seeding/appointments?count={count}", new { });
 
-    public async Task<ServiceResponse> SeedAllAsync(SeedingOptionsDto options)
+    public async Task<ServiceResponse> SeedAllAsync(SeedingOptionsRequest options)
         => await PostForResponseAsync("seeding/all", options);
 }

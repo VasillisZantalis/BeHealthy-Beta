@@ -4,9 +4,9 @@ namespace BeHealthy.Frontend.Services.Interfaces;
 
 public interface IRoomService
 {
-    Task<IEnumerable<RoomDto>> GetAllRoomsAsync();
-    Task<RoomDto?> GetRoomByIdAsync(int id);
-    Task AddRoomAsync(RoomCreateDto roomDto);
-    Task UpdateRoomAsync(RoomUpdateDto roomDto);
+    Task<IEnumerable<RoomResponse>> GetAllRoomsAsync();
+    Task<RoomResponse?> GetRoomByIdAsync(int id);
+    Task AddRoomAsync(RoomCreateRequest roomDto);
+    Task UpdateRoomAsync(RoomUpdateRequest roomDto);
     Task DeleteRoomAsync(int id);
 }

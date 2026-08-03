@@ -7,22 +7,22 @@ namespace BeHealthy.Application.Mappings;
 
 public static class PrescriptionMapper
 {
-    public static PrescriptionDto MapToDto(this Prescription prescription)
+    public static PrescriptionResponse MapToDto(this Prescription prescription)
     {
-        return new PrescriptionDto
+        return new PrescriptionResponse
         {
             Id = prescription.Id,
             PatientId = prescription.PatientId,
-            Patient = prescription.Patient != null ? prescription.Patient.MapToSimpleDto() : new PatientSimpleDto(),
+            Patient = prescription.Patient != null ? prescription.Patient.MapToSimpleDto() : new PatientSimpleResponse(),
             DoctorId = prescription.DoctorId,
-            Doctor = prescription.Doctor != null ? prescription.Doctor.MapToSimpleDto() : new DoctorSimpleDto(),
+            Doctor = prescription.Doctor != null ? prescription.Doctor.MapToSimpleDto() : new DoctorSimpleResponse(),
             Medication = prescription.Medication,
             Dosage = prescription.Dosage,
             DatePrescribed = prescription.DatePrescribed
         };
     }
 
-    public static Prescription MapToDomain(this PrescriptionDto dto)
+    public static Prescription MapToDomain(this PrescriptionResponse dto)
     {
         return new Prescription
         {
@@ -35,7 +35,7 @@ public static class PrescriptionMapper
         };
     }
 
-    public static Prescription MapToDomain(this PrescriptionCreateDto dto)
+    public static Prescription MapToDomain(this PrescriptionCreateRequest dto)
     {
         return new Prescription
         {
@@ -47,7 +47,7 @@ public static class PrescriptionMapper
         };
     }
 
-    public static Prescription MapToDomain(this PrescriptionUpdateDto dto)
+    public static Prescription MapToDomain(this PrescriptionUpdateRequest dto)
     {
         return new Prescription
         {
@@ -57,9 +57,9 @@ public static class PrescriptionMapper
         };
     }
 
-    public static PrescriptionUpdateDto MapToUpdateDto(this Prescription prescription)
+    public static PrescriptionUpdateRequest MapToUpdateDto(this Prescription prescription)
     {
-        return new PrescriptionUpdateDto
+        return new PrescriptionUpdateRequest
         {
             Id = prescription.Id,
             Medication = prescription.Medication,
@@ -67,9 +67,9 @@ public static class PrescriptionMapper
         };
     }
 
-    public static PrescriptionCreateDto MapDtoToCreateDto(this PrescriptionDto prescription)
+    public static PrescriptionCreateRequest MapDtoToCreateDto(this PrescriptionResponse prescription)
     {
-        return new PrescriptionCreateDto
+        return new PrescriptionCreateRequest
         {
             Medication = prescription.Medication,
             Dosage = prescription.Dosage,
@@ -79,9 +79,9 @@ public static class PrescriptionMapper
         };
     }
 
-    public static PrescriptionUpdateDto MapDtoToUpdateDto(this PrescriptionDto prescription)
+    public static PrescriptionUpdateRequest MapDtoToUpdateDto(this PrescriptionResponse prescription)
     {
-        return new PrescriptionUpdateDto
+        return new PrescriptionUpdateRequest
         {
             Id = prescription.Id,
             Medication = prescription.Medication,
@@ -90,12 +90,12 @@ public static class PrescriptionMapper
     }
 
 
-    public static IEnumerable<PrescriptionDto> MapToDto(this IEnumerable<Prescription> prescriptions)
+    public static IEnumerable<PrescriptionResponse> MapToDto(this IEnumerable<Prescription> prescriptions)
     {
         return prescriptions.Select(p => p.MapToDto());
     }
 
-    public static IEnumerable<Prescription> MapToDomain(this IEnumerable<PrescriptionDto> dtos)
+    public static IEnumerable<Prescription> MapToDomain(this IEnumerable<PrescriptionResponse> dtos)
     {
         return dtos.Select(dto => dto.MapToDomain());
     }

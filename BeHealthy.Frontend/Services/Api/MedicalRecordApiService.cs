@@ -7,19 +7,19 @@ public class MedicalRecordApiService : ApiClientBase, IMedicalRecordService
 {
     public MedicalRecordApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
 
-    public async Task<IEnumerable<MedicalRecordDto>> GetAllMedicalRecordsAsync()
-        => await GetListAsync<MedicalRecordDto>("medicalrecords");
+    public async Task<IEnumerable<MedicalRecordResponse>> GetAllMedicalRecordsAsync()
+        => await GetListAsync<MedicalRecordResponse>("medicalrecords");
 
-    public async Task<MedicalRecordDto?> GetMedicalRecordByIdAsync(int id)
-        => await GetAsync<MedicalRecordDto>($"medicalrecords/{id}");
+    public async Task<MedicalRecordResponse?> GetMedicalRecordByIdAsync(int id)
+        => await GetAsync<MedicalRecordResponse>($"medicalrecords/{id}");
 
-    public async Task<IEnumerable<MedicalRecordDto>> GetMedicalRecordsByPatientIdAsync(int patientId)
-        => await GetListAsync<MedicalRecordDto>($"medicalrecords/patient/{patientId}");
+    public async Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId)
+        => await GetListAsync<MedicalRecordResponse>($"medicalrecords/patient/{patientId}");
 
-    public async Task AddMedicalRecordAsync(MedicalRecordCreateDto medicalRecordDto)
+    public async Task AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto)
         => await PostAsync("medicalrecords", medicalRecordDto);
 
-    public async Task UpdateMedicalRecordAsync(MedicalRecordUpdateDto medicalRecordDto)
+    public async Task UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto)
         => await PutAsync("medicalrecords", medicalRecordDto);
 
     public async Task DeleteMedicalRecordAsync(int id)

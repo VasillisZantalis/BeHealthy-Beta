@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace BeHealthy.Application.Validations.Specialty;
 
-public class SpecialtyDtoValidator : AbstractValidator<SpecialtyDto>
+public class SpecialtyDtoValidator : AbstractValidator<SpecialtyResponse>
 {
     public SpecialtyDtoValidator()
     {

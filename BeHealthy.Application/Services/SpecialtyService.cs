@@ -11,25 +11,25 @@ public class SpecialtyService : ISpecialtyService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<IEnumerable<SpecialtyDto>> GetSpecialtiesAsync()
+    public async Task<IEnumerable<SpecialtyResponse>> GetSpecialtiesAsync()
     {
         var specialties = await _unitOfWork.SpecialtyRepository.GetAllAsync();
         return specialties.MapToDto();
     }
 
-    public async Task<SpecialtyDto?> GetSpecialtyByIdAsync(int id)
+    public async Task<SpecialtyResponse?> GetSpecialtyByIdAsync(int id)
     {
         var specialty = await _unitOfWork.SpecialtyRepository.GetByIdAsync(id);
         return specialty?.MapToDto();
     }
 
-    public async Task AddSpecialtyAsync(SpecialtyCreateDto specialtyForCreationDto)
+    public async Task AddSpecialtyAsync(SpecialtyCreateRequest specialtyForCreationDto)
     {
         var specialty = specialtyForCreationDto.MapToDomain();
         await _unitOfWork.SpecialtyRepository.AddAsync(specialty);
     }
 
-    public async Task UpdateSpecialtyAsync(SpecialtyUpdateDto specialtyForUpdateDto)
+    public async Task UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto)
     {
         var specialty = specialtyForUpdateDto.MapToDomain();
 

@@ -108,7 +108,7 @@ public class PatientsServiceTests
     public async Task AddPatientAsync_ReturnsSuccess_WhenAllStepsSucceed()
     {
         // Arrange
-        var patientDto = new PatientCreateDto { Email = "test@test.com", Password = "pass" };
+        var patientDto = new PatientCreateRequest { Email = "test@test.com", Password = "pass" };
         var user = new ApplicationUser { Id = "user1" };
 
         _userServiceMock.Setup(s => s.CreateApplicationUser(
@@ -140,7 +140,7 @@ public class PatientsServiceTests
     public async Task AddPatientAsync_ReturnsFailed_WhenUserCreationFails()
     {
         // Arrange
-        var patientDto = new PatientCreateDto { Email = "fail@test.com", Password = "pass" };
+        var patientDto = new PatientCreateRequest { Email = "fail@test.com", Password = "pass" };
         _userServiceMock.Setup(s => s.CreateApplicationUser(
             It.IsAny<ApplicationUser>(),
             patientDto.Password,
@@ -159,7 +159,7 @@ public class PatientsServiceTests
     public async Task AddPatientAsync_ReturnsFailed_WhenAddToRoleFails()
     {
         // Arrange
-        var patientDto = new PatientCreateDto { Email = "failrole@test.com", Password = "pass" };
+        var patientDto = new PatientCreateRequest { Email = "failrole@test.com", Password = "pass" };
         _userServiceMock.Setup(s => s.CreateApplicationUser(
             It.IsAny<ApplicationUser>(),
             patientDto.Password,
@@ -181,7 +181,7 @@ public class PatientsServiceTests
     public async Task AddPatientAsync_DeletesUserOnException()
     {
         // Arrange
-        var patientDto = new PatientCreateDto { Email = "exception@test.com", Password = "pass" };
+        var patientDto = new PatientCreateRequest { Email = "exception@test.com", Password = "pass" };
         _userServiceMock.Setup(s => s.CreateApplicationUser(
             It.IsAny<ApplicationUser>(),
             patientDto.Password,
@@ -213,7 +213,7 @@ public class PatientsServiceTests
     public async Task UpdatePatientAsync_ReturnsSuccess_WhenUpdateSucceeds()
     {
         // Arrange
-        var patientDto = new PatientUpdateDto { UserId = "user1", FirstName = "John", LastName = "Doe", PhoneNumber = "123" };
+        var patientDto = new PatientUpdateRequest { UserId = "user1", FirstName = "John", LastName = "Doe", PhoneNumber = "123" };
         var user = new ApplicationUser { Id = "user1" };
 
         _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId))
@@ -238,7 +238,7 @@ public class PatientsServiceTests
     public async Task UpdatePatientAsync_ReturnsFailed_WhenUserNotFound()
     {
         // Arrange
-        var patientDto = new PatientUpdateDto { UserId = "notfound" };
+        var patientDto = new PatientUpdateRequest { UserId = "notfound" };
         
         _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId))
             .ReturnsAsync((ApplicationUser?)null);
@@ -254,7 +254,7 @@ public class PatientsServiceTests
     public async Task UpdatePatientAsync_ReturnsFailed_WhenUpdateUserFails()
     {
         // Arrange
-        var patientDto = new PatientUpdateDto { UserId = "user1" };
+        var patientDto = new PatientUpdateRequest { UserId = "user1" };
         var user = new ApplicationUser { Id = "user1" };
 
         _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId))

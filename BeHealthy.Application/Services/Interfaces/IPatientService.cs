@@ -4,14 +4,14 @@ namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IPatientService
 {
-    Task<IEnumerable<PatientDto>> GetAllPatientsAsync(PatientQueryParameters? parameters = null);
-    Task<PatientDto?> GetPatientByIdAsync(int id);
-    Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsByUserIdAsync(string userId);
-    Task<IEnumerable<PatientSimpleDto>> GetAllPatientsSimpleAsync();
-    Task<ProfileDto?> GetPatientProfileByUserIdAsync(string userId);
-    Task<IEnumerable<DoctorDto>> GetMyDoctorsAsync(string userId);
-    Task<ServiceResponse> AddPatientAsync(PatientCreateDto patient);
+    Task<IEnumerable<PatientResponse>> GetAllPatientsAsync(PatientQueryParameters? parameters = null);
+    Task<PatientResponse?> GetPatientByIdAsync(int id);
+    Task<IEnumerable<AppointmentResponse>> GetPatientAppointmentsByUserIdAsync(string userId);
+    Task<IEnumerable<PatientSimpleResponse>> GetAllPatientsSimpleAsync();
+    Task<ProfileResponse?> GetPatientProfileByUserIdAsync(string userId);
+    Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId);
+    Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patient);
     Task<int> GetPatientCountAsync();
-    Task<ServiceResponse> UpdatePatientAsync(PatientUpdateDto patient);
+    Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patient);
     Task DeletePatientAsync(int id);
 }

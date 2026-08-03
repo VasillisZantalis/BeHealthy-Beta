@@ -12,26 +12,26 @@
     </Header>
 
     <Body>  
-        <BeHealthyTable TItem="DepartmentDto"
+        <BeHealthyTable TItem="DepartmentResponse"
                         Items="departments"
                         IsLoading="this.IsLoading"
                         TableClass="table table-responsive"
                         WrapperClass="table-wrapper"
                         EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Departments)">
 
-            <BeHealthyColumn TItem="DepartmentDto"
+            <BeHealthyColumn TItem="DepartmentResponse"
                              Title="@Resource.Name"
                              Property="@(x => x.Name)" />
 
-            <BeHealthyColumn TItem="DepartmentDto"
+            <BeHealthyColumn TItem="DepartmentResponse"
                              Title="@Resource.Location"
                              Property="@(x => x.Location)" />
 
-            <BeHealthyColumn TItem="DepartmentDto"
+            <BeHealthyColumn TItem="DepartmentResponse"
                              Title="@Resource.HeadΟfDepartment"
                              Property="@(x => x.HeadOfDepartment?.FullName ?? string.Empty)" />
 
-            <BeHealthyActionsColumn TItem="DepartmentDto"
+            <BeHealthyActionsColumn TItem="DepartmentResponse"
                                     HeaderClass="text-end"
                                     CellClass="text-end">
                 <Template>
@@ -51,7 +51,7 @@
 </BeHealthyCard>
 
 @code{
-    private List<DepartmentDto> departments = new();
+    private List<DepartmentResponse> departments = new();
 
     protected override void OnInitialized()
     {

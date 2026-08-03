@@ -11,22 +11,22 @@
     </Header>
     
     <Body>
-        <BeHealthyTable TItem="SpecialtyDto"
+        <BeHealthyTable TItem="SpecialtyResponse"
                         Items="@specialties"
                         IsLoading="isLoading"
                         TableClass="table table-responsive"
                         WrapperClass="table-wrapper"
                         EmptyMessage="@string.Format(Resource.NoAvailable, Resource.Specialties)">
 
-            <BeHealthyColumn TItem="SpecialtyDto"
+            <BeHealthyColumn TItem="SpecialtyResponse"
                              Title="#"
                              Property="@(x => specialties.IndexOf(x))" />
 
-            <BeHealthyColumn TItem="SpecialtyDto"
+            <BeHealthyColumn TItem="SpecialtyResponse"
                              Title="@Resource.Name"
                              Property="@(x => x.Name)" />
 
-            <BeHealthyActionsColumn TItem="SpecialtyDto"
+            <BeHealthyActionsColumn TItem="SpecialtyResponse"
                                     Title="@Resource.Actions"
                                     CellClass="text-end">
                 <Template>
@@ -51,7 +51,7 @@
 </BeHealthyCard>
 
 @code {
-    private List<SpecialtyDto> specialties { get; set; } = new();
+    private List<SpecialtyResponse> specialties { get; set; } = new();
     private bool isLoading = false;
     private int? specialtyId;
 
@@ -96,7 +96,7 @@
            new Dictionary<string, object?>
            {
                { nameof(UpsertModal.Specialty), specialty },
-               { nameof(UpsertModal.OnSpecialtySaved), EventCallback.Factory.Create<SpecialtyDto>(this, HandleResponse) }
+               { nameof(UpsertModal.OnSpecialtySaved), EventCallback.Factory.Create<SpecialtyResponse>(this, HandleResponse) }
            });
     }
 
@@ -115,12 +115,12 @@
         await LoadSpecialties();
     }
 
-    private async Task HandleResponse(SpecialtyDto specialtyDto)
+    private async Task HandleResponse(SpecialtyResponse specialtyDto)
     {
         isLoading = true;
         if (specialtyDto.Id > 0)
         {
-            var specialtyForUpdateDto = new SpecialtyUpdateDto
+            var specialtyForUpdateDto = new SpecialtyUpdateRequest
             {
                 Id = specialtyDto.Id,
                 Name = specialtyDto.Name
@@ -129,7 +129,7 @@
         }
         else
         {
-            var specialtyForCreationDto = new SpecialtyCreateDto
+            var specialtyForCreationDto = new SpecialtyCreateRequest
             {
                 Name = specialtyDto.Name
             };

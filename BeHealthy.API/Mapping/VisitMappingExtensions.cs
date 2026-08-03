@@ -6,7 +6,7 @@ namespace BeHealthy.API.Mapping;
 
 public static class VisitMappingExtensions
 {
-    public static DiagnosisDto MapToDto(this Diagnosis diagnosis) => new()
+    public static DiagnosisResponse MapToDto(this Diagnosis diagnosis) => new()
     {
         Id = diagnosis.Id,
         Name = diagnosis.Name,
@@ -14,7 +14,7 @@ public static class VisitMappingExtensions
         VisitId = diagnosis.VisitId
     };
 
-    public static TreatmentDto MapToDto(this Treatment treatment) => new()
+    public static TreatmentResponse MapToDto(this Treatment treatment) => new()
     {
         Id = treatment.Id,
         Description = treatment.Description,
@@ -24,7 +24,7 @@ public static class VisitMappingExtensions
         DiagnosisId = treatment.DiagnosisId
     };
 
-    public static LabResultDto MapToDto(this LabResult labResult) => new()
+    public static LabResultResponse MapToDto(this LabResult labResult) => new()
     {
         Id = labResult.Id,
         TestName = labResult.TestName,
@@ -35,7 +35,7 @@ public static class VisitMappingExtensions
         VisitId = labResult.VisitId
     };
 
-    public static VisitDetailsDto MapToDetailsDto(this Visit visit) => new()
+    public static VisitDetailsResponse MapToDetailsDto(this Visit visit) => new()
     {
         Id = visit.Id,
         VisitDate = visit.VisitDate,
