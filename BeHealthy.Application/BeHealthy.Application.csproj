@@ -25,6 +25,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Allergies\" />
+    <Folder Include="Features\Appointments\" />
+    <Folder Include="Features\AppSettings\" />
+    <Folder Include="Features\Dashboard\" />
+    <Folder Include="Features\Departments\" />
+    <Folder Include="Features\Doctors\" />
+    <Folder Include="Features\MedicalRecords\" />
+    <Folder Include="Features\Nurses\" />
+    <Folder Include="Features\Patients\" />
+    <Folder Include="Features\Prescriptions\" />
+    <Folder Include="Features\Rooms\" />
+    <Folder Include="Features\Seeding\" />
+    <Folder Include="Features\Specialties\" />
+    <Folder Include="Features\Visits\" />
     <Folder Include="Validations\Prescription\" />
   </ItemGroup>
 
