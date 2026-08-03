@@ -1,7 +1,9 @@
 ﻿namespace BeHealthy.Application.CQRS.Command;
 
-public interface ICommandHandler<in TCommand, out TResult>
+public interface ICommandHandler<TCommand, TResult>
     where TCommand : ICommand<TResult>
 {
-    Task HandleAsync(TCommand command, CancellationToken cancellationToken);
+    Task<TResult> HandleAsync(
+       TCommand command,
+       CancellationToken cancellationToken);
 }

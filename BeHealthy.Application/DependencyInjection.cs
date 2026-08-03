@@ -1,5 +1,4 @@
-﻿using BeHealthy.Application.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
 
 namespace BeHealthy.Application;
 
@@ -21,6 +20,34 @@ public static class DependencyInjection
         services.AddScoped<IVisitService, VisitService>();
         services.AddScoped<IAllergyService, AllergyService>();
         services.AddScoped<ISeedingService, SeedingService>();
+
+        services.AddScoped<IValidatorService, ValidatorService>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddCQRS(
+        this IServiceCollection services)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+
+        services.AddScoped<IDispatcher, Dispatcher>();
+
+        services.Scan(scan => scan
+            .FromAssemblies(assembly)
+            .AddClasses(classes => classes
+                .AssignableTo(typeof(ICommandHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+
+        services.Scan(scan => scan
+            .FromAssemblies(assembly)
+            .AddClasses(classes => classes
+                .AssignableTo(typeof(IQueryHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
 
         return services;
     }

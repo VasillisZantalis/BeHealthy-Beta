@@ -1,7 +1,7 @@
 ﻿namespace BeHealthy.Application.CQRS.Query;
 
-public interface IQueryHandler<in TQuery, out TResult>
+public interface IQueryHandler<TQuery, TResult>
     where TQuery : IQuery<TResult>
 {
-    Task HandleAsync(TQuery query, CancellationToken cancellationToken);
+    Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken);
 }
