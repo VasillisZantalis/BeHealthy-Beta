@@ -21,7 +21,6 @@ function initializeCalendar(dotNetRef, events) {
 
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        locale: getLocale(),
         timeZone: 'local',
         headerToolbar: {
             start: 'prev,next today',

@@ -1,16 +1,6 @@
-using BeHealthy.Shared.Common;
-using System.ComponentModel;
-
 namespace BeHealthy.Frontend.Models;
 
 // UI-oriented enums ported from BeHealthy.Domain so the WASM frontend does not depend on the Domain project.
-
-[TypeConverter(typeof(EnumResourceConverter))]
-public enum LanguageOptions
-{
-    English,
-    Greek
-}
 
 public enum MedicalRecordTabs
 {

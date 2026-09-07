@@ -52,7 +52,7 @@ public static class FieldMapper
             .Select(reason => new SelectItem
             {
                 Value = (int)reason,
-                Text = reason.ToLocalizedString(),
+                Text = reason.ToDisplayString(),
             })
             .ToList();
 

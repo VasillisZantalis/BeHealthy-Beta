@@ -175,7 +175,7 @@ public partial class AppointmentModal : ModalBase
          .Select(reason => new SelectItem
          {
              Value = (int)reason,
-             Text = reason.ToLocalizedString(),
+             Text = reason.ToDisplayString(),
          })
          .ToList();
 

@@ -107,7 +107,7 @@
                                 {
                                     if (status != AppointmentStatus.Scheduled)
                                     {
-                                        <option value="@status">@status.ToLocalizedString()</option>
+                                        <option value="@status">@status.ToDisplayString()</option>
                                     }
                                 }
                             </InputSelect>
@@ -119,7 +119,7 @@
                         <InputSelect id="reason" @bind-Value="appointmentDto.Reason" class="form-select">
                             @foreach (var reason in Enum.GetValues(typeof(AppointmentReason)).Cast<AppointmentReason>())
                             {
-                                <option value="@reason">@reason.ToLocalizedString()</option>
+                                <option value="@reason">@reason.ToDisplayString()</option>
                             }
                         </InputSelect>
                         <ValidationMessage For="() => appointmentDto.Reason" class="text-danger" />

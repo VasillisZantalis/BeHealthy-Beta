@@ -3,7 +3,7 @@ using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Infrastructure.Data;
-using BeHealthy.Infrastructure.Localization;
+using BeHealthy.Infrastructure.Identity;
 using BeHealthy.Infrastructure.Repositories;
 using BeHealthy.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -42,7 +42,7 @@ public static class DependencyInjection
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
+            .AddErrorDescriber<AppIdentityErrorDescriber>()
             .AddSignInManager<SignInManager<ApplicationUser>>();
 
         return services;

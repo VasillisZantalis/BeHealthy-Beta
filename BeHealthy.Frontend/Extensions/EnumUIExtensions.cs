@@ -1,21 +1,14 @@
 using BeHealthy.Frontend.Models;
+using BeHealthy.Shared.Common;
 using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Frontend.Extensions;
 
 public static class EnumUIExtensions
 {
-    public static string ToLocalizedString<TEnum>(this TEnum enumValue) where TEnum : Enum
+    public static string ToDisplayString<TEnum>(this TEnum enumValue) where TEnum : Enum
     {
-        var enumType = typeof(TEnum);
-        var enumName = enumValue.ToString();
-
-        var resourceKey = $"{enumType.Name}_{enumName}";
-
-        var resourceManager = Resource.ResourceManager;
-        var localizedString = resourceManager.GetString(resourceKey);
-
-        return string.IsNullOrEmpty(localizedString) ? enumName : localizedString;
+        return EnumResourceConverter.ConvertToDisplayString(enumValue);
     }
 
     public static List<SelectItem> GetEnumAsSelect<T>(bool? addPleaseSelect = false) where T : Enum
@@ -25,7 +18,7 @@ public static class EnumUIExtensions
             .Select(value => new SelectItem
             {
                 Value = Convert.ToInt32(value),
-                Text = value.ToLocalizedString()
+                Text = value.ToDisplayString()
             })
             .ToList();
 

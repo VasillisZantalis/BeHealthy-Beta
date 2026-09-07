@@ -99,13 +99,13 @@
 
             <BeHealthyColumn TItem="AppointmentResponse"
                              Title="@Resource.Reason"
-                             Property="@(x => x.Reason.ToLocalizedString())" />
+                             Property="@(x => x.Reason.ToDisplayString())" />
 
             <BeHealthyColumn TItem="AppointmentResponse"
                              Title="@Resource.Status">
                 <Template>
                     <span class="badge @context.Status.GetBadgeClass()">
-                        @context.Status.ToLocalizedString()
+                        @context.Status.ToDisplayString()
                     </span>
                 </Template>
             </BeHealthyColumn>

@@ -4,13 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BeHealthy.Domain;
 
-[TypeConverter(typeof(EnumResourceConverter))]
-public enum LanguageOptions
-{
-    English,
-    Greek
-}
-
 public enum Severity
 {
     Info,

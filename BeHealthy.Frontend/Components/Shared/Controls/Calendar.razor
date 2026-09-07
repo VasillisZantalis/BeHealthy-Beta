@@ -44,7 +44,7 @@
                 .Select((a, index) => new CalendarItem
                 {
                     Id = index + 1,
-                    Title = $"{a.Reason.ToLocalizedString()} - {a.Patient?.FullName ?? "Unknown"}",
+                    Title = $"{a.Reason.ToDisplayString()} - {a.Patient?.FullName ?? "Unknown"}",
                     Start = a.AppointmentDate.ToDateTime(a.AppointmentStartTime).ToString("yyyy-MM-ddTHH:mm:ss"),
                     End = a.AppointmentDate.ToDateTime(a.AppointmentEndTime).ToString("yyyy-MM-ddTHH:mm:ss"),
                     Description = a.Notes,

@@ -1,9 +1,9 @@
 ﻿using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Identity;
 
-namespace BeHealthy.Infrastructure.Localization;
+namespace BeHealthy.Infrastructure.Identity;
 
-public class LocalizedIdentityErrorDescriber : IdentityErrorDescriber
+public class AppIdentityErrorDescriber : IdentityErrorDescriber
 {
     public override IdentityError DefaultError()
     {

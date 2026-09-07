@@ -89,7 +89,7 @@
         {
             foreach (var reason in appointmentsByReasonCount.Keys)
             {
-                config?.Data.Labels.Add(reason.ToLocalizedString());
+                config?.Data.Labels.Add(reason.ToDisplayString());
             }
 
             var dataset = new BarDataset<int>(appointmentsByReasonCount.Values)
