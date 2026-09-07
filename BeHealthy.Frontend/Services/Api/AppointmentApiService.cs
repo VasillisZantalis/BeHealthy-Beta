@@ -23,7 +23,7 @@ public class AppointmentApiService : ApiClientBase, IAppointmentService
         => await GetListAsync<AppointmentResponse>($"appointments/user/{userId}");
 
     public async Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts()
-        => await GetAsync<Dictionary<AppointmentReason, int>>("appointments/reason-counts") ?? new();
+        => await GetAsync<Dictionary<AppointmentReason, int>>("appointments/reasons") ?? new();
 
     public async Task<AppointmentResponse?> GetAppointmentByIdAsync(int id)
         => await GetAsync<AppointmentResponse>($"appointments/{id}");
