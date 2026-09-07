@@ -18,8 +18,6 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
-builder.Services.AddCQRS();
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("BlazorClient", policy =>
