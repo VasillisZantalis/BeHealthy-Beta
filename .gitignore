@@ -365,3 +365,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BeHealthy.API/behealthy.db
+/BeHealthy.API/behealthy.db-shm
+/BeHealthy.API/behealthy.db-wal

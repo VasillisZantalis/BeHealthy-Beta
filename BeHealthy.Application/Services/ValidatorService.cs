@@ -2,12 +2,11 @@
 
 namespace BeHealthy.Application.Services;
 
-public class ValidatorService(ServiceProvider serviceProvider) : IValidatorService
+public class ValidatorService(IServiceProvider serviceProvider) : IValidatorService
 {
     public async Task ValidateAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
     {
-        var validators = serviceProvider
-            .GetServices<IValidator<TRequest>>();
+        var validators = serviceProvider.GetServices<IValidator<TRequest>>();
 
         if (!validators.Any())
             return;
