@@ -1,0 +1,67 @@
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using System.Linq.Expressions
+
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Sections
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.JSInterop
+
+@using ChartJs.Blazor
+@using Blazored.FluentValidation
+
+@using BeHealthy.Front
+@using BeHealthy.Front.Common
+@using BeHealthy.Front.Extensions
+@using BeHealthy.Front.Helpers
+@using BeHealthy.Front.Mappings
+@using BeHealthy.Front.Models
+@using BeHealthy.Front.Models.Enums
+@using BeHealthy.Front.States
+@using BeHealthy.Front.Services
+@using BeHealthy.Front.Services.Interfaces
+@using BeHealthy.Front.Services.CurrentUser
+
+@using BeHealthy.Front.Components
+@using BeHealthy.Front.Components.Layout
+@using BeHealthy.Front.Components.Pages
+@using BeHealthy.Front.Components.Pages.Dashboard
+@using BeHealthy.Front.Components.Pages.Patients.Components
+@using BeHealthy.Front.Components.Pages.Patients.Components.Prescriptions
+@using BeHealthy.Front.Components.Pages.Patients.Components.MedicalRecords
+@using BeHealthy.Front.Components.Pages.Patients.Components.Allergies
+@using BeHealthy.Front.Components.Pages.Visits
+@using BeHealthy.Front.Components.Shared
+@using BeHealthy.Front.Components.Shared.Controls
+@using BeHealthy.Front.Components.Shared.Controls.Tabs
+@using BeHealthy.Front.Components.Shared.Controls.Buttons
+@using BeHealthy.Front.Components.Shared.Wizards
+@using BeHealthy.Front.Components.Shared.Modals
+@using BeHealthy.Front.Components.Shared.Modals.Base
+@using BeHealthy.Front.Components.Shared.BeHealthyTable
+
+@using BeHealthy.Shared
+@using BeHealthy.Shared.Dtos.Allergy
+@using BeHealthy.Shared.Dtos.Appointment
+@using BeHealthy.Shared.Dtos.Common
+@using BeHealthy.Shared.Dtos.Dashboard
+@using BeHealthy.Shared.Dtos.Department
+@using BeHealthy.Shared.Dtos.Doctor
+@using BeHealthy.Shared.Dtos.MedicalRecord
+@using BeHealthy.Shared.Dtos.Nurse
+@using BeHealthy.Shared.Dtos.Patient
+@using BeHealthy.Shared.Dtos.Prescription
+@using BeHealthy.Shared.Dtos.Room
+@using BeHealthy.Shared.Dtos.Specialty
+@using BeHealthy.Shared.Dtos.User
+@using BeHealthy.Shared.Dtos.Visit
+@using BeHealthy.Shared.Parameters
+@using BeHealthy.Shared.Locales
