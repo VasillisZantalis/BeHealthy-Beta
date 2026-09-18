@@ -26,7 +26,10 @@ public partial class Home : BasePage
     {
         isAdminUser = CurrentUser.IsAdmin;
 
-        await CheckAndPromptSeeding();
+        if (isAdminUser)
+        {
+            await CheckAndPromptSeeding();
+        }
     }
 
     private async Task CheckAndPromptSeeding()

@@ -6,7 +6,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class PrescriptionApiService : ApiClientBase, IPrescriptionService
 {
-    public PrescriptionApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public PrescriptionApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<PrescriptionResponse>> GetAllPrescriptionsAsync()
         => await GetListAsync<PrescriptionResponse>("prescriptions");

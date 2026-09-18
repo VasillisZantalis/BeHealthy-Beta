@@ -47,6 +47,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             },
             new IdentityRole
             {
+                Id = "1",
+                Name = "Staff",
+                NormalizedName = "STAFF",
+                ConcurrencyStamp = "a1b2c3d4-0001-0000-0000-000000000000"
+            },
+            new IdentityRole
+            {
                 Id = "2",
                 Name = "Doctor",
                 NormalizedName = "DOCTOR",

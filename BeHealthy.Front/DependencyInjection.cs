@@ -27,7 +27,6 @@ public static class DependencyInjection
         services.AddScoped<ISeedingService, SeedingApiService>();
         services.AddScoped<IDashboardService, DashboardApiService>();
 
-        // Current-user stub (auth is intentionally out of scope for now)
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         // UI services / state containers

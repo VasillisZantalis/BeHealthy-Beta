@@ -3,14 +3,17 @@ using BeHealthy.Shared;
 namespace BeHealthy.Front.Services.CurrentUser;
 
 /// <summary>
-/// Temporary stand-in for authentication/authorization, which is intentionally out of scope
-/// for the initial WASM migration. Pages branch on the current user's role/id; this stub
-/// supplies a fixed Admin identity so that logic keeps working until real auth is wired in.
+/// Exposes the signed-in user's identity for the lifetime of the current circuit, backed by the
+/// authentication cookie issued at login.
 /// </summary>
 public interface ICurrentUserService
 {
+    bool IsAuthenticated { get; }
     string? UserId { get; }
     string? UserName { get; }
     UserRole? Role { get; }
     bool IsAdmin { get; }
+
+    /// <summary>The JWT to attach as a Bearer token when calling BeHealthy.API.</summary>
+    string? Token { get; }
 }

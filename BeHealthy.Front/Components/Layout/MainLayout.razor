@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
 @inject ICurrentUserService CurrentUser
+@inject NavigationManager NavigationManager
 
 <ErrorBoundary>
     <ChildContent>
@@ -11,6 +12,9 @@
                 <AlertModal />
                 <div class="d-flex flex-row align-items-center ms-auto gap-3">
                     <a class="m-0 p-0 nav-link" href="/profile" title="profile">@Resource.Hello, @CurrentUser.UserName</a>
+                    <form method="post" action="/account/logout">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Logout</button>
+                    </form>
                 </div>
             </div>
 
@@ -29,3 +33,14 @@
         </div>
     </ErrorContent>
 </ErrorBoundary>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!CurrentUser.IsAuthenticated)
+        {
+            var returnUrl = Uri.EscapeDataString(NavigationManager.ToBaseRelativePath(NavigationManager.Uri));
+            NavigationManager.NavigateTo($"{RoutingEndpoints.LOGIN_PAGE}?returnUrl={returnUrl}", forceLoad: true);
+        }
+    }
+}

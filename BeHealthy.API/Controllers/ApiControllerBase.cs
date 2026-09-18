@@ -2,8 +2,11 @@ namespace BeHealthy.API.Controllers;
 
 /// <summary>
 /// Shared behavior for all BeHealthy.API controllers: consistent RFC 7807 problem responses
-/// for failures reported by the application services.
+/// for failures reported by the application services, and a default requirement that callers
+/// are authenticated (JWT bearer). Controllers that need to allow anonymous access, such as
+/// <see cref="AuthController"/>, opt out with [AllowAnonymous].
 /// </summary>
+[Authorize]
 public abstract class ApiControllerBase : ControllerBase
 {
     protected ObjectResult ProblemFromServiceResponse(ServiceResponse response) => Problem(

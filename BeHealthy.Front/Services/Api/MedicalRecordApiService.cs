@@ -5,7 +5,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class MedicalRecordApiService : ApiClientBase, IMedicalRecordService
 {
-    public MedicalRecordApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public MedicalRecordApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<MedicalRecordResponse>> GetAllMedicalRecordsAsync()
         => await GetListAsync<MedicalRecordResponse>("medicalrecords");

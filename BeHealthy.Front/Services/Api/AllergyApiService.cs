@@ -6,7 +6,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class AllergyApiService : ApiClientBase, IAllergyService
 {
-    public AllergyApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public AllergyApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<AllergyResponse>> GetAllergiesByPatientIdAsync(int patientId)
         => await GetListAsync<AllergyResponse>($"allergies/patient/{patientId}");

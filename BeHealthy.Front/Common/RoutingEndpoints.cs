@@ -3,6 +3,7 @@ namespace BeHealthy.Front.Common;
 public static class RoutingEndpoints
 {
     public const string HOME_PAGE = "/";
+    public const string LOGIN_PAGE = "/login";
     public const string APPOINTMENTS_PAGE = "/appointments";
     public const string DEPARTMENTS_PAGE = "/departments";
     public const string DOCTORS_PAGE = "/doctors";

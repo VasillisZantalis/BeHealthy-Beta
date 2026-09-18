@@ -45,6 +45,9 @@ public static class DependencyInjection
             .AddErrorDescriber<AppIdentityErrorDescriber>()
             .AddSignInManager<SignInManager<ApplicationUser>>();
 
+        services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+
         return services;
     }
 

@@ -30,6 +30,7 @@ public class AppSettingsController(IAppSettingsService appSettingsService) : Api
 
     /// <summary>Updates the value of a setting.</summary>
     [HttpPut("{key}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

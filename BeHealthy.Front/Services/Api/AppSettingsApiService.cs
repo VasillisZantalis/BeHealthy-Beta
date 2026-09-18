@@ -6,7 +6,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class AppSettingsApiService : ApiClientBase, IAppSettingsService
 {
-    public AppSettingsApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public AppSettingsApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<AppSettingResponse>> GetAppSettingsAsync()
         => await GetListAsync<AppSettingResponse>("appsettings");

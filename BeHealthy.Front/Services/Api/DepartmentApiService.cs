@@ -6,7 +6,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class DepartmentApiService : ApiClientBase, IDepartmentService
 {
-    public DepartmentApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public DepartmentApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<DepartmentResponse>> GetAllDepartmentsAsync()
         => await GetListAsync<DepartmentResponse>("departments");

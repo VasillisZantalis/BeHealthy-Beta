@@ -5,7 +5,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class RoomApiService : ApiClientBase, IRoomService
 {
-    public RoomApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public RoomApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<RoomResponse>> GetAllRoomsAsync()
         => await GetListAsync<RoomResponse>("rooms");

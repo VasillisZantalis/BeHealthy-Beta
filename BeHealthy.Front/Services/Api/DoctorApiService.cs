@@ -10,7 +10,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class DoctorApiService : ApiClientBase, IDoctorService
 {
-    public DoctorApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public DoctorApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<PaginatedResult<DoctorResponse>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null)
         => await GetAsync<PaginatedResult<DoctorResponse>>($"doctors{ToQueryString(parameters)}") ?? new();

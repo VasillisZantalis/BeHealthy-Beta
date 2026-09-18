@@ -8,7 +8,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class AppointmentApiService : ApiClientBase, IAppointmentService
 {
-    public AppointmentApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public AppointmentApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<PaginatedResult<AppointmentResponse>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null)
         => await GetAsync<PaginatedResult<AppointmentResponse>>($"appointments{ToQueryString(parameters)}") ?? new();

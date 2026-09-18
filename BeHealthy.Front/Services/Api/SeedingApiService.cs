@@ -5,7 +5,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class SeedingApiService : ApiClientBase, ISeedingService
 {
-    public SeedingApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public SeedingApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<Dictionary<string, int>> CheckEntityCountsAsync()
         => await GetAsync<Dictionary<string, int>>("seeding/counts") ?? new();

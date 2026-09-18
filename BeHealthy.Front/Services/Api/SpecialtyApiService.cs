@@ -5,7 +5,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class SpecialtyApiService : ApiClientBase, ISpecialtyService
 {
-    public SpecialtyApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public SpecialtyApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<SpecialtyResponse>> GetSpecialtiesAsync()
         => await GetListAsync<SpecialtyResponse>("specialties");

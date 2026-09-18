@@ -1,3 +1,5 @@
+using BeHealthy.Front.Common;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using BeHealthy.Shared.Dtos.Common;
@@ -6,23 +8,26 @@ using BeHealthy.Shared.Parameters;
 namespace BeHealthy.Front.Services.Api;
 
 /// <summary>
-/// Base class for the WASM client-side API services. Wraps the named "API" <see cref="HttpClient"/>
+/// Base class for the server-side API services. Wraps the named "API" <see cref="HttpClient"/>
 /// and provides small helpers for the common request shapes used across the app.
 /// </summary>
 public abstract class ApiClientBase
 {
     protected readonly HttpClient httpClient;
 
-    protected ApiClientBase(IHttpClientFactory httpClientFactory)
+    protected ApiClientBase(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser)
     {
         httpClient = httpClientFactory.CreateClient("API");
+
+        if (!string.IsNullOrEmpty(currentUser.Token))
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", currentUser.Token);
     }
 
     protected async Task<T?> GetAsync<T>(string url)
     {
         try
         {
-            return await httpClient.GetFromJsonAsync<T>(url);
+            return await httpClient.GetFromJsonAsync<T>(url, ApiJsonOptions.Default);
         }
         catch (HttpRequestException)
         {
@@ -37,7 +42,7 @@ public abstract class ApiClientBase
     {
         try
         {
-            var response = await httpClient.PostAsJsonAsync(url, body);
+            var response = await httpClient.PostAsJsonAsync(url, body, ApiJsonOptions.Default);
             return await ReadServiceResponseAsync(response);
         }
         catch (HttpRequestException ex)
@@ -50,7 +55,7 @@ public abstract class ApiClientBase
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync(url, body);
+            var response = await httpClient.PutAsJsonAsync(url, body, ApiJsonOptions.Default);
             return await ReadServiceResponseAsync(response);
         }
         catch (HttpRequestException ex)
@@ -73,10 +78,10 @@ public abstract class ApiClientBase
     }
 
     protected async Task PostAsync<TBody>(string url, TBody body)
-        => await httpClient.PostAsJsonAsync(url, body);
+        => await httpClient.PostAsJsonAsync(url, body, ApiJsonOptions.Default);
 
     protected async Task PutAsync<TBody>(string url, TBody body)
-        => await httpClient.PutAsJsonAsync(url, body);
+        => await httpClient.PutAsJsonAsync(url, body, ApiJsonOptions.Default);
 
     protected async Task DeleteAsync(string url)
         => await httpClient.DeleteAsync(url);
@@ -85,7 +90,7 @@ public abstract class ApiClientBase
     {
         try
         {
-            var result = await response.Content.ReadFromJsonAsync<ServiceResponse>();
+            var result = await response.Content.ReadFromJsonAsync<ServiceResponse>(ApiJsonOptions.Default);
             if (result is not null)
                 return result;
         }

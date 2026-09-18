@@ -3,6 +3,7 @@ namespace BeHealthy.API.Controllers;
 /// <summary>Admin-only endpoints backing the seeding modal in the UI.</summary>
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = nameof(UserRole.Admin))]
 public class SeedingController(ISeedingService seedingService) : ApiControllerBase
 {
     /// <summary>Gets the current row count of every seedable entity.</summary>

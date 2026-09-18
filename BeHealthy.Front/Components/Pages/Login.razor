@@ -1,0 +1,39 @@
+@page "/login"
+@layout BeHealthy.Front.Components.Layout.AuthLayout
+
+<PageTitle>Login</PageTitle>
+
+<div class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-4 rounded p-5 shadow bg-white">
+    <h2 class="mb-4">Login</h2>
+
+    @if (HasError)
+    {
+        <div class="alert alert-danger" role="alert">Invalid username or password.</div>
+    }
+
+    <form method="post" action="/account/login">
+        <input type="hidden" name="returnUrl" value="@ReturnUrl" />
+
+        <div class="form-floating mb-3">
+            <input type="email" id="username" name="username" class="form-control" placeholder="name@example.com" autocomplete="username" required />
+            <label for="username">Email</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password" autocomplete="current-password" required />
+            <label for="password">Password</label>
+        </div>
+
+        <button type="submit" class="w-100 btn btn-primary">Login</button>
+    </form>
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "error")]
+    private string? Error { get; set; }
+
+    [SupplyParameterFromQuery(Name = "returnUrl")]
+    private string? ReturnUrl { get; set; }
+
+    private bool HasError => !string.IsNullOrEmpty(Error);
+}

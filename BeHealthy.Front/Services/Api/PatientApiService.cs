@@ -10,7 +10,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class PatientApiService : ApiClientBase, IPatientService
 {
-    public PatientApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public PatientApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<PatientResponse>> GetAllPatientsAsync(PatientQueryParameters? parameters = null)
         => await GetListAsync<PatientResponse>($"patients{ToQueryString(parameters)}");

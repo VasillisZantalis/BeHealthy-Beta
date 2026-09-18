@@ -6,7 +6,7 @@ namespace BeHealthy.Front.Services.Api;
 
 public class VisitApiService : ApiClientBase, IVisitService
 {
-    public VisitApiService(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public VisitApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<VisitResponse>> GetAllVisitsAsync()
         => await GetListAsync<VisitResponse>("visits");
