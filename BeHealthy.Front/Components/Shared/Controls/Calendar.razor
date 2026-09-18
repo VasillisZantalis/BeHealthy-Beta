@@ -14,6 +14,8 @@
 @code {
     private List<CalendarItem> calendarItems = new();
     private DotNetObjectReference<Calendar>? dotNetRef;
+    private bool isDataLoaded = false;
+    private bool isCalendarInitialized = false;
 
     List<AppointmentResponse> appointments = new();
 
@@ -34,27 +36,30 @@
                 appointments = paginatedResult.Items.ToList();
                 break;
         }
+
+        calendarItems = appointments
+            .Select((a, index) => new CalendarItem
+            {
+                Id = index + 1,
+                Title = $"{a.Reason.ToDisplayString()} - {a.Patient?.FullName ?? "Unknown"}",
+                Start = a.AppointmentDate.ToDateTime(a.AppointmentStartTime).ToString("yyyy-MM-ddTHH:mm:ss"),
+                End = a.AppointmentDate.ToDateTime(a.AppointmentEndTime).ToString("yyyy-MM-ddTHH:mm:ss"),
+                Description = a.Notes,
+                BackgroundColor = a.Status.GetStatusColor(),
+                BorderColor = a.Status.GetStatusColor(),
+                Color = a.Status.GetStatusColor()
+            }).ToList();
+
+        isDataLoaded = true;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (isDataLoaded && !isCalendarInitialized)
         {
-            calendarItems = appointments
-                .Select((a, index) => new CalendarItem
-                {
-                    Id = index + 1,
-                    Title = $"{a.Reason.ToDisplayString()} - {a.Patient?.FullName ?? "Unknown"}",
-                    Start = a.AppointmentDate.ToDateTime(a.AppointmentStartTime).ToString("yyyy-MM-ddTHH:mm:ss"),
-                    End = a.AppointmentDate.ToDateTime(a.AppointmentEndTime).ToString("yyyy-MM-ddTHH:mm:ss"),
-                    Description = a.Notes,
-                    BackgroundColor = a.Status.GetStatusColor(),
-                    BorderColor = a.Status.GetStatusColor(),
-                    Color = a.Status.GetStatusColor()
-                }).ToList();
-
             dotNetRef = DotNetObjectReference.Create(this);
             await JS.InvokeVoidAsync("initializeCalendar", dotNetRef, calendarItems);
+            isCalendarInitialized = true;
         }
     }
 
