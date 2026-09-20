@@ -30,6 +30,7 @@ public class DepartmentService : IDepartmentService
         {
             var department = departmentDto.MapToDomain();
             await _unitOfWork.DepartmentRepository.AddAsync(department);
+            await _unitOfWork.SaveChangesAsync();
             return ServiceResponse.Successful();
         }
         catch (Exception)
@@ -44,6 +45,7 @@ public class DepartmentService : IDepartmentService
         {
             var department = departmentDto.MapToDomain();
             await _unitOfWork.DepartmentRepository.UpdateAsync(department);
+            await _unitOfWork.SaveChangesAsync();
             return ServiceResponse.Successful();
         }
         catch (Exception)

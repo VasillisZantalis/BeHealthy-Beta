@@ -1,4 +1,4 @@
-﻿using BeHealthy.Infrastructure.Data;
+using BeHealthy.Infrastructure.Data;
 using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using BeHealthy.Application.Interfaces.Repositories;
@@ -7,15 +7,13 @@ namespace BeHealthy.Infrastructure.Repositories;
 
 public class MedicalRecordRepository : GenericRepository<MedicalRecord>, IMedicalRecordRepository
 {
-    public MedicalRecordRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
+    public MedicalRecordRepository(ApplicationDbContext context) : base(context)
     {
     }
 
     public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsByPatientIdAsync(int patientId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        var records = await context.MedicalRecords
+        var records = await _context.MedicalRecords
                                    .Where(mr => mr.PatientId == patientId)
                                    .ToListAsync();
         return records;
@@ -23,9 +21,7 @@ public class MedicalRecordRepository : GenericRepository<MedicalRecord>, IMedica
 
     public async Task UpdateMedicalRecordNotesAsync(int id, string notes)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        await context.MedicalRecords
+        await _context.MedicalRecords
             .Where(context => context.Id == id)
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(mr => mr.Notes, notes));

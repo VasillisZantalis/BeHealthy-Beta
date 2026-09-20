@@ -64,26 +64,36 @@ public class NurseService : INurseService
             Email = nurseDto.Email
         };
 
+        await using var transaction = await _unitOfWork.BeginTransactionAsync();
+
         try
         {
             var userCreationResult = await _userService.CreateApplicationUser(user, nurseDto.Password);
             if (!userCreationResult.Success)
+            {
+                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
+            }
 
             var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Nurse);
             if (!addToRoleResult.Success)
+            {
+                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
+            }
 
             nurseDto.UserId = user.Id;
             var nurse = nurseDto.MapToDomain();
 
             await _unitOfWork.NurseRepository.AddAsync(nurse);
+            await _unitOfWork.SaveChangesAsync();
 
+            await transaction.CommitAsync();
             return ServiceResponse.Successful();
         }
         catch (Exception)
         {
-            await _userService.DeleteUserAsync(user);
+            await transaction.RollbackAsync();
             return ServiceResponse.Failed();
         }
     }
@@ -112,6 +122,7 @@ public class NurseService : INurseService
         nurse.DepartmentId = nurseDto.DepartmentId;
 
         await _unitOfWork.NurseRepository.UpdateAsync(nurse);
+        await _unitOfWork.SaveChangesAsync();
 
         return ServiceResponse.Successful();
     }
@@ -119,6 +130,7 @@ public class NurseService : INurseService
     public async Task DeleteNurseAsync(int id)
     {
         await _unitOfWork.NurseRepository.DeleteNurseAsync(id);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<NurseResponse>> GetNursesOfPatientByUserId(string userId)

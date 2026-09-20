@@ -47,16 +47,6 @@ public static class PrescriptionMapper
         };
     }
 
-    public static Prescription MapToDomain(this PrescriptionUpdateRequest dto)
-    {
-        return new Prescription
-        {
-            Id = dto.Id,
-            Medication = dto.Medication,
-            Dosage = dto.Dosage
-        };
-    }
-
     public static PrescriptionUpdateRequest MapToUpdateDto(this Prescription prescription)
     {
         return new PrescriptionUpdateRequest

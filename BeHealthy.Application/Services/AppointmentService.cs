@@ -116,6 +116,7 @@ public class AppointmentService : IAppointmentService
             if (!conflictCheck.Success) return conflictCheck;
 
             await _unitOfWork.AppointmentRepository.AddAsync(appointment);
+            await _unitOfWork.SaveChangesAsync();
 
             return ServiceResponse.Successful();
         }
@@ -156,6 +157,7 @@ public class AppointmentService : IAppointmentService
             if (!conflictCheck.Success) return conflictCheck;
 
             await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
+            await _unitOfWork.SaveChangesAsync();
 
             return ServiceResponse.Successful();
         }

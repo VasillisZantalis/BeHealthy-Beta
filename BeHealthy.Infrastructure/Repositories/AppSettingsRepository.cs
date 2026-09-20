@@ -1,4 +1,4 @@
-﻿using BeHealthy.Infrastructure.Data;
+using BeHealthy.Infrastructure.Data;
 using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using BeHealthy.Application.Interfaces.Repositories;
@@ -7,15 +7,13 @@ namespace BeHealthy.Infrastructure.Repositories;
 
 public class AppSettingsRepository : GenericRepository<AppSetting>, IAppSettingsRepository
 {
-    public AppSettingsRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
+    public AppSettingsRepository(ApplicationDbContext context) : base(context)
     {
     }
 
     public async Task<List<AppSetting>> GetMassAppSettingsAsync(List<string> keys)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-    
-        return await context.AppSettings
+        return await _context.AppSettings
             .AsNoTracking()
             .Where(w => keys.Contains(w.Key))
             .ToListAsync();
@@ -23,8 +21,6 @@ public class AppSettingsRepository : GenericRepository<AppSetting>, IAppSettings
 
     public async Task<AppSetting?> GetSettingByKeyAsync(string key)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        return await context.AppSettings.FirstOrDefaultAsync(w => w.Key == key);
+        return await _context.AppSettings.FirstOrDefaultAsync(w => w.Key == key);
     }
 }

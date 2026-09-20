@@ -7,6 +7,7 @@ public class PatientsServiceTests
     private readonly Mock<IPatientRepository> _patientRepositoryMock;
     private readonly Mock<IAppointmentRepository> _appointmentRepositoryMock;
     private readonly Mock<IDoctorRepository> _doctorRepositoryMock;
+    private readonly Mock<IUnitOfWorkTransaction> _transactionMock;
     private readonly PatientService _service;
 
     public PatientsServiceTests()
@@ -16,10 +17,12 @@ public class PatientsServiceTests
         _patientRepositoryMock = new Mock<IPatientRepository>();
         _appointmentRepositoryMock = new Mock<IAppointmentRepository>();
         _doctorRepositoryMock = new Mock<IDoctorRepository>();
+        _transactionMock = new Mock<IUnitOfWorkTransaction>();
 
         _unitOfWorkMock.SetupGet(u => u.PatientRepository).Returns(_patientRepositoryMock.Object);
         _unitOfWorkMock.SetupGet(u => u.AppointmentRepository).Returns(_appointmentRepositoryMock.Object);
         _unitOfWorkMock.SetupGet(u => u.DoctorRepository).Returns(_doctorRepositoryMock.Object);
+        _unitOfWorkMock.Setup(u => u.BeginTransactionAsync()).ReturnsAsync(_transactionMock.Object);
 
         _service = new PatientService(_unitOfWorkMock.Object, _userServiceMock.Object);
     }
@@ -178,7 +181,7 @@ public class PatientsServiceTests
     }
 
     [Fact]
-    public async Task AddPatientAsync_DeletesUserOnException()
+    public async Task AddPatientAsync_RollsBackTransactionOnException()
     {
         // Arrange
         var patientDto = new PatientCreateRequest { Email = "exception@test.com", Password = "pass" };
@@ -194,15 +197,13 @@ public class PatientsServiceTests
         _patientRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Patient>()))
             .ThrowsAsync(new Exception());
 
-        _userServiceMock.Setup(s => s.DeleteUserAsync(It.IsAny<ApplicationUser>()))
-            .ReturnsAsync(ServiceResponse.Successful());
-
         // Act
         var result = await _service.AddPatientAsync(patientDto);
 
         // Assert
         Assert.False(result.Success);
-        _userServiceMock.Verify(s => s.DeleteUserAsync(It.IsAny<ApplicationUser>()), Times.Once);
+        _transactionMock.Verify(t => t.RollbackAsync(), Times.Once);
+        _transactionMock.Verify(t => t.CommitAsync(), Times.Never);
     }
 
     #endregion

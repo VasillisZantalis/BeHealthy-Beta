@@ -31,5 +31,6 @@ public class AppSettingsService : IAppSettingsService
     public async Task UpdateSettingAsync(AppSetting setting)
     {
         await _unitOfWork.AppSettingsRepository.UpdateAsync(setting);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

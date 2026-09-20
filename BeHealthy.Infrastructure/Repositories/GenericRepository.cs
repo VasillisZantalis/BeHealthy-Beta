@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Common.Models;
+using BeHealthy.Application.Common.Models;
 using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -8,36 +8,31 @@ namespace BeHealthy.Infrastructure.Repositories;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    protected readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+    protected readonly ApplicationDbContext _context;
 
-    public GenericRepository(IDbContextFactory<ApplicationDbContext> contextFactory)
+    public GenericRepository(ApplicationDbContext context)
     {
-        _contextFactory = contextFactory;
+        _context = context;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Set<T>().ToListAsync();
+        return await _context.Set<T>().ToListAsync();
     }
 
     public async Task<T?> GetByIdAsync(int id)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Set<T>().FindAsync(id);
+        return await _context.Set<T>().FindAsync(id);
     }
 
     public IQueryable<T> GetQueryable()
     {
-        using var context = _contextFactory.CreateDbContext();
-        return context.Set<T>().AsQueryable();
+        return _context.Set<T>().AsQueryable();
     }
 
     public async Task<T?> GetByIdWithIncludes(int id, params Expression<Func<T, object>>[] includes)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        var query = context.Set<T>().AsQueryable();
+        var query = _context.Set<T>().AsQueryable();
         query = includes.Aggregate(query, (current, include) => current.Include(include));
 
         return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
@@ -45,57 +40,46 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task AddAsync(T entity)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        await context.Set<T>().AddAsync(entity);
-        await context.SaveChangesAsync();
+        await _context.Set<T>().AddAsync(entity);
     }
 
-    public async Task UpdateAsync(T entity)
+    public Task UpdateAsync(T entity)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        context.Set<T>().Update(entity);
-        await context.SaveChangesAsync();
+        _context.Set<T>().Update(entity);
+        return Task.CompletedTask;
     }
 
     public async Task DeleteAsync(int id)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        await context.Set<T>()
+        await _context.Set<T>()
             .Where(e => EF.Property<int>(e, "Id") == id)
             .ExecuteDeleteAsync();
     }
 
-    public async Task DeleteEntityAsync(T entity)
+    public Task DeleteEntityAsync(T entity)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        context.Set<T>().Remove(entity);
-        await context.SaveChangesAsync();
+        _context.Set<T>().Remove(entity);
+        return Task.CompletedTask;
     }
 
     public async Task<bool> ExistsAsync(int id)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id);
+        return await _context.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id);
     }
 
     public async Task<int> GetCountAsync()
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Set<T>().CountAsync();
+        return await _context.Set<T>().CountAsync();
     }
 
     public async Task<T?> GetByUserIdAsync(string userId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Set<T>().FirstOrDefaultAsync(e => EF.Property<string>(e, "UserId") == userId);
+        return await _context.Set<T>().FirstOrDefaultAsync(e => EF.Property<string>(e, "UserId") == userId);
     }
 
     public async Task<IEnumerable<T>> QueryAsync(QueryOptions<T> options)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        IQueryable<T> query = context.Set<T>();
+        IQueryable<T> query = _context.Set<T>();
 
         if (options.Includes != null && options.Includes.Any())
             query = options.Includes.Aggregate(query, (current, include) => current.Include(include));
@@ -103,13 +87,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (!options.TrackChanges)
             query = query.AsNoTracking();
 
-        if (options.Predicate != null) 
+        if (options.Predicate != null)
             query = query.Where(options.Predicate);
 
         if (options.OrderBy != null)
         {
-            query = options.OrderDescending 
-                ? query.OrderByDescending(options.OrderBy) 
+            query = options.OrderDescending
+                ? query.OrderByDescending(options.OrderBy)
                 : query.OrderBy(options.OrderBy);
         }
 
@@ -126,7 +110,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Set<T>().AnyAsync(predicate);
+        return await _context.Set<T>().AnyAsync(predicate);
+    }
+
+    public Task<int> SaveChangesAsync()
+    {
+        return _context.SaveChangesAsync();
     }
 }

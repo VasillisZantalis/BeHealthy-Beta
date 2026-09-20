@@ -10,6 +10,7 @@ public class DoctorServiceTests
     private readonly Mock<IDoctorRepository> _mockDoctorRepository;
     private readonly Mock<IUserService> _mockUserService;
     private readonly Mock<ISpecialtyRepository> _mockSpecialtyRepository;
+    private readonly Mock<IUnitOfWorkTransaction> _mockTransaction;
 
     private readonly DoctorService _sut;
 
@@ -19,9 +20,11 @@ public class DoctorServiceTests
         _mockDoctorRepository = new Mock<IDoctorRepository>();
         _mockUserService = new Mock<IUserService>();
         _mockSpecialtyRepository = new Mock<ISpecialtyRepository>();
+        _mockTransaction = new Mock<IUnitOfWorkTransaction>();
 
         _mockUnitOfWork.Setup(uow => uow.DoctorRepository).Returns(_mockDoctorRepository.Object);
         _mockUnitOfWork.Setup(uow => uow.SpecialtyRepository).Returns(_mockSpecialtyRepository.Object);
+        _mockUnitOfWork.Setup(uow => uow.BeginTransactionAsync()).ReturnsAsync(_mockTransaction.Object);
 
         _sut = new DoctorService(_mockUnitOfWork.Object, _mockUserService.Object);
     }
@@ -242,7 +245,7 @@ public class DoctorServiceTests
     }
 
     [Fact]
-    public async Task AddDoctorAsync_ExceptionThrown_DeletesUserAndReturnsFailed()
+    public async Task AddDoctorAsync_ExceptionThrown_RollsBackTransactionAndReturnsFailed()
     {
         // Arrange
         var doctorDto = new DoctorCreateRequest
@@ -255,7 +258,7 @@ public class DoctorServiceTests
 
         _mockUserService.Setup(s => s.CreateApplicationUser(
             It.IsAny<ApplicationUser>(),
-            doctorDto.Password, 
+            doctorDto.Password,
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
 
@@ -265,16 +268,14 @@ public class DoctorServiceTests
         _mockDoctorRepository.Setup(r => r.AddAsync(It.IsAny<Doctor>()))
             .ThrowsAsync(new Exception("DB error"));
 
-        _mockUserService.Setup(s => s.DeleteUserAsync(It.IsAny<ApplicationUser>()))
-            .ReturnsAsync(ServiceResponse.Successful());
-
         // Act
         var result = await _sut.AddDoctorAsync(doctorDto);
 
         // Assert
         result.ShouldNotBeNull();
         result.Success.ShouldBeFalse();
-        _mockUserService.Verify(s => s.DeleteUserAsync(It.IsAny<ApplicationUser>()), Times.Once);
+        _mockTransaction.Verify(t => t.RollbackAsync(), Times.Once);
+        _mockTransaction.Verify(t => t.CommitAsync(), Times.Never);
     }
 
     #endregion

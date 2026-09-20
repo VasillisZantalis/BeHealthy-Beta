@@ -34,6 +34,7 @@ public class PrescriptionService : IPrescriptionService
         {
             var prescription = prescriptionDto.MapToDomain();
             await _unitOfWork.PrescriptionRepository.AddAsync(prescription);
+            await _unitOfWork.SaveChangesAsync();
 
             return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
         }
@@ -56,14 +57,11 @@ public class PrescriptionService : IPrescriptionService
                 return ServiceResponse.Failed(errorMessage);
             }
 
-            var updatedPrescription = prescriptionDto.MapToDomain();
+            existingPrescr.Medication = prescriptionDto.Medication;
+            existingPrescr.Dosage = prescriptionDto.Dosage;
 
-            updatedPrescription.Id = existingPrescr.Id;
-            updatedPrescription.DoctorId = existingPrescr.DoctorId;
-            updatedPrescription.PatientId = existingPrescr.PatientId;
-            updatedPrescription.DatePrescribed = existingPrescr.DatePrescribed;
-
-            await _unitOfWork.PrescriptionRepository.UpdateAsync(updatedPrescription);
+            await _unitOfWork.PrescriptionRepository.UpdateAsync(existingPrescr);
+            await _unitOfWork.SaveChangesAsync();
 
             return ServiceResponse.Successful();
         }

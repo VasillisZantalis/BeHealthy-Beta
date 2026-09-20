@@ -14,4 +14,5 @@ public interface IGenericRepository<T> where T : class
     Task<bool> ExistsAsync(int id);
     Task<int> GetCountAsync();
     Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+    Task<int> SaveChangesAsync();
 }

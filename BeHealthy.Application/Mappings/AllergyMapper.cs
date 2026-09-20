@@ -29,19 +29,6 @@ public static class AllergyMapper
         };
     }
 
-    public static Allergy MapToDomain(this AllergyUpdateRequest dto)
-    {
-        return new Allergy
-        {
-            Id = dto.Id,
-            AllergyName = dto.AllergyName,
-            Allergen = dto.Allergen,
-            Severity = dto.Severity,
-            Notes = dto.Notes,
-            PatientId = dto.PatientId
-        };
-    }
-
     public static AllergyCreateRequest MapToCreateDto(this AllergyResponse dto)
     {
         return new AllergyCreateRequest

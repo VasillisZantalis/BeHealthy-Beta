@@ -73,26 +73,36 @@ public class DoctorService : IDoctorService
             Email = doctorDto.Email
         };
 
+        await using var transaction = await _unitOfWork.BeginTransactionAsync();
+
         try
         {
             var userCreationResult = await _userService.CreateApplicationUser(user, doctorDto.Password);
             if (!userCreationResult.Success)
+            {
+                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
+            }
 
             var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Doctor);
             if (!addToRoleResult.Success)
+            {
+                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
+            }
 
             doctorDto.UserId = user.Id;
             var doctor = doctorDto.MapToDomain();
 
             await _unitOfWork.DoctorRepository.AddAsync(doctor);
+            await _unitOfWork.SaveChangesAsync();
 
+            await transaction.CommitAsync();
             return ServiceResponse.Successful();
         }
         catch (Exception)
         {
-            await _userService.DeleteUserAsync(user);
+            await transaction.RollbackAsync();
             return ServiceResponse.Failed();
         }
     }
@@ -125,6 +135,7 @@ public class DoctorService : IDoctorService
         doctor.DepartmentId = doctorDto.DepartmentId;
 
         await _unitOfWork.DoctorRepository.UpdateAsync(doctor);
+        await _unitOfWork.SaveChangesAsync();
 
         return ServiceResponse.Successful();
     }
@@ -132,6 +143,7 @@ public class DoctorService : IDoctorService
     public async Task DeleteDoctorAsync(int id)
     {
         await _unitOfWork.DoctorRepository.DeleteDoctorAsync(id);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<AppointmentResponse>> GetDoctorAppointmentsByUserIdAsync(string userId)

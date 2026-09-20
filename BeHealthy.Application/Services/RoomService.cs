@@ -27,12 +27,14 @@ public class RoomService : IRoomService
     {
         var room = roomDto.MapToDomain();
         await _unitOfWork.RoomRepository.AddAsync(room);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateRoomAsync(RoomUpdateRequest roomDto)
     {
         var room = roomDto.MapToDomain();
         await _unitOfWork.RoomRepository.UpdateAsync(room);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteRoomAsync(int id)

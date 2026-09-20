@@ -7,14 +7,13 @@ namespace BeHealthy.Infrastructure.Repositories;
 
 public class AllergyRepository : GenericRepository<Allergy>, IAllergyRepository
 {
-    public AllergyRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
+    public AllergyRepository(ApplicationDbContext context) : base(context)
     {
     }
 
     public async Task<IEnumerable<Allergy>> GetAllergiesByPatientIdAsync(int patientId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Allergies
+        return await _context.Allergies
             .Where(a => a.PatientId == patientId)
             .ToListAsync();
     }

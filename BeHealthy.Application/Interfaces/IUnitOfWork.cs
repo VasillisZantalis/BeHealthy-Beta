@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Interfaces.Repositories;
+using BeHealthy.Application.Interfaces.Repositories;
 
 namespace BeHealthy.Application.Interfaces;
 
@@ -14,4 +14,9 @@ public interface IUnitOfWork
     IRoomRepository RoomRepository { get; }
     IAppSettingsRepository AppSettingsRepository { get; }
     ISpecialtyRepository SpecialtyRepository { get; }
+    IAllergyRepository AllergyRepository { get; }
+    IVisitRepository VisitRepository { get; }
+
+    Task<int> SaveChangesAsync();
+    Task<IUnitOfWorkTransaction> BeginTransactionAsync();
 }

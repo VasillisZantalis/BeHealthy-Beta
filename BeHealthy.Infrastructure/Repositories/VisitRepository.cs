@@ -7,14 +7,13 @@ namespace BeHealthy.Infrastructure.Repositories;
 
 public class VisitRepository : GenericRepository<Visit>, IVisitRepository
 {
-    public VisitRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
+    public VisitRepository(ApplicationDbContext context) : base(context)
     {
     }
 
     public async Task<Visit?> GetVisitWithDetailsAsync(int visitId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Visits
+        return await _context.Visits
             .Include(v => v.Patient)
             .Include(v => v.Doctor)
             .Include(v => v.MedicalRecord)
@@ -26,32 +25,28 @@ public class VisitRepository : GenericRepository<Visit>, IVisitRepository
 
     public async Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Diagnoses
+        return await _context.Diagnoses
             .Where(d => d.VisitId == visitId)
             .ToListAsync();
     }
 
     public async Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Treatments
+        return await _context.Treatments
             .Where(t => t.VisitId == visitId)
             .ToListAsync();
     }
 
     public async Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.LabResults
+        return await _context.LabResults
             .Where(lr => lr.VisitId == visitId)
             .ToListAsync();
     }
 
     public async Task<IEnumerable<Visit>> GetVisitsByPatientIdAsync(int patientId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-            return await context.Visits
+        return await _context.Visits
             .Where(v => v.PatientId == patientId)
             .Include(v => v.Patient)
             .Include(v => v.Doctor)

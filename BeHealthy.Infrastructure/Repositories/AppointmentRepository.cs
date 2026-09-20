@@ -1,4 +1,4 @@
-﻿using BeHealthy.Application.Interfaces.Repositories;
+using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -8,14 +8,13 @@ namespace BeHealthy.Infrastructure.Repositories;
 public class AppointmentRepository : GenericRepository<Appointment>, IAppointmentRepository
 {
 
-    public AppointmentRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
+    public AppointmentRepository(ApplicationDbContext context) : base(context)
     {
     }
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Appointments
+        return await _context.Appointments
                 .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
@@ -26,8 +25,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Appointments
+        return await _context.Appointments
                 .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
@@ -39,8 +37,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(int patientId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Appointments
+        return await _context.Appointments
                 .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
@@ -52,8 +49,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByNurseIdAsync(int nurseId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Appointments
+        return await _context.Appointments
                 .AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
@@ -65,8 +61,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Appointments
+        return await _context.Appointments
                     .AsNoTracking()
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)
@@ -80,8 +75,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
 
     public async Task<IEnumerable<Appointment>> GetUserAppointmentsAsync(string userId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Appointments
+        return await _context.Appointments
                     .AsNoTracking()
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor)

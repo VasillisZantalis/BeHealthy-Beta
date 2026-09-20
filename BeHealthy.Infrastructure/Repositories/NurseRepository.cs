@@ -1,4 +1,4 @@
-﻿using BeHealthy.Infrastructure.Data;
+using BeHealthy.Infrastructure.Data;
 using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using BeHealthy.Application.Interfaces.Repositories;
@@ -7,22 +7,20 @@ namespace BeHealthy.Infrastructure.Repositories;
 
 public class NurseRepository : GenericRepository<Nurse>, INurseRepository
 {
-    public NurseRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
+    public NurseRepository(ApplicationDbContext context) : base(context)
     {
     }
 
     public async Task<IEnumerable<Nurse>> GetAllNursesAsync()
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Nurses
+        return await _context.Nurses
                     .Include(d => d.User)
                     .ToListAsync();
     }
 
     public async Task DeleteNurseAsync(int id)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        var nurse = await context.Nurses
+        var nurse = await _context.Nurses
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
@@ -30,20 +28,17 @@ public class NurseRepository : GenericRepository<Nurse>, INurseRepository
         {
             if (nurse.User != null)
             {
-                context.Users.Remove(nurse.User);
+                _context.Users.Remove(nurse.User);
             }
 
-            context.Nurses.Remove(nurse);
-            await context.SaveChangesAsync();
+            _context.Nurses.Remove(nurse);
         }
     }
 
     public async Task<Nurse?> GetNurseByUserIdAsync(string userId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        
-        return context.Nurses
+        return await _context.Nurses
             .Include(n => n.User)
-            .FirstOrDefault(n => n.UserId == userId);
+            .FirstOrDefaultAsync(n => n.UserId == userId);
     }
 }

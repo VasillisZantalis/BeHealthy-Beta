@@ -27,6 +27,7 @@ public class SpecialtyService : ISpecialtyService
     {
         var specialty = specialtyForCreationDto.MapToDomain();
         await _unitOfWork.SpecialtyRepository.AddAsync(specialty);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto)
@@ -34,6 +35,7 @@ public class SpecialtyService : ISpecialtyService
         var specialty = specialtyForUpdateDto.MapToDomain();
 
         await _unitOfWork.SpecialtyRepository.UpdateAsync(specialty);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteSpecialtyAsync(int id)

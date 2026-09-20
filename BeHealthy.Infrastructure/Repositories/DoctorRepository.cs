@@ -1,4 +1,4 @@
-﻿using BeHealthy.Infrastructure.Data;
+using BeHealthy.Infrastructure.Data;
 using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using BeHealthy.Application.Interfaces.Repositories;
@@ -7,14 +7,13 @@ namespace BeHealthy.Infrastructure.Repositories;
 
 public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 {
-    public DoctorRepository(IDbContextFactory<ApplicationDbContext> contextFactory) : base(contextFactory)
+    public DoctorRepository(ApplicationDbContext context) : base(context)
     {
     }
 
     public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Doctors
+        return await _context.Doctors
                     .Include(d => d.User)
                     .Include(d => d.Specialty)
                     .ToListAsync();
@@ -22,14 +21,12 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 
     public async Task<IEnumerable<Doctor>> GetAllDoctorsSimpleAsync()
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Doctors.ToListAsync();
+        return await _context.Doctors.ToListAsync();
     }
 
     public async Task DeleteDoctorAsync(int id)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        var doctor = await context.Doctors
+        var doctor = await _context.Doctors
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
@@ -37,18 +34,16 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
         {
             if (doctor.User != null)
             {
-                context.Users.Remove(doctor.User);
+                _context.Users.Remove(doctor.User);
             }
 
-            context.Doctors.Remove(doctor);
-            await context.SaveChangesAsync();
+            _context.Doctors.Remove(doctor);
         }
     }
 
     public async Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-        return await context.Appointments
+        return await _context.Appointments
                 .Include(a => a.Patient)
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
@@ -59,17 +54,13 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
 
     public async Task<Doctor?> GetDoctorByUserIdAsync(string userId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        return await context.Doctors
+        return await _context.Doctors
             .Include(i => i.User)
             .FirstOrDefaultAsync(w => w.UserId == userId);
     }
 
     public async Task<bool> IsDoctorHeadOfDepartmentAsync(int doctorId)
     {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        return await context.Departments.AnyAsync(w => w.HeadOfDepartmentId == doctorId);
+        return await _context.Departments.AnyAsync(w => w.HeadOfDepartmentId == doctorId);
     }
 }
