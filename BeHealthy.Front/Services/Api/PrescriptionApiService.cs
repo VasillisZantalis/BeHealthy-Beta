@@ -21,7 +21,7 @@ public class PrescriptionApiService : ApiClientBase, IPrescriptionService
         => await PostForResponseAsync("prescriptions", prescriptionDto);
 
     public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateRequest prescriptionDto)
-        => await PutForResponseAsync("prescriptions", prescriptionDto);
+        => await PutForResponseAsync($"prescriptions/{prescriptionDto.Id}", prescriptionDto);
 
     public async Task<ServiceResponse> DeletePrescriptionAsync(int id)
         => await DeleteForResponseAsync($"prescriptions/{id}");

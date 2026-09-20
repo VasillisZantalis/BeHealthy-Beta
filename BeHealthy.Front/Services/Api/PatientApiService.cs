@@ -37,7 +37,7 @@ public class PatientApiService : ApiClientBase, IPatientService
         => await GetAsync<int>("patients/count");
 
     public async Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patient)
-        => await PutForResponseAsync("patients", patient);
+        => await PutForResponseAsync($"patients/{patient.Id}", patient);
 
     public async Task DeletePatientAsync(int id)
         => await DeleteAsync($"patients/{id}");

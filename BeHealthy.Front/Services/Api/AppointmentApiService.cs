@@ -32,7 +32,7 @@ public class AppointmentApiService : ApiClientBase, IAppointmentService
         => await PostForResponseAsync("appointments", appointment);
 
     public async Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateRequest appointment)
-        => await PutForResponseAsync("appointments", appointment);
+        => await PutForResponseAsync($"appointments/{appointment.Id}", appointment);
 
     public async Task DeleteAppointmentAsync(int id)
         => await DeleteAsync($"appointments/{id}");

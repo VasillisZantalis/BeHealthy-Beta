@@ -17,7 +17,7 @@ public class RoomApiService : ApiClientBase, IRoomService
         => await PostAsync("rooms", roomDto);
 
     public async Task UpdateRoomAsync(RoomUpdateRequest roomDto)
-        => await PutAsync("rooms", roomDto);
+        => await PutAsync($"rooms/{roomDto.Id}", roomDto);
 
     public async Task DeleteRoomAsync(int id)
         => await DeleteAsync($"rooms/{id}");

@@ -17,7 +17,7 @@ public class SpecialtyApiService : ApiClientBase, ISpecialtyService
         => await PostAsync("specialties", specialtyForCreationDto);
 
     public async Task UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto)
-        => await PutAsync("specialties", specialtyForUpdateDto);
+        => await PutAsync($"specialties/{specialtyForUpdateDto.Id}", specialtyForUpdateDto);
 
     public async Task DeleteSpecialtyAsync(int id)
         => await DeleteAsync($"specialties/{id}");

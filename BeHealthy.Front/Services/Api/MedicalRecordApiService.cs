@@ -20,7 +20,7 @@ public class MedicalRecordApiService : ApiClientBase, IMedicalRecordService
         => await PostAsync("medicalrecords", medicalRecordDto);
 
     public async Task UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto)
-        => await PutAsync("medicalrecords", medicalRecordDto);
+        => await PutAsync($"medicalrecords/{medicalRecordDto.Id}", medicalRecordDto);
 
     public async Task DeleteMedicalRecordAsync(int id)
         => await DeleteAsync($"medicalrecords/{id}");

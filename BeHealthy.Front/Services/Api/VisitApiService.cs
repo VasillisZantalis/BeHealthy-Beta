@@ -30,7 +30,7 @@ public class VisitApiService : ApiClientBase, IVisitService
         => await PostForResponseAsync("visits", dto);
 
     public async Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto)
-        => await PutForResponseAsync("visits", dto);
+        => await PutForResponseAsync($"visits/{dto.Id}", dto);
 
     public async Task<ServiceResponse> DeleteVisitAsync(int id)
         => await DeleteForResponseAsync($"visits/{id}");

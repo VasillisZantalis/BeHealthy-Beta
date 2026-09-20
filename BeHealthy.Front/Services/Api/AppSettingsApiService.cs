@@ -26,5 +26,5 @@ public class AppSettingsApiService : ApiClientBase, IAppSettingsService
         => await GetAsync<AppSettingResponse>($"appsettings/{Uri.EscapeDataString(key)}");
 
     public async Task UpdateSettingAsync(AppSettingUpdateRequest setting)
-        => await PutAsync("appsettings", setting);
+        => await PutAsync($"appsettings/{Uri.EscapeDataString(setting.Key)}", setting);
 }

@@ -18,7 +18,7 @@ public class AllergyApiService : ApiClientBase, IAllergyService
         => await PostForResponseAsync("allergies", dto);
 
     public async Task<ServiceResponse> UpdateAllergyAsync(AllergyUpdateRequest dto)
-        => await PutForResponseAsync("allergies", dto);
+        => await PutForResponseAsync($"allergies/{dto.Id}", dto);
 
     public async Task<ServiceResponse> DeleteAllergyAsync(int id)
         => await DeleteForResponseAsync($"allergies/{id}");

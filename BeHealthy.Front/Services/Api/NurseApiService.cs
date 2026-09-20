@@ -32,7 +32,7 @@ public class NurseApiService : ApiClientBase, INurseService
         => await GetAsync<int>("nurses/count");
 
     public async Task<ServiceResponse> UpdateNurseAsync(NurseUpdateRequest nurse)
-        => await PutForResponseAsync("nurses", nurse);
+        => await PutForResponseAsync($"nurses/{nurse.Id}", nurse);
 
     public async Task DeleteNurseAsync(int id)
         => await DeleteAsync($"nurses/{id}");

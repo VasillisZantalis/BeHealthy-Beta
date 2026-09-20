@@ -18,7 +18,7 @@ public class DepartmentApiService : ApiClientBase, IDepartmentService
         => await PostForResponseAsync("departments", departmentDto);
 
     public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateRequest departmentDto)
-        => await PutForResponseAsync("departments", departmentDto);
+        => await PutForResponseAsync($"departments/{departmentDto.Id}", departmentDto);
 
     public async Task<ServiceResponse> DeleteDepartmentAsync(int id)
         => await DeleteForResponseAsync($"departments/{id}");
