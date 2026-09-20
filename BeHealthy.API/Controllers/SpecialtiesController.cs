@@ -40,8 +40,8 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;
 
-        await specialtyService.UpdateSpecialtyAsync(dto);
-        return NoContent();
+        var response = await specialtyService.UpdateSpecialtyAsync(dto);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 
     /// <summary>Deletes a specialty.</summary>

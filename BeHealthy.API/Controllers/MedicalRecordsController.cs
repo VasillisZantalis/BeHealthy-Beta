@@ -46,8 +46,8 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;
 
-        await medicalRecordService.UpdateMedicalRecordAsync(dto);
-        return NoContent();
+        var response = await medicalRecordService.UpdateMedicalRecordAsync(dto);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 
     /// <summary>Updates only the notes of a medical record.</summary>

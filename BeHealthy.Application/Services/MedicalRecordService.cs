@@ -1,4 +1,6 @@
-﻿using BeHealthy.Shared.Dtos.MedicalRecord;
+﻿using BeHealthy.Shared.Dtos.Common;
+using BeHealthy.Shared.Dtos.MedicalRecord;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -30,11 +32,20 @@ public class MedicalRecordService : IMedicalRecordService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto)
+    public async Task<ServiceResponse> UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto)
     {
-        var medicalRecord = medicalRecordDto.MapToDomain();
+        var medicalRecord = await _unitOfWork.MedicalRecordRepository.GetByIdAsync(medicalRecordDto.Id);
+        if (medicalRecord is null)
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        medicalRecord.PatientId = medicalRecordDto.PatientId;
+        medicalRecord.RecordDate = medicalRecordDto.RecordDate;
+        medicalRecord.Notes = medicalRecordDto.Notes;
+        medicalRecord.CreatedBy = medicalRecordDto.CreatedBy;
+
         await _unitOfWork.MedicalRecordRepository.UpdateAsync(medicalRecord);
         await _unitOfWork.SaveChangesAsync();
+        return ServiceResponse.Successful();
     }
 
     public async Task DeleteMedicalRecordAsync(int id)

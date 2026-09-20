@@ -1,4 +1,6 @@
-﻿using BeHealthy.Shared.Dtos.Room;
+﻿using BeHealthy.Shared.Dtos.Common;
+using BeHealthy.Shared.Dtos.Room;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -30,11 +32,19 @@ public class RoomService : IRoomService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task UpdateRoomAsync(RoomUpdateRequest roomDto)
+    public async Task<ServiceResponse> UpdateRoomAsync(RoomUpdateRequest roomDto)
     {
-        var room = roomDto.MapToDomain();
+        var room = await _unitOfWork.RoomRepository.GetByIdAsync(roomDto.Id);
+        if (room is null)
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        room.Name = roomDto.Name;
+        room.Number = roomDto.Number;
+        room.DepartmentId = roomDto.DepartmentId;
+
         await _unitOfWork.RoomRepository.UpdateAsync(room);
         await _unitOfWork.SaveChangesAsync();
+        return ServiceResponse.Successful();
     }
 
     public async Task DeleteRoomAsync(int id)

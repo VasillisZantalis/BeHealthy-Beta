@@ -1,4 +1,5 @@
-﻿using BeHealthy.Shared.Dtos.MedicalRecord;
+﻿using BeHealthy.Shared.Dtos.Common;
+using BeHealthy.Shared.Dtos.MedicalRecord;
 
 namespace BeHealthy.Application.Services.Interfaces;
 
@@ -8,7 +9,7 @@ public interface IMedicalRecordService
     Task<MedicalRecordResponse?> GetMedicalRecordByIdAsync(int id);
     Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId);
     Task AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto);
-    Task UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto);
+    Task<ServiceResponse> UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto);
     Task DeleteMedicalRecordAsync(int id);
     Task UpdateMedicalRecordNotesAsync(int id, string notes);
 }

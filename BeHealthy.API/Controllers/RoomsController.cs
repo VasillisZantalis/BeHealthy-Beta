@@ -40,8 +40,8 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;
 
-        await roomService.UpdateRoomAsync(dto);
-        return NoContent();
+        var response = await roomService.UpdateRoomAsync(dto);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 
     /// <summary>Deletes a room.</summary>

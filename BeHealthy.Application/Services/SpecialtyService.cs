@@ -1,4 +1,6 @@
-﻿using BeHealthy.Shared.Dtos.Specialty;
+﻿using BeHealthy.Shared.Dtos.Common;
+using BeHealthy.Shared.Dtos.Specialty;
+using BeHealthy.Shared.Locales;
 
 namespace BeHealthy.Application.Services;
 
@@ -30,12 +32,17 @@ public class SpecialtyService : ISpecialtyService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto)
+    public async Task<ServiceResponse> UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto)
     {
-        var specialty = specialtyForUpdateDto.MapToDomain();
+        var specialty = await _unitOfWork.SpecialtyRepository.GetByIdAsync(specialtyForUpdateDto.Id);
+        if (specialty is null)
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        specialty.Name = specialtyForUpdateDto.Name;
 
         await _unitOfWork.SpecialtyRepository.UpdateAsync(specialty);
         await _unitOfWork.SaveChangesAsync();
+        return ServiceResponse.Successful();
     }
 
     public async Task DeleteSpecialtyAsync(int id)

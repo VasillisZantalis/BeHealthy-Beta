@@ -130,16 +130,18 @@ public class AppointmentService : IAppointmentService
     {
         try
         {
-            var appointment = appointmentDto.MapToDomain();
+            var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(appointmentDto.Id);
+            if (appointment is null)
+                return ServiceResponse.Failed(Resource.NotFound);
 
-            var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointment.DoctorId);
+            var doctorExists = await _unitOfWork.DoctorRepository.ExistsAsync(appointmentDto.DoctorId);
             if (!doctorExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
 
-            var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointment.PatientId);
+            var patientExists = await _unitOfWork.PatientRepository.ExistsAsync(appointmentDto.PatientId);
             if (!patientExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
 
-            if (appointment.RoomId.HasValue
-                && !await _unitOfWork.RoomRepository.ExistsAsync(appointment.RoomId.Value))
+            if (appointmentDto.RoomId.HasValue
+                && !await _unitOfWork.RoomRepository.ExistsAsync(appointmentDto.RoomId.Value))
             {
                 return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
             }
@@ -155,6 +157,17 @@ public class AppointmentService : IAppointmentService
                 appointmentDto.Id);
 
             if (!conflictCheck.Success) return conflictCheck;
+
+            appointment.PatientId = appointmentDto.PatientId;
+            appointment.DoctorId = appointmentDto.DoctorId;
+            appointment.AppointmentDate = appointmentDto.AppointmentDate;
+            appointment.AppointmentStartTime = appointmentDto.AppointmentStartTime;
+            appointment.AppointmentEndTime = appointmentDto.AppointmentEndTime;
+            appointment.Notes = appointmentDto.Notes;
+            appointment.Status = appointmentDto.Status;
+            appointment.Reason = appointmentDto.Reason;
+            appointment.RoomId = appointmentDto.RoomId;
+            appointment.NurseId = appointmentDto.NurseId;
 
             await _unitOfWork.AppointmentRepository.UpdateAsync(appointment);
             await _unitOfWork.SaveChangesAsync();

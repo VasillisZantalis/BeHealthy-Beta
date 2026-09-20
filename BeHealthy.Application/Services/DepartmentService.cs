@@ -43,7 +43,14 @@ public class DepartmentService : IDepartmentService
     {
         try
         {
-            var department = departmentDto.MapToDomain();
+            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(departmentDto.Id);
+            if (department is null)
+                return ServiceResponse.Failed(Resource.NotFound);
+
+            department.Name = departmentDto.Name;
+            department.Location = departmentDto.Location;
+            department.HeadOfDepartmentId = departmentDto.HeadOfDepartmentId;
+
             await _unitOfWork.DepartmentRepository.UpdateAsync(department);
             await _unitOfWork.SaveChangesAsync();
             return ServiceResponse.Successful();
