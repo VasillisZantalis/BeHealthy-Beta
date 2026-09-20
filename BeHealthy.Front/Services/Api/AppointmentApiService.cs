@@ -36,4 +36,7 @@ public class AppointmentApiService : ApiClientBase, IAppointmentService
 
     public async Task DeleteAppointmentAsync(int id)
         => await DeleteAsync($"appointments/{id}");
+
+    public async Task<List<AppointmentResponse>> GetUpcomingAppointments()
+        => await GetListAsync<AppointmentResponse>("appointments/upcoming");
 }

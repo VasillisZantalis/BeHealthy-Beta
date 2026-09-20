@@ -7,10 +7,8 @@ using BeHealthy.Front.Services.Interfaces;
 using BeHealthy.Front.Validations.Appointments;
 using BeHealthy.Front.Components.Shared.Modals.Base;
 using BeHealthy.Shared;
-using BeHealthy.Front.Extensions;
 using BeHealthy.Front.Models;
 using BeHealthy.Shared.Locales;
-using BeHealthy.Front.States;
 using Microsoft.AspNetCore.Components;
 
 namespace BeHealthy.Front.Components.Pages.Appointments;

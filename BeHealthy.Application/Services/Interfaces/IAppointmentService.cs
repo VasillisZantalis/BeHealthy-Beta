@@ -13,4 +13,5 @@ public interface IAppointmentService
     Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateRequest appointment);
     Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateRequest appointment);
     Task DeleteAppointmentAsync(int id);
+    Task<IEnumerable<AppointmentResponse>> GetUpcomingAppointmentsAsync();
 }

@@ -269,5 +269,26 @@ public class AppointmentService : IAppointmentService
             return newStart <= existingEnd && newEnd >= existingStart;
         });
     }
+
+    public async Task<IEnumerable<AppointmentResponse>> GetUpcomingAppointmentsAsync()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var threeDaysFromNow = today.AddDays(3);
+
+
+        QueryOptions<Appointment> queryOptions = new QueryOptions<Appointment>
+        {
+            Predicate = a => a.AppointmentDate >= today 
+                            && a.AppointmentDate <= threeDaysFromNow 
+                            && a.Status != AppointmentStatus.Cancelled 
+                            && a.Status != AppointmentStatus.Completed,
+            OrderBy = a => a.AppointmentDate,
+            PageSize = 5
+        };
+
+        var appointments = await _unitOfWork.AppointmentRepository.QueryAsync(queryOptions);
+
+        return appointments.MapToDto();
+    }
 }
 

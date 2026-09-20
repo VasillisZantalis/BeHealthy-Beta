@@ -77,4 +77,11 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ap
         await appointmentService.DeleteAppointmentAsync(id);
         return NoContent();
     }
+
+    [HttpGet("upcoming")]
+    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetUpcomingAppointments()
+    {
+        var appointments = await appointmentService.GetUpcomingAppointmentsAsync();
+        return Ok(appointments);
+    }
 }

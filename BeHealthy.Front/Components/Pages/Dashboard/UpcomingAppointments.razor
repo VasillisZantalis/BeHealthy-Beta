@@ -13,21 +13,19 @@
             {
                 foreach (var appointment in upcomingAppointments)
                 {
-                    <div class="list-group">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex flex-row align-items-center justify-content-between border-bottom">
-                                <span><strong>Date:</strong> @appointment.AppointmentDate</span>
-                                <div class="d-flex flex-column">
-                                    <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
-                                    <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
-                                </div>
-                                <div><span class="badge @EnumExtensions.GetBadgeClass(appointment!.Status)">@appointment.Status</span></div>
-                                <button class="btn" title="@(Resource.Delete)" @onclick="() => DeleteAppointment(appointment.Id)">
-                                    <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex flex-row align-items-center justify-content-between border-bottom">
+                            <span><strong>Date:</strong> @appointment.AppointmentDate</span>
+                            <div class="d-flex flex-column">
+                                <span><strong>Patient:</strong> @appointment?.Patient?.FullName</span>
+                                <span><strong>Doctor:</strong> @appointment?.Doctor?.FullName</span>
+                            </div>
+                            <div><span class="badge @EnumExtensions.GetBadgeClass(appointment!.Status)">@appointment.Status</span></div>
+                            <button class="btn" title="@(Resource.Delete)" @onclick="() => DeleteAppointment(appointment.Id)">
+                                <Icon IconClass="@FAIcon.TrashCan" TextClass="text-danger" />
+                            </button>
+                        </li>
+                    </ul>
 
                 }
             }
@@ -45,21 +43,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var today = DateOnly.FromDateTime(DateTime.Now);
-        var threeDaysFromNow = today.AddDays(3);
-
-        var appointments = await AppointmentService.GetAllAppointmentsAsync();
-
-        upcomingAppointments = appointments.Items
-            .Where(a =>
-                a.AppointmentDate >= today &&
-                a.AppointmentDate <= threeDaysFromNow &&
-                a.Status != AppointmentStatus.Cancelled &&
-                a.Status != AppointmentStatus.Completed)
-            .OrderBy(a => a.AppointmentDate)
-            .ThenBy(a => a.AppointmentStartTime)
-            .Take(5)
-            .ToList();
+        upcomingAppointments = await AppointmentService.GetUpcomingAppointments();
     }
 
     private async Task DeleteAppointment(int appointmentId)
