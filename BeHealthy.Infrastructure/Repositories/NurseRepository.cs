@@ -11,18 +11,18 @@ public class NurseRepository : GenericRepository<Nurse>, INurseRepository
     {
     }
 
-    public async Task<IEnumerable<Nurse>> GetAllNursesAsync()
+    public async Task<IEnumerable<Nurse>> GetAllNursesAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Nurses
                     .Include(d => d.User)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
     }
 
-    public async Task DeleteNurseAsync(int id)
+    public async Task DeleteNurseAsync(int id, CancellationToken cancellationToken = default)
     {
         var nurse = await _context.Nurses
                 .Include(d => d.User)
-                .FirstOrDefaultAsync(d => d.Id == id);
+                .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
         if (nurse != null)
         {
@@ -35,10 +35,10 @@ public class NurseRepository : GenericRepository<Nurse>, INurseRepository
         }
     }
 
-    public async Task<Nurse?> GetNurseByUserIdAsync(string userId)
+    public async Task<Nurse?> GetNurseByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Nurses
             .Include(n => n.User)
-            .FirstOrDefaultAsync(n => n.UserId == userId);
+            .FirstOrDefaultAsync(n => n.UserId == userId, cancellationToken);
     }
 }

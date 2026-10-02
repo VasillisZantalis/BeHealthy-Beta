@@ -6,47 +6,48 @@ namespace BeHealthy.Application.Services;
 
 public class SpecialtyService : ISpecialtyService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ISpecialtyRepository _specialtyRepository;
 
-    public SpecialtyService(IUnitOfWork unitOfWork)
+    public SpecialtyService(ISpecialtyRepository specialtyRepository)
     {
-        _unitOfWork = unitOfWork;
+        _specialtyRepository = specialtyRepository;
     }
 
-    public async Task<IEnumerable<SpecialtyResponse>> GetSpecialtiesAsync()
+    public async Task<IEnumerable<SpecialtyResponse>> GetSpecialtiesAsync(CancellationToken cancellationToken = default)
     {
-        var specialties = await _unitOfWork.SpecialtyRepository.GetAllAsync();
+        var specialties = await _specialtyRepository.GetAllAsync(cancellationToken);
         return specialties.MapToDto();
     }
 
-    public async Task<SpecialtyResponse?> GetSpecialtyByIdAsync(int id)
+    public async Task<SpecialtyResponse?> GetSpecialtyByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var specialty = await _unitOfWork.SpecialtyRepository.GetByIdAsync(id);
+        var specialty = await _specialtyRepository.GetByIdAsync(id, cancellationToken);
         return specialty?.MapToDto();
     }
 
-    public async Task AddSpecialtyAsync(SpecialtyCreateRequest specialtyForCreationDto)
+    public async Task AddSpecialtyAsync(SpecialtyCreateRequest specialtyForCreationDto, CancellationToken cancellationToken = default)
     {
         var specialty = specialtyForCreationDto.MapToDomain();
-        await _unitOfWork.SpecialtyRepository.AddAsync(specialty);
-        await _unitOfWork.SaveChangesAsync();
+        await _specialtyRepository.AddAsync(specialty, cancellationToken);
+        await _specialtyRepository.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<ServiceResponse> UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto)
+    public async Task<ServiceResponse> UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto, CancellationToken cancellationToken = default)
     {
-        var specialty = await _unitOfWork.SpecialtyRepository.GetByIdAsync(specialtyForUpdateDto.Id);
+        var specialty = await _specialtyRepository.GetByIdAsync(specialtyForUpdateDto.Id, cancellationToken);
         if (specialty is null)
             return ServiceResponse.Failed(Resource.NotFound);
 
         specialty.Name = specialtyForUpdateDto.Name;
 
-        await _unitOfWork.SpecialtyRepository.UpdateAsync(specialty);
-        await _unitOfWork.SaveChangesAsync();
+        await _specialtyRepository.UpdateAsync(specialty);
+        await _specialtyRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task DeleteSpecialtyAsync(int id)
+    public async Task DeleteSpecialtyAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.SpecialtyRepository.DeleteAsync(id);
+        if (await _specialtyRepository.DeleteAsync(id, cancellationToken))
+            await _specialtyRepository.SaveChangesAsync(cancellationToken);
     }
 }

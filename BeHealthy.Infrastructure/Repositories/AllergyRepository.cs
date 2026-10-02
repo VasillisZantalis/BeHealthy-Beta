@@ -11,10 +11,10 @@ public class AllergyRepository : GenericRepository<Allergy>, IAllergyRepository
     {
     }
 
-    public async Task<IEnumerable<Allergy>> GetAllergiesByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<Allergy>> GetAllergiesByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
     {
         return await _context.Allergies
             .Where(a => a.PatientId == patientId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 }

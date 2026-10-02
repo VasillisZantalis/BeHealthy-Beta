@@ -6,31 +6,31 @@ namespace BeHealthy.Application.Services;
 
 public class AppSettingsService : IAppSettingsService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAppSettingsRepository _appSettingsRepository;
 
-    public AppSettingsService(IUnitOfWork unitOfWork)
+    public AppSettingsService(IAppSettingsRepository appSettingsRepository)
     {
-        _unitOfWork = unitOfWork;
+        _appSettingsRepository = appSettingsRepository;
     }
 
-    public async Task<IEnumerable<AppSetting>> GetAppSettingsAsync()
+    public async Task<IEnumerable<AppSetting>> GetAppSettingsAsync(CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.AppSettingsRepository.GetAllAsync();
+        return await _appSettingsRepository.GetAllAsync(cancellationToken);
     }
 
-    public async Task<List<AppSetting>> GetMassAppSettingsAsync(List<string> keys)
+    public async Task<List<AppSetting>> GetMassAppSettingsAsync(List<string> keys, CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.AppSettingsRepository.GetMassAppSettingsAsync(keys);
+        return await _appSettingsRepository.GetMassAppSettingsAsync(keys, cancellationToken);
     }
 
-    public async Task<AppSetting?> GetSettingByKeyAsync(string key)
+    public async Task<AppSetting?> GetSettingByKeyAsync(string key, CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.AppSettingsRepository.GetSettingByKeyAsync(key);
+        return await _appSettingsRepository.GetSettingByKeyAsync(key, cancellationToken);
     }
 
-    public async Task UpdateSettingAsync(AppSetting setting)
+    public async Task UpdateSettingAsync(AppSetting setting, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.AppSettingsRepository.UpdateAsync(setting);
-        await _unitOfWork.SaveChangesAsync();
+        await _appSettingsRepository.UpdateAsync(setting);
+        await _appSettingsRepository.SaveChangesAsync(cancellationToken);
     }
 }

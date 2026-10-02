@@ -9,32 +9,32 @@ namespace BeHealthy.Application.Services;
 
 public class PrescriptionService : IPrescriptionService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPrescriptionRepository _prescriptionRepository;
 
-    public PrescriptionService(IUnitOfWork unitOfWork)
+    public PrescriptionService(IPrescriptionRepository prescriptionRepository)
     {
-        _unitOfWork = unitOfWork;
+        _prescriptionRepository = prescriptionRepository;
     }
 
-    public async Task<IEnumerable<PrescriptionResponse>> GetAllPrescriptionsAsync()
+    public async Task<IEnumerable<PrescriptionResponse>> GetAllPrescriptionsAsync(CancellationToken cancellationToken = default)
     {
-        var prescriptions = await _unitOfWork.PrescriptionRepository.GetAllAsync();
+        var prescriptions = await _prescriptionRepository.GetAllAsync(cancellationToken);
         return prescriptions.MapToDto();
     }
 
-    public async Task<PrescriptionResponse?> GetPrescriptionByIdAsync(int id)
+    public async Task<PrescriptionResponse?> GetPrescriptionByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var prescription = await _unitOfWork.PrescriptionRepository.GetByIdAsync(id);
+        var prescription = await _prescriptionRepository.GetByIdAsync(id, cancellationToken);
         return prescription?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateRequest prescriptionDto)
+    public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateRequest prescriptionDto, CancellationToken cancellationToken = default)
     {
         try
         {
             var prescription = prescriptionDto.MapToDomain();
-            await _unitOfWork.PrescriptionRepository.AddAsync(prescription);
-            await _unitOfWork.SaveChangesAsync();
+            await _prescriptionRepository.AddAsync(prescription, cancellationToken);
+            await _prescriptionRepository.SaveChangesAsync(cancellationToken);
 
             return prescription.Id > 0 ? ServiceResponse.Successful() : ServiceResponse.Failed();
         }
@@ -45,11 +45,11 @@ public class PrescriptionService : IPrescriptionService
         
     }
 
-    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateRequest prescriptionDto)
+    public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateRequest prescriptionDto, CancellationToken cancellationToken = default)
     {
         try
         {
-            var existingPrescr = await _unitOfWork.PrescriptionRepository.GetByIdAsync(prescriptionDto.Id);
+            var existingPrescr = await _prescriptionRepository.GetByIdAsync(prescriptionDto.Id, cancellationToken);
 
             if (existingPrescr is null)
             {
@@ -60,8 +60,8 @@ public class PrescriptionService : IPrescriptionService
             existingPrescr.Medication = prescriptionDto.Medication;
             existingPrescr.Dosage = prescriptionDto.Dosage;
 
-            await _unitOfWork.PrescriptionRepository.UpdateAsync(existingPrescr);
-            await _unitOfWork.SaveChangesAsync();
+            await _prescriptionRepository.UpdateAsync(existingPrescr);
+            await _prescriptionRepository.SaveChangesAsync(cancellationToken);
 
             return ServiceResponse.Successful();
         }
@@ -72,16 +72,18 @@ public class PrescriptionService : IPrescriptionService
         
     }
 
-    public async Task<ServiceResponse> DeletePrescriptionAsync(int id)
+    public async Task<ServiceResponse> DeletePrescriptionAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.PrescriptionRepository.DeleteAsync(id);
+        if (!await _prescriptionRepository.DeleteAsync(id, cancellationToken))
+            return ServiceResponse.Failed(Resource.NotFound);
 
+        await _prescriptionRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task<IEnumerable<PrescriptionResponse>> GetPrescriptionsByPatientIdAsync(int id)
+    public async Task<IEnumerable<PrescriptionResponse>> GetPrescriptionsByPatientIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var prescriptions = await _unitOfWork.PrescriptionRepository.GetPrescriptionsByPatientIdAsync(id);
+        var prescriptions = await _prescriptionRepository.GetPrescriptionsByPatientIdAsync(id, cancellationToken);
 
         return prescriptions.MapToDto();
     }

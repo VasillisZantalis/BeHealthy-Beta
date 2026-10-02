@@ -11,24 +11,24 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
     {
     }
 
-    public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
+    public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Doctors
                     .Include(d => d.User)
                     .Include(d => d.Specialty)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Doctor>> GetAllDoctorsSimpleAsync()
+    public async Task<IEnumerable<Doctor>> GetAllDoctorsSimpleAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Doctors.ToListAsync();
+        return await _context.Doctors.ToListAsync(cancellationToken);
     }
 
-    public async Task DeleteDoctorAsync(int id)
+    public async Task DeleteDoctorAsync(int id, CancellationToken cancellationToken = default)
     {
         var doctor = await _context.Doctors
                 .Include(d => d.User)
-                .FirstOrDefaultAsync(d => d.Id == id);
+                .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
         if (doctor != null)
         {
@@ -41,7 +41,7 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
         }
     }
 
-    public async Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                 .Include(a => a.Patient)
@@ -49,18 +49,18 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
                 .Include(i => i.Room)
                 .Include(i => i.Nurse)
                 .Where(a => a.Doctor != null && a.Doctor.UserId == userId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
     }
 
-    public async Task<Doctor?> GetDoctorByUserIdAsync(string userId)
+    public async Task<Doctor?> GetDoctorByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Doctors
             .Include(i => i.User)
-            .FirstOrDefaultAsync(w => w.UserId == userId);
+            .FirstOrDefaultAsync(w => w.UserId == userId, cancellationToken);
     }
 
-    public async Task<bool> IsDoctorHeadOfDepartmentAsync(int doctorId)
+    public async Task<bool> IsDoctorHeadOfDepartmentAsync(int doctorId, CancellationToken cancellationToken = default)
     {
-        return await _context.Departments.AnyAsync(w => w.HeadOfDepartmentId == doctorId);
+        return await _context.Departments.AnyAsync(w => w.HeadOfDepartmentId == doctorId, cancellationToken);
     }
 }

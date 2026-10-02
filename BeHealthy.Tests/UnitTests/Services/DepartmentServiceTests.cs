@@ -6,7 +6,6 @@ namespace BeHealthy.Tests.UnitTests.Services;
 
 public class DepartmentServiceTests
 {
-    private readonly Mock<IUnitOfWork> _mockUnitOfWork;
     private readonly Mock<IDepartmentRepository> _mockDepartmentRepository;
     private readonly IDepartmentService _sut;
     private readonly IFixture _fixture;
@@ -15,12 +14,14 @@ public class DepartmentServiceTests
     {
         _fixture = new Fixture();
 
-        _mockUnitOfWork = new Mock<IUnitOfWork>();
         _mockDepartmentRepository = new Mock<IDepartmentRepository>();
 
-        _mockUnitOfWork.Setup(uow => uow.DepartmentRepository).Returns(_mockDepartmentRepository.Object);
-
-        _sut = new DepartmentService(_mockUnitOfWork.Object);
+        _sut = new DepartmentService(
+            _mockDepartmentRepository.Object,
+            Mock.Of<IDoctorRepository>(),
+            Mock.Of<INurseRepository>(),
+            Mock.Of<IPatientRepository>(),
+            Mock.Of<IRoomRepository>());
     }
 
     #region AddDepartmentAsync
@@ -31,7 +32,7 @@ public class DepartmentServiceTests
         //Arrange
         DepartmentCreateRequest departmentForCreationDto = _fixture.Create<DepartmentCreateRequest>();
 
-        _mockUnitOfWork.Setup(uow => uow.DepartmentRepository.AddAsync(It.IsAny<Department>()))
+        _mockDepartmentRepository.Setup(r => r.AddAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         //Act
@@ -45,7 +46,7 @@ public class DepartmentServiceTests
     public async Task AddDepartmentAsync_NullDepartment_ReturnsFailedResponse()
     {
         //Arrange
-        _mockUnitOfWork.Setup(uow => uow.DepartmentRepository.AddAsync(It.IsAny<Department>()))
+        _mockDepartmentRepository.Setup(r => r.AddAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         //Act
@@ -63,7 +64,7 @@ public class DepartmentServiceTests
             .With(w => w.HeadOfDepartmentId, 1)
             .Create();
 
-        _mockUnitOfWork.Setup(uow => uow.DepartmentRepository.AddAsync(It.IsAny<Department>()))
+        _mockDepartmentRepository.Setup(r => r.AddAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -81,7 +82,7 @@ public class DepartmentServiceTests
             .With(w => w.HeadOfDepartmentId, 99999)
             .Create();
 
-        _mockUnitOfWork.Setup(uow => uow.DepartmentRepository.AddAsync(It.IsAny<Department>()))
+        _mockDepartmentRepository.Setup(r => r.AddAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException());
 
         // Act

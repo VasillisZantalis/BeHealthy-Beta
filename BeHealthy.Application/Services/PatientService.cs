@@ -5,16 +5,27 @@ namespace BeHealthy.Application.Services;
 
 public class PatientService : IPatientService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPatientRepository _patientRepository;
+    private readonly IAppointmentRepository _appointmentRepository;
+    private readonly IDoctorRepository _doctorRepository;
     private readonly IUserService _userService;
+    private readonly ITransactionManager _transactionManager;
 
-    public PatientService(IUnitOfWork unitOfWork, IUserService userService)
+    public PatientService(
+        IPatientRepository patientRepository,
+        IAppointmentRepository appointmentRepository,
+        IDoctorRepository doctorRepository,
+        IUserService userService,
+        ITransactionManager transactionManager)
     {
-        _unitOfWork = unitOfWork;
+        _patientRepository = patientRepository;
+        _appointmentRepository = appointmentRepository;
+        _doctorRepository = doctorRepository;
         _userService = userService;
+        _transactionManager = transactionManager;
     }
 
-    public async Task<IEnumerable<PatientResponse>> GetAllPatientsAsync(PatientQueryParameters? parameters = null)
+    public async Task<IEnumerable<PatientResponse>> GetAllPatientsAsync(PatientQueryParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         parameters ??= new PatientQueryParameters();
         var queryOptions = new QueryOptions<Patient>
@@ -26,23 +37,23 @@ public class PatientService : IPatientService
             Includes = { d => d.User! }
         };
 
-        var patients = await _unitOfWork.PatientRepository.QueryAsync(queryOptions);
+        var patients = await _patientRepository.QueryAsync(queryOptions, cancellationToken);
         return patients.MapToDto();
     }
 
-    public async Task<IEnumerable<PatientSimpleResponse>> GetAllPatientsSimpleAsync()
+    public async Task<IEnumerable<PatientSimpleResponse>> GetAllPatientsSimpleAsync(CancellationToken cancellationToken = default)
     {
-        var patients = await _unitOfWork.PatientRepository.GetAllPatientsSimpleAsync();
+        var patients = await _patientRepository.GetAllPatientsSimpleAsync(cancellationToken);
         return patients.MapToSimpleDto();
     }
 
-    public async Task<PatientResponse?> GetPatientByIdAsync(int id)
+    public async Task<PatientResponse?> GetPatientByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var patient = await _unitOfWork.PatientRepository.GetByIdWithIncludes(id, w => w.User!);
+        var patient = await _patientRepository.GetByIdWithIncludes(id, cancellationToken, w => w.User!);
         return patient?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patientDto)
+    public async Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patientDto, CancellationToken cancellationToken = default)
     {
         var user = new ApplicationUser
         {
@@ -52,91 +63,81 @@ public class PatientService : IPatientService
             Email = patientDto.Email
         };
 
-        await using var transaction = await _unitOfWork.BeginTransactionAsync();
-
-        try
+        // UserManager saves on its own, so the user, its role and the patient need one explicit transaction.
+        return await _transactionManager.ExecuteInTransactionAsync(async () =>
         {
-            var userCreationResult = await _userService.CreateApplicationUser(user, patientDto.Password);
+            var userCreationResult = await _userService.CreateApplicationUser(user, patientDto.Password, cancellationToken);
             if (!userCreationResult.Success)
-            {
-                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
-            }
 
-            var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Patient);
+            var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Patient, cancellationToken);
             if (!addToRoleResult.Success)
-            {
-                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
-            }
 
             patientDto.UserId = user.Id;
 
             var patient = patientDto.MapToDomain();
-            await _unitOfWork.PatientRepository.AddAsync(patient);
-            await _unitOfWork.SaveChangesAsync();
+            await _patientRepository.AddAsync(patient, cancellationToken);
+            await _patientRepository.SaveChangesAsync(cancellationToken);
 
-            await transaction.CommitAsync();
             return ServiceResponse.Successful();
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            return ServiceResponse.Failed();
-        }
+        }, cancellationToken);
     }
 
-    public async Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patientDto)
+    public async Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patientDto, CancellationToken cancellationToken = default)
     {
-        var existingUser = await _userService.GetUserByIdAsync(patientDto.UserId);
+        var existingUser = await _userService.GetUserByIdAsync(patientDto.UserId, cancellationToken);
         if (existingUser == null)
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        var patient = await _patientRepository.GetByIdAsync(patientDto.Id, cancellationToken);
+        if (patient is null)
             return ServiceResponse.Failed(Resource.NotFound);
 
         existingUser.FirstName = patientDto.FirstName;
         existingUser.LastName = patientDto.LastName;
         existingUser.PhoneNumber = patientDto.PhoneNumber;
 
-        var updateUserResult = await _userService.UpdateUserAsync(existingUser);
-        if (!updateUserResult.Success)
-            return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
-
-        var patient = await _unitOfWork.PatientRepository.GetByIdAsync(patientDto.Id);
-        if (patient is null)
-            return ServiceResponse.Failed(Resource.NotFound);
-
         patient.FirstName = patientDto.FirstName;
         patient.LastName = patientDto.LastName;
         patient.Image = patientDto.Image;
         patient.DepartmentId = patientDto.DepartmentId;
 
-        await _unitOfWork.PatientRepository.UpdateAsync(patient);
-        await _unitOfWork.SaveChangesAsync();
+        return await _transactionManager.ExecuteInTransactionAsync(async () =>
+        {
+            var updateUserResult = await _userService.UpdateUserAsync(existingUser, cancellationToken);
+            if (!updateUserResult.Success)
+                return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
 
-        return ServiceResponse.Successful();
+            await _patientRepository.UpdateAsync(patient);
+            await _patientRepository.SaveChangesAsync(cancellationToken);
+
+            return ServiceResponse.Successful();
+        }, cancellationToken);
     }
 
-    public async Task DeletePatientAsync(int id)
+    public async Task DeletePatientAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.PatientRepository.DeletePatientAsync(id);
-        await _unitOfWork.SaveChangesAsync();
+        await _patientRepository.DeletePatientAsync(id, cancellationToken);
+        await _patientRepository.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<AppointmentResponse>> GetPatientAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<AppointmentResponse>> GetPatientAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var patientAppointments = await _unitOfWork.PatientRepository.GetPatientAppointmentsByUserIdAsync(userId);
+        var patientAppointments = await _patientRepository.GetPatientAppointmentsByUserIdAsync(userId, cancellationToken);
         return patientAppointments.MapToDto();
     }
 
-    public async Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId)
+    public async Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId, CancellationToken cancellationToken = default)
     {
         var doctors = new List<Doctor>();
 
-        var patient = await _unitOfWork.PatientRepository.GetByUserIdAsync(userId);
+        var patient = await _patientRepository.GetByUserIdAsync(userId, cancellationToken);
 
         if (patient is null)
             return Enumerable.Empty<DoctorResponse>();
 
-        var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id);
+        var patientAppointments = await _appointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id, cancellationToken);
 
         var doctorIds = patientAppointments
             .Select(s => s.DoctorId)
@@ -151,7 +152,7 @@ public class PatientService : IPatientService
                 Includes = { w => w.User! }
             };
 
-            var treatingDoctors = await _unitOfWork.DoctorRepository.QueryAsync(queryOptions);
+            var treatingDoctors = await _doctorRepository.QueryAsync(queryOptions, cancellationToken);
 
             doctors.AddRange(treatingDoctors);
         }
@@ -159,14 +160,14 @@ public class PatientService : IPatientService
         return doctors.MapToDto();
     }
 
-    public async Task<int> GetPatientCountAsync()
+    public async Task<int> GetPatientCountAsync(CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.PatientRepository.GetCountAsync();
+        return await _patientRepository.GetCountAsync(cancellationToken);
     }
 
-    public async Task<ProfileResponse?> GetPatientProfileByUserIdAsync(string userId)
+    public async Task<ProfileResponse?> GetPatientProfileByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var patient = await _unitOfWork.PatientRepository.GetPatientByUserIdAsync(userId);
+        var patient = await _patientRepository.GetPatientByUserIdAsync(userId, cancellationToken);
 
         if (patient is null) return null;
 

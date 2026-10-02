@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Application.Interfaces;
+using BeHealthy.Application.Interfaces.Repositories;
 using BeHealthy.Application.Services.Interfaces;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Infrastructure.Data;
@@ -18,14 +19,30 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("Default");
 
-        services.AddDbContextFactory<ApplicationDbContext>(options =>
+        // One DbContext per request: it is the unit of work shared by all repositories and Identity.
+        services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(connectionString));
 
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ITransactionManager, EfTransactionManager>();
+
+        services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IDoctorRepository, DoctorRepository>();
+        services.AddScoped<INurseRepository, NurseRepository>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+        services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
+        services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IAppSettingsRepository, AppSettingsRepository>();
+        services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
+        services.AddScoped<IAllergyRepository, AllergyRepository>();
+        services.AddScoped<IVisitRepository, VisitRepository>();
 
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
 
+        services.AddHttpContextAccessor();
         services.AddIdentityCore<ApplicationUser>()
+            .AddUserManager<AspNetUserManager<ApplicationUser>>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddErrorDescriber<AppIdentityErrorDescriber>()

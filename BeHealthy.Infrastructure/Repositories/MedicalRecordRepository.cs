@@ -11,19 +11,11 @@ public class MedicalRecordRepository : GenericRepository<MedicalRecord>, IMedica
     {
     }
 
-    public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<MedicalRecord>> GetMedicalRecordsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
     {
         var records = await _context.MedicalRecords
                                    .Where(mr => mr.PatientId == patientId)
-                                   .ToListAsync();
+                                   .ToListAsync(cancellationToken);
         return records;
-    }
-
-    public async Task UpdateMedicalRecordNotesAsync(int id, string notes)
-    {
-        await _context.MedicalRecords
-            .Where(context => context.Id == id)
-            .ExecuteUpdateAsync(setters => setters
-                .SetProperty(mr => mr.Notes, notes));
     }
 }

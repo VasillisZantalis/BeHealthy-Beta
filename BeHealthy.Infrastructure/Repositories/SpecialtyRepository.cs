@@ -11,8 +11,8 @@ internal class SpecialtyRepository : GenericRepository<Specialty>, ISpecialtyRep
     {
     }
 
-    public async Task<List<Specialty>> GetAllSpecialtiesAsync()
+    public async Task<List<Specialty>> GetAllSpecialtiesAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Specialties.ToListAsync();
+        return await _context.Specialties.ToListAsync(cancellationToken);
     }
 }

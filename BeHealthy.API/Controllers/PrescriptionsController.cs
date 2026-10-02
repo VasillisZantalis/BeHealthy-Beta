@@ -9,22 +9,22 @@ public class PrescriptionsController(IPrescriptionService prescriptionService) :
     /// <summary>Gets every prescription.</summary>
     [HttpGet]
     [ProducesResponseType<IEnumerable<PrescriptionResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<PrescriptionResponse>>> GetAll()
-        => Ok(await prescriptionService.GetAllPrescriptionsAsync());
+    public async Task<ActionResult<IEnumerable<PrescriptionResponse>>> GetAll(CancellationToken cancellationToken)
+        => Ok(await prescriptionService.GetAllPrescriptionsAsync(cancellationToken));
 
     /// <summary>Gets every prescription for a patient.</summary>
     [HttpGet("by-patient/{patientId:int}")]
     [ProducesResponseType<IEnumerable<PrescriptionResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<PrescriptionResponse>>> GetByPatient(int patientId)
-        => Ok(await prescriptionService.GetPrescriptionsByPatientIdAsync(patientId));
+    public async Task<ActionResult<IEnumerable<PrescriptionResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
+        => Ok(await prescriptionService.GetPrescriptionsByPatientIdAsync(patientId, cancellationToken));
 
     /// <summary>Gets a single prescription by id.</summary>
     [HttpGet("{id:int}")]
     [ProducesResponseType<PrescriptionResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PrescriptionResponse>> GetById(int id)
+    public async Task<ActionResult<PrescriptionResponse>> GetById(int id, CancellationToken cancellationToken)
     {
-        var prescription = await prescriptionService.GetPrescriptionByIdAsync(id);
+        var prescription = await prescriptionService.GetPrescriptionByIdAsync(id, cancellationToken);
         return prescription is null ? NotFoundProblem("Prescription", id) : Ok(prescription);
     }
 
@@ -32,9 +32,9 @@ public class PrescriptionsController(IPrescriptionService prescriptionService) :
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(PrescriptionCreateRequest dto)
+    public async Task<IActionResult> Create(PrescriptionCreateRequest dto, CancellationToken cancellationToken)
     {
-        var response = await prescriptionService.AddPrescriptionAsync(dto);
+        var response = await prescriptionService.AddPrescriptionAsync(dto, cancellationToken);
         return response.Success ? StatusCode(StatusCodes.Status201Created) : ProblemFromServiceResponse(response);
     }
 
@@ -42,12 +42,12 @@ public class PrescriptionsController(IPrescriptionService prescriptionService) :
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(int id, PrescriptionUpdateRequest dto)
+    public async Task<IActionResult> Update(int id, PrescriptionUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;
 
-        var response = await prescriptionService.UpdatePrescriptionAsync(dto);
+        var response = await prescriptionService.UpdatePrescriptionAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 
@@ -55,9 +55,9 @@ public class PrescriptionsController(IPrescriptionService prescriptionService) :
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var response = await prescriptionService.DeletePrescriptionAsync(id);
+        var response = await prescriptionService.DeletePrescriptionAsync(id, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 }

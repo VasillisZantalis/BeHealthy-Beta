@@ -6,16 +6,27 @@ namespace BeHealthy.Application.Services;
 
 public class NurseService : INurseService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly INurseRepository _nurseRepository;
+    private readonly IPatientRepository _patientRepository;
+    private readonly IAppointmentRepository _appointmentRepository;
     private readonly IUserService _userService;
+    private readonly ITransactionManager _transactionManager;
 
-    public NurseService(IUnitOfWork unitOfWork, IUserService userService)
+    public NurseService(
+        INurseRepository nurseRepository,
+        IPatientRepository patientRepository,
+        IAppointmentRepository appointmentRepository,
+        IUserService userService,
+        ITransactionManager transactionManager)
     {
-        _unitOfWork = unitOfWork;
+        _nurseRepository = nurseRepository;
+        _patientRepository = patientRepository;
+        _appointmentRepository = appointmentRepository;
         _userService = userService;
+        _transactionManager = transactionManager;
     }
 
-    public async Task<PaginatedResult<NurseResponse>> GetAllNursesAsync(QueryParameters? parameters = null)
+    public async Task<PaginatedResult<NurseResponse>> GetAllNursesAsync(QueryParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         parameters ??= new QueryParameters();
         var queryOptions = new QueryOptions<Nurse>
@@ -35,8 +46,8 @@ public class NurseService : INurseService
             queryOptions.OrderDescending = parameters.OrderDescending;
         }
 
-        var nurses = await _unitOfWork.NurseRepository.QueryAsync(queryOptions);
-        var totalCount = await _unitOfWork.NurseRepository.GetCountAsync();
+        var nurses = await _nurseRepository.QueryAsync(queryOptions, cancellationToken);
+        var totalCount = await _nurseRepository.GetCountAsync(cancellationToken);
 
         return new PaginatedResult<NurseResponse>
         {
@@ -48,13 +59,13 @@ public class NurseService : INurseService
 
     }
 
-    public async Task<NurseResponse?> GetNurseByIdAsync(int id)
+    public async Task<NurseResponse?> GetNurseByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var nurse = await _unitOfWork.NurseRepository.GetByIdWithIncludes(id, d => d.User!);
+        var nurse = await _nurseRepository.GetByIdWithIncludes(id, cancellationToken, d => d.User!);
         return nurse?.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddNurseAsync(NurseCreateRequest nurseDto)
+    public async Task<ServiceResponse> AddNurseAsync(NurseCreateRequest nurseDto, CancellationToken cancellationToken = default)
     {
         var user = new ApplicationUser
         {
@@ -64,85 +75,75 @@ public class NurseService : INurseService
             Email = nurseDto.Email
         };
 
-        await using var transaction = await _unitOfWork.BeginTransactionAsync();
-
-        try
+        // UserManager saves on its own, so the user, its role and the nurse need one explicit transaction.
+        return await _transactionManager.ExecuteInTransactionAsync(async () =>
         {
-            var userCreationResult = await _userService.CreateApplicationUser(user, nurseDto.Password);
+            var userCreationResult = await _userService.CreateApplicationUser(user, nurseDto.Password, cancellationToken);
             if (!userCreationResult.Success)
-            {
-                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
-            }
 
-            var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Nurse);
+            var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Nurse, cancellationToken);
             if (!addToRoleResult.Success)
-            {
-                await transaction.RollbackAsync();
                 return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
-            }
 
             nurseDto.UserId = user.Id;
             var nurse = nurseDto.MapToDomain();
 
-            await _unitOfWork.NurseRepository.AddAsync(nurse);
-            await _unitOfWork.SaveChangesAsync();
+            await _nurseRepository.AddAsync(nurse, cancellationToken);
+            await _nurseRepository.SaveChangesAsync(cancellationToken);
 
-            await transaction.CommitAsync();
             return ServiceResponse.Successful();
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            return ServiceResponse.Failed();
-        }
+        }, cancellationToken);
     }
 
-    public async Task<ServiceResponse> UpdateNurseAsync(NurseUpdateRequest nurseDto)
+    public async Task<ServiceResponse> UpdateNurseAsync(NurseUpdateRequest nurseDto, CancellationToken cancellationToken = default)
     {
-        var existingUser = await _userService.GetUserByIdAsync(nurseDto.UserId);
+        var existingUser = await _userService.GetUserByIdAsync(nurseDto.UserId, cancellationToken);
         if (existingUser == null)
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        var nurse = await _nurseRepository.GetByIdAsync(nurseDto.Id, cancellationToken);
+        if (nurse is null)
             return ServiceResponse.Failed(Resource.NotFound);
 
         existingUser.FirstName = nurseDto.FirstName;
         existingUser.LastName = nurseDto.LastName;
         existingUser.PhoneNumber = nurseDto.PhoneNumber;
 
-        var updateUserResult = await _userService.UpdateUserAsync(existingUser);
-        if (!updateUserResult.Success)
-            return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
-
-        var nurse = await _unitOfWork.NurseRepository.GetByIdAsync(nurseDto.Id);
-        if (nurse is null)
-            return ServiceResponse.Failed(Resource.NotFound);
-
         nurse.FirstName = nurseDto.FirstName;
         nurse.LastName = nurseDto.LastName;
         nurse.Image = nurseDto.Image;
         nurse.DepartmentId = nurseDto.DepartmentId;
 
-        await _unitOfWork.NurseRepository.UpdateAsync(nurse);
-        await _unitOfWork.SaveChangesAsync();
+        return await _transactionManager.ExecuteInTransactionAsync(async () =>
+        {
+            var updateUserResult = await _userService.UpdateUserAsync(existingUser, cancellationToken);
+            if (!updateUserResult.Success)
+                return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
 
-        return ServiceResponse.Successful();
+            await _nurseRepository.UpdateAsync(nurse);
+            await _nurseRepository.SaveChangesAsync(cancellationToken);
+
+            return ServiceResponse.Successful();
+        }, cancellationToken);
     }
 
-    public async Task DeleteNurseAsync(int id)
+    public async Task DeleteNurseAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.NurseRepository.DeleteNurseAsync(id);
-        await _unitOfWork.SaveChangesAsync();
+        await _nurseRepository.DeleteNurseAsync(id, cancellationToken);
+        await _nurseRepository.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<NurseResponse>> GetNursesOfPatientByUserId(string userId)
+    public async Task<IEnumerable<NurseResponse>> GetNursesOfPatientByUserId(string userId, CancellationToken cancellationToken = default)
     {
         List<Nurse> nurses = new();
 
-        var patient = await _unitOfWork.PatientRepository.GetByUserIdAsync(userId);
+        var patient = await _patientRepository.GetByUserIdAsync(userId, cancellationToken);
 
         if (patient is null)
             return Enumerable.Empty<NurseResponse>();
 
-        var patientAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id);
+        var patientAppointments = await _appointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id, cancellationToken);
 
         List<int?> nurseIds = patientAppointments
             .Select(s => s.NurseId)
@@ -151,10 +152,10 @@ public class NurseService : INurseService
 
         if (nurseIds.Any())
         {
-            var nursesThatTreatPatient = await _unitOfWork.NurseRepository.QueryAsync(new QueryOptions<Nurse>
+            var nursesThatTreatPatient = await _nurseRepository.QueryAsync(new QueryOptions<Nurse>
             {
                 Predicate = w => nurseIds.Contains(w.Id)
-            });
+            }, cancellationToken);
 
             nurses.AddRange(nursesThatTreatPatient);
         }
@@ -167,14 +168,14 @@ public class NurseService : INurseService
         return distinctNurses.MapToDto();
     }
 
-    public async Task<int> GetNurseCountAsync()
+    public async Task<int> GetNurseCountAsync(CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.NurseRepository.GetCountAsync();
+        return await _nurseRepository.GetCountAsync(cancellationToken);
     }
 
-    public async Task<ProfileResponse?> GetNurseProfileByUserIdAsync(string userId)
+    public async Task<ProfileResponse?> GetNurseProfileByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var nurse = await _unitOfWork.NurseRepository.GetNurseByUserIdAsync(userId);
+        var nurse = await _nurseRepository.GetNurseByUserIdAsync(userId, cancellationToken);
 
         if (nurse is null) return null;
 
@@ -192,9 +193,9 @@ public class NurseService : INurseService
         return profile;
     }
 
-    public async Task<IEnumerable<NurseSimpleResponse>> GetAllNursesSimpleAsync()
+    public async Task<IEnumerable<NurseSimpleResponse>> GetAllNursesSimpleAsync(CancellationToken cancellationToken = default)
     {
-        var nurses = await _unitOfWork.NurseRepository.GetAllAsync();
+        var nurses = await _nurseRepository.GetAllAsync(cancellationToken);
         return nurses.Select(x => x.MapToSimpleDto()).ToList();
     }
 }

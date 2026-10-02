@@ -10,5 +10,5 @@ public record AuthResult(bool Success, string? ErrorMessage, LoginResponse? Data
 
 public interface IAuthService
 {
-    Task<AuthResult> LoginAsync(LoginRequest request);
+    Task<AuthResult> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
 }

@@ -4,13 +4,13 @@ namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IVisitService
 {
-    Task<IEnumerable<Visit>> GetAllVisitsAsync();
-    Task<Visit?> GetVisitWithDetailsAsync(int visitId);
-    Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId);
-    Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId);
-    Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId);
-    Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId);
-    Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto);
-    Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto);
-    Task<ServiceResponse> DeleteVisitAsync(int id);
+    Task<IEnumerable<Visit>> GetAllVisitsAsync(CancellationToken cancellationToken = default);
+    Task<Visit?> GetVisitWithDetailsAsync(int visitId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> DeleteVisitAsync(int id, CancellationToken cancellationToken = default);
 }

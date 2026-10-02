@@ -11,13 +11,13 @@ public class PrescriptionRepository : GenericRepository<Prescription>, IPrescrip
     {
     }
 
-    public async Task<IEnumerable<Prescription>> GetPrescriptionsByPatientIdAsync(int id)
+    public async Task<IEnumerable<Prescription>> GetPrescriptionsByPatientIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var prescriptions = await _context.Prescriptions
             .Where(i => i.PatientId == id)
             .Include(i => i.Patient)
             .Include(i => i.Doctor)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return prescriptions;
     }

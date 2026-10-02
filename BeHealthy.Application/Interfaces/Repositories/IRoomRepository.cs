@@ -4,7 +4,7 @@ namespace BeHealthy.Application.Interfaces.Repositories;
 
 public interface IRoomRepository : IGenericRepository<Room>
 {
-    Task<IEnumerable<Room>> GetAllRoomsAsync();
-    Task<Room?> GetRoomByIdAsync(int roomId);
-    Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId);
+    Task<IEnumerable<Room>> GetAllRoomsAsync(CancellationToken cancellationToken = default);
+    Task<Room?> GetRoomByIdAsync(int roomId, CancellationToken cancellationToken = default);
+    Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId, CancellationToken cancellationToken = default);
 }

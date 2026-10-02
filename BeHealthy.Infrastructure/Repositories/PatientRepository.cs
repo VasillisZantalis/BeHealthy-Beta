@@ -12,17 +12,17 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
     {
     }
 
-    public async Task<IEnumerable<Patient>> GetAllPatientsAsync()
+    public async Task<IEnumerable<Patient>> GetAllPatientsAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Patients.Include(d => d.User).ToListAsync();
+        return await _context.Patients.Include(d => d.User).ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Patient>> GetAllPatientsSimpleAsync()
+    public async Task<IEnumerable<Patient>> GetAllPatientsSimpleAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Patients.ToListAsync();
+        return await _context.Patients.ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetPatientAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<Appointment>> GetPatientAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                 .Include(a => a.Doctor)
@@ -30,14 +30,14 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
                 .Include(i => i.Room)
                 .Include(i => i.Nurse)
                 .Where(a => a.Patient!.UserId == userId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
     }
 
-    public async Task DeletePatientAsync(int id)
+    public async Task DeletePatientAsync(int id, CancellationToken cancellationToken = default)
     {
         var patient = await _context.Patients
                 .Include(d => d.User)
-                .FirstOrDefaultAsync(d => d.Id == id);
+                .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
         if (patient != null)
         {
@@ -50,19 +50,19 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
         }
     }
 
-    public async Task<IEnumerable<Patient>> GetPatientsByDepartmentIdAsync(int departmentId)
+    public async Task<IEnumerable<Patient>> GetPatientsByDepartmentIdAsync(int departmentId, CancellationToken cancellationToken = default)
     {
         return await _context.Patients
             .AsNoTracking()
             .Where(w => w.DepartmentId == departmentId)
             .Include(i => i.User)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<Patient?> GetPatientByUserIdAsync(string userId)
+    public async Task<Patient?> GetPatientByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Patients
             .Include(i => i.User)
-            .FirstOrDefaultAsync(w => w.UserId == userId);
+            .FirstOrDefaultAsync(w => w.UserId == userId, cancellationToken);
     }
 }

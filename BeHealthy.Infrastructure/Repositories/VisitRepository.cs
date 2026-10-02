@@ -11,7 +11,7 @@ public class VisitRepository : GenericRepository<Visit>, IVisitRepository
     {
     }
 
-    public async Task<Visit?> GetVisitWithDetailsAsync(int visitId)
+    public async Task<Visit?> GetVisitWithDetailsAsync(int visitId, CancellationToken cancellationToken = default)
     {
         return await _context.Visits
             .Include(v => v.Patient)
@@ -20,36 +20,36 @@ public class VisitRepository : GenericRepository<Visit>, IVisitRepository
             .Include(v => v.Diagnoses)
             .Include(v => v.LabResults)
             .Include(v => v.Treatments)
-            .FirstOrDefaultAsync(v => v.Id == visitId);
+            .FirstOrDefaultAsync(v => v.Id == visitId, cancellationToken);
     }
 
-    public async Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId)
+    public async Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId, CancellationToken cancellationToken = default)
     {
         return await _context.Diagnoses
             .Where(d => d.VisitId == visitId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId)
+    public async Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId, CancellationToken cancellationToken = default)
     {
         return await _context.Treatments
             .Where(t => t.VisitId == visitId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId)
+    public async Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId, CancellationToken cancellationToken = default)
     {
         return await _context.LabResults
             .Where(lr => lr.VisitId == visitId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Visit>> GetVisitsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<Visit>> GetVisitsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
     {
         return await _context.Visits
             .Where(v => v.PatientId == patientId)
             .Include(v => v.Patient)
             .Include(v => v.Doctor)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 }

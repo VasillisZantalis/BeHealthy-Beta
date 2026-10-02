@@ -4,5 +4,5 @@ namespace BeHealthy.Application.Interfaces.Repositories;
 
 public interface IAllergyRepository : IGenericRepository<Allergy>
 {
-    Task<IEnumerable<Allergy>> GetAllergiesByPatientIdAsync(int patientId);
+    Task<IEnumerable<Allergy>> GetAllergiesByPatientIdAsync(int patientId, CancellationToken cancellationToken = default);
 }

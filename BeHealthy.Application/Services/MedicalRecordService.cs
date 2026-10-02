@@ -6,35 +6,35 @@ namespace BeHealthy.Application.Services;
 
 public class MedicalRecordService : IMedicalRecordService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMedicalRecordRepository _medicalRecordRepository;
 
-    public MedicalRecordService(IUnitOfWork unitOfWork)
+    public MedicalRecordService(IMedicalRecordRepository medicalRecordRepository)
     {
-        _unitOfWork = unitOfWork;
+        _medicalRecordRepository = medicalRecordRepository;
     }
 
-    public async Task<IEnumerable<MedicalRecordResponse>> GetAllMedicalRecordsAsync()
+    public async Task<IEnumerable<MedicalRecordResponse>> GetAllMedicalRecordsAsync(CancellationToken cancellationToken = default)
     {
-        var medicalRecords = await _unitOfWork.MedicalRecordRepository.GetAllAsync();
+        var medicalRecords = await _medicalRecordRepository.GetAllAsync(cancellationToken);
         return medicalRecords.MapToDto();
     }
 
-    public async Task<MedicalRecordResponse?> GetMedicalRecordByIdAsync(int id)
+    public async Task<MedicalRecordResponse?> GetMedicalRecordByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var medicalRecord = await _unitOfWork.MedicalRecordRepository.GetByIdAsync(id);
+        var medicalRecord = await _medicalRecordRepository.GetByIdAsync(id, cancellationToken);
         return medicalRecord?.MapToDto();
     }
 
-    public async Task AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto)
+    public async Task AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto, CancellationToken cancellationToken = default)
     {
         var medicalRecord = medicalRecordDto.MapToDomain();
-        await _unitOfWork.MedicalRecordRepository.AddAsync(medicalRecord);
-        await _unitOfWork.SaveChangesAsync();
+        await _medicalRecordRepository.AddAsync(medicalRecord, cancellationToken);
+        await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<ServiceResponse> UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto)
+    public async Task<ServiceResponse> UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto, CancellationToken cancellationToken = default)
     {
-        var medicalRecord = await _unitOfWork.MedicalRecordRepository.GetByIdAsync(medicalRecordDto.Id);
+        var medicalRecord = await _medicalRecordRepository.GetByIdAsync(medicalRecordDto.Id, cancellationToken);
         if (medicalRecord is null)
             return ServiceResponse.Failed(Resource.NotFound);
 
@@ -43,24 +43,30 @@ public class MedicalRecordService : IMedicalRecordService
         medicalRecord.Notes = medicalRecordDto.Notes;
         medicalRecord.CreatedBy = medicalRecordDto.CreatedBy;
 
-        await _unitOfWork.MedicalRecordRepository.UpdateAsync(medicalRecord);
-        await _unitOfWork.SaveChangesAsync();
+        await _medicalRecordRepository.UpdateAsync(medicalRecord);
+        await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task DeleteMedicalRecordAsync(int id)
+    public async Task DeleteMedicalRecordAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.MedicalRecordRepository.DeleteAsync(id);
+        if (await _medicalRecordRepository.DeleteAsync(id, cancellationToken))
+            await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
     {
-        var medicalRecords = await _unitOfWork.MedicalRecordRepository.GetMedicalRecordsByPatientIdAsync(patientId);
+        var medicalRecords = await _medicalRecordRepository.GetMedicalRecordsByPatientIdAsync(patientId, cancellationToken);
         return medicalRecords.MapToDto();
     }
 
-    public async Task UpdateMedicalRecordNotesAsync(int id, string notes)
+    public async Task UpdateMedicalRecordNotesAsync(int id, string notes, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.MedicalRecordRepository.UpdateMedicalRecordNotesAsync(id, notes);
+        var medicalRecord = await _medicalRecordRepository.GetByIdAsync(id, cancellationToken);
+        if (medicalRecord is null)
+            return;
+
+        medicalRecord.Notes = notes;
+        await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
     }
 }

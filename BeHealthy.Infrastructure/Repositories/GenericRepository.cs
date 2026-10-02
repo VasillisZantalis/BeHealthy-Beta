@@ -15,45 +15,46 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context = context;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Set<T>().ToListAsync();
+        return await _context.Set<T>().ToListAsync(cancellationToken);
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _context.Set<T>().FindAsync(id);
+        return await _context.Set<T>().FindAsync([id], cancellationToken);
     }
 
-    public IQueryable<T> GetQueryable()
-    {
-        return _context.Set<T>().AsQueryable();
-    }
-
-    public async Task<T?> GetByIdWithIncludes(int id, params Expression<Func<T, object>>[] includes)
+    public async Task<T?> GetByIdWithIncludes(int id, CancellationToken cancellationToken, params Expression<Func<T, object>>[] includes)
     {
         var query = _context.Set<T>().AsQueryable();
         query = includes.Aggregate(query, (current, include) => current.Include(include));
 
-        return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
+        return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken);
     }
 
-    public async Task AddAsync(T entity)
+    public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
-        await _context.Set<T>().AddAsync(entity);
+        await _context.Set<T>().AddAsync(entity, cancellationToken);
     }
 
     public Task UpdateAsync(T entity)
     {
-        _context.Set<T>().Update(entity);
+        // Tracked entities are already change-detected; Update() would mark every column (and the whole graph) as modified.
+        if (_context.Entry(entity).State == EntityState.Detached)
+            _context.Set<T>().Update(entity);
+
         return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _context.Set<T>()
-            .Where(e => EF.Property<int>(e, "Id") == id)
-            .ExecuteDeleteAsync();
+        var entity = await _context.Set<T>().FindAsync([id], cancellationToken);
+        if (entity is null)
+            return false;
+
+        _context.Set<T>().Remove(entity);
+        return true;
     }
 
     public Task DeleteEntityAsync(T entity)
@@ -62,22 +63,22 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return Task.CompletedTask;
     }
 
-    public async Task<bool> ExistsAsync(int id)
+    public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _context.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id);
+        return await _context.Set<T>().AnyAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken);
     }
 
-    public async Task<int> GetCountAsync()
+    public async Task<int> GetCountAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.Set<T>().CountAsync();
+        return await _context.Set<T>().CountAsync(cancellationToken);
     }
 
-    public async Task<T?> GetByUserIdAsync(string userId)
+    public async Task<T?> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        return await _context.Set<T>().FirstOrDefaultAsync(e => EF.Property<string>(e, "UserId") == userId);
+        return await _context.Set<T>().FirstOrDefaultAsync(e => EF.Property<string>(e, "UserId") == userId, cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> QueryAsync(QueryOptions<T> options)
+    public async Task<IEnumerable<T>> QueryAsync(QueryOptions<T> options, CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -105,16 +106,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
                 .Take(options.PageSize.Value);
         }
 
-        return await query.ToListAsync();
+        return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await _context.Set<T>().AnyAsync(predicate);
+        return await _context.Set<T>().AnyAsync(predicate, cancellationToken);
     }
 
-    public Task<int> SaveChangesAsync()
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return _context.SaveChangesAsync();
+        return _context.SaveChangesAsync(cancellationToken);
     }
 }

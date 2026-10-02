@@ -4,10 +4,10 @@ namespace BeHealthy.Application.Interfaces.Repositories;
 
 public interface IAppointmentRepository : IGenericRepository<Appointment>
 {
-    Task<IEnumerable<Appointment>> GetAllAppointmentsAsync();
-    Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(int doctorId);
-    Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(int patientId);
-    Task<IEnumerable<Appointment>> GetAllAppointmentsByNurseIdAsync(int nurseId);
-    Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId);
-    Task<IEnumerable<Appointment>> GetUserAppointmentsAsync(string userId);
+    Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(int doctorId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Appointment>> GetAllAppointmentsByNurseIdAsync(int nurseId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Appointment>> GetUserAppointmentsAsync(string userId, CancellationToken cancellationToken = default);
 }

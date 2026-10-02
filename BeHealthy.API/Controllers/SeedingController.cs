@@ -9,22 +9,22 @@ public class SeedingController(ISeedingService seedingService) : ApiControllerBa
     /// <summary>Gets the current row count of every seedable entity.</summary>
     [HttpGet("counts")]
     [ProducesResponseType<Dictionary<string, int>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Dictionary<string, int>>> GetCounts()
-        => Ok(await seedingService.CheckEntityCountsAsync());
+    public async Task<ActionResult<Dictionary<string, int>>> GetCounts(CancellationToken cancellationToken)
+        => Ok(await seedingService.CheckEntityCountsAsync(cancellationToken));
 
     /// <summary>Gets whether the database still needs seeding.</summary>
     [HttpGet("needs-seeding")]
     [ProducesResponseType<bool>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<bool>> NeedsSeeding()
-        => Ok(await seedingService.NeedsSeedingAsync());
+    public async Task<ActionResult<bool>> NeedsSeeding(CancellationToken cancellationToken)
+        => Ok(await seedingService.NeedsSeedingAsync(cancellationToken));
 
     /// <summary>Seeds a number of doctors.</summary>
     [HttpPost("doctors")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SeedDoctors([FromQuery] int count = 1)
+    public async Task<IActionResult> SeedDoctors([FromQuery] int count = 1, CancellationToken cancellationToken = default)
     {
-        var response = await seedingService.SeedDoctorsAsync(count);
+        var response = await seedingService.SeedDoctorsAsync(count, cancellationToken);
         return response.Success ? Ok() : ProblemFromServiceResponse(response);
     }
 
@@ -32,9 +32,9 @@ public class SeedingController(ISeedingService seedingService) : ApiControllerBa
     [HttpPost("patients")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SeedPatients([FromQuery] int count = 1)
+    public async Task<IActionResult> SeedPatients([FromQuery] int count = 1, CancellationToken cancellationToken = default)
     {
-        var response = await seedingService.SeedPatientsAsync(count);
+        var response = await seedingService.SeedPatientsAsync(count, cancellationToken);
         return response.Success ? Ok() : ProblemFromServiceResponse(response);
     }
 
@@ -42,9 +42,9 @@ public class SeedingController(ISeedingService seedingService) : ApiControllerBa
     [HttpPost("nurses")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SeedNurses([FromQuery] int count = 1)
+    public async Task<IActionResult> SeedNurses([FromQuery] int count = 1, CancellationToken cancellationToken = default)
     {
-        var response = await seedingService.SeedNursesAsync(count);
+        var response = await seedingService.SeedNursesAsync(count, cancellationToken);
         return response.Success ? Ok() : ProblemFromServiceResponse(response);
     }
 
@@ -52,9 +52,9 @@ public class SeedingController(ISeedingService seedingService) : ApiControllerBa
     [HttpPost("appointments")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SeedAppointments([FromQuery] int count = 1)
+    public async Task<IActionResult> SeedAppointments([FromQuery] int count = 1, CancellationToken cancellationToken = default)
     {
-        var response = await seedingService.SeedAppointmentsAsync(count);
+        var response = await seedingService.SeedAppointmentsAsync(count, cancellationToken);
         return response.Success ? Ok() : ProblemFromServiceResponse(response);
     }
 
@@ -62,9 +62,9 @@ public class SeedingController(ISeedingService seedingService) : ApiControllerBa
     [HttpPost("all")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SeedAll(SeedingOptionsRequest options)
+    public async Task<IActionResult> SeedAll(SeedingOptionsRequest options, CancellationToken cancellationToken)
     {
-        var response = await seedingService.SeedAllAsync(options);
+        var response = await seedingService.SeedAllAsync(options, cancellationToken);
         return response.Success ? Ok() : ProblemFromServiceResponse(response);
     }
 }

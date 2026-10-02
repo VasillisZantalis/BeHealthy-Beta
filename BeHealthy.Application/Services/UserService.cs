@@ -6,22 +6,30 @@ namespace BeHealthy.Application.Services;
 
 public class UserService : IUserService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDoctorRepository _doctorRepository;
+    private readonly IPatientRepository _patientRepository;
+    private readonly INurseRepository _nurseRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserStore<ApplicationUser> _userStore;
 
     public UserService(
-        IUnitOfWork unitOfWork,
+        IDoctorRepository doctorRepository,
+        IPatientRepository patientRepository,
+        INurseRepository nurseRepository,
         UserManager<ApplicationUser> userManager,
         IUserStore<ApplicationUser> userStore)
     {
-        _unitOfWork = unitOfWork;
+        _doctorRepository = doctorRepository;
+        _patientRepository = patientRepository;
+        _nurseRepository = nurseRepository;
         _userManager = userManager;
         _userStore = userStore;
     }
 
     public async Task<ServiceResponse> CreateApplicationUser(ApplicationUser applicationUser, string password, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         await _userManager.SetEmailAsync(applicationUser, applicationUser.Email);
         await _userStore.SetUserNameAsync(applicationUser, applicationUser.Email, cancellationToken);
 
@@ -37,8 +45,10 @@ public class UserService : IUserService
     }
 
 
-    public async Task<ServiceResponse> AddUserToRoleAsync(ApplicationUser user, UserRole role)
+    public async Task<ServiceResponse> AddUserToRoleAsync(ApplicationUser user, UserRole role, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (user == null)
         {
             return ServiceResponse.Failed("User cannot be null");
@@ -60,20 +70,22 @@ public class UserService : IUserService
         return ServiceResponse.Successful();
     }
 
-    public async Task<Dictionary<string, int>> GetUsersInRolesCount()
+    public async Task<Dictionary<string, int>> GetUsersInRolesCount(CancellationToken cancellationToken = default)
     {
         var result = new Dictionary<string, int>
         {
-            { nameof(UserRole.Doctor), await _unitOfWork.DoctorRepository.GetCountAsync() },
-            { nameof(UserRole.Patient), await _unitOfWork.PatientRepository.GetCountAsync() },
-            { nameof(UserRole.Nurse), await _unitOfWork.NurseRepository.GetCountAsync() }
+            { nameof(UserRole.Doctor), await _doctorRepository.GetCountAsync(cancellationToken) },
+            { nameof(UserRole.Patient), await _patientRepository.GetCountAsync(cancellationToken) },
+            { nameof(UserRole.Nurse), await _nurseRepository.GetCountAsync(cancellationToken) }
         };
 
         return result;
     }
 
-    public async Task<ServiceResponse> RemoveUserFromRoleAsync(ApplicationUser user, UserRole role)
+    public async Task<ServiceResponse> RemoveUserFromRoleAsync(ApplicationUser user, UserRole role, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (user == null)
         {
             return ServiceResponse.Failed("User cannot be null");
@@ -91,8 +103,10 @@ public class UserService : IUserService
         return ServiceResponse.Successful();
     }
 
-    public async Task<ApplicationUser?> GetUserByIdAsync(string userId)
+    public async Task<ApplicationUser?> GetUserByIdAsync(string userId, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (string.IsNullOrEmpty(userId))
         {
             return null;
@@ -101,8 +115,10 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<ServiceResponse> DeleteUserAsync(ApplicationUser applicationUser)
+    public async Task<ServiceResponse> DeleteUserAsync(ApplicationUser applicationUser, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         if (applicationUser == null)
         {
             return ServiceResponse.Failed("User cannot be null");
@@ -128,6 +144,8 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse> UpdateUserAsync(ApplicationUser applicationUser, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var result = await _userManager.UpdateAsync(applicationUser);
 
         if (!result.Succeeded)
@@ -141,6 +159,8 @@ public class UserService : IUserService
 
     public async Task<ServiceResponse> CreateAdminAsync(ApplicationUser applicationUser, string password, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         await _userManager.SetEmailAsync(applicationUser, applicationUser.Email);
         await _userStore.SetUserNameAsync(applicationUser, applicationUser.Email, cancellationToken);
 
@@ -152,7 +172,7 @@ public class UserService : IUserService
             return ServiceResponse.Failed(errorMessage);
         }
 
-        var assignToAdminResult = await AddUserToRoleAsync(applicationUser, UserRole.Admin);
+        var assignToAdminResult = await AddUserToRoleAsync(applicationUser, UserRole.Admin, cancellationToken);
         if (!assignToAdminResult.Success)
             return ServiceResponse.Failed(assignToAdminResult.ErrorMessage!);
 

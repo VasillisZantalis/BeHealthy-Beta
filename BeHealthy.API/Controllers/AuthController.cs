@@ -12,9 +12,9 @@ public class AuthController(IAuthService authService) : ApiControllerBase
     [HttpPost("login")]
     [ProducesResponseType<LoginResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
+    public async Task<ActionResult<LoginResponse>> Login(LoginRequest request, CancellationToken cancellationToken)
     {
-        var result = await authService.LoginAsync(request);
+        var result = await authService.LoginAsync(request, cancellationToken);
         if (!result.Success)
             return Unauthorized(new { message = result.ErrorMessage });
 

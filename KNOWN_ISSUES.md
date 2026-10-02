@@ -35,13 +35,15 @@ Most domain controllers (`AllergiesController`, `PrescriptionsController`, `Medi
 
 **Fix:** drop `EnsureDeleted()` and rely on `Migrate()` alone, or gate the wipe behind an explicit opt-in flag.
 
-## 5. No real transactional integrity for multi-step writes
+## 5. ~~No real transactional integrity for multi-step writes~~ (resolved)
 
-`GenericRepository` calls `SaveChangesAsync()` inside every individual `Add/Update/Delete`. Multi-step operations like `PatientService.AddPatientAsync` (create Identity user → assign role → insert Patient) commit each step independently — a failure partway through can leave an orphaned Identity user with a role and no matching Patient row.
+The custom `UnitOfWork` was removed; EF Core's request-scoped `ApplicationDbContext` is the unit of work. Rules for writes:
 
-Relatedly, `UnitOfWork` doesn't actually unify anything: each repository opens its own `DbContext` from a shared factory and commits immediately, so it provides no real atomicity despite the name.
-
-**Fix:** wrap multi-entity operations in an explicit DB transaction, or restructure `UnitOfWork`/repositories to share one `DbContext` per logical operation with a single `SaveChangesAsync()`.
+- Repositories only stage changes (`AddAsync`/`UpdateAsync`/`DeleteAsync`); they never write to the DB on their own (no `ExecuteUpdate`/`ExecuteDelete`).
+- A service ends a write with a single `SaveChangesAsync()` on a repository. All repositories (and Identity's `UserManager`) share the same `DbContext`, and EF wraps one save in a transaction, so that is atomic.
+- When an operation saves more than once — anything calling `UserManager` (which saves itself) plus our own entities — wrap it in `ITransactionManager.ExecuteInTransactionAsync`. It commits only when the operation returns a successful `ServiceResponse`; a failed response or an exception rolls back and clears the change tracker (exceptions are rethrown to the global handler).
+- Do all lookups/validation before the transaction, so it only contains the writes.
+- Every async method takes a `CancellationToken` (controllers get it bound to `HttpContext.RequestAborted`) and must forward it; `.editorconfig` raises CA2016 as a warning when a call doesn't. A cancelled request inside a transaction is rolled back like any other exception.
 
 ## 6. Toastr notifications leak across all connected users
 
@@ -84,8 +86,6 @@ Unlike `AppointmentService` (which checks correctly), these insert without verif
 
 ## 11. Smaller/lower-priority items
 
-- `GenericRepository.GetQueryable()` returns an `IQueryable` bound to an already-disposed `DbContext` (`using var context = ...` disposed before the caller enumerates). Currently unused, but a landmine for the next feature that calls it.
 - Global exception handler treats everything as a generic 500 with no exception-type branching — once validation (#1) is wired up, validation errors would surface as opaque 500s instead of 400s.
-- No `CancellationToken` threading anywhere in the repository/`UnitOfWork` layer.
 - Blazor's auth gate is a layout-level redirect in `MainLayout.OnInitialized`, not a real `AuthorizeRouteView`/`[Authorize]` route gate — fragile if a page ever skips `MainLayout`.
 - `AllergyService.UpdateAllergyAsync` fetches the existing entity only to immediately overwrite it with the DTO — harmless today since the DTO carries all fields, but fragile if the DTO is ever trimmed.

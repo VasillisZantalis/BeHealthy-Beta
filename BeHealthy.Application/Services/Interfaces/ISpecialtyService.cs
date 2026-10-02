@@ -5,9 +5,9 @@ namespace BeHealthy.Application.Services.Interfaces;
 
 public interface ISpecialtyService
 {
-    Task<IEnumerable<SpecialtyResponse>> GetSpecialtiesAsync();
-    Task<SpecialtyResponse?> GetSpecialtyByIdAsync(int id);
-    Task AddSpecialtyAsync(SpecialtyCreateRequest specialtyForCreationDto);
-    Task<ServiceResponse> UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto);
-    Task DeleteSpecialtyAsync(int id);
+    Task<IEnumerable<SpecialtyResponse>> GetSpecialtiesAsync(CancellationToken cancellationToken = default);
+    Task<SpecialtyResponse?> GetSpecialtyByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task AddSpecialtyAsync(SpecialtyCreateRequest specialtyForCreationDto, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto, CancellationToken cancellationToken = default);
+    Task DeleteSpecialtyAsync(int id, CancellationToken cancellationToken = default);
 }

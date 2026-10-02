@@ -11,16 +11,16 @@ public class AppSettingsRepository : GenericRepository<AppSetting>, IAppSettings
     {
     }
 
-    public async Task<List<AppSetting>> GetMassAppSettingsAsync(List<string> keys)
+    public async Task<List<AppSetting>> GetMassAppSettingsAsync(List<string> keys, CancellationToken cancellationToken = default)
     {
         return await _context.AppSettings
             .AsNoTracking()
             .Where(w => keys.Contains(w.Key))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<AppSetting?> GetSettingByKeyAsync(string key)
+    public async Task<AppSetting?> GetSettingByKeyAsync(string key, CancellationToken cancellationToken = default)
     {
-        return await _context.AppSettings.FirstOrDefaultAsync(w => w.Key == key);
+        return await _context.AppSettings.FirstOrDefaultAsync(w => w.Key == key, cancellationToken);
     }
 }

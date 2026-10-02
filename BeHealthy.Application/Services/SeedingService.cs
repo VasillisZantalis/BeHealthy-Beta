@@ -10,44 +10,53 @@ namespace BeHealthy.Application.Services;
 
 public class SeedingService : ISeedingService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDoctorRepository _doctorRepository;
+    private readonly IPatientRepository _patientRepository;
+    private readonly INurseRepository _nurseRepository;
+    private readonly IAppointmentRepository _appointmentRepository;
     private readonly IDoctorService _doctorService;
     private readonly IPatientService _patientService;
     private readonly INurseService _nurseService;
     private readonly IAppointmentService _appointmentService;
 
     public SeedingService(
-        IUnitOfWork unitOfWork,
+        IDoctorRepository doctorRepository,
+        IPatientRepository patientRepository,
+        INurseRepository nurseRepository,
+        IAppointmentRepository appointmentRepository,
         IDoctorService doctorService,
         IPatientService patientService,
         INurseService nurseService,
         IAppointmentService appointmentService)
     {
-        _unitOfWork = unitOfWork;
+        _doctorRepository = doctorRepository;
+        _patientRepository = patientRepository;
+        _nurseRepository = nurseRepository;
+        _appointmentRepository = appointmentRepository;
         _doctorService = doctorService;
         _patientService = patientService;
         _nurseService = nurseService;
         _appointmentService = appointmentService;
     }
 
-    public async Task<Dictionary<string, int>> CheckEntityCountsAsync()
+    public async Task<Dictionary<string, int>> CheckEntityCountsAsync(CancellationToken cancellationToken = default)
     {
         return new Dictionary<string, int>
         {
-            { "Doctors", await _unitOfWork.DoctorRepository.GetCountAsync() },
-            { "Patients", await _unitOfWork.PatientRepository.GetCountAsync() },
-            { "Nurses", await _unitOfWork.NurseRepository.GetCountAsync() },
-            { "Appointments", await _unitOfWork.AppointmentRepository.GetCountAsync() }
+            { "Doctors", await _doctorRepository.GetCountAsync(cancellationToken) },
+            { "Patients", await _patientRepository.GetCountAsync(cancellationToken) },
+            { "Nurses", await _nurseRepository.GetCountAsync(cancellationToken) },
+            { "Appointments", await _appointmentRepository.GetCountAsync(cancellationToken) }
         };
     }
 
-    public async Task<bool> NeedsSeedingAsync()
+    public async Task<bool> NeedsSeedingAsync(CancellationToken cancellationToken = default)
     {
-        var counts = await CheckEntityCountsAsync();
+        var counts = await CheckEntityCountsAsync(cancellationToken);
         return counts.Values.All(count => count == 0);
     }
 
-    public async Task<ServiceResponse> SeedDoctorsAsync(int count)
+    public async Task<ServiceResponse> SeedDoctorsAsync(int count, CancellationToken cancellationToken = default)
     {
         if (count < 1 || count > 10)
             return ServiceResponse.Failed("Count must be between 1 and 10");
@@ -68,7 +77,7 @@ public class SeedingService : ISeedingService
                     SpecialtyId = null
                 };
 
-                var result = await _doctorService.AddDoctorAsync(doctorDto);
+                var result = await _doctorService.AddDoctorAsync(doctorDto, cancellationToken);
                 if (!result.Success)
                     return ServiceResponse.Failed($"Failed to create doctor {i}: {result.ErrorMessage}");
             }
@@ -81,7 +90,7 @@ public class SeedingService : ISeedingService
         }
     }
 
-    public async Task<ServiceResponse> SeedPatientsAsync(int count)
+    public async Task<ServiceResponse> SeedPatientsAsync(int count, CancellationToken cancellationToken = default)
     {
         if (count < 1 || count > 10)
             return ServiceResponse.Failed("Count must be between 1 and 10");
@@ -101,7 +110,7 @@ public class SeedingService : ISeedingService
                     DepartmentId = null
                 };
 
-                var result = await _patientService.AddPatientAsync(patientDto);
+                var result = await _patientService.AddPatientAsync(patientDto, cancellationToken);
                 if (!result.Success)
                     return ServiceResponse.Failed($"Failed to create patient {i}: {result.ErrorMessage}");
             }
@@ -114,7 +123,7 @@ public class SeedingService : ISeedingService
         }
     }
 
-    public async Task<ServiceResponse> SeedNursesAsync(int count)
+    public async Task<ServiceResponse> SeedNursesAsync(int count, CancellationToken cancellationToken = default)
     {
         if (count < 1 || count > 10)
             return ServiceResponse.Failed("Count must be between 1 and 10");
@@ -134,7 +143,7 @@ public class SeedingService : ISeedingService
                     DepartmentId = null
                 };
 
-                var result = await _nurseService.AddNurseAsync(nurseDto);
+                var result = await _nurseService.AddNurseAsync(nurseDto, cancellationToken);
                 if (!result.Success)
                     return ServiceResponse.Failed($"Failed to create nurse {i}: {result.ErrorMessage}");
             }
@@ -147,15 +156,15 @@ public class SeedingService : ISeedingService
         }
     }
 
-    public async Task<ServiceResponse> SeedAppointmentsAsync(int count)
+    public async Task<ServiceResponse> SeedAppointmentsAsync(int count, CancellationToken cancellationToken = default)
     {
         if (count < 1 || count > 10)
             return ServiceResponse.Failed("Count must be between 1 and 10");
 
         try
         {
-            var doctors = await _unitOfWork.DoctorRepository.GetAllDoctorsSimpleAsync();
-            var patients = await _unitOfWork.PatientRepository.GetAllPatientsSimpleAsync();
+            var doctors = await _doctorRepository.GetAllDoctorsSimpleAsync(cancellationToken);
+            var patients = await _patientRepository.GetAllPatientsSimpleAsync(cancellationToken);
 
             if (!doctors.Any())
                 return ServiceResponse.Failed("No doctors found. Please seed doctors first.");
@@ -186,7 +195,7 @@ public class SeedingService : ISeedingService
                     NurseId = null
                 };
 
-                var result = await _appointmentService.AddAppointmentAsync(appointmentDto);
+                var result = await _appointmentService.AddAppointmentAsync(appointmentDto, cancellationToken);
                 if (!result.Success)
                     return ServiceResponse.Failed($"Failed to create appointment {i}: {result.ErrorMessage}");
             }
@@ -199,34 +208,34 @@ public class SeedingService : ISeedingService
         }
     }
 
-    public async Task<ServiceResponse> SeedAllAsync(SeedingOptionsRequest options)
+    public async Task<ServiceResponse> SeedAllAsync(SeedingOptionsRequest options, CancellationToken cancellationToken = default)
     {
         var results = new List<string>();
 
         if (options.SeedDoctors && options.DoctorCount > 0)
         {
-            var result = await SeedDoctorsAsync(options.DoctorCount);
+            var result = await SeedDoctorsAsync(options.DoctorCount, cancellationToken);
             if (!result.Success)
                 results.Add($"Doctors: {result.ErrorMessage}");
         }
 
         if (options.SeedPatients && options.PatientCount > 0)
         {
-            var result = await SeedPatientsAsync(options.PatientCount);
+            var result = await SeedPatientsAsync(options.PatientCount, cancellationToken);
             if (!result.Success)
                 results.Add($"Patients: {result.ErrorMessage}");
         }
 
         if (options.SeedNurses && options.NurseCount > 0)
         {
-            var result = await SeedNursesAsync(options.NurseCount);
+            var result = await SeedNursesAsync(options.NurseCount, cancellationToken);
             if (!result.Success)
                 results.Add($"Nurses: {result.ErrorMessage}");
         }
 
         if (options.SeedAppointments && options.AppointmentCount > 0)
         {
-            var result = await SeedAppointmentsAsync(options.AppointmentCount);
+            var result = await SeedAppointmentsAsync(options.AppointmentCount, cancellationToken);
             if (!result.Success)
                 results.Add($"Appointments: {result.ErrorMessage}");
         }

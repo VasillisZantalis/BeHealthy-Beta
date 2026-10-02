@@ -5,32 +5,45 @@ namespace BeHealthy.Application.Services;
 
 public class DepartmentService : IDepartmentService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDepartmentRepository _departmentRepository;
+    private readonly IDoctorRepository _doctorRepository;
+    private readonly INurseRepository _nurseRepository;
+    private readonly IPatientRepository _patientRepository;
+    private readonly IRoomRepository _roomRepository;
 
-    public DepartmentService(IUnitOfWork unitOfWork)
+    public DepartmentService(
+        IDepartmentRepository departmentRepository,
+        IDoctorRepository doctorRepository,
+        INurseRepository nurseRepository,
+        IPatientRepository patientRepository,
+        IRoomRepository roomRepository)
     {
-        _unitOfWork = unitOfWork;
+        _departmentRepository = departmentRepository;
+        _doctorRepository = doctorRepository;
+        _nurseRepository = nurseRepository;
+        _patientRepository = patientRepository;
+        _roomRepository = roomRepository;
     }
 
-    public async Task<IEnumerable<DepartmentResponse>> GetAllDepartmentsAsync()
+    public async Task<IEnumerable<DepartmentResponse>> GetAllDepartmentsAsync(CancellationToken cancellationToken = default)
     {
-        var departments = await _unitOfWork.DepartmentRepository.GetDepartmentsAsync();
+        var departments = await _departmentRepository.GetDepartmentsAsync(cancellationToken);
         return departments.MapToDto();
     }
 
-    public async Task<DepartmentResponse> GetDepartmentByIdAsync(int id)
+    public async Task<DepartmentResponse> GetDepartmentByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var department = await _unitOfWork.DepartmentRepository.GetDepartmentByIdAsync(id);
+        var department = await _departmentRepository.GetDepartmentByIdAsync(id, cancellationToken);
         return department.MapToDto();
     }
 
-    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateRequest departmentDto)
+    public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateRequest departmentDto, CancellationToken cancellationToken = default)
     {
         try
         {
             var department = departmentDto.MapToDomain();
-            await _unitOfWork.DepartmentRepository.AddAsync(department);
-            await _unitOfWork.SaveChangesAsync();
+            await _departmentRepository.AddAsync(department, cancellationToken);
+            await _departmentRepository.SaveChangesAsync(cancellationToken);
             return ServiceResponse.Successful();
         }
         catch (Exception)
@@ -39,11 +52,11 @@ public class DepartmentService : IDepartmentService
         }
     }
 
-    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateRequest departmentDto)
+    public async Task<ServiceResponse> UpdateDepartmentAsync(DepartmentUpdateRequest departmentDto, CancellationToken cancellationToken = default)
     {
         try
         {
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(departmentDto.Id);
+            var department = await _departmentRepository.GetByIdAsync(departmentDto.Id, cancellationToken);
             if (department is null)
                 return ServiceResponse.Failed(Resource.NotFound);
 
@@ -51,8 +64,8 @@ public class DepartmentService : IDepartmentService
             department.Location = departmentDto.Location;
             department.HeadOfDepartmentId = departmentDto.HeadOfDepartmentId;
 
-            await _unitOfWork.DepartmentRepository.UpdateAsync(department);
-            await _unitOfWork.SaveChangesAsync();
+            await _departmentRepository.UpdateAsync(department);
+            await _departmentRepository.SaveChangesAsync(cancellationToken);
             return ServiceResponse.Successful();
         }
         catch (Exception)
@@ -61,22 +74,22 @@ public class DepartmentService : IDepartmentService
         }
     }
 
-    public async Task<ServiceResponse> DeleteDepartmentAsync(int id)
+    public async Task<ServiceResponse> DeleteDepartmentAsync(int id, CancellationToken cancellationToken = default)
     {
         try
         {
             List<string> entitiesConnectedToDepartment = new();
 
-            if (await _unitOfWork.DoctorRepository.AnyAsync(d => d.DepartmentId == id))
+            if (await _doctorRepository.AnyAsync(d => d.DepartmentId == id, cancellationToken))
                 entitiesConnectedToDepartment.Add(Resource.Doctors);
 
-            if (await _unitOfWork.NurseRepository.AnyAsync(n => n.DepartmentId == id))
+            if (await _nurseRepository.AnyAsync(n => n.DepartmentId == id, cancellationToken))
                 entitiesConnectedToDepartment.Add(Resource.Nurses);
 
-            if (await _unitOfWork.PatientRepository.AnyAsync(p => p.DepartmentId == id))
+            if (await _patientRepository.AnyAsync(p => p.DepartmentId == id, cancellationToken))
                 entitiesConnectedToDepartment.Add(Resource.Patients);
 
-            if (await _unitOfWork.RoomRepository.AnyAsync(r => r.DepartmentId == id))
+            if (await _roomRepository.AnyAsync(r => r.DepartmentId == id, cancellationToken))
                 entitiesConnectedToDepartment.Add(Resource.Rooms);
 
             if (entitiesConnectedToDepartment.Any())
@@ -89,7 +102,10 @@ public class DepartmentService : IDepartmentService
                 );
             }
 
-            await _unitOfWork.DepartmentRepository.DeleteAsync(id);
+            if (!await _departmentRepository.DeleteAsync(id, cancellationToken))
+                return ServiceResponse.Failed(Resource.NotFound);
+
+            await _departmentRepository.SaveChangesAsync(cancellationToken);
             return ServiceResponse.Successful();
         }
         catch (Exception)

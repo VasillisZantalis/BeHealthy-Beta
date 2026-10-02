@@ -4,5 +4,5 @@ namespace BeHealthy.Application.Interfaces.Repositories;
 
 public interface ISpecialtyRepository : IGenericRepository<Specialty>
 {
-    Task<List<Specialty>> GetAllSpecialtiesAsync();
+    Task<List<Specialty>> GetAllSpecialtiesAsync(CancellationToken cancellationToken = default);
 }

@@ -4,14 +4,14 @@ namespace BeHealthy.Application.Services.Interfaces;
 
 public interface IPatientService
 {
-    Task<IEnumerable<PatientResponse>> GetAllPatientsAsync(PatientQueryParameters? parameters = null);
-    Task<PatientResponse?> GetPatientByIdAsync(int id);
-    Task<IEnumerable<AppointmentResponse>> GetPatientAppointmentsByUserIdAsync(string userId);
-    Task<IEnumerable<PatientSimpleResponse>> GetAllPatientsSimpleAsync();
-    Task<ProfileResponse?> GetPatientProfileByUserIdAsync(string userId);
-    Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId);
-    Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patient);
-    Task<int> GetPatientCountAsync();
-    Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patient);
-    Task DeletePatientAsync(int id);
+    Task<IEnumerable<PatientResponse>> GetAllPatientsAsync(PatientQueryParameters? parameters = null, CancellationToken cancellationToken = default);
+    Task<PatientResponse?> GetPatientByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<AppointmentResponse>> GetPatientAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<PatientSimpleResponse>> GetAllPatientsSimpleAsync(CancellationToken cancellationToken = default);
+    Task<ProfileResponse?> GetPatientProfileByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patient, CancellationToken cancellationToken = default);
+    Task<int> GetPatientCountAsync(CancellationToken cancellationToken = default);
+    Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patient, CancellationToken cancellationToken = default);
+    Task DeletePatientAsync(int id, CancellationToken cancellationToken = default);
 }

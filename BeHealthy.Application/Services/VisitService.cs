@@ -6,67 +6,70 @@ namespace BeHealthy.Application.Services;
 
 public class VisitService : IVisitService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IVisitRepository _visitRepository;
 
-    public VisitService(IUnitOfWork unitOfWork)
+    public VisitService(IVisitRepository visitRepository)
     {
-        _unitOfWork = unitOfWork;
+        _visitRepository = visitRepository;
     }
 
-    public async Task<IEnumerable<Visit>> GetAllVisitsAsync()
+    public async Task<IEnumerable<Visit>> GetAllVisitsAsync(CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.VisitRepository.GetAllAsync();
+        return await _visitRepository.GetAllAsync(cancellationToken);
     }
 
-    public async Task<Visit?> GetVisitWithDetailsAsync(int visitId)
+    public async Task<Visit?> GetVisitWithDetailsAsync(int visitId, CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.VisitRepository.GetVisitWithDetailsAsync(visitId);
+        return await _visitRepository.GetVisitWithDetailsAsync(visitId, cancellationToken);
     }
 
-    public async Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId)
+    public async Task<IEnumerable<Diagnosis>> GetDiagnosesByVisitIdAsync(int visitId, CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.VisitRepository.GetDiagnosesByVisitIdAsync(visitId);
+        return await _visitRepository.GetDiagnosesByVisitIdAsync(visitId, cancellationToken);
     }
 
-    public async Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId)
+    public async Task<IEnumerable<Treatment>> GetTreatmentsByVisitIdAsync(int visitId, CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.VisitRepository.GetTreatmentsByVisitIdAsync(visitId);
+        return await _visitRepository.GetTreatmentsByVisitIdAsync(visitId, cancellationToken);
     }
 
-    public async Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId)
+    public async Task<IEnumerable<LabResult>> GetLabResultsByVisitIdAsync(int visitId, CancellationToken cancellationToken = default)
     {
-        return await _unitOfWork.VisitRepository.GetLabResultsByVisitIdAsync(visitId);
+        return await _visitRepository.GetLabResultsByVisitIdAsync(visitId, cancellationToken);
     }
 
-    public async Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto)
+    public async Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto, CancellationToken cancellationToken = default)
     {
         var visit = dto.MapToDomain();
-        await _unitOfWork.VisitRepository.AddAsync(visit);
-        await _unitOfWork.SaveChangesAsync();
+        await _visitRepository.AddAsync(visit, cancellationToken);
+        await _visitRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto)
+    public async Task<ServiceResponse> UpdateVisitAsync(VisitUpdateRequest dto, CancellationToken cancellationToken = default)
     {
-        var visit = await _unitOfWork.VisitRepository.GetByIdAsync(dto.Id);
+        var visit = await _visitRepository.GetByIdAsync(dto.Id, cancellationToken);
         if (visit == null)
             return ServiceResponse.Failed(Resource.NotFound);
 
         dto.MapToEntity(visit);
-        await _unitOfWork.VisitRepository.UpdateAsync(visit);
-        await _unitOfWork.SaveChangesAsync();
+        await _visitRepository.UpdateAsync(visit);
+        await _visitRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task<ServiceResponse> DeleteVisitAsync(int id)
+    public async Task<ServiceResponse> DeleteVisitAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.VisitRepository.DeleteAsync(id);
+        if (!await _visitRepository.DeleteAsync(id, cancellationToken))
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        await _visitRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
     {
-        var visits = await _unitOfWork.VisitRepository.GetVisitsByPatientIdAsync(patientId);
+        var visits = await _visitRepository.GetVisitsByPatientIdAsync(patientId, cancellationToken);
         return visits.MapToDto();
     }
 }

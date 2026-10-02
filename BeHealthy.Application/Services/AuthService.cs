@@ -14,8 +14,10 @@ public class AuthService : IAuthService
         _jwtTokenService = jwtTokenService;
     }
 
-    public async Task<AuthResult> LoginAsync(LoginRequest request)
+    public async Task<AuthResult> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var user = await _userManager.FindByEmailAsync(request.Username)
             ?? await _userManager.FindByNameAsync(request.Username);
 

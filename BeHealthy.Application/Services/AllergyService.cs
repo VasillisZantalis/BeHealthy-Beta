@@ -7,30 +7,30 @@ namespace BeHealthy.Application.Services;
 
 public class AllergyService : IAllergyService
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAllergyRepository _allergyRepository;
 
-    public AllergyService(IUnitOfWork unitOfWork)
+    public AllergyService(IAllergyRepository allergyRepository)
     {
-        _unitOfWork = unitOfWork;
+        _allergyRepository = allergyRepository;
     }
 
-    public async Task<IEnumerable<AllergyResponse>> GetAllergiesByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<AllergyResponse>> GetAllergiesByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
     {
-        var allergies = await _unitOfWork.AllergyRepository.GetAllergiesByPatientIdAsync(patientId);
+        var allergies = await _allergyRepository.GetAllergiesByPatientIdAsync(patientId, cancellationToken);
         return allergies.Select(a => a.MapToDto());
     }
 
-    public async Task<ServiceResponse> AddAllergyAsync(AllergyCreateRequest dto)
+    public async Task<ServiceResponse> AddAllergyAsync(AllergyCreateRequest dto, CancellationToken cancellationToken = default)
     {
         var allergy = dto.MapToDomain();
-        await _unitOfWork.AllergyRepository.AddAsync(allergy);
-        await _unitOfWork.SaveChangesAsync();
+        await _allergyRepository.AddAsync(allergy, cancellationToken);
+        await _allergyRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task<ServiceResponse> UpdateAllergyAsync(AllergyUpdateRequest dto)
+    public async Task<ServiceResponse> UpdateAllergyAsync(AllergyUpdateRequest dto, CancellationToken cancellationToken = default)
     {
-        var allergy = await _unitOfWork.AllergyRepository.GetByIdAsync(dto.Id);
+        var allergy = await _allergyRepository.GetByIdAsync(dto.Id, cancellationToken);
         if (allergy == null)
             return ServiceResponse.Failed(Resource.NotFound);
 
@@ -40,20 +40,23 @@ public class AllergyService : IAllergyService
         allergy.Notes = dto.Notes;
         allergy.PatientId = dto.PatientId;
 
-        await _unitOfWork.AllergyRepository.UpdateAsync(allergy);
-        await _unitOfWork.SaveChangesAsync();
+        await _allergyRepository.UpdateAsync(allergy);
+        await _allergyRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task<ServiceResponse> DeleteAllergyAsync(int id)
+    public async Task<ServiceResponse> DeleteAllergyAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _unitOfWork.AllergyRepository.DeleteAsync(id);
+        if (!await _allergyRepository.DeleteAsync(id, cancellationToken))
+            return ServiceResponse.Failed(Resource.NotFound);
+
+        await _allergyRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();
     }
 
-    public async Task<AllergyResponse?> GetAllergyByIdAsync(int id)
+    public async Task<AllergyResponse?> GetAllergyByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var allergy = await _unitOfWork.AllergyRepository.GetByIdAsync(id);
+        var allergy = await _allergyRepository.GetByIdAsync(id, cancellationToken);
         return allergy?.MapToDto();
     }
 }

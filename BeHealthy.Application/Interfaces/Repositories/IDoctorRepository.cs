@@ -5,10 +5,10 @@ namespace BeHealthy.Application.Interfaces.Repositories;
 public interface IDoctorRepository : IGenericRepository<Doctor>
 {
 
-    Task<IEnumerable<Doctor>> GetAllDoctorsAsync();
-    Task<IEnumerable<Doctor>> GetAllDoctorsSimpleAsync();
-    Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId);
-    Task<Doctor?> GetDoctorByUserIdAsync(string userId);
-    Task DeleteDoctorAsync(int id);
-    Task<bool> IsDoctorHeadOfDepartmentAsync(int doctorId);
+    Task<IEnumerable<Doctor>> GetAllDoctorsAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<Doctor>> GetAllDoctorsSimpleAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task<Doctor?> GetDoctorByUserIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task DeleteDoctorAsync(int id, CancellationToken cancellationToken = default);
+    Task<bool> IsDoctorHeadOfDepartmentAsync(int doctorId, CancellationToken cancellationToken = default);
 }

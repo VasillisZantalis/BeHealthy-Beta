@@ -1,30 +1,30 @@
-﻿namespace BeHealthy.Tests.UnitTests.Services;
+﻿using BeHealthy.Tests.UnitTests.Fakes;
+
+namespace BeHealthy.Tests.UnitTests.Services;
 
 public class PatientsServiceTests
 {
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IUserService> _userServiceMock;
     private readonly Mock<IPatientRepository> _patientRepositoryMock;
     private readonly Mock<IAppointmentRepository> _appointmentRepositoryMock;
     private readonly Mock<IDoctorRepository> _doctorRepositoryMock;
-    private readonly Mock<IUnitOfWorkTransaction> _transactionMock;
+    private readonly FakeTransactionManager _transactionManager;
     private readonly PatientService _service;
 
     public PatientsServiceTests()
     {
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
         _userServiceMock = new Mock<IUserService>();
         _patientRepositoryMock = new Mock<IPatientRepository>();
         _appointmentRepositoryMock = new Mock<IAppointmentRepository>();
         _doctorRepositoryMock = new Mock<IDoctorRepository>();
-        _transactionMock = new Mock<IUnitOfWorkTransaction>();
+        _transactionManager = new FakeTransactionManager();
 
-        _unitOfWorkMock.SetupGet(u => u.PatientRepository).Returns(_patientRepositoryMock.Object);
-        _unitOfWorkMock.SetupGet(u => u.AppointmentRepository).Returns(_appointmentRepositoryMock.Object);
-        _unitOfWorkMock.SetupGet(u => u.DoctorRepository).Returns(_doctorRepositoryMock.Object);
-        _unitOfWorkMock.Setup(u => u.BeginTransactionAsync()).ReturnsAsync(_transactionMock.Object);
-
-        _service = new PatientService(_unitOfWorkMock.Object, _userServiceMock.Object);
+        _service = new PatientService(
+            _patientRepositoryMock.Object,
+            _appointmentRepositoryMock.Object,
+            _doctorRepositoryMock.Object,
+            _userServiceMock.Object,
+            _transactionManager);
     }
 
     #region GetAllPatientsAsync
@@ -34,14 +34,14 @@ public class PatientsServiceTests
     {
         // Arrange
         var patients = new List<Patient> { new Patient { Id = 1 } };
-        _patientRepositoryMock.Setup(r => r.GetAllPatientsAsync()).ReturnsAsync(patients);
+        _patientRepositoryMock.Setup(r => r.QueryAsync(It.IsAny<QueryOptions<Patient>>(), It.IsAny<CancellationToken>())).ReturnsAsync(patients);
 
         // Act
         var result = await _service.GetAllPatientsAsync();
 
         // Assert
         Assert.NotNull(result);
-        _patientRepositoryMock.Verify(r => r.GetAllPatientsAsync(), Times.Once);
+        _patientRepositoryMock.Verify(r => r.QueryAsync(It.IsAny<QueryOptions<Patient>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     #endregion
@@ -53,14 +53,14 @@ public class PatientsServiceTests
     {
         // Arrange
         var patients = new List<Patient> { new Patient { Id = 1 } };
-        _patientRepositoryMock.Setup(r => r.GetAllPatientsSimpleAsync()).ReturnsAsync(patients);
+        _patientRepositoryMock.Setup(r => r.GetAllPatientsSimpleAsync(It.IsAny<CancellationToken>())).ReturnsAsync(patients);
 
         // Act
         var result = await _service.GetAllPatientsSimpleAsync();
 
         // Assert
         Assert.NotNull(result);
-        _patientRepositoryMock.Verify(r => r.GetAllPatientsSimpleAsync(), Times.Once);
+        _patientRepositoryMock.Verify(r => r.GetAllPatientsSimpleAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     #endregion
@@ -72,7 +72,7 @@ public class PatientsServiceTests
     {
         // Arrange
         var patient = new Patient { Id = 1 };
-        _patientRepositoryMock.Setup(r => r.GetByIdWithIncludes(1, It.IsAny<Expression<Func<Patient, object>>[]>()))
+        _patientRepositoryMock.Setup(r => r.GetByIdWithIncludes(1, It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Patient, object>>[]>()))
             .ReturnsAsync(patient);
 
         // Act
@@ -81,7 +81,7 @@ public class PatientsServiceTests
         // Assert
         Assert.NotNull(result);
         _patientRepositoryMock.Verify(r => r.GetByIdWithIncludes(
-            1,
+            1, It.IsAny<CancellationToken>(),
             It.IsAny<Expression<Func<Patient, object>>[]>()),
             Times.Once);
     }
@@ -91,7 +91,7 @@ public class PatientsServiceTests
     {
         // Arrange
         _patientRepositoryMock.Setup(r => r.GetByIdWithIncludes(
-            2, 
+            2, It.IsAny<CancellationToken>(), 
             It.IsAny<Expression<Func<Patient, object>>[]>())
         )
         .ReturnsAsync((Patient?)null);
@@ -103,9 +103,47 @@ public class PatientsServiceTests
         Assert.Null(result);
     }
 
+    [Fact]
+    public async Task GetPatientByIdAsync_ForwardsCancellationToken()
+    {
+        // Arrange
+        using var cts = new CancellationTokenSource();
+
+        // Act
+        await _service.GetPatientByIdAsync(1, cts.Token);
+
+        // Assert
+        _patientRepositoryMock.Verify(r => r.GetByIdWithIncludes(
+            1,
+            cts.Token,
+            It.IsAny<Expression<Func<Patient, object>>[]>()),
+            Times.Once);
+    }
+
     #endregion
 
     #region AddPatientAsync
+
+    [Fact]
+    public async Task AddPatientAsync_ForwardsCancellationTokenToEveryStep()
+    {
+        // Arrange
+        using var cts = new CancellationTokenSource();
+        var patientDto = new PatientCreateRequest { Email = "token@test.com", Password = "pass" };
+
+        _userServiceMock.Setup(s => s.CreateApplicationUser(It.IsAny<ApplicationUser>(), patientDto.Password, cts.Token))
+            .ReturnsAsync(ServiceResponse.Successful());
+        _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient, cts.Token))
+            .ReturnsAsync(ServiceResponse.Successful());
+
+        // Act
+        var result = await _service.AddPatientAsync(patientDto, cts.Token);
+
+        // Assert
+        Assert.True(result.Success);
+        _patientRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Patient>(), cts.Token), Times.Once);
+        _patientRepositoryMock.Verify(r => r.SaveChangesAsync(cts.Token), Times.Once);
+    }
 
     [Fact]
     public async Task AddPatientAsync_ReturnsSuccess_WhenAllStepsSucceed()
@@ -120,10 +158,10 @@ public class PatientsServiceTests
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
 
-        _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient))
+        _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
         
-        _patientRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Patient>())).Returns(Task.CompletedTask);
+        _patientRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Patient>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         // Act
         var result = await _service.AddPatientAsync(patientDto);
@@ -135,8 +173,8 @@ public class PatientsServiceTests
             patientDto.Password,
             It.IsAny<CancellationToken>()), Times.Once);
 
-        _userServiceMock.Verify(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient), Times.Once);
-        _patientRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Patient>()), Times.Once);
+        _userServiceMock.Verify(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient, It.IsAny<CancellationToken>()), Times.Once);
+        _patientRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Patient>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -169,7 +207,7 @@ public class PatientsServiceTests
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
         
-        _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient))
+        _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Failed("role error"));
 
         // Act
@@ -191,19 +229,18 @@ public class PatientsServiceTests
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
 
-        _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient))
+        _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
 
-        _patientRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Patient>()))
+        _patientRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Patient>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
 
-        // Act
-        var result = await _service.AddPatientAsync(patientDto);
+        // Act & Assert
+        await Assert.ThrowsAsync<Exception>(() => _service.AddPatientAsync(patientDto));
 
-        // Assert
-        Assert.False(result.Success);
-        _transactionMock.Verify(t => t.RollbackAsync(), Times.Once);
-        _transactionMock.Verify(t => t.CommitAsync(), Times.Never);
+        Assert.True(_transactionManager.RolledBack);
+        Assert.False(_transactionManager.Committed);
+        _patientRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     #endregion
@@ -217,12 +254,13 @@ public class PatientsServiceTests
         var patientDto = new PatientUpdateRequest { UserId = "user1", FirstName = "John", LastName = "Doe", PhoneNumber = "123" };
         var user = new ApplicationUser { Id = "user1" };
 
-        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId))
+        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         _userServiceMock.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
 
+        _patientRepositoryMock.Setup(r => r.GetByIdAsync(patientDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Patient { Id = patientDto.Id });
         _patientRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Patient>())).Returns(Task.CompletedTask);
 
         // Act
@@ -230,9 +268,10 @@ public class PatientsServiceTests
 
         // Assert
         Assert.True(result.Success);
-        _userServiceMock.Verify(s => s.GetUserByIdAsync(patientDto.UserId), Times.Once);
+        Assert.True(_transactionManager.Committed);
+        _userServiceMock.Verify(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()), Times.Once);
         _userServiceMock.Verify(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()), Times.Once);
-        _patientRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Patient>()), Times.Once);
+        _patientRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -241,7 +280,7 @@ public class PatientsServiceTests
         // Arrange
         var patientDto = new PatientUpdateRequest { UserId = "notfound" };
         
-        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId))
+        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((ApplicationUser?)null);
 
         // Act
@@ -258,11 +297,13 @@ public class PatientsServiceTests
         var patientDto = new PatientUpdateRequest { UserId = "user1" };
         var user = new ApplicationUser { Id = "user1" };
 
-        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId))
+        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         
         _userServiceMock.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Failed("update error"));
+
+        _patientRepositoryMock.Setup(r => r.GetByIdAsync(patientDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Patient { Id = patientDto.Id });
 
         // Act
         var result = await _service.UpdatePatientAsync(patientDto);
@@ -270,6 +311,8 @@ public class PatientsServiceTests
         // Assert
         Assert.False(result.Success);
         Assert.Equal("update error", result.ErrorMessage);
+        Assert.True(_transactionManager.RolledBack);
+        _patientRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     #endregion
@@ -280,13 +323,13 @@ public class PatientsServiceTests
     public async Task DeletePatientAsync_CallsRepository()
     {
         // Arrange
-        _patientRepositoryMock.Setup(r => r.DeletePatientAsync(1)).Returns(Task.CompletedTask);
+        _patientRepositoryMock.Setup(r => r.DeletePatientAsync(1, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         // Act
         await _service.DeletePatientAsync(1);
 
         // Assert
-        _patientRepositoryMock.Verify(r => r.DeletePatientAsync(1), Times.Once);
+        _patientRepositoryMock.Verify(r => r.DeletePatientAsync(1, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     #endregion
@@ -298,14 +341,14 @@ public class PatientsServiceTests
     {
         // Arrange
         var appointments = new List<Appointment> { new Appointment { Id = 1 } };
-        _patientRepositoryMock.Setup(r => r.GetPatientAppointmentsByUserIdAsync("user1")).ReturnsAsync(appointments);
+        _patientRepositoryMock.Setup(r => r.GetPatientAppointmentsByUserIdAsync("user1", It.IsAny<CancellationToken>())).ReturnsAsync(appointments);
 
         // Act
         var result = await _service.GetPatientAppointmentsByUserIdAsync("user1");
 
         // Assert
         Assert.NotNull(result);
-        _patientRepositoryMock.Verify(r => r.GetPatientAppointmentsByUserIdAsync("user1"), Times.Once);
+        _patientRepositoryMock.Verify(r => r.GetPatientAppointmentsByUserIdAsync("user1", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     #endregion
@@ -316,7 +359,7 @@ public class PatientsServiceTests
     public async Task GetMyDoctorsAsync_ReturnsEmpty_WhenPatientNotFound()
     {
         // Arrange
-        _patientRepositoryMock.Setup(r => r.GetByUserIdAsync("user1"))
+        _patientRepositoryMock.Setup(r => r.GetByUserIdAsync("user1", It.IsAny<CancellationToken>()))
             .ReturnsAsync((Patient?)null);
 
         // Act
@@ -342,20 +385,20 @@ public class PatientsServiceTests
             new Doctor { Id = 3 }
         };
 
-        _patientRepositoryMock.Setup(r => r.GetByUserIdAsync("user1"))
+        _patientRepositoryMock.Setup(r => r.GetByUserIdAsync("user1", It.IsAny<CancellationToken>()))
             .ReturnsAsync(patient);
 
-        _appointmentRepositoryMock.Setup(r => r.GetAllAppointmentsByPatientIdAsync(patient.Id))
+        _appointmentRepositoryMock.Setup(r => r.GetAllAppointmentsByPatientIdAsync(patient.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(appointments);
 
-        _doctorRepositoryMock.Setup(r => r.QueryAsync(It.IsAny<QueryOptions<Doctor>>())).ReturnsAsync(doctors);
+        _doctorRepositoryMock.Setup(r => r.QueryAsync(It.IsAny<QueryOptions<Doctor>>(), It.IsAny<CancellationToken>())).ReturnsAsync(doctors);
 
         // Act
         var result = await _service.GetMyDoctorsAsync("user1");
 
         // Assert
         Assert.NotNull(result);
-        _doctorRepositoryMock.Verify(r => r.QueryAsync(It.IsAny<QueryOptions<Doctor>>()), Times.Once);
+        _doctorRepositoryMock.Verify(r => r.QueryAsync(It.IsAny<QueryOptions<Doctor>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     #endregion
@@ -366,14 +409,14 @@ public class PatientsServiceTests
     public async Task GetPatientCountAsync_ReturnsCount()
     {
         // Arrange
-        _patientRepositoryMock.Setup(r => r.GetCountAsync()).ReturnsAsync(5);
+        _patientRepositoryMock.Setup(r => r.GetCountAsync(It.IsAny<CancellationToken>())).ReturnsAsync(5);
 
         // Act
         var result = await _service.GetPatientCountAsync();
 
         // Assert
         Assert.Equal(5, result);
-        _patientRepositoryMock.Verify(r => r.GetCountAsync(), Times.Once);
+        _patientRepositoryMock.Verify(r => r.GetCountAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     #endregion

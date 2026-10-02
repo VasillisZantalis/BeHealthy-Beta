@@ -11,15 +11,15 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
     {
     }
 
-    public async Task<IEnumerable<Department>> GetDepartmentsAsync()
+    public async Task<IEnumerable<Department>> GetDepartmentsAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Departments
                     .AsNoTracking()
                     .Include(d => d.HeadOfDepartment)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
     }
 
-    public async Task<Department> GetDepartmentByIdAsync(int departmentId)
+    public async Task<Department> GetDepartmentByIdAsync(int departmentId, CancellationToken cancellationToken = default)
     {
         return await _context.Departments
                     .AsNoTracking()
@@ -34,6 +34,6 @@ public class DepartmentRepository : GenericRepository<Department>, IDepartmentRe
                     .Include(d => d.Rooms)
                     .Include(d => d.HeadOfDepartment)
                     .ThenInclude(hd => hd != null ? hd.User : null)
-                    .FirstAsync(x => x.Id == departmentId);
+                    .FirstAsync(x => x.Id == departmentId, cancellationToken);
     }
 }

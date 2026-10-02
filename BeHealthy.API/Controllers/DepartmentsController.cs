@@ -9,16 +9,16 @@ public class DepartmentsController(IDepartmentService departmentService) : ApiCo
     /// <summary>Gets every department.</summary>
     [HttpGet]
     [ProducesResponseType<IEnumerable<DepartmentResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<DepartmentResponse>>> GetAll()
-        => Ok(await departmentService.GetAllDepartmentsAsync());
+    public async Task<ActionResult<IEnumerable<DepartmentResponse>>> GetAll(CancellationToken cancellationToken)
+        => Ok(await departmentService.GetAllDepartmentsAsync(cancellationToken));
 
     /// <summary>Gets a single department, including its doctors, nurses, patients, and rooms.</summary>
     [HttpGet("{id:int}")]
     [ProducesResponseType<DepartmentResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<DepartmentResponse>> GetById(int id)
+    public async Task<ActionResult<DepartmentResponse>> GetById(int id, CancellationToken cancellationToken)
     {
-        var department = await departmentService.GetDepartmentByIdAsync(id);
+        var department = await departmentService.GetDepartmentByIdAsync(id, cancellationToken);
         return department is null ? NotFoundProblem("Department", id) : Ok(department);
     }
 
@@ -26,9 +26,9 @@ public class DepartmentsController(IDepartmentService departmentService) : ApiCo
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(DepartmentCreateRequest dto)
+    public async Task<IActionResult> Create(DepartmentCreateRequest dto, CancellationToken cancellationToken)
     {
-        var response = await departmentService.AddDepartmentAsync(dto);
+        var response = await departmentService.AddDepartmentAsync(dto, cancellationToken);
         return response.Success ? StatusCode(StatusCodes.Status201Created) : ProblemFromServiceResponse(response);
     }
 
@@ -36,12 +36,12 @@ public class DepartmentsController(IDepartmentService departmentService) : ApiCo
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Update(int id, DepartmentUpdateRequest dto)
+    public async Task<IActionResult> Update(int id, DepartmentUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
             return mismatch;
 
-        var response = await departmentService.UpdateDepartmentAsync(dto);
+        var response = await departmentService.UpdateDepartmentAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 
@@ -49,9 +49,9 @@ public class DepartmentsController(IDepartmentService departmentService) : ApiCo
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var response = await departmentService.DeleteDepartmentAsync(id);
+        var response = await departmentService.DeleteDepartmentAsync(id, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 }

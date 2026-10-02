@@ -12,7 +12,7 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
     {
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                 .AsNoTracking()
@@ -20,10 +20,10 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .Include(a => a.Doctor)
                 .Include(i => i.Room)
                 .Include(i => i.Nurse)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByDoctorIdAsync(int doctorId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                 .AsNoTracking()
@@ -32,10 +32,10 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .Include(i => i.Room)
                 .Include(i => i.Nurse)
                 .Where(a => a.DoctorId == doctorId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(int patientId)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                 .AsNoTracking()
@@ -44,10 +44,10 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .Include(i => i.Room)
                 .Include(i => i.Nurse)
                 .Where(a => a.PatientId == patientId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByNurseIdAsync(int nurseId)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByNurseIdAsync(int nurseId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                 .AsNoTracking()
@@ -56,10 +56,10 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .Include(i => i.Room)
                 .Include(i => i.Nurse)
                 .Where(a => a.NurseId == nurseId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId)
+    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                     .AsNoTracking()
@@ -70,10 +70,10 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                     .Where(a => (a.Doctor != null && a.Doctor.UserId == userId)
                              || (a.Patient != null && a.Patient.UserId == userId)
                              || (a.Nurse != null && a.Nurse.UserId == userId))
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetUserAppointmentsAsync(string userId)
+    public async Task<IEnumerable<Appointment>> GetUserAppointmentsAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
                     .AsNoTracking()
@@ -82,6 +82,6 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                     .Include(i => i.Room)
                     .Include(i => i.Nurse)
                     .Where(a => a.Doctor!.UserId == userId || a.Patient!.UserId == userId || a.Nurse!.UserId == userId)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
     }
 }

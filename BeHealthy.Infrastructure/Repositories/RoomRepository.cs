@@ -11,24 +11,24 @@ public class RoomRepository : GenericRepository<Room>, IRoomRepository
     {
     }
 
-    public async Task<IEnumerable<Room>> GetAllRoomsAsync()
+    public async Task<IEnumerable<Room>> GetAllRoomsAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Rooms
             .Include(i => i.Department)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId)
+    public async Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments
             .Where(w => w.RoomId == roomId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<Room?> GetRoomByIdAsync(int roomId)
+    public async Task<Room?> GetRoomByIdAsync(int roomId, CancellationToken cancellationToken = default)
     {
         return await _context.Rooms
             .Include(i => i.Department)
-            .FirstOrDefaultAsync(w => w.Id == roomId);
+            .FirstOrDefaultAsync(w => w.Id == roomId, cancellationToken);
     }
 }
