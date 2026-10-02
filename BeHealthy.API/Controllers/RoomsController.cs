@@ -8,12 +8,14 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
 {
     /// <summary>Gets every room.</summary>
     [HttpGet]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<RoomResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok(await roomService.GetAllRoomsAsync(cancellationToken));
 
     /// <summary>Gets a single room by id.</summary>
     [HttpGet("{id:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<RoomResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<RoomResponse>> GetById(int id, CancellationToken cancellationToken)
@@ -24,6 +26,7 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
 
     /// <summary>Creates a new room.</summary>
     [HttpPost]
+    [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Create(RoomCreateRequest dto, CancellationToken cancellationToken)
     {
@@ -33,6 +36,7 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
 
     /// <summary>Updates an existing room.</summary>
     [HttpPut("{id:int}")]
+    [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(int id, RoomUpdateRequest dto, CancellationToken cancellationToken)
@@ -46,6 +50,7 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
 
     /// <summary>Deletes a room.</summary>
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {

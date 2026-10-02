@@ -10,18 +10,21 @@ public class VisitsController(IVisitService visitService) : ApiControllerBase
 {
     /// <summary>Gets every visit.</summary>
     [HttpGet]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<VisitResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<VisitResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok((await visitService.GetAllVisitsAsync(cancellationToken)).MapToDto());
 
     /// <summary>Gets every visit for a patient.</summary>
     [HttpGet("by-patient/{patientId:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<VisitResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<VisitResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
         => Ok(await visitService.GetVisitsByPatientIdAsync(patientId, cancellationToken));
 
     /// <summary>Gets a single visit, including its diagnoses, treatments, and lab results.</summary>
     [HttpGet("{id:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<VisitDetailsResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<VisitDetailsResponse>> GetById(int id, CancellationToken cancellationToken)
@@ -32,24 +35,28 @@ public class VisitsController(IVisitService visitService) : ApiControllerBase
 
     /// <summary>Gets the diagnoses recorded during a visit.</summary>
     [HttpGet("{id:int}/diagnoses")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<DiagnosisResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<DiagnosisResponse>>> GetDiagnoses(int id, CancellationToken cancellationToken)
         => Ok((await visitService.GetDiagnosesByVisitIdAsync(id, cancellationToken)).Select(d => d.MapToDto()));
 
     /// <summary>Gets the treatments prescribed during a visit.</summary>
     [HttpGet("{id:int}/treatments")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<TreatmentResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TreatmentResponse>>> GetTreatments(int id, CancellationToken cancellationToken)
         => Ok((await visitService.GetTreatmentsByVisitIdAsync(id, cancellationToken)).Select(t => t.MapToDto()));
 
     /// <summary>Gets the lab results recorded during a visit.</summary>
     [HttpGet("{id:int}/lab-results")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<LabResultResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<LabResultResponse>>> GetLabResults(int id, CancellationToken cancellationToken)
         => Ok((await visitService.GetLabResultsByVisitIdAsync(id, cancellationToken)).Select(l => l.MapToDto()));
 
     /// <summary>Creates a new visit.</summary>
     [HttpPost]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(VisitCreateRequest dto, CancellationToken cancellationToken)
@@ -60,6 +67,7 @@ public class VisitsController(IVisitService visitService) : ApiControllerBase
 
     /// <summary>Updates an existing visit.</summary>
     [HttpPut("{id:int}")]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(int id, VisitUpdateRequest dto, CancellationToken cancellationToken)
@@ -73,6 +81,7 @@ public class VisitsController(IVisitService visitService) : ApiControllerBase
 
     /// <summary>Deletes a visit.</summary>
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)

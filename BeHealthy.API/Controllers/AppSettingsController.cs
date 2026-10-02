@@ -8,12 +8,14 @@ public class AppSettingsController(IAppSettingsService appSettingsService) : Api
 {
     /// <summary>Gets every application setting.</summary>
     [HttpGet]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<AppSettingResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<AppSettingResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok((await appSettingsService.GetAppSettingsAsync(cancellationToken)).Select(s => s.MapToDto()));
 
     /// <summary>Gets a single setting by key.</summary>
     [HttpGet("{key}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<AppSettingResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AppSettingResponse>> GetByKey(string key, CancellationToken cancellationToken)
@@ -24,13 +26,14 @@ public class AppSettingsController(IAppSettingsService appSettingsService) : Api
 
     /// <summary>Gets multiple settings by key in one call.</summary>
     [HttpPost("bulk")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<AppSettingResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<AppSettingResponse>>> GetBulk([FromBody] List<string> keys, CancellationToken cancellationToken)
         => Ok((await appSettingsService.GetMassAppSettingsAsync(keys, cancellationToken)).Select(s => s.MapToDto()));
 
     /// <summary>Updates the value of a setting.</summary>
     [HttpPut("{key}")]
-    [Authorize(Roles = nameof(UserRole.Admin))]
+    [Authorize(Roles = RoleGroups.Admin)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

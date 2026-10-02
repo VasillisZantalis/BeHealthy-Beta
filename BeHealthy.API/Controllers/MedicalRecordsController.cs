@@ -8,18 +8,21 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
 {
     /// <summary>Gets every medical record.</summary>
     [HttpGet]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<MedicalRecordResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<MedicalRecordResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok(await medicalRecordService.GetAllMedicalRecordsAsync(cancellationToken));
 
     /// <summary>Gets every medical record for a patient.</summary>
     [HttpGet("by-patient/{patientId:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<MedicalRecordResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<MedicalRecordResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
         => Ok(await medicalRecordService.GetMedicalRecordsByPatientIdAsync(patientId, cancellationToken));
 
     /// <summary>Gets a single medical record by id.</summary>
     [HttpGet("{id:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<MedicalRecordResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<MedicalRecordResponse>> GetById(int id, CancellationToken cancellationToken)
@@ -30,6 +33,7 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
 
     /// <summary>Creates a new medical record.</summary>
     [HttpPost]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Create(MedicalRecordCreateRequest dto, CancellationToken cancellationToken)
     {
@@ -39,6 +43,7 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
 
     /// <summary>Replaces an existing medical record.</summary>
     [HttpPut("{id:int}")]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(int id, MedicalRecordUpdateRequest dto, CancellationToken cancellationToken)
@@ -52,6 +57,7 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
 
     /// <summary>Updates only the notes of a medical record.</summary>
     [HttpPatch("{id:int}/notes")]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateNotes(int id, [FromBody] string notes, CancellationToken cancellationToken)
     {
@@ -61,6 +67,7 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
 
     /// <summary>Deletes a medical record.</summary>
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {

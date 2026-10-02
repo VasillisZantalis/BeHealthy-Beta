@@ -37,7 +37,7 @@ public static class DependencyInjection
         services.AddScoped<BreadcrumbServiceState>();
         services.AddScoped<AlertModalStateService>();
         services.AddScoped<ToastrStateService>();
-        services.AddSingleton<ToastService>();
+        services.AddScoped<ToastService>();
 
         return services;
     }

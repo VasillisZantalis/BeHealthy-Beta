@@ -12,7 +12,10 @@
 </div>
 
 @code {
-    private List<(string Message, string Type)> toasts = new();
+    private const int ToastDurationMs = 3000;
+
+    private readonly List<Toast> toasts = new();
+    private readonly CancellationTokenSource disposalCts = new();
 
     protected override void OnInitialized()
     {
@@ -22,18 +25,39 @@
     public void Dispose()
     {
         ToastService.OnShow -= AddToast;
+        disposalCts.Cancel();
     }
 
     private void AddToast(string message, string type)
     {
-        toasts.Add((message, type));
-        StateHasChanged();
-
-        _ = Task.Delay(3000).ContinueWith(_ =>
+        var toast = new Toast(message, type);
+        _ = InvokeAsync(async () =>
         {
-            toasts.RemoveAt(0);
-            InvokeAsync(StateHasChanged);
+            toasts.Add(toast);
+            StateHasChanged();
+            await RemoveAfterDelayAsync(toast);
         });
+    }
+
+    private async Task RemoveAfterDelayAsync(Toast toast)
+    {
+        try
+        {
+            await Task.Delay(ToastDurationMs, disposalCts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        toasts.Remove(toast);
+        StateHasChanged();
+    }
+
+    private sealed class Toast(string message, string type)
+    {
+        public string Message { get; } = message;
+        public string Type { get; } = type;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

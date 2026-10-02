@@ -119,6 +119,7 @@
         if (!response.Success)
         {
             ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
+            return;
         }
 
         await ToastService.EnqueueToastAsync(Resource.Success, "success");

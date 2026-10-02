@@ -8,12 +8,14 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
 {
     /// <summary>Gets every specialty.</summary>
     [HttpGet]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<SpecialtyResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<SpecialtyResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok(await specialtyService.GetSpecialtiesAsync(cancellationToken));
 
     /// <summary>Gets a single specialty by id.</summary>
     [HttpGet("{id:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<SpecialtyResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<SpecialtyResponse>> GetById(int id, CancellationToken cancellationToken)
@@ -24,6 +26,7 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
 
     /// <summary>Creates a new specialty.</summary>
     [HttpPost]
+    [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Create(SpecialtyCreateRequest dto, CancellationToken cancellationToken)
     {
@@ -33,6 +36,7 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
 
     /// <summary>Updates an existing specialty.</summary>
     [HttpPut("{id:int}")]
+    [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(int id, SpecialtyUpdateRequest dto, CancellationToken cancellationToken)
@@ -46,6 +50,7 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
 
     /// <summary>Deletes a specialty.</summary>
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {

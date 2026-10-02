@@ -8,12 +8,14 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
 {
     /// <summary>Gets every allergy for a patient.</summary>
     [HttpGet("by-patient/{patientId:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<IEnumerable<AllergyResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<AllergyResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
         => Ok(await allergyService.GetAllergiesByPatientIdAsync(patientId, cancellationToken));
 
     /// <summary>Gets a single allergy by id.</summary>
     [HttpGet("{id:int}")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<AllergyResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AllergyResponse>> GetById(int id, CancellationToken cancellationToken)
@@ -24,6 +26,7 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
 
     /// <summary>Adds a new allergy.</summary>
     [HttpPost]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(AllergyCreateRequest dto, CancellationToken cancellationToken)
@@ -34,6 +37,7 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
 
     /// <summary>Updates an existing allergy.</summary>
     [HttpPut("{id:int}")]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Update(int id, AllergyUpdateRequest dto, CancellationToken cancellationToken)
@@ -47,6 +51,7 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
 
     /// <summary>Deletes an allergy.</summary>
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)

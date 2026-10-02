@@ -14,6 +14,7 @@ public class DashboardController(
 {
     /// <summary>Gets the dashboard summary: entity counts, appointment reason distribution, and users per role.</summary>
     [HttpGet("summary")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
     [ProducesResponseType<DashboardSummaryResponse>(StatusCodes.Status200OK)]
     public async Task<ActionResult<DashboardSummaryResponse>> GetSummary(CancellationToken cancellationToken)
     {
