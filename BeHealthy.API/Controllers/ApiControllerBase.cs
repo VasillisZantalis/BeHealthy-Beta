@@ -25,7 +25,9 @@ public abstract class ApiControllerBase : ControllerBase
     protected ObjectResult? EnsureMatchingId(int routeId, int bodyId)
     {
         if (routeId == bodyId)
+        {
             return null;
+        }
 
         return Problem(
             detail: $"Route id '{routeId}' does not match body id '{bodyId}'.",

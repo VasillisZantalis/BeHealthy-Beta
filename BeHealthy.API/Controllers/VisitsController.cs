@@ -73,7 +73,9 @@ public class VisitsController(IVisitService visitService) : ApiControllerBase
     public async Task<IActionResult> Update(int id, VisitUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await visitService.UpdateVisitAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

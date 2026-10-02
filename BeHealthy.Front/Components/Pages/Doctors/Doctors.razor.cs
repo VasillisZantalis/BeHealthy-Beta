@@ -100,7 +100,9 @@ public partial class Doctors : BasePage
     private async Task HandleClearFilters()
     {
         if (string.IsNullOrEmpty(QueryParameters.SearchTerm) && QueryParameters.SpecialtyId is null)
+        {
             return;
+        }
 
         QueryParameters.SearchTerm = "";
         QueryParameters.SpecialtyId = null;
@@ -122,7 +124,7 @@ public partial class Doctors : BasePage
         var userId = currentUserId;
 
         IsLoading = true;
-        
+
         if (role == UserRole.Patient && userId is not null)
         {
             doctors = (await PatientsService.GetMyDoctorsAsync(userId)).ToList();
@@ -187,7 +189,7 @@ public partial class Doctors : BasePage
                 return;
             }
         }
-        
+
         await LoadDoctors();
         IsLoading = false;
     }

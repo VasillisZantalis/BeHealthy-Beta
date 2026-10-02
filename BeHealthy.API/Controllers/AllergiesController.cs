@@ -43,7 +43,9 @@ public class AllergiesController(IAllergyService allergyService) : ApiController
     public async Task<IActionResult> Update(int id, AllergyUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await allergyService.UpdateAllergyAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

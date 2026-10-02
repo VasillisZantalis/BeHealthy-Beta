@@ -91,7 +91,7 @@ public class PatientsServiceTests
     {
         // Arrange
         _patientRepositoryMock.Setup(r => r.GetByIdWithIncludes(
-            2, It.IsAny<CancellationToken>(), 
+            2, It.IsAny<CancellationToken>(),
             It.IsAny<Expression<Func<Patient, object>>[]>())
         )
         .ReturnsAsync((Patient?)null);
@@ -160,7 +160,7 @@ public class PatientsServiceTests
 
         _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
-        
+
         _patientRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Patient>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         // Act
@@ -206,7 +206,7 @@ public class PatientsServiceTests
             patientDto.Password,
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
-        
+
         _userServiceMock.Setup(s => s.AddUserToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Patient, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Failed("role error"));
 
@@ -279,7 +279,7 @@ public class PatientsServiceTests
     {
         // Arrange
         var patientDto = new PatientUpdateRequest { UserId = "notfound" };
-        
+
         _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((ApplicationUser?)null);
 
@@ -299,7 +299,7 @@ public class PatientsServiceTests
 
         _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
-        
+
         _userServiceMock.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Failed("update error"));
 

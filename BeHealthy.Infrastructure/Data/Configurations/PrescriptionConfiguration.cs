@@ -25,7 +25,8 @@ public class PrescriptionConfiguration : IEntityTypeConfiguration<Prescription>
             .HasConversion(
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
                 v => DateTime.SpecifyKind(v, DateTimeKind.Local)
-            ); ;
+            );
+        ;
 
         // Relationships
         builder.HasOne(p => p.Patient)

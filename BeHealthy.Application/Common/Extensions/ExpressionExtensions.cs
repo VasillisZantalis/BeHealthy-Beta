@@ -48,7 +48,10 @@ public static class ExpressionExtensions
         public override Expression? Visit(Expression? node)
         {
             if (node == _oldValue)
+            {
                 return _newValue;
+            }
+
             return base.Visit(node);
         }
     }

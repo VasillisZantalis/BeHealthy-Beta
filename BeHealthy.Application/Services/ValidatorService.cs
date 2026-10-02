@@ -9,7 +9,9 @@ public class ValidatorService(IServiceProvider serviceProvider) : IValidatorServ
         var validators = serviceProvider.GetServices<IValidator<TRequest>>();
 
         if (!validators.Any())
+        {
             return;
+        }
 
         var context = new ValidationContext<TRequest>(request);
 
@@ -20,7 +22,9 @@ public class ValidatorService(IServiceProvider serviceProvider) : IValidatorServ
                 cancellationToken);
 
             if (!result.IsValid)
+            {
                 throw new ValidationException(result.Errors);
+            }
         }
     }
 }

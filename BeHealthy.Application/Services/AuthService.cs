@@ -22,11 +22,15 @@ public class AuthService : IAuthService
             ?? await _userManager.FindByNameAsync(request.Username);
 
         if (user is null || !await _userManager.CheckPasswordAsync(user, request.Password))
+        {
             return AuthResult.Failed("Invalid username or password.");
+        }
 
         var roles = await _userManager.GetRolesAsync(user);
         if (roles.Count == 0 || !Enum.TryParse<UserRole>(roles[0], out var role))
+        {
             return AuthResult.Failed("This user has no recognized role assigned.");
+        }
 
         var (token, expiresAtUtc) = _jwtTokenService.GenerateToken(user, roles);
 

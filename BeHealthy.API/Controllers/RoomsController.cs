@@ -42,7 +42,9 @@ public class RoomsController(IRoomService roomService) : ApiControllerBase
     public async Task<IActionResult> Update(int id, RoomUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await roomService.UpdateRoomAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

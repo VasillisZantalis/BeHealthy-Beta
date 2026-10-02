@@ -139,7 +139,10 @@ public partial class Nurses : BasePage
             }
 
             var response = await NurseService.AddNurseAsync(nurse);
-            if (HandleServiceResponse(response)) continue;
+            if (HandleServiceResponse(response))
+            {
+                continue;
+            }
         }
         await LoadNurses();
         IsLoading = false;
@@ -174,7 +177,10 @@ public partial class Nurses : BasePage
 
     private async Task HandleClearFilters()
     {
-        if (string.IsNullOrEmpty(QueryParameters.SearchTerm)) return;
+        if (string.IsNullOrEmpty(QueryParameters.SearchTerm))
+        {
+            return;
+        }
 
         QueryParameters.SearchTerm = "";
         await LoadNurses();

@@ -71,7 +71,9 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ap
     public async Task<IActionResult> Update(int id, AppointmentUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await appointmentService.UpdateAppointmentAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

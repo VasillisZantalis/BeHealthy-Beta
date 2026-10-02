@@ -57,27 +57,27 @@ public static class DepartmentMapper
     }
 
     public static DepartmentCreateRequest MapToCreationDto(this DepartmentResponse department) => new DepartmentCreateRequest
-        {
-            Name = department.Name,
-            Location = department.Location,
-            HeadOfDepartmentId = department.HeadOfDepartmentId,
-            Doctors = department.Doctors,
-            Nurses = department.Nurses,
-            Patients = department.Patients,
-            Rooms = department.Rooms
-        };
+    {
+        Name = department.Name,
+        Location = department.Location,
+        HeadOfDepartmentId = department.HeadOfDepartmentId,
+        Doctors = department.Doctors,
+        Nurses = department.Nurses,
+        Patients = department.Patients,
+        Rooms = department.Rooms
+    };
 
     public static DepartmentUpdateRequest MapToUpdateDto(this DepartmentResponse department) => new DepartmentUpdateRequest
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Location = department.Location,
-            HeadOfDepartmentId = department.HeadOfDepartmentId,
-            Doctors = department.Doctors,
-            Nurses = department.Nurses,
-            Patients = department.Patients,
-            Rooms = department.Rooms
-        };
+    {
+        Id = department.Id,
+        Name = department.Name,
+        Location = department.Location,
+        HeadOfDepartmentId = department.HeadOfDepartmentId,
+        Doctors = department.Doctors,
+        Nurses = department.Nurses,
+        Patients = department.Patients,
+        Rooms = department.Rooms
+    };
 
     public static IEnumerable<DepartmentResponse> MapToDto(this IEnumerable<Department> departments)
     {

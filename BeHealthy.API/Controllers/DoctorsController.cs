@@ -85,7 +85,9 @@ public class DoctorsController(IDoctorService doctorService) : ApiControllerBase
     public async Task<IActionResult> Update(int id, DoctorUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await doctorService.UpdateDoctorAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

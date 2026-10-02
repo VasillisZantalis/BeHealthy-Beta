@@ -18,7 +18,10 @@ public class AppSettingsApiService : ApiClientBase, IAppSettingsService
     {
         var response = await httpClient.PostAsJsonAsync("appsettings/mass", keys);
         if (!response.IsSuccessStatusCode)
+        {
             return new();
+        }
+
         return await response.Content.ReadFromJsonAsync<List<AppSettingResponse>>() ?? new();
     }
 

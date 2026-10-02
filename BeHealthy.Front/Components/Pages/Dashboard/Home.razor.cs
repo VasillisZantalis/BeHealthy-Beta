@@ -37,7 +37,7 @@ public partial class Home : BasePage
         IsLoading = true;
 
         var needsSeeding = await seedingService.NeedsSeedingAsync();
-        
+
         if (needsSeeding)
         {
             ModalService.Show<SeedingModal>(

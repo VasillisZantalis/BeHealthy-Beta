@@ -42,7 +42,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         // Tracked entities are already change-detected; Update() would mark every column (and the whole graph) as modified.
         if (_context.Entry(entity).State == EntityState.Detached)
+        {
             _context.Set<T>().Update(entity);
+        }
 
         return Task.CompletedTask;
     }
@@ -51,7 +53,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         var entity = await _context.Set<T>().FindAsync([id], cancellationToken);
         if (entity is null)
+        {
             return false;
+        }
 
         _context.Set<T>().Remove(entity);
         return true;
@@ -83,13 +87,19 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         IQueryable<T> query = _context.Set<T>();
 
         if (options.Includes != null && options.Includes.Any())
+        {
             query = options.Includes.Aggregate(query, (current, include) => current.Include(include));
+        }
 
         if (!options.TrackChanges)
+        {
             query = query.AsNoTracking();
+        }
 
         if (options.Predicate != null)
+        {
             query = query.Where(options.Predicate);
+        }
 
         if (options.OrderBy != null)
         {

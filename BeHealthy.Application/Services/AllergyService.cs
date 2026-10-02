@@ -32,7 +32,9 @@ public class AllergyService : IAllergyService
     {
         var allergy = await _allergyRepository.GetByIdAsync(dto.Id, cancellationToken);
         if (allergy == null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         allergy.AllergyName = dto.AllergyName;
         allergy.Allergen = dto.Allergen;
@@ -48,7 +50,9 @@ public class AllergyService : IAllergyService
     public async Task<ServiceResponse> DeleteAllergyAsync(int id, CancellationToken cancellationToken = default)
     {
         if (!await _allergyRepository.DeleteAsync(id, cancellationToken))
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         await _allergyRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();

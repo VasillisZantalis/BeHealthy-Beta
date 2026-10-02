@@ -76,7 +76,9 @@ public class NursesController(INurseService nurseService) : ApiControllerBase
     public async Task<IActionResult> Update(int id, NurseUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await nurseService.UpdateNurseAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

@@ -20,7 +20,9 @@ public class EfTransactionManager : ITransactionManager
     {
         // Already inside a transaction: let the outermost call decide commit/rollback.
         if (_context.Database.CurrentTransaction is not null)
+        {
             return await operation();
+        }
 
         var strategy = _context.Database.CreateExecutionStrategy();
 

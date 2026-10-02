@@ -16,7 +16,9 @@ public class AuthController(IAuthService authService) : ApiControllerBase
     {
         var result = await authService.LoginAsync(request, cancellationToken);
         if (!result.Success)
+        {
             return Unauthorized(new { message = result.ErrorMessage });
+        }
 
         return Ok(result.Data);
     }

@@ -50,7 +50,9 @@ public class PrescriptionsController(IPrescriptionService prescriptionService) :
     public async Task<IActionResult> Update(int id, PrescriptionUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await prescriptionService.UpdatePrescriptionAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

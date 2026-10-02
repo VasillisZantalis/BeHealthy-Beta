@@ -58,7 +58,9 @@ public class DepartmentService : IDepartmentService
         {
             var department = await _departmentRepository.GetByIdAsync(departmentDto.Id, cancellationToken);
             if (department is null)
+            {
                 return ServiceResponse.Failed(Resource.NotFound);
+            }
 
             department.Name = departmentDto.Name;
             department.Location = departmentDto.Location;
@@ -81,29 +83,39 @@ public class DepartmentService : IDepartmentService
             List<string> entitiesConnectedToDepartment = new();
 
             if (await _doctorRepository.AnyAsync(d => d.DepartmentId == id, cancellationToken))
+            {
                 entitiesConnectedToDepartment.Add(Resource.Doctors);
+            }
 
             if (await _nurseRepository.AnyAsync(n => n.DepartmentId == id, cancellationToken))
+            {
                 entitiesConnectedToDepartment.Add(Resource.Nurses);
+            }
 
             if (await _patientRepository.AnyAsync(p => p.DepartmentId == id, cancellationToken))
+            {
                 entitiesConnectedToDepartment.Add(Resource.Patients);
+            }
 
             if (await _roomRepository.AnyAsync(r => r.DepartmentId == id, cancellationToken))
+            {
                 entitiesConnectedToDepartment.Add(Resource.Rooms);
+            }
 
             if (entitiesConnectedToDepartment.Any())
             {
                 var connectedEntities = string.Join(", ", entitiesConnectedToDepartment);
                 return ServiceResponse.Failed(
-                    string.Format(Resource.CannotDeleteEntityWithRelationships, 
+                    string.Format(Resource.CannotDeleteEntityWithRelationships,
                                 Resource.Department,
                                 connectedEntities)
                 );
             }
 
             if (!await _departmentRepository.DeleteAsync(id, cancellationToken))
+            {
                 return ServiceResponse.Failed(Resource.NotFound);
+            }
 
             await _departmentRepository.SaveChangesAsync(cancellationToken);
             return ServiceResponse.Successful();

@@ -81,11 +81,15 @@ app.MapPost("/account/login", async (
             (string.IsNullOrEmpty(returnUrl) ? "" : $"&returnUrl={Uri.EscapeDataString(returnUrl)}");
 
         if (!apiResponse.IsSuccessStatusCode)
+        {
             return Results.Redirect(failureRedirect);
+        }
 
         var loginResult = await apiResponse.Content.ReadFromJsonAsync<LoginResponse>(ApiJsonOptions.Default);
         if (loginResult is null)
+        {
             return Results.Redirect(failureRedirect);
+        }
 
         var claims = new List<Claim>
         {

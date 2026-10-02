@@ -40,7 +40,10 @@ public class BreadcrumbServiceState
 
     public void AddBreadcrumb(Breadcrumb breadcrumb)
     {
-        if (breadcrumb == null) return;
+        if (breadcrumb == null)
+        {
+            return;
+        }
 
         Breadcrumbs.Add(breadcrumb);
         IsBreadcrumbVisible = true;
@@ -50,7 +53,10 @@ public class BreadcrumbServiceState
 
     public void BackButtonClickHandler()
     {
-        if (!IsBackButtonVisible) return;
+        if (!IsBackButtonVisible)
+        {
+            return;
+        }
 
         var lastInactiveBreadcrumb = Breadcrumbs
             .Where(b => !string.IsNullOrEmpty(b.Link))

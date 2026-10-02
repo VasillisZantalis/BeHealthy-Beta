@@ -42,7 +42,9 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
     public async Task<IActionResult> Update(int id, SpecialtyUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await specialtyService.UpdateSpecialtyAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

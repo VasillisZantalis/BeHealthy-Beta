@@ -42,7 +42,7 @@ public class PrescriptionService : IPrescriptionService
         {
             return ServiceResponse.Failed();
         }
-        
+
     }
 
     public async Task<ServiceResponse> UpdatePrescriptionAsync(PrescriptionUpdateRequest prescriptionDto, CancellationToken cancellationToken = default)
@@ -69,13 +69,15 @@ public class PrescriptionService : IPrescriptionService
         {
             return ServiceResponse.Failed();
         }
-        
+
     }
 
     public async Task<ServiceResponse> DeletePrescriptionAsync(int id, CancellationToken cancellationToken = default)
     {
         if (!await _prescriptionRepository.DeleteAsync(id, cancellationToken))
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         await _prescriptionRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();

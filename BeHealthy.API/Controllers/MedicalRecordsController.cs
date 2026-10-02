@@ -49,7 +49,9 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
     public async Task<IActionResult> Update(int id, MedicalRecordUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (EnsureMatchingId(id, dto.Id) is { } mismatch)
+        {
             return mismatch;
+        }
 
         var response = await medicalRecordService.UpdateMedicalRecordAsync(dto, cancellationToken);
         return response.Success ? NoContent() : ProblemFromServiceResponse(response);

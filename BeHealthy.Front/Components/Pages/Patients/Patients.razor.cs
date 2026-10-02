@@ -53,7 +53,7 @@ public partial class Patients : BasePage
         await LoadPatients(currentUserId, userRole);
 
         hasEditRight = CurrentUser.Role == UserRole.Admin;
-        hasDeleteRight = CurrentUser.Role == UserRole.Admin; 
+        hasDeleteRight = CurrentUser.Role == UserRole.Admin;
         hasActionRights = hasEditRight || hasDeleteRight;
         IsLoading = false;
     }
@@ -102,7 +102,10 @@ public partial class Patients : BasePage
 
     private async Task HandleClearFilters()
     {
-        if (string.IsNullOrEmpty(QueryParameters.SearchTerm)) return;
+        if (string.IsNullOrEmpty(QueryParameters.SearchTerm))
+        {
+            return;
+        }
 
         QueryParameters.SearchTerm = "";
         await LoadPatients(currentUserId, userRole);
@@ -149,7 +152,10 @@ public partial class Patients : BasePage
             }
 
             var response = await PatientService.AddPatientAsync(patient);
-            if (HandleServiceResponse(response)) continue;
+            if (HandleServiceResponse(response))
+            {
+                continue;
+            }
         }
         await LoadPatients(currentUserId, userRole);
         IsLoading = false;
@@ -184,7 +190,7 @@ public partial class Patients : BasePage
         {
             await PatientService.DeletePatientAsync(patientId);
         }
-        
+
         IsLoading = false;
 
         await LoadPatients(currentUserId, userRole);

@@ -32,8 +32,8 @@ public class DoctorService : IDoctorService
     public async Task<PaginatedResult<DoctorResponse>> GetAllDoctorsAsync(DoctorQueryParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         parameters ??= new DoctorQueryParameters();
-        
-        var predicate = (Expression<Func<Doctor, bool>>)(d => 
+
+        var predicate = (Expression<Func<Doctor, bool>>)(d =>
             (string.IsNullOrEmpty(parameters.SearchTerm) ||
              d.FirstName.Contains(parameters.SearchTerm) ||
              d.LastName.Contains(parameters.SearchTerm)) &&
@@ -54,7 +54,7 @@ public class DoctorService : IDoctorService
         }
 
         var doctors = await _doctorRepository.QueryAsync(queryOptions, cancellationToken);
-        
+
         var countOptions = new QueryOptions<Doctor>
         {
             Predicate = predicate
@@ -92,11 +92,15 @@ public class DoctorService : IDoctorService
         {
             var userCreationResult = await _userService.CreateApplicationUser(user, doctorDto.Password, cancellationToken);
             if (!userCreationResult.Success)
+            {
                 return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
+            }
 
             var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Doctor, cancellationToken);
             if (!addToRoleResult.Success)
+            {
                 return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
+            }
 
             doctorDto.UserId = user.Id;
             var doctor = doctorDto.MapToDomain();
@@ -112,14 +116,20 @@ public class DoctorService : IDoctorService
     {
         var existingUser = await _userService.GetUserByIdAsync(doctorDto.UserId, cancellationToken);
         if (existingUser == null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         var doctor = await _doctorRepository.GetByIdAsync(doctorDto.Id, cancellationToken);
         if (doctor is null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         if (doctorDto.SpecialtyId.HasValue && !await _specialtyRepository.ExistsAsync(doctorDto.SpecialtyId.Value, cancellationToken))
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         existingUser.FirstName = doctorDto.FirstName;
         existingUser.LastName = doctorDto.LastName;
@@ -135,7 +145,9 @@ public class DoctorService : IDoctorService
         {
             var updateUserResult = await _userService.UpdateUserAsync(existingUser, cancellationToken);
             if (!updateUserResult.Success)
+            {
                 return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
+            }
 
             await _doctorRepository.UpdateAsync(doctor);
             await _doctorRepository.SaveChangesAsync(cancellationToken);
@@ -160,7 +172,10 @@ public class DoctorService : IDoctorService
     {
         var doctor = await _doctorRepository.GetDoctorByUserIdAsync(userId, cancellationToken);
 
-        if (doctor is null) return null;
+        if (doctor is null)
+        {
+            return null;
+        }
 
         var profile = new ProfileResponse
         {
@@ -184,7 +199,9 @@ public class DoctorService : IDoctorService
         var doctor = await _doctorRepository.GetDoctorByUserIdAsync(userId, cancellationToken);
 
         if (doctor is null)
+        {
             return Enumerable.Empty<PatientResponse>();
+        }
 
         var doctorAppointments = await _appointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctor.Id, cancellationToken);
 

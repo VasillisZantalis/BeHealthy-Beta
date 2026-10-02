@@ -2,4 +2,5 @@
 
 public interface IMedicalRecordRepository : IGenericRepository<MedicalRecord>
 {
-    Task<IEnumerable<MedicalRecord>> GetMedicalRecordsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default);}
+    Task<IEnumerable<MedicalRecord>> GetMedicalRecordsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default);
+}

@@ -68,11 +68,15 @@ public class PatientService : IPatientService
         {
             var userCreationResult = await _userService.CreateApplicationUser(user, patientDto.Password, cancellationToken);
             if (!userCreationResult.Success)
+            {
                 return ServiceResponse.Failed(userCreationResult.ErrorMessage!);
+            }
 
             var addToRoleResult = await _userService.AddUserToRoleAsync(user, UserRole.Patient, cancellationToken);
             if (!addToRoleResult.Success)
+            {
                 return ServiceResponse.Failed(addToRoleResult.ErrorMessage!);
+            }
 
             patientDto.UserId = user.Id;
 
@@ -88,11 +92,15 @@ public class PatientService : IPatientService
     {
         var existingUser = await _userService.GetUserByIdAsync(patientDto.UserId, cancellationToken);
         if (existingUser == null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         var patient = await _patientRepository.GetByIdAsync(patientDto.Id, cancellationToken);
         if (patient is null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         existingUser.FirstName = patientDto.FirstName;
         existingUser.LastName = patientDto.LastName;
@@ -107,7 +115,9 @@ public class PatientService : IPatientService
         {
             var updateUserResult = await _userService.UpdateUserAsync(existingUser, cancellationToken);
             if (!updateUserResult.Success)
+            {
                 return ServiceResponse.Failed(updateUserResult.ErrorMessage!);
+            }
 
             await _patientRepository.UpdateAsync(patient);
             await _patientRepository.SaveChangesAsync(cancellationToken);
@@ -135,7 +145,9 @@ public class PatientService : IPatientService
         var patient = await _patientRepository.GetByUserIdAsync(userId, cancellationToken);
 
         if (patient is null)
+        {
             return Enumerable.Empty<DoctorResponse>();
+        }
 
         var patientAppointments = await _appointmentRepository.GetAllAppointmentsByPatientIdAsync(patient.Id, cancellationToken);
 
@@ -169,7 +181,10 @@ public class PatientService : IPatientService
     {
         var patient = await _patientRepository.GetPatientByUserIdAsync(userId, cancellationToken);
 
-        if (patient is null) return null;
+        if (patient is null)
+        {
+            return null;
+        }
 
         var profile = new ProfileResponse
         {

@@ -174,7 +174,9 @@ public class UserService : IUserService
 
         var assignToAdminResult = await AddUserToRoleAsync(applicationUser, UserRole.Admin, cancellationToken);
         if (!assignToAdminResult.Success)
+        {
             return ServiceResponse.Failed(assignToAdminResult.ErrorMessage!);
+        }
 
         return ServiceResponse.Successful();
     }

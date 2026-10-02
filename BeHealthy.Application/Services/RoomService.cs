@@ -36,7 +36,9 @@ public class RoomService : IRoomService
     {
         var room = await _roomRepository.GetByIdAsync(roomDto.Id, cancellationToken);
         if (room is null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         room.Name = roomDto.Name;
         room.Number = roomDto.Number;
@@ -50,6 +52,8 @@ public class RoomService : IRoomService
     public async Task DeleteRoomAsync(int id, CancellationToken cancellationToken = default)
     {
         if (await _roomRepository.DeleteAsync(id, cancellationToken))
+        {
             await _roomRepository.SaveChangesAsync(cancellationToken);
+        }
     }
 }

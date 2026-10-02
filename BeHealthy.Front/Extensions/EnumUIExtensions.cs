@@ -23,7 +23,9 @@ public static class EnumUIExtensions
             .ToList();
 
         if (addPleaseSelect == true)
+        {
             selectItems.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
+        }
 
         return selectItems;
     }

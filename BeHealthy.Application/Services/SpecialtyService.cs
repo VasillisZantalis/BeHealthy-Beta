@@ -36,7 +36,9 @@ public class SpecialtyService : ISpecialtyService
     {
         var specialty = await _specialtyRepository.GetByIdAsync(specialtyForUpdateDto.Id, cancellationToken);
         if (specialty is null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         specialty.Name = specialtyForUpdateDto.Name;
 
@@ -48,6 +50,8 @@ public class SpecialtyService : ISpecialtyService
     public async Task DeleteSpecialtyAsync(int id, CancellationToken cancellationToken = default)
     {
         if (await _specialtyRepository.DeleteAsync(id, cancellationToken))
+        {
             await _specialtyRepository.SaveChangesAsync(cancellationToken);
+        }
     }
 }

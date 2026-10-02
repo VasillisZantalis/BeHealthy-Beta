@@ -36,7 +36,9 @@ public class MedicalRecordService : IMedicalRecordService
     {
         var medicalRecord = await _medicalRecordRepository.GetByIdAsync(medicalRecordDto.Id, cancellationToken);
         if (medicalRecord is null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         medicalRecord.PatientId = medicalRecordDto.PatientId;
         medicalRecord.RecordDate = medicalRecordDto.RecordDate;
@@ -51,7 +53,9 @@ public class MedicalRecordService : IMedicalRecordService
     public async Task DeleteMedicalRecordAsync(int id, CancellationToken cancellationToken = default)
     {
         if (await _medicalRecordRepository.DeleteAsync(id, cancellationToken))
+        {
             await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
+        }
     }
 
     public async Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
@@ -64,7 +68,9 @@ public class MedicalRecordService : IMedicalRecordService
     {
         var medicalRecord = await _medicalRecordRepository.GetByIdAsync(id, cancellationToken);
         if (medicalRecord is null)
+        {
             return;
+        }
 
         medicalRecord.Notes = notes;
         await _medicalRecordRepository.SaveChangesAsync(cancellationToken);

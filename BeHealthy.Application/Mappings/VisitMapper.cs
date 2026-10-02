@@ -42,7 +42,7 @@ public static class VisitMapper
         };
     }
 
-    public static IEnumerable<VisitResponse> MapToDto(this IEnumerable<Visit> visits) 
+    public static IEnumerable<VisitResponse> MapToDto(this IEnumerable<Visit> visits)
         => visits.Select(visit => visit.MapToDto());
 
     public static VisitCreateRequest MapToCreateDto(this VisitResponse visit)

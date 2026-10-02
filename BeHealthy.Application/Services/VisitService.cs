@@ -50,7 +50,9 @@ public class VisitService : IVisitService
     {
         var visit = await _visitRepository.GetByIdAsync(dto.Id, cancellationToken);
         if (visit == null)
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         dto.MapToEntity(visit);
         await _visitRepository.UpdateAsync(visit);
@@ -61,7 +63,9 @@ public class VisitService : IVisitService
     public async Task<ServiceResponse> DeleteVisitAsync(int id, CancellationToken cancellationToken = default)
     {
         if (!await _visitRepository.DeleteAsync(id, cancellationToken))
+        {
             return ServiceResponse.Failed(Resource.NotFound);
+        }
 
         await _visitRepository.SaveChangesAsync(cancellationToken);
         return ServiceResponse.Successful();

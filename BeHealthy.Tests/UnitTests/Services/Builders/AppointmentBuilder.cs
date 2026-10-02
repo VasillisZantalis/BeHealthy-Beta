@@ -11,9 +11,9 @@ public class AppointmentBuilder
     private DateOnly _date = DateOnly.FromDateTime(DateTime.UtcNow);
     private TimeOnly _startTime = TimeOnly.FromDateTime(DateTime.UtcNow);
     private TimeOnly _endTime = TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1));
-    
+
     public AppointmentBuilder(IFixture fixture) { _fixture = fixture; }
-    
+
     public AppointmentBuilder WithId(int id) { _id = id; return this; }
     public AppointmentBuilder WithDoctorId(int doctorId) { _doctorId = doctorId; return this; }
     public AppointmentBuilder WithPatientId(int patientId) { _patientId = patientId; return this; }
@@ -41,6 +41,6 @@ public class AppointmentBuilder
             .Create();
     }
 
-    public IEnumerable<Appointment> BuildMany(int count) => 
+    public IEnumerable<Appointment> BuildMany(int count) =>
         Enumerable.Range(0, count).Select(_ => Build()).ToList();
 }

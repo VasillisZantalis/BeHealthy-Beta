@@ -30,12 +30,16 @@ public class ToastService(ProtectedSessionStorage sessionStorage)
     {
         var pendingToasts = await GetPendingToastsAsync();
         if (pendingToasts.Count == 0)
+        {
             return;
+        }
 
         await sessionStorage.DeleteAsync(PendingToastsKey);
 
         foreach (var toast in pendingToasts)
+        {
             ShowToast(toast.Message, toast.Type);
+        }
     }
 
     private async Task<List<PendingToast>> GetPendingToastsAsync()

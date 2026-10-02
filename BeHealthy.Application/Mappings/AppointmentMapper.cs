@@ -115,7 +115,7 @@ namespace BeHealthy.Application.Mappings
             };
         }
 
-        public static IEnumerable<Appointment> MapToDomain(this IEnumerable<AppointmentResponse> dtos) 
+        public static IEnumerable<Appointment> MapToDomain(this IEnumerable<AppointmentResponse> dtos)
             => dtos.Select(dto => dto.MapToDomain());
 
         public static IEnumerable<AppointmentResponse> MapToDto(this IEnumerable<Appointment> entities)

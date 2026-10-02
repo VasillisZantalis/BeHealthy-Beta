@@ -13,10 +13,10 @@ public enum Severity
 }
 
 public enum MedicalRecordTabs
-{ 
-    Visits = 0, 
-    Allergies = 1, 
-    Medications = 2 
+{
+    Visits = 0,
+    Allergies = 1,
+    Medications = 2
 }
 
 public enum PatientTabs

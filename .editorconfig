@@ -1,3 +1,13 @@
+root = true
+
 # Flag async calls that do not forward an available CancellationToken.
 [*.cs]
 dotnet_diagnostic.CA2016.severity = warning
+csharp_prefer_braces = true:error
+csharp_new_line_before_open_brace = all
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = false
+
+# Enforce the style rules above during build (EnforceCodeStyleInBuild in Directory.Build.props).
+dotnet_diagnostic.IDE0011.severity = error
+dotnet_diagnostic.IDE0055.severity = error

@@ -20,7 +20,9 @@ public abstract class ApiClientBase
         httpClient = httpClientFactory.CreateClient("API");
 
         if (!string.IsNullOrEmpty(currentUser.Token))
+        {
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", currentUser.Token);
+        }
     }
 
     protected async Task<T?> GetAsync<T>(string url)
@@ -92,7 +94,9 @@ public abstract class ApiClientBase
         {
             var result = await response.Content.ReadFromJsonAsync<ServiceResponse>(ApiJsonOptions.Default);
             if (result is not null)
+            {
                 return result;
+            }
         }
         catch
         {
@@ -107,14 +111,19 @@ public abstract class ApiClientBase
     protected static string ToQueryString(QueryParameters? parameters)
     {
         if (parameters is null)
+        {
             return string.Empty;
+        }
 
         var sb = new StringBuilder();
 
         void Add(string key, string? value)
         {
             if (string.IsNullOrEmpty(value))
+            {
                 return;
+            }
+
             sb.Append(sb.Length == 0 ? '?' : '&');
             sb.Append(Uri.EscapeDataString(key));
             sb.Append('=');

@@ -80,7 +80,7 @@ public partial class AppointmentModal : ModalBase
         var nurses = (await NurseService.GetAllNursesSimpleAsync()).ToList();
 
         await GetAppSettings();
-       
+
         roomsSelect = rooms.Select(s => new SelectItem
         {
             Value = s.Id,
@@ -122,7 +122,9 @@ public partial class AppointmentModal : ModalBase
     protected override async Task OnParametersSetAsync()
     {
         if (AppointmentId.HasValue && AppointmentId.Value > 0)
+        {
             appointmentDto = await AppointmentService.GetAppointmentByIdAsync(AppointmentId.Value) ?? new();
+        }
 
         if (Role == UserRole.Doctor)
         {

@@ -228,8 +228,8 @@ public class DoctorServiceTests
         };
 
         _mockUserService.Setup(s => s.CreateApplicationUser(
-            It.IsAny<ApplicationUser>(), 
-            doctorDto.Password, 
+            It.IsAny<ApplicationUser>(),
+            doctorDto.Password,
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful())
             ;
@@ -397,7 +397,7 @@ public class DoctorServiceTests
 
         _mockDoctorRepository.Setup(r => r.GetByIdAsync(updateDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Doctor { Id = updateDto.Id });
         _mockDoctorRepository.Setup(r => r.UpdateAsync(It.IsAny<Doctor>())).Returns(Task.CompletedTask);
-        
+
         _mockSpecialtyRepository.Setup(r => r.ExistsAsync(updateDto.SpecialtyId.Value, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
 

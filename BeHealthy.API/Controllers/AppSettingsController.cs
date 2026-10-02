@@ -40,14 +40,18 @@ public class AppSettingsController(IAppSettingsService appSettingsService) : Api
     public async Task<IActionResult> Update(string key, AppSettingUpdateRequest dto, CancellationToken cancellationToken)
     {
         if (key != dto.Key)
+        {
             return Problem(
                 detail: $"Route key '{key}' does not match body key '{dto.Key}'.",
                 statusCode: StatusCodes.Status400BadRequest,
                 title: "Key mismatch");
+        }
 
         var setting = await appSettingsService.GetSettingByKeyAsync(key, cancellationToken);
         if (setting is null)
+        {
             return NotFoundProblem("Setting", key);
+        }
 
         setting.Value = dto.Value;
         await appSettingsService.UpdateSettingAsync(setting, cancellationToken);

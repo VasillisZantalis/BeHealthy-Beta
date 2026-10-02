@@ -129,11 +129,11 @@ public partial class Appointments : BasePage
         }
 
         doctorsSelect = doctors.Select(s => new SelectItem
-        { 
+        {
             Text = s.FullName,
-            Value = s.Id 
+            Value = s.Id
         }).ToList();
-        doctorsSelect.Insert(0, new(){ Text = Resource.All, Value = 0 });
+        doctorsSelect.Insert(0, new() { Text = Resource.All, Value = 0 });
     }
 
     private async Task LoadPatients()
@@ -273,7 +273,9 @@ public partial class Appointments : BasePage
         if (HandleServiceResponse(response))
         {
             if (!fromBulkCreation)
+            {
                 await LoadAppointments();
+            }
         }
     }
 
@@ -282,7 +284,9 @@ public partial class Appointments : BasePage
         var response = await AppointmentService.UpdateAppointmentAsync(appointmentForUpdateDto);
 
         if (HandleServiceResponse(response))
+        {
             await LoadAppointments();
+        }
     }
 
     private async Task BulkCreateAppointments((List<AppointmentCreateRequest> AppointmentCreateDtos, bool UseValidation) result)

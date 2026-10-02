@@ -103,10 +103,16 @@ public class AppointmentService : IAppointmentService
             var appointment = appointmentDto.MapToDomain();
 
             var doctorExists = await _doctorRepository.ExistsAsync(appointment.DoctorId, cancellationToken);
-            if (!doctorExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+            if (!doctorExists)
+            {
+                return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+            }
 
             var patientExists = await _patientRepository.ExistsAsync(appointment.PatientId, cancellationToken);
-            if (!patientExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+            if (!patientExists)
+            {
+                return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+            }
 
             if (appointment.RoomId.HasValue
                 && !await _roomRepository.ExistsAsync(appointment.RoomId.Value, cancellationToken))
@@ -124,7 +130,10 @@ public class AppointmentService : IAppointmentService
                 appointmentDto.AppointmentEndTime,
                 cancellationToken: cancellationToken);
 
-            if (!conflictCheck.Success) return conflictCheck;
+            if (!conflictCheck.Success)
+            {
+                return conflictCheck;
+            }
 
             await _appointmentRepository.AddAsync(appointment, cancellationToken);
             await _appointmentRepository.SaveChangesAsync(cancellationToken);
@@ -143,13 +152,21 @@ public class AppointmentService : IAppointmentService
         {
             var appointment = await _appointmentRepository.GetByIdAsync(appointmentDto.Id, cancellationToken);
             if (appointment is null)
+            {
                 return ServiceResponse.Failed(Resource.NotFound);
+            }
 
             var doctorExists = await _doctorRepository.ExistsAsync(appointmentDto.DoctorId, cancellationToken);
-            if (!doctorExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+            if (!doctorExists)
+            {
+                return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+            }
 
             var patientExists = await _patientRepository.ExistsAsync(appointmentDto.PatientId, cancellationToken);
-            if (!patientExists) return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+            if (!patientExists)
+            {
+                return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+            }
 
             if (appointmentDto.RoomId.HasValue
                 && !await _roomRepository.ExistsAsync(appointmentDto.RoomId.Value, cancellationToken))
@@ -168,7 +185,10 @@ public class AppointmentService : IAppointmentService
                 appointmentDto.Id,
                 cancellationToken);
 
-            if (!conflictCheck.Success) return conflictCheck;
+            if (!conflictCheck.Success)
+            {
+                return conflictCheck;
+            }
 
             appointment.PatientId = appointmentDto.PatientId;
             appointment.DoctorId = appointmentDto.DoctorId;
@@ -195,7 +215,9 @@ public class AppointmentService : IAppointmentService
     public async Task DeleteAppointmentAsync(int id, CancellationToken cancellationToken = default)
     {
         if (await _appointmentRepository.DeleteAsync(id, cancellationToken))
+        {
             await _appointmentRepository.SaveChangesAsync(cancellationToken);
+        }
     }
 
     public async Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts(CancellationToken cancellationToken = default)
@@ -292,7 +314,9 @@ public class AppointmentService : IAppointmentService
         return appointments.FirstOrDefault(existing =>
         {
             if (excludeId.HasValue && existing.Id == excludeId.Value)
+            {
                 return false;
+            }
 
             DateTime existingStart = existing.AppointmentDate.ToDateTime(existing.AppointmentStartTime);
             DateTime existingEnd = existing.AppointmentDate.ToDateTime(existing.AppointmentEndTime);
@@ -309,9 +333,9 @@ public class AppointmentService : IAppointmentService
 
         QueryOptions<Appointment> queryOptions = new QueryOptions<Appointment>
         {
-            Predicate = a => a.AppointmentDate >= today 
-                            && a.AppointmentDate <= threeDaysFromNow 
-                            && a.Status != AppointmentStatus.Cancelled 
+            Predicate = a => a.AppointmentDate >= today
+                            && a.AppointmentDate <= threeDaysFromNow
+                            && a.Status != AppointmentStatus.Cancelled
                             && a.Status != AppointmentStatus.Completed,
             OrderBy = a => a.AppointmentDate,
             PageSize = 5
