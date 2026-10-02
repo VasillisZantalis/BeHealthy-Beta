@@ -43,10 +43,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("BlazorClient", policy =>
-        policy.WithOrigins(
-                  "https://localhost:7209", // legacy Blazor Server client
-                  "https://localhost:7224", // WASM frontend (https)
-                  "http://localhost:5005")  // WASM frontend (http)
+        policy.WithOrigins("https://localhost:7130")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials());

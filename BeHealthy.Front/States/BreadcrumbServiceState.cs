@@ -50,7 +50,7 @@ public class BreadcrumbServiceState
 
     public void BackButtonClickHandler()
     {
-        if (!Breadcrumbs.Any()) return;
+        if (!IsBackButtonVisible) return;
 
         var lastInactiveBreadcrumb = Breadcrumbs
             .Where(b => !string.IsNullOrEmpty(b.Link))

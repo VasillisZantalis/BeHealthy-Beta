@@ -3,7 +3,7 @@
 @inject BreadcrumbServiceState BreadcrumbServiceState
 
 <div class="container-fluid d-flex flex-row align-items-start">
-    <BackButton OnClick="BackButtonClick" />
+    <BackButton OnClick="BackButtonClick" Disabled="!BreadcrumbServiceState.IsBackButtonVisible" />
     <div class="bg-light rounded-pill px-4 py-2 mb-4 d-flex align-items-center">
 
         <ul class="breadcrumb mb-0 @(!BreadcrumbServiceState.IsBreadcrumbVisible ? "invisible" : "")">
