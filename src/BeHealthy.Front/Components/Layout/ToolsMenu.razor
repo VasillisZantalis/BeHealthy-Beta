@@ -1,0 +1,47 @@
+@inject IModalService ModalService
+@inject NavigationManager NavigationManager
+
+<AuthorizeView Roles="Admin">
+    <div class="dropdown">
+        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" aria-expanded="@isOpen" @onclick="ToggleMenu">
+            <Icon IconClass="@FAIcon.Toolbox" /> @Resource.Tools
+        </button>
+
+        @if (isOpen)
+        {
+            <div class="tools-menu-backdrop" @onclick="CloseMenu"></div>
+        }
+
+        <ul class="dropdown-menu dropdown-menu-end @(isOpen ? "show" : string.Empty)">
+            <li>
+                <button type="button" class="dropdown-item" @onclick="OpenMassImport">
+                    <Icon IconClass="@FAIcon.Import" /> @Resource.MassImport
+                </button>
+            </li>
+        </ul>
+    </div>
+</AuthorizeView>
+
+@code {
+    private bool isOpen;
+
+    private void ToggleMenu() => isOpen = !isOpen;
+
+    private void CloseMenu() => isOpen = false;
+
+    private void OpenMassImport()
+    {
+        CloseMenu();
+
+        ModalService.Show<SeedingModal>(
+            new Dictionary<string, object?>
+            {
+                { nameof(SeedingModal.OnSeedingCompleted), EventCallback.Factory.Create(this, OnSeedingCompleted) }
+            });
+    }
+
+    private void OnSeedingCompleted()
+    {
+        NavigationManager.Refresh(true);
+    }
+}

@@ -164,6 +164,7 @@ public static class Resource
     public const string TheFieldIsRequired = "The field {0} is required";
     public const string ThereAreNo = "There are no {0}";
     public const string ThisActionCannotBeUndone = "This action cannot be undone";
+    public const string Tools = "Tools";
     public const string TotalAppointments = "Total Appointments";
     public const string Unauthorized = "Unauthorized";
     public const string UpcomingAppointments = "Upcoming Appointments";
