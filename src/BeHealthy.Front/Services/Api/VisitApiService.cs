@@ -24,7 +24,7 @@ public class VisitApiService : ApiClientBase, IVisitService
         => await GetListAsync<LabResultResponse>($"visits/{visitId}/lab-results");
 
     public async Task<IEnumerable<VisitResponse>> GetVisitsByPatientIdAsync(int patientId)
-        => await GetListAsync<VisitResponse>($"visits/patient/{patientId}");
+        => await GetListAsync<VisitResponse>($"patients/{patientId}/visits");
 
     public async Task<ServiceResponse> AddVisitAsync(VisitCreateRequest dto)
         => await PostForResponseAsync("visits", dto);

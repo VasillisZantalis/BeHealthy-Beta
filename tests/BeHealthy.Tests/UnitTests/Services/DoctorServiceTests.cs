@@ -430,29 +430,6 @@ public class DoctorServiceTests
 
     #endregion
 
-    #region GetDoctorAppointmentsByUserIdAsync
-
-    [Fact]
-    public async Task GetDoctorAppointmentsByUserIdAsync_ReturnsMappedDtos()
-    {
-        // Arrange
-        var userId = "user-1";
-        var appointments = new List<Appointment>
-        {
-            new Appointment { Id = 1, DoctorId = 1, PatientId = 1, AppointmentDate = DateOnly.FromDateTime(DateTime.Now) }
-        };
-        _mockDoctorRepository.Setup(r => r.GetDoctorAppointmentsByUserIdAsync(userId, It.IsAny<CancellationToken>())).ReturnsAsync(appointments);
-
-        // Act
-        var result = await _sut.GetDoctorAppointmentsByUserIdAsync(userId);
-
-        // Assert
-        result.ShouldNotBeNull();
-        result.ShouldBeAssignableTo<IEnumerable<AppointmentResponse>>();
-    }
-
-    #endregion
-
     #region GetDoctorProfileByUserIdAsync
 
     [Fact]

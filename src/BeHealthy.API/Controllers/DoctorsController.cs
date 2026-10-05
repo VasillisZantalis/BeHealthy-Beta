@@ -1,13 +1,11 @@
 using BeHealthy.Shared.Dtos.Appointment;
 using BeHealthy.Shared.Dtos.Doctor;
-using BeHealthy.Shared.Dtos.Patient;
-using BeHealthy.Shared.Dtos.User;
 
 namespace BeHealthy.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class DoctorsController(IDoctorService doctorService) : ApiControllerBase
+public class DoctorsController(IDoctorService doctorService, IAppointmentService appointmentService) : ApiControllerBase
 {
     /// <summary>Gets a paginated, filterable list of doctors.</summary>
     [HttpGet]
@@ -30,31 +28,6 @@ public class DoctorsController(IDoctorService doctorService) : ApiControllerBase
     public async Task<ActionResult<int>> GetCount(CancellationToken cancellationToken)
         => Ok(await doctorService.GetDoctorCountAsync(cancellationToken));
 
-    /// <summary>Gets the doctor profile for the given user.</summary>
-    [HttpGet("profile/{userId}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<ProfileResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProfileResponse>> GetProfile(string userId, CancellationToken cancellationToken)
-    {
-        var profile = await doctorService.GetDoctorProfileByUserIdAsync(userId, cancellationToken);
-        return profile is null ? NotFoundProblem("Doctor profile", userId) : Ok(profile);
-    }
-
-    /// <summary>Gets the appointments booked with the doctor for the given user.</summary>
-    [HttpGet("{userId}/appointments")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<AppointmentResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetAppointments(string userId, CancellationToken cancellationToken)
-        => Ok(await doctorService.GetDoctorAppointmentsByUserIdAsync(userId, cancellationToken));
-
-    /// <summary>Gets the patients assigned to the doctor for the given user.</summary>
-    [HttpGet("{userId}/patients")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<PatientResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<PatientResponse>>> GetPatients(string userId, CancellationToken cancellationToken)
-        => Ok(await doctorService.GetMyPatientsAsync(userId, cancellationToken));
-
     /// <summary>Gets a single doctor by id.</summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = RoleGroups.AllUsers)]
@@ -65,6 +38,13 @@ public class DoctorsController(IDoctorService doctorService) : ApiControllerBase
         var doctor = await doctorService.GetDoctorByIdAsync(id, cancellationToken);
         return doctor is null ? NotFoundProblem("Doctor", id) : Ok(doctor);
     }
+
+    /// <summary>Gets every appointment for a doctor.</summary>
+    [HttpGet("{id:int}/appointments")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
+    [ProducesResponseType<IEnumerable<AppointmentResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetAppointments(int id, CancellationToken cancellationToken)
+        => Ok(await appointmentService.GetAllAppointmentsByDoctorIdAsync(id, cancellationToken));
 
     /// <summary>Creates a new doctor and their user account.</summary>
     [HttpPost]

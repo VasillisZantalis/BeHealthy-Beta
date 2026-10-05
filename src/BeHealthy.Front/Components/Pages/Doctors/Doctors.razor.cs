@@ -32,7 +32,6 @@ public partial class Doctors : BasePage
     private string selectedView = "Grid";
     private bool hasActionRights;
     private UserRole? userRole;
-    private string? currentUserId;
 
     protected override void OnInitialized()
     {
@@ -43,7 +42,6 @@ public partial class Doctors : BasePage
     {
         IsLoading = true;
         userRole = CurrentUser.Role;
-        currentUserId = CurrentUser.UserId;
 
         await LoadDoctors();
         await LoadSpecialties();
@@ -121,13 +119,12 @@ public partial class Doctors : BasePage
     private async Task LoadDoctors()
     {
         var role = userRole ?? UserRole.Admin;
-        var userId = currentUserId;
 
         IsLoading = true;
 
-        if (role == UserRole.Patient && userId is not null)
+        if (role == UserRole.Patient)
         {
-            doctors = (await PatientsService.GetMyDoctorsAsync(userId)).ToList();
+            doctors = (await PatientsService.GetMyDoctorsAsync()).ToList();
             totalCount = doctors.Count;
         }
         else

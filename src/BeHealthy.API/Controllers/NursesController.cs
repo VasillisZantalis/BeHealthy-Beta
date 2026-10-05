@@ -1,5 +1,4 @@
 using BeHealthy.Shared.Dtos.Nurse;
-using BeHealthy.Shared.Dtos.User;
 
 namespace BeHealthy.API.Controllers;
 
@@ -27,24 +26,6 @@ public class NursesController(INurseService nurseService) : ApiControllerBase
     [ProducesResponseType<int>(StatusCodes.Status200OK)]
     public async Task<ActionResult<int>> GetCount(CancellationToken cancellationToken)
         => Ok(await nurseService.GetNurseCountAsync(cancellationToken));
-
-    /// <summary>Gets the nurse profile for the given user.</summary>
-    [HttpGet("profile/{userId}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<ProfileResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProfileResponse>> GetProfile(string userId, CancellationToken cancellationToken)
-    {
-        var profile = await nurseService.GetNurseProfileByUserIdAsync(userId, cancellationToken);
-        return profile is null ? NotFoundProblem("Nurse profile", userId) : Ok(profile);
-    }
-
-    /// <summary>Gets the nurses assigned to the given patient's user.</summary>
-    [HttpGet("by-patient/{userId}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<NurseResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<NurseResponse>>> GetByPatientUserId(string userId, CancellationToken cancellationToken)
-        => Ok(await nurseService.GetNursesOfPatientByUserId(userId, cancellationToken));
 
     /// <summary>Gets a single nurse by id.</summary>
     [HttpGet("{id:int}")]

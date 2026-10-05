@@ -78,10 +78,9 @@ public partial class Appointments : BasePage
         }
         else
         {
-            appointments = (userRole, currentUserId) switch
+            appointments = userRole switch
             {
-                (UserRole.Doctor, not null) => (await DoctorService.GetDoctorAppointmentsByUserIdAsync(currentUserId)).ToList(),
-                (UserRole.Patient, not null) => (await PatientService.GetPatientAppointmentsByUserIdAsync(currentUserId)).ToList(),
+                UserRole.Doctor or UserRole.Patient => (await AppointmentService.GetMyAppointmentsAsync()).ToList(),
                 _ => []
             };
         }

@@ -20,27 +20,6 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ap
     public async Task<ActionResult<Dictionary<AppointmentReason, int>>> GetReasonCounts(CancellationToken cancellationToken)
         => Ok(await appointmentService.GetAppointmentReasonCounts(cancellationToken));
 
-    /// <summary>Gets every appointment for a doctor.</summary>
-    [HttpGet("by-doctor/{doctorId:int}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<AppointmentResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetByDoctor(int doctorId, CancellationToken cancellationToken)
-        => Ok(await appointmentService.GetAllAppointmentsByDoctorIdAsync(doctorId, cancellationToken));
-
-    /// <summary>Gets every appointment for a patient.</summary>
-    [HttpGet("by-patient/{patientId:int}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<AppointmentResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
-        => Ok(await appointmentService.GetAllAppointmentsByPatientIdAsync(patientId, cancellationToken));
-
-    /// <summary>Gets every appointment for a given user (patient or doctor).</summary>
-    [HttpGet("by-user/{userId}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<AppointmentResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetByUser(string userId, CancellationToken cancellationToken)
-        => Ok(await appointmentService.GetAllAppointmentsByUserIdAsync(userId, cancellationToken));
-
     /// <summary>Gets a single appointment by id.</summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = RoleGroups.AllUsers)]

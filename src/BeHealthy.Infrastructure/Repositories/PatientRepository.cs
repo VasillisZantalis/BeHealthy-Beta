@@ -22,17 +22,6 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
         return await _context.Patients.ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetPatientAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Appointments
-                .Include(a => a.Doctor)
-                .Include(a => a.Patient)
-                .Include(i => i.Room)
-                .Include(i => i.Nurse)
-                .Where(a => a.Patient!.UserId == userId)
-                .ToListAsync(cancellationToken);
-    }
-
     public async Task DeletePatientAsync(int id, CancellationToken cancellationToken = default)
     {
         var patient = await _context.Patients

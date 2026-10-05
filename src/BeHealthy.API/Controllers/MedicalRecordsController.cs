@@ -13,13 +13,6 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
     public async Task<ActionResult<IEnumerable<MedicalRecordResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok(await medicalRecordService.GetAllMedicalRecordsAsync(cancellationToken));
 
-    /// <summary>Gets every medical record for a patient.</summary>
-    [HttpGet("by-patient/{patientId:int}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<MedicalRecordResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<MedicalRecordResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
-        => Ok(await medicalRecordService.GetMedicalRecordsByPatientIdAsync(patientId, cancellationToken));
-
     /// <summary>Gets a single medical record by id.</summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = RoleGroups.AllUsers)]

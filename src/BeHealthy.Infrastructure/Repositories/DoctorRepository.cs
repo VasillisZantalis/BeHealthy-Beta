@@ -41,17 +41,6 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
         }
     }
 
-    public async Task<IEnumerable<Appointment>> GetDoctorAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Appointments
-                .Include(a => a.Patient)
-                .Include(a => a.Doctor)
-                .Include(i => i.Room)
-                .Include(i => i.Nurse)
-                .Where(a => a.Doctor != null && a.Doctor.UserId == userId)
-                .ToListAsync(cancellationToken);
-    }
-
     public async Task<Doctor?> GetDoctorByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Doctors

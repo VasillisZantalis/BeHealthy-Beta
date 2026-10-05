@@ -6,13 +6,6 @@ namespace BeHealthy.API.Controllers;
 [ApiController]
 public class AllergiesController(IAllergyService allergyService) : ApiControllerBase
 {
-    /// <summary>Gets every allergy for a patient.</summary>
-    [HttpGet("by-patient/{patientId:int}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<AllergyResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AllergyResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
-        => Ok(await allergyService.GetAllergiesByPatientIdAsync(patientId, cancellationToken));
-
     /// <summary>Gets a single allergy by id.</summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = RoleGroups.AllUsers)]

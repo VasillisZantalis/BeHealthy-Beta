@@ -18,17 +18,11 @@ public class PatientApiService : ApiClientBase, IPatientService
     public async Task<PatientResponse?> GetPatientByIdAsync(int id)
         => await GetAsync<PatientResponse>($"patients/{id}");
 
-    public async Task<IEnumerable<AppointmentResponse>> GetPatientAppointmentsByUserIdAsync(string userId)
-        => await GetListAsync<AppointmentResponse>($"patients/{userId}/appointments");
-
     public async Task<IEnumerable<PatientSimpleResponse>> GetAllPatientsSimpleAsync()
         => await GetListAsync<PatientSimpleResponse>("patients/simple");
 
-    public async Task<ProfileResponse?> GetPatientProfileByUserIdAsync(string userId)
-        => await GetAsync<ProfileResponse>($"patients/{userId}/profile");
-
-    public async Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId)
-        => await GetListAsync<DoctorResponse>($"patients/{userId}/doctors");
+    public async Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync()
+        => await GetListAsync<DoctorResponse>("me/doctors");
 
     public async Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patient)
         => await PostForResponseAsync("patients", patient);

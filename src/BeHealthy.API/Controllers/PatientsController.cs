@@ -1,13 +1,21 @@
+using BeHealthy.Shared.Dtos.Allergy;
 using BeHealthy.Shared.Dtos.Appointment;
-using BeHealthy.Shared.Dtos.Doctor;
+using BeHealthy.Shared.Dtos.MedicalRecord;
 using BeHealthy.Shared.Dtos.Patient;
-using BeHealthy.Shared.Dtos.User;
+using BeHealthy.Shared.Dtos.Prescription;
+using BeHealthy.Shared.Dtos.Visit;
 
 namespace BeHealthy.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PatientsController(IPatientService patientService) : ApiControllerBase
+public class PatientsController(
+    IPatientService patientService,
+    IAppointmentService appointmentService,
+    IAllergyService allergyService,
+    IPrescriptionService prescriptionService,
+    IMedicalRecordService medicalRecordService,
+    IVisitService visitService) : ApiControllerBase
 {
     /// <summary>Gets a filterable list of patients.</summary>
     [HttpGet]
@@ -30,31 +38,6 @@ public class PatientsController(IPatientService patientService) : ApiControllerB
     public async Task<ActionResult<int>> GetCount(CancellationToken cancellationToken)
         => Ok(await patientService.GetPatientCountAsync(cancellationToken));
 
-    /// <summary>Gets the patient profile for the given user.</summary>
-    [HttpGet("profile/{userId}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<ProfileResponse>(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProfileResponse>> GetProfile(string userId, CancellationToken cancellationToken)
-    {
-        var profile = await patientService.GetPatientProfileByUserIdAsync(userId, cancellationToken);
-        return profile is null ? NotFoundProblem("Patient profile", userId) : Ok(profile);
-    }
-
-    /// <summary>Gets the appointments booked by the given user.</summary>
-    [HttpGet("{userId}/appointments")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<AppointmentResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetAppointments(string userId, CancellationToken cancellationToken)
-        => Ok(await patientService.GetPatientAppointmentsByUserIdAsync(userId, cancellationToken));
-
-    /// <summary>Gets the doctors assigned to the given user.</summary>
-    [HttpGet("{userId}/doctors")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<DoctorResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<DoctorResponse>>> GetDoctors(string userId, CancellationToken cancellationToken)
-        => Ok(await patientService.GetMyDoctorsAsync(userId, cancellationToken));
-
     /// <summary>Gets a single patient by id.</summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = RoleGroups.AllUsers)]
@@ -65,6 +48,41 @@ public class PatientsController(IPatientService patientService) : ApiControllerB
         var patient = await patientService.GetPatientByIdAsync(id, cancellationToken);
         return patient is null ? NotFoundProblem("Patient", id) : Ok(patient);
     }
+
+    /// <summary>Gets every appointment for a patient.</summary>
+    [HttpGet("{id:int}/appointments")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
+    [ProducesResponseType<IEnumerable<AppointmentResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<AppointmentResponse>>> GetAppointments(int id, CancellationToken cancellationToken)
+        => Ok(await appointmentService.GetAllAppointmentsByPatientIdAsync(id, cancellationToken));
+
+    /// <summary>Gets every allergy for a patient.</summary>
+    [HttpGet("{id:int}/allergies")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
+    [ProducesResponseType<IEnumerable<AllergyResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<AllergyResponse>>> GetAllergies(int id, CancellationToken cancellationToken)
+        => Ok(await allergyService.GetAllergiesByPatientIdAsync(id, cancellationToken));
+
+    /// <summary>Gets every prescription for a patient.</summary>
+    [HttpGet("{id:int}/prescriptions")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
+    [ProducesResponseType<IEnumerable<PrescriptionResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<PrescriptionResponse>>> GetPrescriptions(int id, CancellationToken cancellationToken)
+        => Ok(await prescriptionService.GetPrescriptionsByPatientIdAsync(id, cancellationToken));
+
+    /// <summary>Gets every medical record for a patient.</summary>
+    [HttpGet("{id:int}/medical-records")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
+    [ProducesResponseType<IEnumerable<MedicalRecordResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<MedicalRecordResponse>>> GetMedicalRecords(int id, CancellationToken cancellationToken)
+        => Ok(await medicalRecordService.GetMedicalRecordsByPatientIdAsync(id, cancellationToken));
+
+    /// <summary>Gets every visit for a patient.</summary>
+    [HttpGet("{id:int}/visits")]
+    [Authorize(Roles = RoleGroups.AllUsers)]
+    [ProducesResponseType<IEnumerable<VisitResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<VisitResponse>>> GetVisits(int id, CancellationToken cancellationToken)
+        => Ok(await visitService.GetVisitsByPatientIdAsync(id, cancellationToken));
 
     /// <summary>Creates a new patient and their user account.</summary>
     [HttpPost]

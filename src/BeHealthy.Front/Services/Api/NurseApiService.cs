@@ -16,14 +16,11 @@ public class NurseApiService : ApiClientBase, INurseService
     public async Task<NurseResponse?> GetNurseByIdAsync(int id)
         => await GetAsync<NurseResponse>($"nurses/{id}");
 
-    public async Task<IEnumerable<NurseResponse>> GetNursesOfPatientByUserId(string userId)
-        => await GetListAsync<NurseResponse>($"nurses/patient/{userId}");
+    public async Task<IEnumerable<NurseResponse>> GetMyNursesAsync()
+        => await GetListAsync<NurseResponse>("me/nurses");
 
     public async Task<IEnumerable<NurseSimpleResponse>> GetAllNursesSimpleAsync()
         => await GetListAsync<NurseSimpleResponse>("nurses/simple");
-
-    public async Task<ProfileResponse?> GetNurseProfileByUserIdAsync(string userId)
-        => await GetAsync<ProfileResponse>($"nurses/{userId}/profile");
 
     public async Task<ServiceResponse> AddNurseAsync(NurseCreateRequest nurse)
         => await PostForResponseAsync("nurses", nurse);

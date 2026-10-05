@@ -13,13 +13,6 @@ public class PrescriptionsController(IPrescriptionService prescriptionService) :
     public async Task<ActionResult<IEnumerable<PrescriptionResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok(await prescriptionService.GetAllPrescriptionsAsync(cancellationToken));
 
-    /// <summary>Gets every prescription for a patient.</summary>
-    [HttpGet("by-patient/{patientId:int}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<PrescriptionResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<PrescriptionResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
-        => Ok(await prescriptionService.GetPrescriptionsByPatientIdAsync(patientId, cancellationToken));
-
     /// <summary>Gets a single prescription by id.</summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = RoleGroups.AllUsers)]

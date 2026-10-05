@@ -15,13 +15,6 @@ public class VisitsController(IVisitService visitService) : ApiControllerBase
     public async Task<ActionResult<IEnumerable<VisitResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok((await visitService.GetAllVisitsAsync(cancellationToken)).MapToDto());
 
-    /// <summary>Gets every visit for a patient.</summary>
-    [HttpGet("by-patient/{patientId:int}")]
-    [Authorize(Roles = RoleGroups.AllUsers)]
-    [ProducesResponseType<IEnumerable<VisitResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<VisitResponse>>> GetByPatient(int patientId, CancellationToken cancellationToken)
-        => Ok(await visitService.GetVisitsByPatientIdAsync(patientId, cancellationToken));
-
     /// <summary>Gets a single visit, including its diagnoses, treatments, and lab results.</summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = RoleGroups.AllUsers)]

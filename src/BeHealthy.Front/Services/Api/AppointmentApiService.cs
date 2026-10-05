@@ -14,13 +14,13 @@ public class AppointmentApiService : ApiClientBase, IAppointmentService
         => await GetAsync<PaginatedResult<AppointmentResponse>>($"appointments{ToQueryString(parameters)}") ?? new();
 
     public async Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByDoctorIdAsync(int doctorId)
-        => await GetListAsync<AppointmentResponse>($"appointments/doctor/{doctorId}");
+        => await GetListAsync<AppointmentResponse>($"doctors/{doctorId}/appointments");
 
     public async Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByPatientIdAsync(int patientId)
-        => await GetListAsync<AppointmentResponse>($"appointments/patient/{patientId}");
+        => await GetListAsync<AppointmentResponse>($"patients/{patientId}/appointments");
 
-    public async Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByUserIdAsync(string userId)
-        => await GetListAsync<AppointmentResponse>($"appointments/user/{userId}");
+    public async Task<IEnumerable<AppointmentResponse>> GetMyAppointmentsAsync()
+        => await GetListAsync<AppointmentResponse>("me/appointments");
 
     public async Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts()
         => await GetAsync<Dictionary<AppointmentReason, int>>("appointments/reasons") ?? new();

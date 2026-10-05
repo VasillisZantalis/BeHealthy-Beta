@@ -162,12 +162,6 @@ public class DoctorService : IDoctorService
         await _doctorRepository.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<AppointmentResponse>> GetDoctorAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
-    {
-        var doctorAppointments = await _doctorRepository.GetDoctorAppointmentsByUserIdAsync(userId, cancellationToken);
-        return doctorAppointments.MapToDto();
-    }
-
     public async Task<ProfileResponse?> GetDoctorProfileByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         var doctor = await _doctorRepository.GetDoctorByUserIdAsync(userId, cancellationToken);

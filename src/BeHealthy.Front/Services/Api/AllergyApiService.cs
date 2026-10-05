@@ -9,7 +9,7 @@ public class AllergyApiService : ApiClientBase, IAllergyService
     public AllergyApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<AllergyResponse>> GetAllergiesByPatientIdAsync(int patientId)
-        => await GetListAsync<AllergyResponse>($"allergies/patient/{patientId}");
+        => await GetListAsync<AllergyResponse>($"patients/{patientId}/allergies");
 
     public async Task<AllergyResponse?> GetAllergyByIdAsync(int id)
         => await GetAsync<AllergyResponse>($"allergies/{id}");

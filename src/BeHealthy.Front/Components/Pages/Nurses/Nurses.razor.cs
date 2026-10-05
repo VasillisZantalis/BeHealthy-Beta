@@ -31,7 +31,6 @@ public partial class Nurses : BasePage
     private string selectedView = "Grid";
     private bool hasActionRights;
     private UserRole? userRole;
-    private string? currentUserId;
     private int totalCount = 0;
 
     void ShowImportWizard()
@@ -54,7 +53,6 @@ public partial class Nurses : BasePage
         IsLoading = true;
 
         userRole = CurrentUser.Role;
-        currentUserId = CurrentUser.UserId;
 
         await LoadNurses();
 
@@ -75,13 +73,12 @@ public partial class Nurses : BasePage
     private async Task LoadNurses()
     {
         var role = userRole ?? UserRole.Admin;
-        var userId = currentUserId;
 
         IsLoading = true;
 
-        if (role == UserRole.Patient && userId is not null)
+        if (role == UserRole.Patient)
         {
-            nurses = (await NurseService.GetNursesOfPatientByUserId(userId)).ToList();
+            nurses = (await NurseService.GetMyNursesAsync()).ToList();
         }
         else
         {

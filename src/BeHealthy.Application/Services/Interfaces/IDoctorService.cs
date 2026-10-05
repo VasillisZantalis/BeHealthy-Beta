@@ -9,7 +9,6 @@ public interface IDoctorService
     Task<DoctorResponse?> GetDoctorByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<IEnumerable<PatientResponse>> GetMyPatientsAsync(string userId, CancellationToken cancellationToken = default);
     Task<ProfileResponse?> GetDoctorProfileByUserIdAsync(string userId, CancellationToken cancellationToken = default);
-    Task<IEnumerable<AppointmentResponse>> GetDoctorAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default);
     Task<ServiceResponse> AddDoctorAsync(DoctorCreateRequest doctor, CancellationToken cancellationToken = default);
     Task<int> GetDoctorCountAsync(CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateDoctorAsync(DoctorUpdateRequest doctor, CancellationToken cancellationToken = default);

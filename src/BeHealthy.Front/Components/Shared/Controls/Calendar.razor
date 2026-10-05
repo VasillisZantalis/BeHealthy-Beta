@@ -21,15 +21,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var userId = CurrentUser.UserId;
-
         switch (CurrentUser.Role)
         {
-            case UserRole.Doctor when userId is not null:
-                appointments = (await AppointmentService.GetAllAppointmentsByUserIdAsync(userId)).ToList();
-                break;
-            case UserRole.Patient when userId is not null:
-                appointments = (await AppointmentService.GetAllAppointmentsByUserIdAsync(userId)).ToList();
+            case UserRole.Doctor or UserRole.Patient:
+                appointments = (await AppointmentService.GetMyAppointmentsAsync()).ToList();
                 break;
             default:
                 var paginatedResult = await AppointmentService.GetAllAppointmentsAsync();

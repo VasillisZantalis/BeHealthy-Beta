@@ -10,6 +10,13 @@ public static class RoleGroups
 
     public const string Admin = nameof(UserRole.Admin);
 
+    public const string Doctor = nameof(UserRole.Doctor);
+
+    public const string Patient = nameof(UserRole.Patient);
+
+    /// <summary>Users who have their own profile and take part in appointments.</summary>
+    public const string AppointmentParticipants = Doctor + Separator + nameof(UserRole.Nurse) + Separator + Patient;
+
     /// <summary>Users who manage the hospital's structure and registrations.</summary>
     public const string Administration = Admin + Separator + nameof(UserRole.Staff);
 

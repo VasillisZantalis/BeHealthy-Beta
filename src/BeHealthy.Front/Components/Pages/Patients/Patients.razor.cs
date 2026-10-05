@@ -36,7 +36,6 @@ public partial class Patients : BasePage
     private bool hasDeleteRight;
 
     private UserRole? userRole;
-    private string? currentUserId;
 
     protected override void OnInitialized()
     {
@@ -48,9 +47,8 @@ public partial class Patients : BasePage
         IsLoading = true;
 
         userRole = CurrentUser.Role;
-        currentUserId = CurrentUser.UserId;
 
-        await LoadPatients(currentUserId, userRole);
+        await LoadPatients();
 
         hasEditRight = CurrentUser.Role == UserRole.Admin;
         hasDeleteRight = CurrentUser.Role == UserRole.Admin;
@@ -67,13 +65,13 @@ public partial class Patients : BasePage
         });
     }
 
-    private async Task LoadPatients(string? doctorId, UserRole? userRole = UserRole.Admin)
+    private async Task LoadPatients()
     {
         IsLoading = true;
 
         patients = userRole switch
         {
-            UserRole.Doctor when doctorId is not null => (await DoctorService.GetMyPatientsAsync(doctorId)).ToList(),
+            UserRole.Doctor => (await DoctorService.GetMyPatientsAsync()).ToList(),
             _ => (await PatientService.GetAllPatientsAsync(QueryParameters)).ToList()
         };
 
@@ -97,7 +95,7 @@ public partial class Patients : BasePage
     private async Task HandleSearch(string term)
     {
         QueryParameters.SearchTerm = term;
-        await LoadPatients(currentUserId, userRole);
+        await LoadPatients();
     }
 
     private async Task HandleClearFilters()
@@ -108,7 +106,7 @@ public partial class Patients : BasePage
         }
 
         QueryParameters.SearchTerm = "";
-        await LoadPatients(currentUserId, userRole);
+        await LoadPatients();
     }
 
     void ShowImportWizard()
@@ -156,7 +154,7 @@ public partial class Patients : BasePage
                 continue;
             }
         }
-        await LoadPatients(currentUserId, userRole);
+        await LoadPatients();
         IsLoading = false;
     }
 
@@ -192,6 +190,6 @@ public partial class Patients : BasePage
 
         IsLoading = false;
 
-        await LoadPatients(currentUserId, userRole);
+        await LoadPatients();
     }
 }

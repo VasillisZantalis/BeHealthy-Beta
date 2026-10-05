@@ -15,7 +15,7 @@ public class PrescriptionApiService : ApiClientBase, IPrescriptionService
         => await GetAsync<PrescriptionResponse>($"prescriptions/{id}");
 
     public async Task<IEnumerable<PrescriptionResponse>> GetPrescriptionsByPatientIdAsync(int id)
-        => await GetListAsync<PrescriptionResponse>($"prescriptions/patient/{id}");
+        => await GetListAsync<PrescriptionResponse>($"patients/{id}/prescriptions");
 
     public async Task<ServiceResponse> AddPrescriptionAsync(PrescriptionCreateRequest prescriptionDto)
         => await PostForResponseAsync("prescriptions", prescriptionDto);

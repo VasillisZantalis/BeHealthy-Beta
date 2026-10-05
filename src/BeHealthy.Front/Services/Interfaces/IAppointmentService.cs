@@ -10,7 +10,7 @@ public interface IAppointmentService
     Task<PaginatedResult<AppointmentResponse>> GetAllAppointmentsAsync(AppointmentQueryParameters? parameters = null);
     Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByDoctorIdAsync(int doctorId);
     Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByPatientIdAsync(int patientId);
-    Task<IEnumerable<AppointmentResponse>> GetAllAppointmentsByUserIdAsync(string userId);
+    Task<IEnumerable<AppointmentResponse>> GetMyAppointmentsAsync();
     Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts();
     Task<AppointmentResponse?> GetAppointmentByIdAsync(int id);
     Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateRequest appointment);

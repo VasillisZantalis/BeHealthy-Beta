@@ -15,7 +15,7 @@ public class MedicalRecordApiService : ApiClientBase, IMedicalRecordService
         => await GetAsync<MedicalRecordResponse>($"medical-records/{id}");
 
     public async Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId)
-        => await GetListAsync<MedicalRecordResponse>($"medical-records/by-patient/{patientId}");
+        => await GetListAsync<MedicalRecordResponse>($"patients/{patientId}/medical-records");
 
     public async Task<ServiceResponse> AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto)
         => await PostForResponseAsync("medical-records", medicalRecordDto);
