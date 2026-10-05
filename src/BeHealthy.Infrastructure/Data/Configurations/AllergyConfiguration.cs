@@ -1,4 +1,5 @@
 using BeHealthy.Domain.Entities;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,10 +15,10 @@ public class AllergyConfiguration : IEntityTypeConfiguration<Allergy>
 
         builder.Property(a => a.AllergyName)
             .IsRequired()
-            .HasMaxLength(128);
+            .HasMaxLength(FieldLengths.AllergyName);
 
         builder.Property(a => a.Notes)
-            .HasMaxLength(512);
+            .HasMaxLength(FieldLengths.AllergyNotes);
 
         builder.Property(a => a.Allergen)
             .IsRequired(false);

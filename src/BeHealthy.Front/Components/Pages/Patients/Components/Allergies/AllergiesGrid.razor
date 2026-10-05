@@ -1,9 +1,10 @@
-﻿@using BeHealthy.Front.Validations.Allergy
-@inherits BasePage
+﻿@inherits BasePage
 
 @inject IAllergyService AllergyService
 @inject ICurrentUserService CurrentUser
 @inject NavigationManager NavigationManager
+@inject FluentValidation.IValidator<AllergyCreateRequest> CreateValidator
+@inject FluentValidation.IValidator<AllergyUpdateRequest> UpdateValidator
 
 
 <BeHealthyCard HeaderClass="d-flex justify-content-between align-items-center flex-wrap" RemoveCardStyle=true>
@@ -92,12 +93,11 @@
         {
             var allergyCreateDto = allergyDto.MapToCreateDto();
 
-            var validator = new AllergyCreateDtoValidator();
-            var validationResult = await validator.ValidateAsync(allergyCreateDto);
+            var validationResult = await CreateValidator.ValidateAsync(allergyCreateDto);
 
             if (!validationResult.IsValid)
             {
-                ToastService.ShowToast(Resource.InvalidData, "danger");
+                ToastService.ShowToast(validationResult.Errors[0].ErrorMessage, "danger");
                 return;
             }
             serviceResponse = await AllergyService.AddAllergyAsync(allergyCreateDto);
@@ -106,12 +106,11 @@
         {
             var allergyUpdateDto = allergyDto.MapToUpdateDto();
 
-            var validator = new AllergyUpdateDtoValidator();
-            var validationResult = await validator.ValidateAsync(allergyUpdateDto);
+            var validationResult = await UpdateValidator.ValidateAsync(allergyUpdateDto);
 
             if (!validationResult.IsValid)
             {
-                ToastService.ShowToast(Resource.InvalidData, "danger");
+                ToastService.ShowToast(validationResult.Errors[0].ErrorMessage, "danger");
                 return;
             }
             serviceResponse = await AllergyService.UpdateAllergyAsync(allergyUpdateDto);

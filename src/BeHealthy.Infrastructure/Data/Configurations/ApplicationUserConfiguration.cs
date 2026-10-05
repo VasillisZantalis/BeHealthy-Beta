@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeHealthy.Infrastructure.Data.Configurations;
@@ -12,11 +13,11 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.Property(u => u.FirstName)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(FieldLengths.PersonName);
 
         builder.Property(u => u.LastName)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(FieldLengths.PersonName);
 
         builder.Property(u => u.DateOfBirth)
             .IsRequired(false)
@@ -26,9 +27,9 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             );
 
         builder.Property(u => u.Gender)
-            .HasMaxLength(10);
+            .HasMaxLength(FieldLengths.Gender);
 
         builder.Property(u => u.Address)
-            .HasMaxLength(200);
+            .HasMaxLength(FieldLengths.Address);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Domain.Entities;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,6 +23,6 @@ public class MedicalRecordConfiguration : IEntityTypeConfiguration<MedicalRecord
 
         builder.Property(mr => mr.Notes)
             .IsRequired(false)
-            .HasMaxLength(500);
+            .HasMaxLength(FieldLengths.MedicalRecordNotes);
     }
 }

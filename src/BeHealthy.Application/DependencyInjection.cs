@@ -1,3 +1,8 @@
+using BeHealthy.Application.Validators;
+using BeHealthy.Validation;
+using BeHealthy.Validation.Settings;
+using FluentValidation;
+
 namespace BeHealthy.Application;
 
 public static class DependencyInjection
@@ -20,7 +25,12 @@ public static class DependencyInjection
         services.AddScoped<IAllergyService, AllergyService>();
         services.AddScoped<ISeedingService, SeedingService>();
 
-        services.AddScoped<IValidatorService, ValidatorService>();
+        // Validation: a request type can have two validators, and the API runs both.
+        // - the shared one from BeHealthy.Validation (also used by the Blazor front end), and
+        // - a "*ServerValidator" from this assembly for rules that need the database.
+        services.AddSharedValidators();
+        services.AddValidatorsFromAssemblyContaining<ValidationSettingsProvider>(ServiceLifetime.Scoped);
+        services.AddScoped<IValidationSettingsProvider, ValidationSettingsProvider>();
 
         return services;
     }

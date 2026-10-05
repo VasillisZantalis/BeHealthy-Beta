@@ -1,5 +1,4 @@
 ﻿@page "/doctors/create"
-@using BeHealthy.Front.Validations.Doctor
 @inherits BasePage
 
 @inject IDoctorService DoctorService
@@ -7,6 +6,7 @@
 @inject ISpecialtyService SpecialtyService
 @inject IAppSettingsService AppSettingsService
 @inject NavigationManager NavigationManager
+@inject FluentValidation.IValidator<DoctorCreateRequest> DoctorValidator
 
 <PageTitle>@Resource.Create</PageTitle>
 
@@ -87,6 +87,7 @@
                 {
                     <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
                         <InputSelect id="department" @bind-Value="DoctorCreateRequest.DepartmentId" class="form-control">
+                            <option value="">@Resource.PleaseSelect</option>
                             @foreach (var department in departmentsSelect)
                             {
                                 <option value="@department.Value">@department.Text</option>
@@ -99,6 +100,7 @@
                 {
                     <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="doNotAllowDoctorWithoutSpecialty">
                         <InputSelect id="specialty" @bind-Value="DoctorCreateRequest.SpecialtyId" class="form-control">
+                            <option value="">@Resource.PleaseSelect</option>
                             @foreach (var specialty in specialtiesSelect)
                             {
                                 <option value="@specialty.Value">@specialty.Text</option>
@@ -144,7 +146,6 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
         var specialties = await SpecialtyService.GetSpecialtiesAsync();
 
@@ -153,14 +154,13 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        specialtiesSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
         IsLoading = false;
     }
 
     private async Task GetSettings()
     {
-        AppSettingResponse? setting = await AppSettingsService.GetSettingByKeyAsync("DoNotAllowDoctorWithoutSpecialty");
+        AppSettingResponse? setting = await AppSettingsService.GetSettingByKeyAsync(AppSettingKeys.DoNotAllowDoctorWithoutSpecialty);
         doNotAllowDoctorWithoutSpecialty = setting?.GetBooleanValue() ?? false;
     }
 
@@ -199,8 +199,7 @@
 
         validationComponent?.ClearErrors();
 
-        var validator = new DoctorCreateDtoValidator(doNotAllowDoctorWithoutSpecialty);
-        var validationResult = await validator.ValidateAsync(DoctorCreateRequest);
+        var validationResult = await DoctorValidator.ValidateAsync(DoctorCreateRequest);
 
         if (!validationResult.IsValid)
         {
@@ -215,7 +214,8 @@
 
         if (!doctorCreationResult.Success)
         {
-            alert.ShowFailed(Resource.SomethingWentWrong);
+            validationComponent?.DisplayErrors(doctorCreationResult.ValidationErrors);
+            alert.ShowFailed(doctorCreationResult.ErrorMessage);
         }
         else
         {

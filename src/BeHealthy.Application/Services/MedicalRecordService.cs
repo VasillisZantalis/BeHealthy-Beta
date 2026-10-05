@@ -64,7 +64,7 @@ public class MedicalRecordService : IMedicalRecordService
         return medicalRecords.MapToDto();
     }
 
-    public async Task UpdateMedicalRecordNotesAsync(int id, string notes, CancellationToken cancellationToken = default)
+    public async Task UpdateMedicalRecordNotesAsync(int id, string? notes, CancellationToken cancellationToken = default)
     {
         var medicalRecord = await _medicalRecordRepository.GetByIdAsync(id, cancellationToken);
         if (medicalRecord is null)

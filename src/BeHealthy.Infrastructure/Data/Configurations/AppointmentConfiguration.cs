@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Domain.Entities;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,7 +23,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .IsRequired();
 
         builder.Property(a => a.Notes)
-            .HasMaxLength(500);
+            .HasMaxLength(FieldLengths.AppointmentNotes);
 
         // Relationships
         builder.HasOne(a => a.Patient)

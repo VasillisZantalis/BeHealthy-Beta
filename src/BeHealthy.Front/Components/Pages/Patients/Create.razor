@@ -1,5 +1,4 @@
 ﻿@page "/patients/create"
-@using BeHealthy.Front.Validations.Patient
 @inherits BasePage
 
 @inject IPatientService PatientService
@@ -21,7 +20,9 @@
             </button>
 
             <FluentValidationValidator @ref="fluentValidationValidator" />
-       
+
+            <ValidationComponent @ref="validationComponent" />
+
             <Alert @ref="alert" />
                 <div class="d-flex flex-column gap-3 p-3">
                     <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage="@(PatientCreateRequest.Image != null)" OnDeleteImage="@(() => PatientCreateRequest.Image = null)">
@@ -84,6 +85,7 @@
                     {
                         <BeHealthyFormGroup Label="@Resource.Department" InputId="department">
                             <InputSelect id="department" @bind-Value="PatientCreateRequest.DepartmentId" class="form-control">
+                                <option value="">@Resource.PleaseSelect</option>
                                 @foreach (var department in departmentsSelect)
                                 {
                                     <option value="@department.Value">@department.Text</option>
@@ -106,6 +108,7 @@
 
     private Alert alert = new();
     private FluentValidationValidator fluentValidationValidator = new();
+    private ValidationComponent? validationComponent;
 
     private List<SelectItem> departmentsSelect = new List<SelectItem>();
 
@@ -124,7 +127,6 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
         IsLoading = false;
     }
@@ -154,6 +156,7 @@
 
         if (!patientCreationResult.Success)
         {
+            validationComponent?.DisplayErrors(patientCreationResult.ValidationErrors);
             alert.ShowFailed(patientCreationResult.ErrorMessage);
             return;
         }

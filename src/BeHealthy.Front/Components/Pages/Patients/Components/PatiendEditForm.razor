@@ -9,6 +9,7 @@
         <span>@Resource.Save</span>
     </button>
     <FluentValidationValidator @ref="fluentValidationValidator" />
+    <ValidationComponent @ref="validationComponent" />
     <div class="d-flex flex-column gap-3">
         @if (ShowAlert)
         {
@@ -41,6 +42,7 @@
     {
         <BeHealthyFormGroup Label="@Resource.Department" InputId="Department">
             <InputSelect id="Department" @bind-Value="Model.DepartmentId" class="form-control">
+                <option value="">@Resource.PleaseSelect</option>
                 @foreach (var department in Departments)
                 {
                     <option value="@department.Value">@department.Text</option>
@@ -67,6 +69,7 @@
     public EventCallback<PatientUpdateRequest> OnValidSubmit { get; set; }
 
     private FluentValidationValidator fluentValidationValidator = new();
+    private ValidationComponent? validationComponent;
     private Alert alert = new();
 
     private async Task HandleValidSubmit()
@@ -97,4 +100,11 @@
 
     public FluentValidationValidator GetValidator() => fluentValidationValidator;
     public Alert GetAlert() => alert;
+
+    /// <summary>Shows a failed save: field errors from the API next to their inputs, plus the message in the alert.</summary>
+    public void ShowErrors(ServiceResponse response)
+    {
+        validationComponent?.DisplayErrors(response.ValidationErrors);
+        alert.ShowFailed(response.ErrorMessage);
+    }
 }

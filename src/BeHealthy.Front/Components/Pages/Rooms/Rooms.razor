@@ -113,17 +113,26 @@
     private async Task HandleSavedRoom(RoomResponse roomDto)
     {
         isLoading = true;
+        ServiceResponse response;
+
         if (roomDto.Id > 0)
         {
             var roomForUpdate = roomDto.MapDtoToUpdateDto();
-            await RoomService.UpdateRoomAsync(roomForUpdate);
+            response = await RoomService.UpdateRoomAsync(roomForUpdate);
         }
         else
         {
             var roomForCreate = roomDto.MapDtoToCreateDto();
-            await RoomService.AddRoomAsync(roomForCreate);
+            response = await RoomService.AddRoomAsync(roomForCreate);
         }
         isLoading = false;
+
+        if (!response.Success)
+        {
+            ToastService.ShowToast(response.ErrorMessage ?? Resource.SomethingWentWrong, "danger");
+            return;
+        }
+
         ToastService.ShowToast(Resource.Success, "success");
         await LoadRooms();
     }

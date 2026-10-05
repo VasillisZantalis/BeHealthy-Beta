@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeHealthy.Infrastructure.Data.Configurations;
@@ -14,7 +15,7 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
 
         builder.Property(r => r.Name)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(FieldLengths.RoomName);
 
         builder.Property(r => r.Number)
             .IsRequired();

@@ -2,6 +2,7 @@ using BeHealthy.Front.Common;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using BeHealthy.Shared.Dtos.Common;
 using BeHealthy.Shared.Parameters;
 
@@ -88,24 +89,52 @@ public abstract class ApiClientBase
     protected async Task DeleteAsync(string url)
         => await httpClient.DeleteAsync(url);
 
-    private static async Task<ServiceResponse> ReadServiceResponseAsync(HttpResponseMessage response)
+    protected async Task<ServiceResponse> PatchForResponseAsync<TBody>(string url, TBody body)
     {
         try
         {
-            var result = await response.Content.ReadFromJsonAsync<ServiceResponse>(ApiJsonOptions.Default);
-            if (result is not null)
-            {
-                return result;
-            }
+            var response = await httpClient.PatchAsJsonAsync(url, body, ApiJsonOptions.Default);
+            return await ReadServiceResponseAsync(response);
         }
-        catch
+        catch (HttpRequestException ex)
         {
-            // fall through to status-based result
+            return ServiceResponse.Failed(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// The API answers failures with RFC 7807 problem details. A 400 from validation carries
+    /// per-field errors, which are returned in <see cref="ServiceResponse.ValidationErrors"/> so a
+    /// form can show them next to the right inputs.
+    /// </summary>
+    private static async Task<ServiceResponse> ReadServiceResponseAsync(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            return ServiceResponse.Successful();
         }
 
-        return response.IsSuccessStatusCode
-            ? ServiceResponse.Successful()
-            : ServiceResponse.Failed($"Request failed with status {(int)response.StatusCode}");
+        try
+        {
+            var problem = await response.Content.ReadFromJsonAsync<HttpValidationProblemDetails>(ApiJsonOptions.Default);
+
+            if (problem?.Errors is { Count: > 0 } errors)
+            {
+                return ServiceResponse.ValidationFailed(errors.ToDictionary(e => e.Key, e => e.Value));
+            }
+
+            var message = problem?.Detail ?? problem?.Title;
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                return ServiceResponse.Failed(message);
+            }
+        }
+        catch (Exception ex) when (ex is JsonException or NotSupportedException)
+        {
+            // Not a problem details body (for example an empty 404): fall back to the status code.
+        }
+
+        return ServiceResponse.Failed($"Request failed with status {(int)response.StatusCode}");
     }
 
     protected static string ToQueryString(QueryParameters? parameters)

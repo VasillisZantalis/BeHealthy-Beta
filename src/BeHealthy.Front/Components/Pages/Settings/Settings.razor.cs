@@ -64,8 +64,15 @@ public partial class Settings : BasePage
     private async Task UpdateSettingValue(AppSettingResponse setting)
     {
         IsLoading = true;
-        await AppSettingsService.UpdateSettingAsync(new AppSettingUpdateRequest { Key = setting.Key, Value = setting.Value });
+        var response = await AppSettingsService.UpdateSettingAsync(new AppSettingUpdateRequest { Key = setting.Key, Value = setting.Value });
         IsLoading = false;
+
+        if (!response.Success)
+        {
+            ToastService.ShowToast(response.ErrorMessage ?? Resource.SomethingWentWrong, "danger");
+            return;
+        }
+
         ToastService.ShowToast(Resource.Success, "success");
     }
 }

@@ -1,3 +1,4 @@
+using BeHealthy.API.Filters;
 using BeHealthy.API.Middleware;
 using BeHealthy.Application;
 using BeHealthy.Infrastructure;
@@ -10,7 +11,8 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers()
+// ValidationFilter runs the FluentValidation validators (registered by AddApplication) for every action.
+builder.Services.AddControllers(o => o.Filters.Add<ValidationFilter>())
     .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
 

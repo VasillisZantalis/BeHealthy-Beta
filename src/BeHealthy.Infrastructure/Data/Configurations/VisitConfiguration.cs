@@ -1,4 +1,5 @@
 using BeHealthy.Domain.Entities;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,10 +18,10 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
 
         builder.Property(v => v.Reason)
             .IsRequired()
-            .HasMaxLength(256);
+            .HasMaxLength(FieldLengths.VisitReason);
 
         builder.Property(v => v.Notes)
-            .HasMaxLength(1024);
+            .HasMaxLength(FieldLengths.VisitNotes);
 
         builder.HasOne(v => v.Patient)
             .WithMany(p => p.Visits)

@@ -2,7 +2,6 @@
 using BeHealthy.Front.Services.CurrentUser;
 using BeHealthy.Front.Extensions;
 using BeHealthy.Front.Services.Interfaces;
-using BeHealthy.Front.Validations.Doctor;
 using BeHealthy.Front.Common;
 using BeHealthy.Front.Components.Shared.Modals;
 using BeHealthy.Front.Components.Shared.Wizards;
@@ -22,6 +21,7 @@ public partial class Doctors : BasePage
     [Inject] ISpecialtyService SpecialtyService { get; set; } = default!;
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
     [Inject] ICurrentUserService CurrentUser { get; set; } = default!;
+    [Inject] FluentValidation.IValidator<DoctorCreateRequest> DoctorValidator { get; set; } = default!;
 
     private DoctorQueryParameters QueryParameters { get; set; } = new();
     private List<DoctorResponse> doctors = new();
@@ -167,7 +167,7 @@ public partial class Doctors : BasePage
     private async Task BulkCreateDoctors((List<DoctorCreateRequest> doctorCreateDtos, bool UseValidation) result)
     {
         IsLoading = true;
-        var validator = result.UseValidation ? new DoctorCreateDtoValidator(false) : null;
+        var validator = result.UseValidation ? DoctorValidator : null;
 
         foreach (var doctor in result.doctorCreateDtos)
         {

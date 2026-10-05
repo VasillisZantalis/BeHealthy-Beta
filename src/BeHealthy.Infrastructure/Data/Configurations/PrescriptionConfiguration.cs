@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeHealthy.Infrastructure.Data.Configurations;
@@ -14,11 +15,11 @@ public class PrescriptionConfiguration : IEntityTypeConfiguration<Prescription>
 
         builder.Property(p => p.Medication)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(FieldLengths.Medication);
 
         builder.Property(p => p.Dosage)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(FieldLengths.Dosage);
 
         builder.Property(p => p.DatePrescribed)
             .IsRequired()

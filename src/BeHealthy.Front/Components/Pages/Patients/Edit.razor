@@ -69,7 +69,6 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
         canSeePrecriptions = true;
         canCreatePrecriptions = true;
@@ -103,7 +102,7 @@
 
         if (!result.Success)
         {
-            patientEditForm?.GetAlert()?.ShowFailed(result.ErrorMessage);
+            patientEditForm?.ShowErrors(result);
         }
         else
         {

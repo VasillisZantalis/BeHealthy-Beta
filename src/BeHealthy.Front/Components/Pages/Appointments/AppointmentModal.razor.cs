@@ -3,10 +3,11 @@ using BeHealthy.Shared.Dtos.Doctor;
 using BeHealthy.Shared.Dtos.Patient;
 using BeHealthy.Front.Extensions;
 using BeHealthy.Front.Helpers;
+using BeHealthy.Front.Mappings;
 using BeHealthy.Front.Services.Interfaces;
-using BeHealthy.Front.Validations.Appointments;
 using BeHealthy.Front.Components.Shared.Modals.Base;
 using BeHealthy.Shared;
+using BeHealthy.Shared.Common;
 using BeHealthy.Front.Models;
 using BeHealthy.Shared.Locales;
 using Microsoft.AspNetCore.Components;
@@ -48,6 +49,12 @@ public partial class AppointmentModal : ModalBase
     [Inject]
     private IAppointmentService AppointmentService { get; set; } = default!;
 
+    [Inject]
+    private FluentValidation.IValidator<AppointmentCreateRequest> CreateValidator { get; set; } = default!;
+
+    [Inject]
+    private FluentValidation.IValidator<AppointmentUpdateRequest> UpdateValidator { get; set; } = default!;
+
     private List<SelectItem> doctorsSelect = new();
     private List<SelectItem> patientsSelect = new();
     private List<SelectItem> roomsSelect = new();
@@ -86,14 +93,12 @@ public partial class AppointmentModal : ModalBase
             Value = s.Id,
             Text = s.Name,
         }).ToList();
-        roomsSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
         nursesSelect = nurses.Select(s => new SelectItem
         {
             Value = s.Id,
             Text = s.FullName,
         }).ToList();
-        nursesSelect.Insert(0, new SelectItem { Text = Resource.PleaseSelect, Value = 0 });
 
 
         // Even thought we set currect hours, still are converted to UTC
@@ -139,11 +144,11 @@ public partial class AppointmentModal : ModalBase
 
     protected async Task GetAppSettings()
     {
-        var keys = new[] { "AppointmentRequiresRoom", "NurseIsRequiredForAppointment" }.ToList();
+        var keys = new[] { AppSettingKeys.AppointmentRequiresRoom, AppSettingKeys.NurseIsRequiredForAppointment }.ToList();
         var settings = await appSettingsService.GetMassAppSettingsAsync(keys);
 
-        var nurseSetting = settings.FirstOrDefault(s => s.Key == "NurseIsRequiredForAppointment");
-        var requireRoomSetting = settings.FirstOrDefault(s => s.Key == "AppointmentRequiresRoom");
+        var nurseSetting = settings.FirstOrDefault(s => s.Key == AppSettingKeys.NurseIsRequiredForAppointment);
+        var requireRoomSetting = settings.FirstOrDefault(s => s.Key == AppSettingKeys.AppointmentRequiresRoom);
 
         showNurses = nurseSetting?.GetBooleanValue() ?? false;
         showRooms = requireRoomSetting?.GetBooleanValue() ?? false;
@@ -153,8 +158,11 @@ public partial class AppointmentModal : ModalBase
     {
         validationComponent?.ClearErrors();
 
-        var validator = new AppointmentDtoValidator(showNurses, showRooms);
-        var validationResult = await validator.ValidateAsync(appointmentDto);
+        // The form edits an AppointmentResponse; validate the request that will actually be sent.
+        // Property names match, so the errors land on the right inputs.
+        var validationResult = isEdit
+            ? await UpdateValidator.ValidateAsync(appointmentDto.MapToUpdateDto())
+            : await CreateValidator.ValidateAsync(appointmentDto.MapToCreationDto());
 
         if (!validationResult.IsValid)
         {

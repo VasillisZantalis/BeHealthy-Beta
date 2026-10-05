@@ -1,6 +1,8 @@
 @inherits ModalBase
 
 @inject IDepartmentService DepartmentService
+@inject FluentValidation.IValidator<RoomCreateRequest> CreateValidator
+@inject FluentValidation.IValidator<RoomUpdateRequest> UpdateValidator
 
 <BeHealthyModal BodyClass="">
     <Header>
@@ -10,7 +12,7 @@
     <Body>
 
         <EditForm Model="roomDto" FormName="RoomForm" OnValidSubmit="SaveRoom">
-            <FluentValidationValidator @ref="fluentValidationValidator" />
+            <ValidationComponent @ref="validationComponent" />
 
             <div class="d-flex flex-column gap-3">
 
@@ -59,7 +61,7 @@
     [SupplyParameterFromForm]
     private RoomResponse roomDto { get; set; } = new();
 
-    private FluentValidationValidator fluentValidationValidator = new();
+    private ValidationComponent? validationComponent;
 
     private bool isEditMode => Room.Id > 0;
     private List<SelectItem> departmentSelect = new();
@@ -86,10 +88,20 @@
 
     private async Task SaveRoom()
     {
-        if (await fluentValidationValidator.ValidateAsync())
+        validationComponent?.ClearErrors();
+
+        // The form edits a RoomResponse; validate the request that will actually be sent.
+        var validationResult = isEditMode
+            ? await UpdateValidator.ValidateAsync(roomDto.MapDtoToUpdateDto())
+            : await CreateValidator.ValidateAsync(roomDto.MapDtoToCreateDto());
+
+        if (!validationResult.IsValid)
         {
-            await OnRoomSaved.InvokeAsync(roomDto);
-            Close();
+            validationComponent?.DisplayErrors(validationResult.GetErrorsGroupedByProperty());
+            return;
         }
+
+        await OnRoomSaved.InvokeAsync(roomDto);
+        Close();
     }
 }

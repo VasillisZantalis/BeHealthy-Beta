@@ -6,6 +6,7 @@ using BeHealthy.Infrastructure.Data;
 using BeHealthy.Infrastructure.Identity;
 using BeHealthy.Infrastructure.Repositories;
 using BeHealthy.Infrastructure.Services;
+using BeHealthy.Validation.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,7 +42,15 @@ public static class DependencyInjection
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
 
         services.AddHttpContextAccessor();
-        services.AddIdentityCore<ApplicationUser>()
+        // The validators mirror this policy (BeHealthy.Validation.Common.PasswordPolicy) so forms report the same rules.
+        services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.Password.RequiredLength = PasswordPolicy.RequiredLength;
+                options.Password.RequireDigit = PasswordPolicy.RequireDigit;
+                options.Password.RequireLowercase = PasswordPolicy.RequireLowercase;
+                options.Password.RequireUppercase = PasswordPolicy.RequireUppercase;
+                options.Password.RequireNonAlphanumeric = PasswordPolicy.RequireNonAlphanumeric;
+            })
             .AddUserManager<AspNetUserManager<ApplicationUser>>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()

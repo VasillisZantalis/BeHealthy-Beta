@@ -44,6 +44,14 @@ public class UserService : IUserService
         return ServiceResponse.Successful();
     }
 
+    public async Task<bool> IsEmailInUseAsync(string email, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        // CreateApplicationUser uses the email as the user name too, and Identity keeps user names unique.
+        return await _userManager.FindByEmailAsync(email) is not null
+            || await _userManager.FindByNameAsync(email) is not null;
+    }
 
     public async Task<ServiceResponse> AddUserToRoleAsync(ApplicationUser user, UserRole role, CancellationToken cancellationToken = default)
     {

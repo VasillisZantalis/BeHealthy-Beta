@@ -2,7 +2,6 @@
 using BeHealthy.Front.Services.CurrentUser;
 using BeHealthy.Front.Extensions;
 using BeHealthy.Front.Services.Interfaces;
-using BeHealthy.Front.Validations.Nurse;
 using BeHealthy.Front.Common;
 using BeHealthy.Front.Components.Pages.Doctors;
 using BeHealthy.Front.Components.Shared.Modals;
@@ -23,6 +22,7 @@ public partial class Nurses : BasePage
 
     [Inject] NavigationManager NavigationManager { get; set; } = default!;
     [Inject] ICurrentUserService CurrentUser { get; set; } = default!;
+    [Inject] FluentValidation.IValidator<NurseCreateRequest> NurseValidator { get; set; } = default!;
 
     private List<NurseResponse> nurses { get; set; } = new();
     private QueryParameters QueryParameters { get; set; } = new();
@@ -123,13 +123,12 @@ public partial class Nurses : BasePage
         IsLoading = true;
 
         var useValidation = result.UseValidation;
-        var validator = new NurseForCreationDtoValidator();
 
         foreach (var nurse in result.nurseForCreationDtos)
         {
             if (useValidation)
             {
-                var validationResult = await validator.ValidateAsync(nurse);
+                var validationResult = await NurseValidator.ValidateAsync(nurse);
                 if (!validationResult.IsValid)
                 {
                     AlertModalStateService.Show(null, validationResult.Errors.FirstOrDefault()?.ErrorMessage);

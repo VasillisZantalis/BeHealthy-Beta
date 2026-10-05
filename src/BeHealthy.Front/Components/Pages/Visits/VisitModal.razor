@@ -1,4 +1,3 @@
-@using BeHealthy.Front.Validations.Visit
 @inherits ModalBase
 
 @inject IVisitService VisitService
@@ -6,6 +5,8 @@
 @inject IPatientService PatientService
 @inject ToastService ToastService
 @inject NavigationManager NavigationManager
+@inject FluentValidation.IValidator<VisitCreateRequest> CreateValidator
+@inject FluentValidation.IValidator<VisitUpdateRequest> UpdateValidator
 
 <BeHealthyModal BodyClass="">
     <Header>
@@ -87,8 +88,7 @@
         {
             var visitUpdateDto = visitDto.MapToUpdateDto();
 
-            var validator = new VisitUpdateDtoValidator();
-            var validationResult = validator.Validate(visitUpdateDto);
+            var validationResult = await UpdateValidator.ValidateAsync(visitUpdateDto);
 
             if (!validationResult.IsValid)
             {
@@ -103,8 +103,7 @@
         {
             var visitCreateDto = visitDto.MapToCreateDto();
 
-            var validator = new VisitCreateDtoValidator();
-            var validationResult = validator.Validate(visitCreateDto);
+            var validationResult = await CreateValidator.ValidateAsync(visitCreateDto);
 
             if (!validationResult.IsValid)
             {
@@ -118,7 +117,8 @@
 
         if (!response.Success)
         {
-            ToastService.ShowToast(Resource.SomethingWentWrong, "danger");
+            HandleValidationErrors(response.ValidationErrors?.ToDictionary(e => e.Key, e => e.Value.ToList()) ?? new());
+            ToastService.ShowToast(response.ErrorMessage ?? Resource.SomethingWentWrong, "danger");
             return;
         }
 
@@ -127,6 +127,14 @@
         NavigationManager.Refresh(true);
     }
 
-    private void HandleValidationErrors(Dictionary<string, List<string>> errors) 
-        => validationComponent?.DisplayErrors(errors);
+    private void HandleValidationErrors(Dictionary<string, List<string>> errors)
+    {
+        // The doctor dropdown is bound to visitDto.Doctor.Id, while the request property is DoctorId.
+        if (errors.Remove(nameof(VisitCreateRequest.DoctorId), out var doctorErrors))
+        {
+            validationComponent?.DisplayErrors(new FieldIdentifier(visitDto.Doctor, nameof(visitDto.Doctor.Id)), doctorErrors);
+        }
+
+        validationComponent?.DisplayErrors(errors);
+    }
 }

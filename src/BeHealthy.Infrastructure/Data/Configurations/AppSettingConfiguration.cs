@@ -1,4 +1,5 @@
 ﻿using BeHealthy.Domain.Entities;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,7 +15,7 @@ public class AppSettingConfiguration : IEntityTypeConfiguration<AppSetting>
 
         builder.Property(p => p.Key)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(FieldLengths.AppSettingKey);
 
         builder.Property(p => p.Caption)
             .IsRequired()

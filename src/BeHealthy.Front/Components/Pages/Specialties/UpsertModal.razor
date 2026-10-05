@@ -1,14 +1,17 @@
 @inherits ModalBase
 
+@inject FluentValidation.IValidator<SpecialtyCreateRequest> CreateValidator
+@inject FluentValidation.IValidator<SpecialtyUpdateRequest> UpdateValidator
+
 <BeHealthyModal BodyClass="">
     <Header>
-        <h5 class="modal-title">@Resource.Room</h5>
+        <h5 class="modal-title">@Resource.Specialty</h5>
         <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
     </Header>
 
     <Body>
         <EditForm Model="specialtyDto" FormName="SpecialtyForm" OnValidSubmit="SaveSpecialty">
-            <FluentValidationValidator @ref="fluentValidationValidator" />
+            <ValidationComponent @ref="validationComponent" />
 
             <BeHealthyFormGroup Label="@Resource.Name" IsRequired="true" InputId="name">
                 <InputText id="name" class="form-control" @bind-Value="specialtyDto.Name" />
@@ -33,7 +36,7 @@
     [SupplyParameterFromForm]
     private SpecialtyResponse specialtyDto { get; set; } = new();
 
-    private FluentValidationValidator fluentValidationValidator = new();
+    private ValidationComponent? validationComponent;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -42,10 +45,20 @@
 
     private async Task SaveSpecialty()
     {
-        if (await fluentValidationValidator.ValidateAsync())
+        validationComponent?.ClearErrors();
+
+        // The form edits a SpecialtyResponse; validate the request that will actually be sent.
+        var validationResult = specialtyDto.Id > 0
+            ? await UpdateValidator.ValidateAsync(new SpecialtyUpdateRequest { Id = specialtyDto.Id, Name = specialtyDto.Name })
+            : await CreateValidator.ValidateAsync(new SpecialtyCreateRequest { Name = specialtyDto.Name });
+
+        if (!validationResult.IsValid)
         {
-            await OnSpecialtySaved.InvokeAsync(specialtyDto);
-            Close();
+            validationComponent?.DisplayErrors(validationResult.GetErrorsGroupedByProperty());
+            return;
         }
+
+        await OnSpecialtySaved.InvokeAsync(specialtyDto);
+        Close();
     }
 }

@@ -61,9 +61,10 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
     [HttpPatch("{id:int}/notes")]
     [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateNotes(int id, [FromBody] string notes, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateNotes(int id, MedicalRecordNotesUpdateRequest dto, CancellationToken cancellationToken)
     {
-        await medicalRecordService.UpdateMedicalRecordNotesAsync(id, notes, cancellationToken);
+        await medicalRecordService.UpdateMedicalRecordNotesAsync(id, dto.Notes, cancellationToken);
         return NoContent();
     }
 

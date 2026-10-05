@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
-    <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.8" />
@@ -20,10 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BeHealthy.Domain\BeHealthy.Domain.csproj" />
     <ProjectReference Include="..\BeHealthy.Shared\BeHealthy.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Validations\Prescription\" />
+    <ProjectReference Include="..\BeHealthy.Validation\BeHealthy.Validation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -21,6 +21,10 @@
 
         <FluentValidationValidator @ref="fluentValidationValidator" />
 
+        <ValidationComponent @ref="validationComponent" />
+
+        <Alert @ref="alert" />
+
          <div class="d-flex flex-column gap-3 p-3">
                 <ImageUploadContainer OnOpenImageUploadModal="OpenImageUploadModal" HasImage ="@(NurseCreateRequest.Image !=null)" OnDeleteImage="@(() => NurseCreateRequest.Image = null)">
                     <ImagePreview ImageUrl="@NurseCreateRequest.Image" />
@@ -82,6 +86,7 @@
                 {
                     <div class="form-floating mb-3">
                         <InputSelect id="Department" @bind-Value="NurseCreateRequest.DepartmentId" class="form-control">
+                            <option value="">@Resource.PleaseSelect</option>
                             @foreach (var department in departmentsSelect)
                             {
                                 <option value="@department.Value">@department.Text</option>
@@ -104,6 +109,7 @@
 
     private Alert alert = new();
     private FluentValidationValidator fluentValidationValidator = new();
+    private ValidationComponent? validationComponent;
 
     private List<SelectItem> departmentsSelect = new List<SelectItem>();
 
@@ -122,7 +128,6 @@
             Value = s.Id,
             Text = s.Name
         }).ToList();
-        departmentsSelect?.Insert(0, new() { Text = Resource.PleaseSelect, Value = 0 });
 
         IsLoading = false;
     }
@@ -170,6 +175,7 @@
 
         if (!nurseCreationResult.Success)
         {
+            validationComponent?.DisplayErrors(nurseCreationResult.ValidationErrors);
             alert.ShowFailed(nurseCreationResult.ErrorMessage);
         }
         else

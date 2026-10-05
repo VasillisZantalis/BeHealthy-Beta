@@ -4,6 +4,7 @@ public static class Resource
 {
     public const string AccessDenied = "Access Denied";
     public const string Actions = "Actions";
+    public const string Address = "Address";
     public const string AddRow = "Add Row";
     public const string All = "All";
     public const string Allergen = "Allergen";
@@ -45,6 +46,7 @@ public static class Resource
     public const string Dashboard = "Dashboard";
     public const string DataNotFound = "Data not found";
     public const string Date = "Date";
+    public const string DateOfBirth = "Date of Birth";
     public const string DatePrescribed = "Date Prescribed";
     public const string Delete = "Delete";
     public const string Department = "Department";
@@ -59,16 +61,19 @@ public static class Resource
     public const string Email = "Email";
     public const string EmailAlreadyUsed = "Email is already used";
     public const string EndTime = "End Time";
-    public const string EndTimeCannotBeEarlierThanStartTime = "End Time cannot be earlier than Start Time";
+    public const string EndTimeMustBeLaterThanStartTime = "End Time must be later than Start Time";
     public const string Error = "Error";
     public const string Filters = "Filters";
     public const string FirstName = "First Name";
     public const string FullName = "Name";
+    public const string Gender = "Gender";
     public const string GeneralData = "General Data";
     public const string Grid = "Grid";
     public const string HeadΟfDepartment = "Head of Department";
     public const string Hello = "Hello";
     public const string Hour = "Hour";
+    public const string Image = "Image";
+    public const string ImageTooLarge = "The image is too large";
     public const string InvalidData = "Invalid Data";
     public const string InvalidEmail = "Invalid Email";
     public const string InvalidEmailFormat = "Invalid Email Format";
@@ -99,6 +104,8 @@ public static class Resource
     public const string Nurse = "Nurse";
     public const string Nurses = "Nurses";
     public const string OK = "OK";
+    public const string PageNumber = "Page Number";
+    public const string PageSize = "Page Size";
     public const string Password = "Password";
     public const string PasswordNeedsDigit = "Password must have at least one digit";
     public const string PasswordNeedsLowercase = "Password must have at least one lowercase";
@@ -123,6 +130,9 @@ public static class Resource
     public const string Privileges = "Privileges";
     public const string Profile = "Profile";
     public const string PropertyInvalidFormat = "{0} invalid format";
+    public const string PropertyCannotBeInTheFuture = "{0} cannot be in the future";
+    public const string PropertyCannotBeNegative = "{0} cannot be negative";
+    public const string PropertyInvalidValue = "{0} has an invalid value";
     public const string PropertyMaxCharacters = "{0} should be maximum of {1} characters.";
     public const string PropertyMinimumCharacters = "{0} should have at least {1} characters.";
     public const string PropertyRequired = "{0} is required";
@@ -139,8 +149,13 @@ public static class Resource
     public const string Save = "Save";
     public const string Search = "Search";
     public const string SeedData = "Seed Data";
+    public const string Setting = "Setting";
+    public const string SettingValueMustBeBoolean = "{0} must be true or false";
+    public const string SettingValueMustBeNumber = "{0} must be a whole number";
     public const string Settings = "Settings";
+    public const string Severity = "Severity";
     public const string SomethingWentWrong = "Something went wrong";
+    public const string SortBy = "Sort By";
     public const string Specialties = "Specialties";
     public const string Specialty = "Specialty";
     public const string StartTime = "Start Time";
@@ -154,11 +169,13 @@ public static class Resource
     public const string UpcomingAppointments = "Upcoming Appointments";
     public const string UploadFile = "Upload file";
     public const string UseValidation = "Use Validation";
+    public const string Username = "Username";
     public const string UserDistribution = "User Distribution";
     public const string UserRole_Admin = "Admin";
     public const string UserRole_Doctor = "Doctor";
     public const string UserRole_Nurse = "Nurse";
     public const string UserRole_Patient = "Patient";
+    public const string Value = "Value";
     public const string Visit = "Visit";
     public const string VisitDate = "Visit Date";
     public const string Visits = "Visits";

@@ -1,5 +1,6 @@
 ﻿using BeHealthy.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BeHealthy.Validation.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace BeHealthy.Infrastructure.Data.Configurations;
@@ -14,11 +15,11 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
 
         builder.Property(d => d.Name)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(FieldLengths.DepartmentName);
 
         builder.Property(d => d.Location)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(FieldLengths.DepartmentLocation);
 
         builder.HasOne(d => d.HeadOfDepartment)
            .WithMany()

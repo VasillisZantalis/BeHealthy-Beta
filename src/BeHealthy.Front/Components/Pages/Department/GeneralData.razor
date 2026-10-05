@@ -77,11 +77,11 @@
 
     private async Task GetSettings()
     {
-        var keys = new[] { "DepartmentRequiresSupervisor", "DefaultDepartmentSupervison" }.ToList();
+        var keys = new[] { AppSettingKeys.DepartmentRequiresSupervisor, AppSettingKeys.DefaultDepartmentSupervison }.ToList();
         var settings = await appSettingsService.GetMassAppSettingsAsync(keys);
 
-        var requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DepartmentRequiresSupervisor");
-        var defaultSupervisorSetting = settings.FirstOrDefault(s => s.Key == "DefaultDepartmentSupervison");
+        var requiredSupervisorSetting = settings.FirstOrDefault(s => s.Key == AppSettingKeys.DepartmentRequiresSupervisor);
+        var defaultSupervisorSetting = settings.FirstOrDefault(s => s.Key == AppSettingKeys.DefaultDepartmentSupervison);
 
         isRequiredHeadOfDepartment = requiredSupervisorSetting?.GetBooleanValue() ?? false;
         var defaultSupervisor = defaultSupervisorSetting?.GetIntValue();
@@ -139,7 +139,8 @@
 
             if (!result.Success)
             {
-                alert.ShowFailed(result.ErrorMessage!);
+                validationComponent?.DisplayErrors(result.ValidationErrors);
+                alert.ShowFailed(result.ErrorMessage);
             }
             else
             {

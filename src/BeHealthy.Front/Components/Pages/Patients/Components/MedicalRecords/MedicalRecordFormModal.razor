@@ -1,5 +1,7 @@
 @inherits ModalBase
 
+@inject FluentValidation.IValidator<MedicalRecordNotesUpdateRequest> NotesValidator
+
 <BeHealthyModal BodyClass="">
     <Header>
         <h5 class="modal-title">@Resource.MedicalRecord</h5>
@@ -7,7 +9,7 @@
     </Header>
     <Body>
         <EditForm Model="Model" OnValidSubmit="HandleSave">
-            <FluentValidationValidator />
+            <ValidationComponent @ref="validationComponent" />
             
             <BeHealthyFormGroup Label="@Resource.Notes" InputId="notes">
                 <InputTextArea id="notes" @bind-Value="Model.Notes" class="form-control" rows="3" />
@@ -33,8 +35,20 @@
     [Parameter]
     public EventCallback<MedicalRecordResponse> OnSave { get; set; }
 
+    private ValidationComponent? validationComponent;
+
     private async Task HandleSave()
     {
+        validationComponent?.ClearErrors();
+
+        // Only the notes are edited here; the page adds the patient and the date before sending.
+        var validationResult = await NotesValidator.ValidateAsync(new MedicalRecordNotesUpdateRequest { Notes = Model.Notes });
+        if (!validationResult.IsValid)
+        {
+            validationComponent?.DisplayErrors(validationResult.GetErrorsGroupedByProperty());
+            return;
+        }
+
         if (OnSave.HasDelegate)
         {
             await OnSave.InvokeAsync(Model);

@@ -118,6 +118,8 @@
     private async Task HandleResponse(SpecialtyResponse specialtyDto)
     {
         isLoading = true;
+        ServiceResponse response;
+
         if (specialtyDto.Id > 0)
         {
             var specialtyForUpdateDto = new SpecialtyUpdateRequest
@@ -125,7 +127,7 @@
                 Id = specialtyDto.Id,
                 Name = specialtyDto.Name
             };
-            await SpecialtyService.UpdateSpecialtyAsync(specialtyForUpdateDto);
+            response = await SpecialtyService.UpdateSpecialtyAsync(specialtyForUpdateDto);
         }
         else
         {
@@ -133,9 +135,16 @@
             {
                 Name = specialtyDto.Name
             };
-            await SpecialtyService.AddSpecialtyAsync(specialtyForCreationDto);
+            response = await SpecialtyService.AddSpecialtyAsync(specialtyForCreationDto);
         }
         isLoading = false;
+
+        if (!response.Success)
+        {
+            ToastService.ShowToast(response.ErrorMessage ?? Resource.SomethingWentWrong, "danger");
+            return;
+        }
+
         ToastService.ShowToast(Resource.Success, "success");
         await LoadSpecialties();
     }

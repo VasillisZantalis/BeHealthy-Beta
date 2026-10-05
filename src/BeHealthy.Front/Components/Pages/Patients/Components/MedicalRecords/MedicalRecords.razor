@@ -77,9 +77,15 @@
         dto.RecordDate = DateTime.UtcNow;
 
         var medicalRecordCreateDto = dto.MapToMedicalRecordCreateDto();
-        await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
+        var response = await MedicalRecordService.AddMedicalRecordAsync(medicalRecordCreateDto);
 
         isLoading = false;
+
+        if (!HandleServiceResponse(response))
+        {
+            return;
+        }
+
         ToastService.ShowToast(Resource.Success, "success");
         await LoadMedicalRecords();
     }

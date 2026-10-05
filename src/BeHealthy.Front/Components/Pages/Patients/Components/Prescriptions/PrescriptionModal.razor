@@ -14,6 +14,8 @@
                     <EditForm Model="prescriptionDto" FormName="PrescriptionForm" OnValidSubmit="SavePrescription">
                         <DataAnnotationsValidator />
 
+                        <Alert @ref="alert" />
+
                         <div class="d-flex flex-column gap-3">
                             <div class="form">
                                 <label class="fw-bold" for="medication">@Resource.Medication</label>
@@ -66,6 +68,8 @@
     public int? PrescriptionId { get; set; }
 
     [Inject] ICurrentUserService CurrentUser { get; set; } = default!;
+
+    private Alert alert = new();
 
     private bool showModal { get; set; }
     private bool isEditMode => PrescriptionId.HasValue;
@@ -137,18 +141,28 @@
             var prescriptionForUpdate = prescriptionDto.MapDtoToUpdateDto();
 
             var response = await PrescriptionService.UpdatePrescriptionAsync(prescriptionForUpdate);
-
-            CloseModal();
-            await Successful.InvokeAsync(response.Success);
+            await HandleSaveResponse(response);
         }
         else
         {
             var prescriptionForCreation = prescriptionDto.MapDtoToCreateDto();
 
             var response = await PrescriptionService.AddPrescriptionAsync(prescriptionForCreation);
-
-            CloseModal();
-            await Successful.InvokeAsync(response.Success);
+            await HandleSaveResponse(response);
         }
+    }
+
+    // The form only runs DataAnnotations; the API also validates the request (FluentValidation),
+    // so keep the dialog open and show its message when it rejects the save.
+    private async Task HandleSaveResponse(ServiceResponse response)
+    {
+        if (!response.Success)
+        {
+            alert.ShowFailed(response.ErrorMessage);
+            return;
+        }
+
+        CloseModal();
+        await Successful.InvokeAsync(true);
     }
 }

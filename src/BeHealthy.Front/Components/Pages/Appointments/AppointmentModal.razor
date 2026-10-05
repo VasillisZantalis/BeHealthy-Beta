@@ -75,6 +75,7 @@
                         <div class="form-group col">
                             <label class="fw-bold required" for="nursesIdSelect">@Resource.Nurse</label>
                             <InputSelect id="nursesIdSelect" class="form-select" @bind-Value="appointmentDto.NurseId">
+                                <option value="">@Resource.PleaseSelect</option>
                                 @foreach (var nurse in nursesSelect)
                                 {
                                     <option value="@nurse.Value">@nurse.Text</option>
@@ -89,6 +90,7 @@
                         <div class="form-group col">
                             <label class="fw-bold required" for="roomIdSelect">@Resource.Room</label>
                             <InputSelect id="roomIdSelect" class="form-select" @bind-Value="appointmentDto.RoomId">
+                                <option value="">@Resource.PleaseSelect</option>
                                 @foreach (var room in roomsSelect)
                                 {
                                     <option value="@room.Value">@room.Text</option>

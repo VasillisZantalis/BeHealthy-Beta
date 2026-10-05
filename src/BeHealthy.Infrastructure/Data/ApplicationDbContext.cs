@@ -1,6 +1,7 @@
 ﻿using BeHealthy.Domain;
 using BeHealthy.Domain.Entities;
 using BeHealthy.Shared;
+using BeHealthy.Shared.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -79,7 +80,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            new AppSetting
            {
                Id = 1,
-               Key = "AppointmentRequiresRoom",
+               Key = AppSettingKeys.AppointmentRequiresRoom,
                Type = SettingType.Checkbox,
                Group = SettingGroup.Appointment,
                Value = "false",
@@ -89,7 +90,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            new AppSetting
            {
                Id = 2,
-               Key = "DoNotAllowDoctorWithoutSpecialty",
+               Key = AppSettingKeys.DoNotAllowDoctorWithoutSpecialty,
                Type = SettingType.Checkbox,
                Group = SettingGroup.Doctor,
                Value = "false",
@@ -99,7 +100,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            new AppSetting
            {
                Id = 3,
-               Key = "DepartmentRequiresSupervisor",
+               Key = AppSettingKeys.DepartmentRequiresSupervisor,
                Type = SettingType.Checkbox,
                Group = SettingGroup.Department,
                Value = "false",
@@ -109,7 +110,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            new AppSetting
            {
                Id = 4,
-               Key = "DefaultDepartmentSupervison",
+               Key = AppSettingKeys.DefaultDepartmentSupervison,
                Type = SettingType.SingleSelect,
                Group = SettingGroup.Department,
                Value = "0",

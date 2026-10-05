@@ -123,8 +123,17 @@
 
         if (medicalRecord.Notes != notesBackup && !string.IsNullOrWhiteSpace(medicalRecord.Notes))
         {
-            await MedicalRecordService.UpdateMedicalRecordNotesAsync(MedicalRecordId, medicalRecord.Notes);
-            notesBackup = medicalRecord.Notes;
+            var response = await MedicalRecordService.UpdateMedicalRecordNotesAsync(MedicalRecordId, new MedicalRecordNotesUpdateRequest { Notes = medicalRecord.Notes });
+
+            if (HandleServiceResponse(response))
+            {
+                notesBackup = medicalRecord.Notes;
+            }
+            else
+            {
+                // Keep the editor open with the rejected text so the user can fix it.
+                isEditing = true;
+            }
         }
 
         IsLoading = false;

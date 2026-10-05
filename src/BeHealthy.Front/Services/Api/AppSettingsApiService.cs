@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using BeHealthy.Front.Common;
 using BeHealthy.Front.Services.Interfaces;
 using BeHealthy.Shared.Dtos.Common;
 
@@ -9,25 +10,29 @@ public class AppSettingsApiService : ApiClientBase, IAppSettingsService
     public AppSettingsApiService(IHttpClientFactory httpClientFactory, ICurrentUserService currentUser) : base(httpClientFactory, currentUser) { }
 
     public async Task<IEnumerable<AppSettingResponse>> GetAppSettingsAsync()
-        => await GetListAsync<AppSettingResponse>("appsettings");
+        => await GetListAsync<AppSettingResponse>("settings");
 
     public async Task<List<AppSettingResponse>> GetMassAppSettingsAsync(List<string> keys)
-        => await GetAsync<List<AppSettingResponse>>("appsettings/mass") is { } list ? list : await PostMassAsync(keys);
-
-    private async Task<List<AppSettingResponse>> PostMassAsync(List<string> keys)
     {
-        var response = await httpClient.PostAsJsonAsync("appsettings/mass", keys);
-        if (!response.IsSuccessStatusCode)
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("settings/bulk", keys, ApiJsonOptions.Default);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new();
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<AppSettingResponse>>(ApiJsonOptions.Default) ?? new();
+        }
+        catch (HttpRequestException)
         {
             return new();
         }
-
-        return await response.Content.ReadFromJsonAsync<List<AppSettingResponse>>() ?? new();
     }
 
     public async Task<AppSettingResponse?> GetSettingByKeyAsync(string key)
-        => await GetAsync<AppSettingResponse>($"appsettings/{Uri.EscapeDataString(key)}");
+        => await GetAsync<AppSettingResponse>($"settings/{Uri.EscapeDataString(key)}");
 
-    public async Task UpdateSettingAsync(AppSettingUpdateRequest setting)
-        => await PutAsync($"appsettings/{Uri.EscapeDataString(setting.Key)}", setting);
+    public async Task<ServiceResponse> UpdateSettingAsync(AppSettingUpdateRequest setting)
+        => await PutForResponseAsync($"settings/{Uri.EscapeDataString(setting.Key)}", setting);
 }

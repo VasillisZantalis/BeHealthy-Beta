@@ -11,5 +11,5 @@ public interface IMedicalRecordService
     Task AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto, CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto, CancellationToken cancellationToken = default);
     Task DeleteMedicalRecordAsync(int id, CancellationToken cancellationToken = default);
-    Task UpdateMedicalRecordNotesAsync(int id, string notes, CancellationToken cancellationToken = default);
+    Task UpdateMedicalRecordNotesAsync(int id, string? notes, CancellationToken cancellationToken = default);
 }
