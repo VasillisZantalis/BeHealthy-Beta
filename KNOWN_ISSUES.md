@@ -4,12 +4,12 @@
 
 ## 1. Backend has (almost) no server-side validation
 
-This is the biggest gap. All FluentValidation validators under `BeHealthy.Application/Validations/**` are dead code:
+This is the biggest gap. All FluentValidation validators under `src/BeHealthy.Application/Validations/**` are dead code:
 
-- `IValidatorService.ValidateAsync` (`BeHealthy.Application/Services/ValidatorService.cs`) is registered in DI but never called from any Service or Controller.
+- `IValidatorService.ValidateAsync` (`src/BeHealthy.Application/Services/ValidatorService.cs`) is registered in DI but never called from any Service or Controller.
 - No validators are registered with the container at all (`DependencyInjection.cs` has no `AddValidatorsFromAssembly`), so even if called, `ValidateAsync` would silently no-op.
-- None of the request DTOs in `BeHealthy.Shared/Dtos` have DataAnnotations, so `[ApiController]`'s automatic ModelState validation never triggers either.
-- The identical validators duplicated under `BeHealthy.Front/Validations/**` are the *only* validation that ever runs, and only when going through the Blazor UI.
+- None of the request DTOs in `src/BeHealthy.Shared/Dtos` have DataAnnotations, so `[ApiController]`'s automatic ModelState validation never triggers either.
+- The identical validators duplicated under `src/BeHealthy.Front/Validations/**` are the *only* validation that ever runs, and only when going through the Blazor UI.
 
 **Impact:** anything that talks to the API directly (curl, Postman, a different client) can write garbage data — empty required fields, negative IDs/ages, bad date ranges, references to nonexistent patients/doctors.
 
@@ -31,7 +31,7 @@ Most domain controllers (`AllergiesController`, `PrescriptionsController`, `Medi
 
 ## 4. Database is wiped on every dev startup
 
-`BeHealthy.Infrastructure/DependencyInjection.cs` calls `context.Database.EnsureDeleted()` before `Migrate()` whenever `IsDevelopment()`. Every restart destroys all data (patients, appointments, medical records, manually created users) and recreates a hardcoded seed admin (`admin@gmail.com` / `123456aA@`).
+`src/BeHealthy.Infrastructure/DependencyInjection.cs` calls `context.Database.EnsureDeleted()` before `Migrate()` whenever `IsDevelopment()`. Every restart destroys all data (patients, appointments, medical records, manually created users) and recreates a hardcoded seed admin (`admin@gmail.com` / `123456aA@`).
 
 **Fix:** drop `EnsureDeleted()` and rely on `Migrate()` alone, or gate the wipe behind an explicit opt-in flag.
 
@@ -47,7 +47,7 @@ The custom `UnitOfWork` was removed; EF Core's request-scoped `ApplicationDbCont
 
 ## 6. Toastr notifications leak across all connected users
 
-`ToastService` is registered as `Singleton` in `BeHealthy.Front/DependencyInjection.cs`. Every Blazor circuit subscribes to the same shared `OnShow` event, so `ShowToast` fires for *every* connected browser, not just the caller.
+`ToastService` is registered as `Singleton` in `src/BeHealthy.Front/DependencyInjection.cs`. Every Blazor circuit subscribes to the same shared `OnShow` event, so `ShowToast` fires for *every* connected browser, not just the caller.
 
 **Impact:** one user's "Patient created/deleted" toast pops up in every other logged-in user's session — real cross-user data leakage. There's already a correctly `Scoped` `ToastrStateService` that looks like the intended replacement; the two toast systems appear half-migrated.
 

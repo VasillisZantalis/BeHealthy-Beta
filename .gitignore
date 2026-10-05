@@ -365,6 +365,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/BeHealthy.API/behealthy.db
-/BeHealthy.API/behealthy.db-shm
-/BeHealthy.API/behealthy.db-wal
+
+# Local SQLite database the API creates on startup (any project folder)
+behealthy.db
+behealthy.db-shm
+behealthy.db-wal

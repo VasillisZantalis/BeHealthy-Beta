@@ -146,7 +146,7 @@ dotnet_naming_rule.async_methods_suffix.severity = warning
 dotnet_diagnostic.IDE1006.severity = warning   # needed for naming rules to show in build
 ```
 
-> Watch out: the `Async` suffix rule flags every `async` method without the suffix — including controller actions (`public async Task<IActionResult> Get(...)`) and Blazor event handlers. Consider `suggestion` severity or excluding `BeHealthy.API/Controllers/**` and `BeHealthy.Front/**`.
+> Watch out: the `Async` suffix rule flags every `async` method without the suffix — including controller actions (`public async Task<IActionResult> Get(...)`) and Blazor event handlers. Consider `suggestion` severity or excluding `src/BeHealthy.API/Controllers/**` and `src/BeHealthy.Front/**`.
 
 ### Code quality / dead code
 
@@ -269,7 +269,7 @@ To exempt one project (e.g. tests), add to that `.csproj`:
 Or relax rules per folder in `.editorconfig`:
 
 ```ini
-[BeHealthy.Tests/**.cs]
+[tests/BeHealthy.Tests/**.cs]
 dotnet_diagnostic.CA1822.severity = none
 dotnet_diagnostic.IDE0060.severity = none
 ```
@@ -297,7 +297,7 @@ public void Handle(int unused) { }
 2. Run `dotnet format BeHealthy.sln --diagnostics <ID> --severity info` to fix existing code.
 3. Review the diff (`git diff --stat`), revert anything that looks wrong.
 4. `dotnet build BeHealthy.sln` — 0 errors.
-5. `dotnet test BeHealthy.Tests` — all green.
+5. `dotnet test tests/BeHealthy.Tests` — all green.
 6. Commit the `.editorconfig` change together with the reformatted code.
 
 ## References

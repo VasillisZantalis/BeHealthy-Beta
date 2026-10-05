@@ -25,9 +25,9 @@ dotnet format style BeHealthy.sln --severity info
 dotnet format analyzers BeHealthy.sln --severity info
 
 # Limit to one project or some files
-dotnet format BeHealthy.Application/BeHealthy.Application.csproj
-dotnet format BeHealthy.sln --include BeHealthy.API/Controllers/
-dotnet format BeHealthy.sln --exclude BeHealthy.Infrastructure/Migrations/
+dotnet format src/BeHealthy.Application/BeHealthy.Application.csproj
+dotnet format BeHealthy.sln --include src/BeHealthy.API/Controllers/
+dotnet format BeHealthy.sln --exclude src/BeHealthy.Infrastructure/Migrations/
 
 # Preview: write a JSON report of what would change
 dotnet format BeHealthy.sln --verify-no-changes --report ./format-report
@@ -51,20 +51,20 @@ dotnet clean BeHealthy.sln
 dotnet build BeHealthy.sln -v q 2>&1 | grep -c "IDE"
 
 # Tests
-dotnet test BeHealthy.Tests
-dotnet test BeHealthy.Tests --filter "FullyQualifiedName~DoctorServiceTests"
-dotnet test BeHealthy.Tests --filter "Name=CreateAsync_ReturnsSuccess"
-dotnet test BeHealthy.Tests --logger "console;verbosity=detailed"
-dotnet test BeHealthy.Tests --collect:"XPlat Code Coverage"
+dotnet test tests/BeHealthy.Tests
+dotnet test tests/BeHealthy.Tests --filter "FullyQualifiedName~DoctorServiceTests"
+dotnet test tests/BeHealthy.Tests --filter "Name=CreateAsync_ReturnsSuccess"
+dotnet test tests/BeHealthy.Tests --logger "console;verbosity=detailed"
+dotnet test tests/BeHealthy.Tests --collect:"XPlat Code Coverage"
 ```
 
 ## Run the apps
 
 ```bash
-dotnet run --project BeHealthy.API
-dotnet run --project BeHealthy.Front
-dotnet watch --project BeHealthy.Front          # hot reload
-dotnet run --project BeHealthy.API --launch-profile https
+dotnet run --project src/BeHealthy.API
+dotnet run --project src/BeHealthy.Front
+dotnet watch --project src/BeHealthy.Front          # hot reload
+dotnet run --project src/BeHealthy.API --launch-profile https
 ```
 
 ## Solution management
@@ -76,7 +76,7 @@ dotnet sln BeHealthy.sln add NewProject/NewProject.csproj --solution-folder API
 dotnet sln BeHealthy.sln remove OldProject/OldProject.csproj
 
 dotnet new classlib -n BeHealthy.Something -f net9.0
-dotnet add BeHealthy.API reference BeHealthy.Something
+dotnet add src/BeHealthy.API reference src/BeHealthy.Something
 ```
 
 Solution Items (like `.editorconfig`) can't be added via CLI. Edit the `Solution Items` block in `BeHealthy.sln` or right-click the solution in VS → Add → Existing Item.
@@ -87,8 +87,8 @@ Solution Items (like `.editorconfig`) can't be added via CLI. Edit the `Solution
 dotnet list BeHealthy.sln package                  # what is installed
 dotnet list BeHealthy.sln package --outdated       # what can be updated
 dotnet list BeHealthy.sln package --vulnerable --include-transitive
-dotnet add BeHealthy.Application package FluentValidation
-dotnet remove BeHealthy.Application package SomePackage
+dotnet add src/BeHealthy.Application package FluentValidation
+dotnet remove src/BeHealthy.Application package SomePackage
 ```
 
 ## Entity Framework Core migrations
@@ -98,25 +98,25 @@ dotnet remove BeHealthy.Application package SomePackage
 ```bash
 dotnet tool restore
 
-dotnet ef migrations add <Name> --project BeHealthy.Infrastructure --startup-project BeHealthy.API
-dotnet ef migrations list       --project BeHealthy.Infrastructure --startup-project BeHealthy.API
-dotnet ef migrations remove     --project BeHealthy.Infrastructure --startup-project BeHealthy.API   # undo last, not yet applied
-dotnet ef database update       --project BeHealthy.Infrastructure --startup-project BeHealthy.API
-dotnet ef database update <PreviousMigrationName> --project BeHealthy.Infrastructure --startup-project BeHealthy.API   # roll back
+dotnet ef migrations add <Name> --project src/BeHealthy.Infrastructure --startup-project src/BeHealthy.API
+dotnet ef migrations list       --project src/BeHealthy.Infrastructure --startup-project src/BeHealthy.API
+dotnet ef migrations remove     --project src/BeHealthy.Infrastructure --startup-project src/BeHealthy.API   # undo last, not yet applied
+dotnet ef database update       --project src/BeHealthy.Infrastructure --startup-project src/BeHealthy.API
+dotnet ef database update <PreviousMigrationName> --project src/BeHealthy.Infrastructure --startup-project src/BeHealthy.API   # roll back
 
 # Generate an idempotent SQL script (for production deploys)
-dotnet ef migrations script --idempotent -o migrate.sql --project BeHealthy.Infrastructure --startup-project BeHealthy.API
+dotnet ef migrations script --idempotent -o migrate.sql --project src/BeHealthy.Infrastructure --startup-project src/BeHealthy.API
 ```
 
-> `--exclude BeHealthy.Infrastructure/Migrations/` with `dotnet format` keeps generated migration files untouched.
+> `--exclude src/BeHealthy.Infrastructure/Migrations/` with `dotnet format` keeps generated migration files untouched.
 
 ## User secrets (connection strings, keys)
 
 ```bash
-dotnet user-secrets list --project BeHealthy.API
-dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Database=behealthy;Username=...;Password=..." --project BeHealthy.API
-dotnet user-secrets remove "ConnectionStrings:Default" --project BeHealthy.API
-dotnet user-secrets clear --project BeHealthy.API
+dotnet user-secrets list --project src/BeHealthy.API
+dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Database=behealthy;Username=...;Password=..." --project src/BeHealthy.API
+dotnet user-secrets remove "ConnectionStrings:Default" --project src/BeHealthy.API
+dotnet user-secrets clear --project src/BeHealthy.API
 ```
 
 ## Git — keeping style changes clean

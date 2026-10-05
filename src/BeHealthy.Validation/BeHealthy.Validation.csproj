@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Request validators shared by BeHealthy.API (server-side) and BeHealthy.Front (client-side).
+    Only rules that need nothing but the request itself, or an app setting read through
+    IValidationSettingsProvider, live here. Rules that need the database live in BeHealthy.Application.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeHealthy.Shared\BeHealthy.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

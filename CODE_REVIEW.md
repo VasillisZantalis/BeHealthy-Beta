@@ -237,7 +237,7 @@ KNOWN_ISSUES #1 says to wire validation up. Some current problems stop that from
 
 | | Issue | Fix |
 |---|---|---|
-| 🔴 | **JWT signing key is committed** in `BeHealthy.API/appsettings.json` | Move it to `dotnet user-secrets` or environment variables, **rotate it**, and fail startup if it's missing or shorter than 32 bytes. |
+| 🔴 | **JWT signing key is committed** in `src/BeHealthy.API/appsettings.json` | Move it to `dotnet user-secrets` or environment variables, **rotate it**, and fail startup if it's missing or shorter than 32 bytes. |
 | 🔴 | List-all endpoints are open to `AllUsers` (patients): `GET /medical-records`, `GET /prescriptions`, `GET /visits`, `GET /patients`, `GET /appointments` | Restrict to `MedicalStaff`. Patients should only reach "my …" endpoints. |
 | 🔴 | No ownership checks (KNOWN #2) | Use **resource-based authorization**: an `AuthorizationHandler<SameOrStaffRequirement, int /*patientId*/>` called through `IAuthorizationService.AuthorizeAsync(User, patientId, "PatientData")`, or a small `ICurrentUser` service so the application layer can scope queries itself. |
 | 🟠 | A patient can `POST /appointments` for **any** `PatientId` | If the caller is a `Patient`, force `PatientId` to their own patient id. |
@@ -285,7 +285,7 @@ KNOWN_ISSUES #1 says to wire validation up. Some current problems stop that from
 - **Fix:** extract an `IAccountProvisioningService.CreateAccountAsync(PersonCreateRequest, UserRole)` that returns the new user id, and use it from all three services. A generic `PersonService<TEntity>` is another option, but composition is simpler.
 
 ### 5.5 🟠 Some services return entities, others return DTOs
-`VisitService` and `AppSettingsService` return **domain entities**, and the controllers map them using `BeHealthy.API/Mapping/*`. Every other service returns DTOs. `AppSettingsController.Update` also **changes the entity inside the controller** (`setting.Value = dto.Value`), which is business logic in the API layer. Make every service return DTOs and delete `API/Mapping`.
+`VisitService` and `AppSettingsService` return **domain entities**, and the controllers map them using `src/BeHealthy.API/Mapping/*`. Every other service returns DTOs. `AppSettingsController.Update` also **changes the entity inside the controller** (`setting.Value = dto.Value`), which is business logic in the API layer. Make every service return DTOs and delete `API/Mapping`.
 
 ### 5.6 🟡 Mapper bloat
 The Mappings classes contain many conversions that look unused: `Response → Domain`, `UpdateRequest → Response`, `Response → CreateRequest`, `MapToDomain(this DoctorUpdateRequest)`, and `MapToDomain(IEnumerable<…Response>)`. Most of them were probably needed by the old frontend, which now has its own `DtoMappers`. Remove what isn't referenced (check with *Find All References*). Keep mapping one-directional: `Request → Entity` for writes and `Entity → Response` for reads, or use projections (§5.3). If you want generated mappers, **Mapperly** gives compile-time mapping with no reflection.
