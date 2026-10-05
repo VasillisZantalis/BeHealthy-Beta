@@ -4,39 +4,54 @@ using BeHealthy.Shared.Dtos.Nurse;
 using BeHealthy.Shared.Dtos.Patient;
 using BeHealthy.Application.Interfaces;
 using BeHealthy.Application.Services.Interfaces;
-using BeHealthy.Domain;
+using BeHealthy.Application.Services.Seeding;
 
 namespace BeHealthy.Application.Services;
 
 public class SeedingService : ISeedingService
 {
+    // A random slot can clash with an existing appointment, so each appointment gets a few tries.
+    private const int MaxAppointmentAttempts = 10;
+
     private readonly IDoctorRepository _doctorRepository;
     private readonly IPatientRepository _patientRepository;
     private readonly INurseRepository _nurseRepository;
     private readonly IAppointmentRepository _appointmentRepository;
+    private readonly IDepartmentRepository _departmentRepository;
+    private readonly ISpecialtyRepository _specialtyRepository;
+    private readonly IRoomRepository _roomRepository;
     private readonly IDoctorService _doctorService;
     private readonly IPatientService _patientService;
     private readonly INurseService _nurseService;
     private readonly IAppointmentService _appointmentService;
+    private readonly SeedDataGenerator _generator;
 
     public SeedingService(
         IDoctorRepository doctorRepository,
         IPatientRepository patientRepository,
         INurseRepository nurseRepository,
         IAppointmentRepository appointmentRepository,
+        IDepartmentRepository departmentRepository,
+        ISpecialtyRepository specialtyRepository,
+        IRoomRepository roomRepository,
         IDoctorService doctorService,
         IPatientService patientService,
         INurseService nurseService,
-        IAppointmentService appointmentService)
+        IAppointmentService appointmentService,
+        SeedDataGenerator? generator = null)
     {
         _doctorRepository = doctorRepository;
         _patientRepository = patientRepository;
         _nurseRepository = nurseRepository;
         _appointmentRepository = appointmentRepository;
+        _departmentRepository = departmentRepository;
+        _specialtyRepository = specialtyRepository;
+        _roomRepository = roomRepository;
         _doctorService = doctorService;
         _patientService = patientService;
         _nurseService = nurseService;
         _appointmentService = appointmentService;
+        _generator = generator ?? new SeedDataGenerator();
     }
 
     public async Task<Dictionary<string, int>> CheckEntityCountsAsync(CancellationToken cancellationToken = default)
@@ -65,24 +80,17 @@ public class SeedingService : ISeedingService
 
         try
         {
+            var departmentIds = await GetDepartmentIdsAsync(cancellationToken);
+            var specialtyIds = (await _specialtyRepository.GetAllSpecialtiesAsync(cancellationToken)).Select(s => s.Id).ToList();
+
             for (int i = 1; i <= count; i++)
             {
-                var doctorDto = new DoctorCreateRequest
-                {
-                    FirstName = $"Doctor{i}",
-                    LastName = $"Sample{i}",
-                    Email = $"doctor{i}@behealthy.com",
-                    Password = "Doctor123!",
-                    PhoneNumber = $"1234567{i:D3}",
-                    Image = null,
-                    DepartmentId = null,
-                    SpecialtyId = null
-                };
+                var doctorDto = _generator.Doctor(departmentIds, specialtyIds);
 
                 var result = await _doctorService.AddDoctorAsync(doctorDto, cancellationToken);
                 if (!result.Success)
                 {
-                    return ServiceResponse.Failed($"Failed to create doctor {i}: {result.ErrorMessage}");
+                    return ServiceResponse.Failed($"Failed to create doctor {doctorDto.FirstName} {doctorDto.LastName}: {result.ErrorMessage}");
                 }
             }
 
@@ -103,23 +111,16 @@ public class SeedingService : ISeedingService
 
         try
         {
+            var departmentIds = await GetDepartmentIdsAsync(cancellationToken);
+
             for (int i = 1; i <= count; i++)
             {
-                var patientDto = new PatientCreateRequest
-                {
-                    FirstName = $"Patient{i}",
-                    LastName = $"Sample{i}",
-                    Email = $"patient{i}@behealthy.com",
-                    Password = "Patient123!",
-                    PhoneNumber = $"1234568{i:D3}",
-                    Image = null,
-                    DepartmentId = null
-                };
+                var patientDto = _generator.Patient(departmentIds);
 
                 var result = await _patientService.AddPatientAsync(patientDto, cancellationToken);
                 if (!result.Success)
                 {
-                    return ServiceResponse.Failed($"Failed to create patient {i}: {result.ErrorMessage}");
+                    return ServiceResponse.Failed($"Failed to create patient {patientDto.FirstName} {patientDto.LastName}: {result.ErrorMessage}");
                 }
             }
 
@@ -140,23 +141,16 @@ public class SeedingService : ISeedingService
 
         try
         {
+            var departmentIds = await GetDepartmentIdsAsync(cancellationToken);
+
             for (int i = 1; i <= count; i++)
             {
-                var nurseDto = new NurseCreateRequest
-                {
-                    FirstName = $"Nurse{i}",
-                    LastName = $"Sample{i}",
-                    Email = $"nurse{i}@behealthy.com",
-                    Password = "Nurse123!",
-                    PhoneNumber = $"1234569{i:D3}",
-                    Image = null,
-                    DepartmentId = null
-                };
+                var nurseDto = _generator.Nurse(departmentIds);
 
                 var result = await _nurseService.AddNurseAsync(nurseDto, cancellationToken);
                 if (!result.Success)
                 {
-                    return ServiceResponse.Failed($"Failed to create nurse {i}: {result.ErrorMessage}");
+                    return ServiceResponse.Failed($"Failed to create nurse {nurseDto.FirstName} {nurseDto.LastName}: {result.ErrorMessage}");
                 }
             }
 
@@ -177,43 +171,32 @@ public class SeedingService : ISeedingService
 
         try
         {
-            var doctors = await _doctorRepository.GetAllDoctorsSimpleAsync(cancellationToken);
-            var patients = await _patientRepository.GetAllPatientsSimpleAsync(cancellationToken);
+            var doctorIds = (await _doctorRepository.GetAllDoctorsSimpleAsync(cancellationToken)).Select(d => d.Id).ToList();
+            var patientIds = (await _patientRepository.GetAllPatientsSimpleAsync(cancellationToken)).Select(p => p.Id).ToList();
 
-            if (!doctors.Any())
+            if (doctorIds.Count == 0)
             {
                 return ServiceResponse.Failed("No doctors found. Please seed doctors first.");
             }
 
-            if (!patients.Any())
+            if (patientIds.Count == 0)
             {
                 return ServiceResponse.Failed("No patients found. Please seed patients first.");
             }
 
-            var doctorsList = doctors.ToList();
-            var patientsList = patients.ToList();
-            var random = new Random();
+            var nurseIds = (await _nurseRepository.GetAllNursesAsync(cancellationToken)).Select(n => n.Id).ToList();
+            var roomIds = (await _roomRepository.GetAllRoomsAsync(cancellationToken)).Select(r => r.Id).ToList();
 
             for (int i = 1; i <= count; i++)
             {
-                var appointmentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(i));
-                var startHour = 9 + (i % 8); // Between 9 AM and 5 PM
+                var result = ServiceResponse.Failed(string.Empty);
 
-                var appointmentDto = new AppointmentCreateRequest
+                for (int attempt = 1; attempt <= MaxAppointmentAttempts && !result.Success; attempt++)
                 {
-                    DoctorId = doctorsList[random.Next(doctorsList.Count)].Id,
-                    PatientId = patientsList[random.Next(patientsList.Count)].Id,
-                    AppointmentDate = appointmentDate,
-                    AppointmentStartTime = new TimeOnly(startHour, 0),
-                    AppointmentEndTime = new TimeOnly(startHour + 1, 0),
-                    Reason = (AppointmentReason)(i % Enum.GetValues<AppointmentReason>().Length),
-                    Status = AppointmentStatus.Scheduled,
-                    Notes = $"Sample appointment {i}",
-                    RoomId = null,
-                    NurseId = null
-                };
+                    var appointmentDto = _generator.Appointment(doctorIds, patientIds, nurseIds, roomIds);
+                    result = await _appointmentService.AddAppointmentAsync(appointmentDto, cancellationToken);
+                }
 
-                var result = await _appointmentService.AddAppointmentAsync(appointmentDto, cancellationToken);
                 if (!result.Success)
                 {
                     return ServiceResponse.Failed($"Failed to create appointment {i}: {result.ErrorMessage}");
@@ -275,4 +258,7 @@ public class SeedingService : ISeedingService
 
         return ServiceResponse.Successful();
     }
+
+    private async Task<List<int>> GetDepartmentIdsAsync(CancellationToken cancellationToken)
+        => (await _departmentRepository.GetDepartmentsAsync(cancellationToken)).Select(d => d.Id).ToList();
 }
