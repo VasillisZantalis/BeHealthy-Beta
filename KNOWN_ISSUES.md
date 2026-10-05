@@ -2,18 +2,16 @@
 
 > Personal/learning project — this is not a strict audit, just a running list of things that are implemented wrong or missing so they don't get forgotten. Not everything here needs to be fixed; use judgement.
 
-## 1. Backend has (almost) no server-side validation
+## 1. ~~Backend has (almost) no server-side validation~~ (resolved)
 
-This is the biggest gap. All FluentValidation validators under `src/BeHealthy.Application/Validations/**` are dead code:
+Every request is now validated on the API before the action runs. See [`VALIDATION.md`](VALIDATION.md) for the design and how to add rules. In short:
 
-- `IValidatorService.ValidateAsync` (`src/BeHealthy.Application/Services/ValidatorService.cs`) is registered in DI but never called from any Service or Controller.
-- No validators are registered with the container at all (`DependencyInjection.cs` has no `AddValidatorsFromAssembly`), so even if called, `ValidateAsync` would silently no-op.
-- None of the request DTOs in `src/BeHealthy.Shared/Dtos` have DataAnnotations, so `[ApiController]`'s automatic ModelState validation never triggers either.
-- The identical validators duplicated under `src/BeHealthy.Front/Validations/**` are the *only* validation that ever runs, and only when going through the Blazor UI.
+- Shape and setting-driven rules live once in `src/BeHealthy.Validation` and run on both the Front and the API. The duplicated, never-called copies in Application and Front are gone, and so is `IValidatorService`.
+- Rules that need the database (referenced ids exist, email not in use, setting value fits its type) are `*ServerValidator`s in `src/BeHealthy.Application/Validators`.
+- `ValidationFilter` (registered globally) runs all of them and answers 400 `ValidationProblemDetails`.
+- AppSettings-driven rules read the setting through `IValidationSettingsProvider` instead of a constructor flag, so the API enforces them too.
 
-**Impact:** anything that talks to the API directly (curl, Postman, a different client) can write garbage data — empty required fields, negative IDs/ages, bad date ranges, references to nonexistent patients/doctors.
-
-**Fix:** register the validators in DI and call `IValidatorService.ValidateAsync` at the start of each Application service method, before touching the DB.
+Not done: the setting `NurseIsRequiredForAppointment` is read by the Front and the validators but is not in the seed data, so it is always off until a row is added.
 
 ## 2. Missing ownership checks (IDOR)
 
@@ -61,16 +59,11 @@ The custom `UnitOfWork` was removed; EF Core's request-scoped `ApplicationDbCont
 
 **Fix:** have these helpers return a `ServiceResponse` like their siblings, and surface failures via `ToastrStateService.ShowFailed`.
 
-## 8. Missing FK/business checks in several Application services
+**Status:** partly fixed. Room, specialty, medical record and setting writes now use the `*ForResponseAsync` helpers, so a rejected save shows its message. The remaining `PostAsync`/`PutAsync`/`DeleteAsync` callers are the delete buttons.
 
-Unlike `AppointmentService` (which checks correctly), these insert without verifying the referenced entities exist:
+## 8. ~~Missing FK/business checks in several Application services~~ (resolved)
 
-- `VisitService.AddVisitAsync` — no check that `PatientId`/`DoctorId` exist.
-- `PrescriptionService.AddPrescriptionAsync` — no doctor/patient existence check, no date validation.
-- `MedicalRecordService` — no validation at all before writing (not even null/empty notes).
-- `AllergyService.AddAllergyAsync`/`UpdateAllergyAsync` — no patient existence check.
-
-**Fix:** mirror the existence-check pattern already used in `AppointmentService`.
+The existence checks for visits, prescriptions, medical records, allergies (and every other request with a foreign key) now run as `*ServerValidator`s on the API (#1). Code that calls the services directly, such as `SeedingService`, skips them, which is fine for trusted callers.
 
 ## 9. Appointment double-booking race condition
 
@@ -86,6 +79,6 @@ Unlike `AppointmentService` (which checks correctly), these insert without verif
 
 ## 11. Smaller/lower-priority items
 
-- Global exception handler treats everything as a generic 500 with no exception-type branching — once validation (#1) is wired up, validation errors would surface as opaque 500s instead of 400s.
+- Global exception handler treats everything except a `FluentValidation.ValidationException` (now a 400, see #1) as a generic 500. `DbUpdateException`/`DbUpdateConcurrencyException` still surface as 500s instead of 409s.
 - Blazor's auth gate is a layout-level redirect in `MainLayout.OnInitialized`, not a real `AuthorizeRouteView`/`[Authorize]` route gate — fragile if a page ever skips `MainLayout`.
 - `AllergyService.UpdateAllergyAsync` fetches the existing entity only to immediately overwrite it with the DTO — harmless today since the DTO carries all fields, but fragile if the DTO is ever trimmed.

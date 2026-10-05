@@ -46,6 +46,22 @@ BeHealthy is a modern healthcare management solution designed to streamline pati
 - **Repository Pattern**: Abstracted data access for maintainability.
 - **Component-Based UI**: Reusable Blazor components for modularity.
 - **State Management**: Scoped services for UI state (modals, navigation, loaders).
+- **Validation**: FluentValidation rules shared by the Blazor front end and the API, enforced on every API request. See [VALIDATION.md](VALIDATION.md).
+
+## Solution Structure
+
+Projects live under `src/` (application code) and `tests/`. In Visual Studio they are grouped into solution folders:
+
+| Solution folder | Project | Purpose |
+|---|---|---|
+| `src/Backend` | `BeHealthy.Domain` | Entities and domain enums |
+| `src/Backend` | `BeHealthy.Application` | Services, repository interfaces, server-only validators |
+| `src/Backend` | `BeHealthy.Infrastructure` | EF Core (SQLite), Identity, repositories, migrations |
+| `src/Backend` | `BeHealthy.API` | ASP.NET Core Web API: controllers, validation filter |
+| `src/Frontend` | `BeHealthy.Front` | Blazor Server front end; talks to the API |
+| `src/Shared` | `BeHealthy.Shared` | Request/response DTOs, enums, localized strings |
+| `src/Shared` | `BeHealthy.Validation` | Request validators used by both the Front and the API |
+| `tests` | `BeHealthy.Tests` | xUnit and bUnit tests |
 
 ---
 

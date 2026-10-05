@@ -10,13 +10,13 @@
 
 | # | Item | Status now |
 |---|------|-----------|
-| 1 | No server-side validation | **Still open.** See §3 for a concrete design. |
+| 1 | No server-side validation | **Fixed** (after this review). §3 was implemented; see [`VALIDATION.md`](VALIDATION.md). |
 | 2 | IDOR / missing authorization | **Partly fixed.** Role attributes (`RoleGroups`) were added, but ownership checks are still missing. Example: a `Patient` can `GET /api/medical-records` and `GET /api/prescriptions` and receive **every patient's** records. See §4. |
 | 3 | Login bypasses lockout | Still open (`AuthService.cs:24`). `SignInManager` is already registered in Infrastructure DI, so switching to it is a one-liner. |
 | 4 | DB wiped on startup | Still open (`Infrastructure/DependencyInjection.cs:62`). |
 | 6 | Singleton `ToastService` | **Fixed.** It is now `Scoped`. Both toast services still exist (see §F). |
-| 7 | Fire-and-forget API calls | Still open (`ApiClientBase.PostAsync/PutAsync/DeleteAsync`). |
-| 8 | Missing FK checks | Still open. |
+| 7 | Fire-and-forget API calls | **Partly fixed.** Writes now use `*ForResponseAsync`; deletes still use `ApiClientBase.PostAsync/PutAsync/DeleteAsync`. |
+| 8 | Missing FK checks | **Fixed** by the server validators (§3). |
 | 9 | Double-booking race | Still open. §1.5 covers more conflict-check bugs. |
 | 10 | Settings page not gated | Still open. `Settings.razor` has no `[Authorize]`. |
 
@@ -164,6 +164,8 @@ It currently returns 500 for everything. Add:
 ---
 
 ## 3. Validation — a concrete design
+
+> **Implemented** on `feature/server-side-validation`. The design below is kept for reference; [`VALIDATION.md`](VALIDATION.md) describes what was built. Differences from this sketch: the shared validators live in a new `BeHealthy.Validation` project; setting rules go through an `IValidationSettingsProvider` abstraction, so they run on the Front too; and server validators are separate `*ServerValidator` classes (the filter runs every registered validator) rather than `Include(...)` wrappers. §3.4 (over-posting) is still open.
 
 KNOWN_ISSUES #1 says to wire validation up. Some current problems stop that from working as-is.
 
