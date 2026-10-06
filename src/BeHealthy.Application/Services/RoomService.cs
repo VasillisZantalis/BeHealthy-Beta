@@ -49,11 +49,14 @@ public class RoomService : IRoomService
         return ServiceResponse.Successful();
     }
 
-    public async Task DeleteRoomAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteRoomAsync(int id, CancellationToken cancellationToken = default)
     {
-        if (await _roomRepository.DeleteAsync(id, cancellationToken))
+        if (!await _roomRepository.DeleteAsync(id, cancellationToken))
         {
-            await _roomRepository.SaveChangesAsync(cancellationToken);
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Room));
         }
+
+        await _roomRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 }

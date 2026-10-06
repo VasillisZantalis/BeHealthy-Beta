@@ -69,9 +69,10 @@ public class NursesController(INurseService nurseService) : ApiControllerBase
     [HttpDelete("{id:int}")]
     [Authorize(Roles = RoleGroups.Admin)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        await nurseService.DeleteNurseAsync(id, cancellationToken);
-        return NoContent();
+        var response = await nurseService.DeleteNurseAsync(id, cancellationToken);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 }

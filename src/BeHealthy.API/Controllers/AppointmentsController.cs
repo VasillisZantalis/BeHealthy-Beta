@@ -62,10 +62,11 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ap
     [HttpDelete("{id:int}")]
     [Authorize(Roles = RoleGroups.MedicalStaff)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        await appointmentService.DeleteAppointmentAsync(id, cancellationToken);
-        return NoContent();
+        var response = await appointmentService.DeleteAppointmentAsync(id, cancellationToken);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 
     [HttpGet("upcoming")]

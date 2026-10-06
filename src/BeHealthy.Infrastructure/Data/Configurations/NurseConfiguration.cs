@@ -23,14 +23,5 @@ public class NurseConfiguration : IEntityTypeConfiguration<Nurse>
         builder.HasOne(d => d.User)
             .WithOne(u => u.Nurse)
             .HasForeignKey<Nurse>(d => d.UserId);
-
-        builder.HasOne(d => d.Department)
-            .WithMany(d => d.Nurses)
-            .HasForeignKey(d => d.DepartmentId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasMany(p => p.Appointments)
-            .WithOne(a => a.Nurse)
-            .HasForeignKey(a => a.NurseId);
     }
 }

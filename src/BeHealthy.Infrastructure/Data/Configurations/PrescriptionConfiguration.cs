@@ -21,26 +21,26 @@ public class PrescriptionConfiguration : IEntityTypeConfiguration<Prescription>
             .IsRequired()
             .HasMaxLength(FieldLengths.Dosage);
 
+        // A calendar date: stored and returned exactly as entered, with no time-zone conversion.
         builder.Property(p => p.DatePrescribed)
-            .IsRequired()
-            .HasConversion(
-                v => DateTime.SpecifyKind(v, DateTimeKind.Utc),
-                v => DateTime.SpecifyKind(v, DateTimeKind.Local)
-            );
-        ;
+            .IsRequired();
 
-        // Relationships
+        // Relationships. Prescriptions are clinical history: their patient or doctor can't be deleted.
         builder.HasOne(p => p.Patient)
             .WithMany()
-            .HasForeignKey(p => p.PatientId);
+            .HasForeignKey(p => p.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(p => p.Doctor)
             .WithMany()
-            .HasForeignKey(p => p.DoctorId);
+            .HasForeignKey(p => p.DoctorId)
+            .OnDelete(DeleteBehavior.Restrict);
 
+        // Optional: the API can't create treatments, so a prescription is written without one.
         builder.HasOne(p => p.Treatment)
             .WithMany(t => t.Prescriptions)
             .HasForeignKey(p => p.TreatmentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

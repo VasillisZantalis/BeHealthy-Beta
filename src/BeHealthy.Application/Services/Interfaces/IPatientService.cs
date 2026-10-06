@@ -12,5 +12,5 @@ public interface IPatientService
     Task<ServiceResponse> AddPatientAsync(PatientCreateRequest patient, CancellationToken cancellationToken = default);
     Task<int> GetPatientCountAsync(CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patient, CancellationToken cancellationToken = default);
-    Task DeletePatientAsync(int id, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> DeletePatientAsync(int id, CancellationToken cancellationToken = default);
 }

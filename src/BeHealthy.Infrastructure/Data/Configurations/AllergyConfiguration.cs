@@ -25,5 +25,11 @@ public class AllergyConfiguration : IEntityTypeConfiguration<Allergy>
 
         builder.Property(a => a.Severity)
             .IsRequired();
+
+        // Clinical history is kept: a patient with allergies can't be deleted.
+        builder.HasOne(a => a.Patient)
+            .WithMany(p => p.Allergies)
+            .HasForeignKey(a => a.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

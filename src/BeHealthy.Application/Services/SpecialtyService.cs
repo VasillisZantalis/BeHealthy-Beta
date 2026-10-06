@@ -47,11 +47,14 @@ public class SpecialtyService : ISpecialtyService
         return ServiceResponse.Successful();
     }
 
-    public async Task DeleteSpecialtyAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteSpecialtyAsync(int id, CancellationToken cancellationToken = default)
     {
-        if (await _specialtyRepository.DeleteAsync(id, cancellationToken))
+        if (!await _specialtyRepository.DeleteAsync(id, cancellationToken))
         {
-            await _specialtyRepository.SaveChangesAsync(cancellationToken);
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Specialty));
         }
+
+        await _specialtyRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 }

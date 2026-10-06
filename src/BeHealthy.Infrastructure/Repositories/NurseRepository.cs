@@ -18,21 +18,24 @@ public class NurseRepository : GenericRepository<Nurse>, INurseRepository
                     .ToListAsync(cancellationToken);
     }
 
-    public async Task DeleteNurseAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteNurseAsync(int id, CancellationToken cancellationToken = default)
     {
         var nurse = await _context.Nurses
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
-        if (nurse != null)
+        if (nurse is null)
         {
-            if (nurse.User != null)
-            {
-                _context.Users.Remove(nurse.User);
-            }
-
-            _context.Nurses.Remove(nurse);
+            return false;
         }
+
+        if (nurse.User != null)
+        {
+            _context.Users.Remove(nurse.User);
+        }
+
+        _context.Nurses.Remove(nurse);
+        return true;
     }
 
     public async Task<Nurse?> GetNurseByUserIdAsync(string userId, CancellationToken cancellationToken = default)

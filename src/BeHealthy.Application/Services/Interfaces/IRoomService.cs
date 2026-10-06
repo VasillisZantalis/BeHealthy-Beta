@@ -9,5 +9,5 @@ public interface IRoomService
     Task<RoomResponse?> GetRoomByIdAsync(int id, CancellationToken cancellationToken = default);
     Task AddRoomAsync(RoomCreateRequest roomDto, CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateRoomAsync(RoomUpdateRequest roomDto, CancellationToken cancellationToken = default);
-    Task DeleteRoomAsync(int id, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> DeleteRoomAsync(int id, CancellationToken cancellationToken = default);
 }

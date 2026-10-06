@@ -7,7 +7,7 @@ public class Prescription
     public string Dosage { get; set; } = string.Empty;
     public DateTime DatePrescribed { get; set; }
 
-    public int TreatmentId { get; set; }
+    public int? TreatmentId { get; set; }
     public Treatment? Treatment { get; set; }
 
     public int PatientId { get; set; }

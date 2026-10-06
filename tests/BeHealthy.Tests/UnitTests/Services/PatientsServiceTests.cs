@@ -247,21 +247,21 @@ public class PatientsServiceTests
 
     #region UpdatePatientAsync
 
+    private void SetupPatientWithUser(Patient? patient) =>
+        _patientRepositoryMock
+            .Setup(r => r.GetByIdWithIncludes(It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Patient, object>>[]>()))
+            .ReturnsAsync(patient);
+
     [Fact]
     public async Task UpdatePatientAsync_ReturnsSuccess_WhenUpdateSucceeds()
     {
         // Arrange
-        var patientDto = new PatientUpdateRequest { UserId = "user1", FirstName = "John", LastName = "Doe", PhoneNumber = "123" };
+        var patientDto = new PatientUpdateRequest { Id = 1, FirstName = "John", LastName = "Doe", PhoneNumber = "123" };
         var user = new ApplicationUser { Id = "user1" };
-
-        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
+        SetupPatientWithUser(new Patient { Id = 1, UserId = user.Id, User = user });
 
         _userServiceMock.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Successful());
-
-        _patientRepositoryMock.Setup(r => r.GetByIdAsync(patientDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Patient { Id = patientDto.Id });
-        _patientRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Patient>())).Returns(Task.CompletedTask);
 
         // Act
         var result = await _service.UpdatePatientAsync(patientDto);
@@ -269,44 +269,39 @@ public class PatientsServiceTests
         // Assert
         Assert.True(result.Success);
         Assert.True(_transactionManager.Committed);
-        _userServiceMock.Verify(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()), Times.Once);
+        Assert.Equal("John", user.FirstName);
         _userServiceMock.Verify(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()), Times.Once);
+        _userServiceMock.Verify(s => s.GetUserByIdAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         _patientRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public async Task UpdatePatientAsync_ReturnsFailed_WhenUserNotFound()
+    public async Task UpdatePatientAsync_ReturnsFailed_WhenPatientNotFound()
     {
         // Arrange
-        var patientDto = new PatientUpdateRequest { UserId = "notfound" };
-
-        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((ApplicationUser?)null);
+        SetupPatientWithUser(null);
 
         // Act
-        var result = await _service.UpdatePatientAsync(patientDto);
+        var result = await _service.UpdatePatientAsync(new PatientUpdateRequest { Id = 99 });
 
         // Assert
         Assert.False(result.Success);
+        Assert.Equal(string.Format(Resource.NotFoundEntity, Resource.Patient), result.ErrorMessage);
+        _userServiceMock.Verify(s => s.UpdateUserAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
     public async Task UpdatePatientAsync_ReturnsFailed_WhenUpdateUserFails()
     {
         // Arrange
-        var patientDto = new PatientUpdateRequest { UserId = "user1" };
         var user = new ApplicationUser { Id = "user1" };
-
-        _userServiceMock.Setup(s => s.GetUserByIdAsync(patientDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
+        SetupPatientWithUser(new Patient { Id = 1, User = user });
 
         _userServiceMock.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Failed("update error"));
 
-        _patientRepositoryMock.Setup(r => r.GetByIdAsync(patientDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Patient { Id = patientDto.Id });
-
         // Act
-        var result = await _service.UpdatePatientAsync(patientDto);
+        var result = await _service.UpdatePatientAsync(new PatientUpdateRequest { Id = 1 });
 
         // Assert
         Assert.False(result.Success);
@@ -320,16 +315,47 @@ public class PatientsServiceTests
     #region DeletePatientAsync
 
     [Fact]
-    public async Task DeletePatientAsync_CallsRepository()
+    public async Task DeletePatientAsync_NoHistory_DeletesAndSaves()
     {
         // Arrange
-        _patientRepositoryMock.Setup(r => r.DeletePatientAsync(1, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _patientRepositoryMock.Setup(r => r.DeletePatientAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
         // Act
-        await _service.DeletePatientAsync(1);
+        var result = await _service.DeletePatientAsync(1);
 
         // Assert
-        _patientRepositoryMock.Verify(r => r.DeletePatientAsync(1, It.IsAny<CancellationToken>()), Times.Once);
+        Assert.True(result.Success);
+        _patientRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeletePatientAsync_WithClinicalHistory_ReturnsFailedAndDoesNotDelete()
+    {
+        // Arrange
+        _patientRepositoryMock.Setup(r => r.HasClinicalHistoryAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+
+        // Act
+        var result = await _service.DeletePatientAsync(1);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Equal(string.Format(Resource.CannotDeleteEntityWithRelationships, Resource.Patient, Resource.ClinicalHistory), result.ErrorMessage);
+        _patientRepositoryMock.Verify(r => r.DeletePatientAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task DeletePatientAsync_NotFound_ReturnsFailed()
+    {
+        // Arrange
+        _patientRepositoryMock.Setup(r => r.DeletePatientAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(false);
+
+        // Act
+        var result = await _service.DeletePatientAsync(1);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Equal(string.Format(Resource.NotFoundEntity, Resource.Patient), result.ErrorMessage);
+        _patientRepositoryMock.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     #endregion

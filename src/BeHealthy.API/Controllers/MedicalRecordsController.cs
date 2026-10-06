@@ -57,17 +57,18 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateNotes(int id, MedicalRecordNotesUpdateRequest dto, CancellationToken cancellationToken)
     {
-        await medicalRecordService.UpdateMedicalRecordNotesAsync(id, dto.Notes, cancellationToken);
-        return NoContent();
+        var response = await medicalRecordService.UpdateMedicalRecordNotesAsync(id, dto.Notes, cancellationToken);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 
     /// <summary>Deletes a medical record.</summary>
     [HttpDelete("{id:int}")]
     [Authorize(Roles = RoleGroups.Clinicians)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        await medicalRecordService.DeleteMedicalRecordAsync(id, cancellationToken);
-        return NoContent();
+        var response = await medicalRecordService.DeleteMedicalRecordAsync(id, cancellationToken);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 }

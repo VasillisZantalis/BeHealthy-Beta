@@ -92,6 +92,33 @@ public class DoctorServiceTests
         result.Items.ShouldBeEmpty();
     }
 
+    [Fact]
+    public async Task GetAllDoctorsAsync_WithFilter_CountsOnlyMatchingDoctors()
+    {
+        // Arrange
+        Expression<Func<Doctor, bool>>? countPredicate = null;
+        _mockDoctorRepository
+            .Setup(r => r.GetCountAsync(It.IsAny<Expression<Func<Doctor, bool>>>(), It.IsAny<CancellationToken>()))
+            .Callback<Expression<Func<Doctor, bool>>, CancellationToken>((p, _) => countPredicate = p)
+            .ReturnsAsync(1);
+
+        var doctors = new[]
+        {
+            new Doctor { FirstName = "Anna", LastName = "Smith", SpecialtyId = 1 },
+            new Doctor { FirstName = "Anna", LastName = "Jones", SpecialtyId = 2 },
+            new Doctor { FirstName = "Bob", LastName = "Smith", SpecialtyId = 1 },
+        };
+
+        // Act
+        var result = await _sut.GetAllDoctorsAsync(new Shared.Parameters.DoctorQueryParameters { SearchTerm = "Anna", SpecialtyId = 1 });
+
+        // Assert
+        result.TotalCount.ShouldBe(1);
+        _mockDoctorRepository.Verify(r => r.GetCountAsync(It.IsAny<CancellationToken>()), Times.Never);
+        countPredicate.ShouldNotBeNull();
+        doctors.Count(countPredicate.Compile()).ShouldBe(1);
+    }
+
     #endregion
 
     #region GetDoctorByIdAsync
@@ -281,35 +308,57 @@ public class DoctorServiceTests
 
     #region UpdateDoctorAsync
 
+    private void SetupDoctorWithUser(Doctor? doctor) =>
+        _mockDoctorRepository
+            .Setup(r => r.GetByIdWithIncludes(It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<Expression<Func<Doctor, object>>[]>()))
+            .ReturnsAsync(doctor);
+
     [Fact]
-    public async Task UpdateDoctorAsync_UserNotFound_ReturnsFailed()
+    public async Task UpdateDoctorAsync_DoctorNotExists_ReturnsFailedAndDoesNotUpdateUser()
     {
         // Arrange
-        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1 };
-        _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId, It.IsAny<CancellationToken>())).ReturnsAsync((ApplicationUser?)null);
+        var updateDto = new DoctorUpdateRequest { Id = 1 };
+        SetupDoctorWithUser(null);
 
         // Act
         var result = await _sut.UpdateDoctorAsync(updateDto);
 
         // Assert
         result.Success.ShouldBeFalse();
-        result.ErrorMessage.ShouldBe(Resource.NotFound);
+        result.ErrorMessage.ShouldBe(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+        _mockUserService.Verify(s => s.UpdateUserAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateDoctorAsync_UpdatesTheDoctorsOwnUser()
+    {
+        // Arrange
+        var updateDto = new DoctorUpdateRequest { Id = 1, FirstName = "New", LastName = "Name", PhoneNumber = "555" };
+        var ownUser = new ApplicationUser { Id = "own-user" };
+        SetupDoctorWithUser(new Doctor { Id = 1, UserId = ownUser.Id, User = ownUser });
+        _mockUserService.Setup(s => s.UpdateUserAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ServiceResponse.Successful());
+
+        // Act
+        var result = await _sut.UpdateDoctorAsync(updateDto);
+
+        // Assert
+        result.Success.ShouldBeTrue();
+        _mockUserService.Verify(s => s.UpdateUserAsync(ownUser, It.IsAny<CancellationToken>()), Times.Once);
+        _mockUserService.Verify(s => s.GetUserByIdAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        ownUser.FirstName.ShouldBe("New");
+        ownUser.PhoneNumber.ShouldBe("555");
     }
 
     [Fact]
     public async Task UpdateDoctorAsync_UpdateUserFails_ReturnsFailed()
     {
         // Arrange
-        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1 };
-        var user = new ApplicationUser { Id = updateDto.UserId };
-
-        _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
-
+        var updateDto = new DoctorUpdateRequest { Id = 1 };
+        var user = new ApplicationUser { Id = "user-1" };
+        SetupDoctorWithUser(new Doctor { Id = 1, User = user });
         _mockUserService.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ServiceResponse.Failed("Update failed"));
-
-        _mockDoctorRepository.Setup(r => r.GetByIdAsync(updateDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Doctor { Id = updateDto.Id });
 
         // Act
         var result = await _sut.UpdateDoctorAsync(updateDto);
@@ -322,84 +371,31 @@ public class DoctorServiceTests
     }
 
     [Fact]
-    public async Task UpdateDoctorAsync_DoctorNotExists_DoesNotUpdateUser()
-    {
-        // Arrange
-        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1 };
-        _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ApplicationUser { Id = updateDto.UserId });
-        _mockDoctorRepository.Setup(r => r.GetByIdAsync(updateDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync((Doctor?)null);
-
-        // Act
-        await _sut.UpdateDoctorAsync(updateDto);
-
-        // Assert
-        _mockUserService.Verify(s => s.UpdateUserAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task UpdateDoctorAsync_DoctorNotExists_ReturnsFailed()
-    {
-        // Arrange
-        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1 };
-        var user = new ApplicationUser { Id = updateDto.UserId };
-
-        _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
-        _mockUserService.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ServiceResponse.Successful());
-
-        _mockDoctorRepository.Setup(r => r.GetByIdAsync(updateDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync((Doctor?)null);
-
-        // Act
-        var result = await _sut.UpdateDoctorAsync(updateDto);
-
-        // Assert
-        result.Success.ShouldBeFalse();
-        result.ErrorMessage.ShouldBe(Resource.NotFound);
-    }
-
-    [Fact]
     public async Task UpdateDoctorAsync_SpecialtyNotExists_ReturnsFailed()
     {
         // Arrange
-        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1, SpecialtyId = 2 };
-        var user = new ApplicationUser { Id = updateDto.UserId };
-
-        _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
-        _mockUserService.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ServiceResponse.Successful());
-
-        _mockDoctorRepository.Setup(r => r.GetByIdAsync(updateDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Doctor { Id = updateDto.Id });
-        _mockSpecialtyRepository.Setup(r => r.ExistsAsync(updateDto.SpecialtyId.Value, It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        var updateDto = new DoctorUpdateRequest { Id = 1, SpecialtyId = 2 };
+        SetupDoctorWithUser(new Doctor { Id = 1, User = new ApplicationUser() });
+        _mockSpecialtyRepository.Setup(r => r.ExistsAsync(2, It.IsAny<CancellationToken>())).ReturnsAsync(false);
 
         // Act
         var result = await _sut.UpdateDoctorAsync(updateDto);
 
         // Assert
         result.Success.ShouldBeFalse();
-        result.ErrorMessage.ShouldBe(Resource.NotFound);
+        result.ErrorMessage.ShouldBe(string.Format(Resource.NotFoundEntity, Resource.Specialty));
     }
 
     [Fact]
     public async Task UpdateDoctorAsync_Successful_ReturnsSuccessful()
     {
         // Arrange
-        var updateDto = new DoctorUpdateRequest { UserId = "user-1", Id = 1, SpecialtyId = 2 };
-        var user = new ApplicationUser { Id = updateDto.UserId };
-
-        _mockUserService.Setup(s => s.GetUserByIdAsync(updateDto.UserId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
-
+        var updateDto = new DoctorUpdateRequest { Id = 1, SpecialtyId = 2 };
+        var user = new ApplicationUser { Id = "user-1" };
+        SetupDoctorWithUser(new Doctor { Id = 1, User = user });
         _mockUserService.Setup(s => s.UpdateUserAsync(user, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ServiceResponse.Successful());
-
-        _mockDoctorRepository.Setup(r => r.GetByIdAsync(updateDto.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Doctor { Id = updateDto.Id });
-        _mockDoctorRepository.Setup(r => r.UpdateAsync(It.IsAny<Doctor>())).Returns(Task.CompletedTask);
-
-        _mockSpecialtyRepository.Setup(r => r.ExistsAsync(updateDto.SpecialtyId.Value, It.IsAny<CancellationToken>())).ReturnsAsync(true);
-
+            .ReturnsAsync(ServiceResponse.Successful());
+        _mockSpecialtyRepository.Setup(r => r.ExistsAsync(2, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
         // Act
         var result = await _sut.UpdateDoctorAsync(updateDto);
@@ -415,17 +411,48 @@ public class DoctorServiceTests
     #region DeleteDoctorAsync
 
     [Fact]
-    public async Task DeleteDoctorAsync_InvokesRepository()
+    public async Task DeleteDoctorAsync_NoHistory_DeletesAndSaves()
     {
         // Arrange
-        var doctorId = 1;
-        _mockDoctorRepository.Setup(r => r.DeleteDoctorAsync(doctorId, It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+        _mockDoctorRepository.Setup(r => r.DeleteDoctorAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
         // Act
-        await _sut.DeleteDoctorAsync(doctorId);
+        var result = await _sut.DeleteDoctorAsync(1);
 
         // Assert
-        _mockDoctorRepository.Verify(r => r.DeleteDoctorAsync(doctorId, It.IsAny<CancellationToken>()), Times.Once);
+        result.Success.ShouldBeTrue();
+        _mockDoctorRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteDoctorAsync_WithClinicalHistory_ReturnsFailedAndDoesNotDelete()
+    {
+        // Arrange
+        _mockDoctorRepository.Setup(r => r.HasClinicalHistoryAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+
+        // Act
+        var result = await _sut.DeleteDoctorAsync(1);
+
+        // Assert
+        result.Success.ShouldBeFalse();
+        result.ErrorMessage.ShouldBe(string.Format(Resource.CannotDeleteEntityWithRelationships, Resource.Doctor, Resource.ClinicalHistory));
+        _mockDoctorRepository.Verify(r => r.DeleteDoctorAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+        _mockDoctorRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task DeleteDoctorAsync_NotFound_ReturnsFailed()
+    {
+        // Arrange
+        _mockDoctorRepository.Setup(r => r.DeleteDoctorAsync(1, It.IsAny<CancellationToken>())).ReturnsAsync(false);
+
+        // Act
+        var result = await _sut.DeleteDoctorAsync(1);
+
+        // Assert
+        result.Success.ShouldBeFalse();
+        result.ErrorMessage.ShouldBe(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+        _mockDoctorRepository.Verify(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     #endregion

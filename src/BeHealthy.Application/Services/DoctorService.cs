@@ -54,13 +54,7 @@ public class DoctorService : IDoctorService
         }
 
         var doctors = await _doctorRepository.QueryAsync(queryOptions, cancellationToken);
-
-        var countOptions = new QueryOptions<Doctor>
-        {
-            Predicate = predicate
-        };
-        var allDoctors = await _doctorRepository.QueryAsync(countOptions, cancellationToken);
-        var totalCount = await _doctorRepository.GetCountAsync(cancellationToken);
+        var totalCount = await _doctorRepository.GetCountAsync(predicate, cancellationToken);
 
         return new PaginatedResult<DoctorResponse>
         {
@@ -114,22 +108,19 @@ public class DoctorService : IDoctorService
 
     public async Task<ServiceResponse> UpdateDoctorAsync(DoctorUpdateRequest doctorDto, CancellationToken cancellationToken = default)
     {
-        var existingUser = await _userService.GetUserByIdAsync(doctorDto.UserId, cancellationToken);
-        if (existingUser == null)
+        // The account is always the doctor's own; the request can't point at another user.
+        var doctor = await _doctorRepository.GetByIdWithIncludes(doctorDto.Id, cancellationToken, d => d.User!);
+        if (doctor?.User is null)
         {
-            return ServiceResponse.Failed(Resource.NotFound);
-        }
-
-        var doctor = await _doctorRepository.GetByIdAsync(doctorDto.Id, cancellationToken);
-        if (doctor is null)
-        {
-            return ServiceResponse.Failed(Resource.NotFound);
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
         }
 
         if (doctorDto.SpecialtyId.HasValue && !await _specialtyRepository.ExistsAsync(doctorDto.SpecialtyId.Value, cancellationToken))
         {
-            return ServiceResponse.Failed(Resource.NotFound);
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Specialty));
         }
+
+        var existingUser = doctor.User;
 
         existingUser.FirstName = doctorDto.FirstName;
         existingUser.LastName = doctorDto.LastName;
@@ -156,10 +147,20 @@ public class DoctorService : IDoctorService
         }, cancellationToken);
     }
 
-    public async Task DeleteDoctorAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteDoctorAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _doctorRepository.DeleteDoctorAsync(id, cancellationToken);
+        if (await _doctorRepository.HasClinicalHistoryAsync(id, cancellationToken))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.CannotDeleteEntityWithRelationships, Resource.Doctor, Resource.ClinicalHistory));
+        }
+
+        if (!await _doctorRepository.DeleteDoctorAsync(id, cancellationToken))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Doctor));
+        }
+
         await _doctorRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 
     public async Task<ProfileResponse?> GetDoctorProfileByUserIdAsync(string userId, CancellationToken cancellationToken = default)

@@ -18,6 +18,7 @@ public static class Resource
     public const string AppointmentReason_Illness = "Illness";
     public const string AppointmentReason_Injury = "Injury";
     public const string AppointmentReason_Prescription = "Prescription";
+    public const string Appointment = "Appointment";
     public const string AppointmentRequiresRoom = "Appointment Requires Room";
     public const string AppointmentStatus_Cancelled = "Cancelled";
     public const string AppointmentStatus_Completed = "Completed";
@@ -34,6 +35,7 @@ public static class Resource
     public const string CannotDeleteEntityWithRelationships = "Cannot delete {0}. It is connected to: {1}";
     public const string Card = "Card";
     public const string ClearFilters = "Clear Filters";
+    public const string ClinicalHistory = "clinical history, such as appointments, visits or prescriptions";
     public const string Close = "Close";
     public const string Configuration = "Configuration";
     public const string ConfirmDeletion = "Confirm Deletion";

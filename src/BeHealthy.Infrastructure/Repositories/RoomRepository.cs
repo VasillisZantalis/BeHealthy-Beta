@@ -18,13 +18,6 @@ public class RoomRepository : GenericRepository<Room>, IRoomRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Appointment>> GetRoomAppointmentsAsync(int roomId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Appointments
-            .Where(w => w.RoomId == roomId)
-            .ToListAsync(cancellationToken);
-    }
-
     public async Task<Room?> GetRoomByIdAsync(int roomId, CancellationToken cancellationToken = default)
     {
         return await _context.Rooms

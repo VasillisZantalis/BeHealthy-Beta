@@ -12,10 +12,6 @@ public class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
 
         builder.HasKey(d => d.Id);
 
-        builder.HasMany(d => d.Appointments)
-            .WithOne(a => a.Doctor)
-            .HasForeignKey(a => a.DoctorId);
-
         builder.HasOne(d => d.Department)
             .WithMany(dept => dept.Doctors)
             .HasForeignKey(d => d.DepartmentId)

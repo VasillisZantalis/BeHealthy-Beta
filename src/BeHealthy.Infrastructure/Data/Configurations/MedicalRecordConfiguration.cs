@@ -24,5 +24,11 @@ public class MedicalRecordConfiguration : IEntityTypeConfiguration<MedicalRecord
         builder.Property(mr => mr.Notes)
             .IsRequired(false)
             .HasMaxLength(FieldLengths.MedicalRecordNotes);
+
+        // Clinical history is kept: a patient with medical records can't be deleted.
+        builder.HasOne(mr => mr.Patient)
+            .WithMany(p => p.MedicalRecords)
+            .HasForeignKey(mr => mr.PatientId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

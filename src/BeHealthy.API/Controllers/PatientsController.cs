@@ -115,9 +115,10 @@ public class PatientsController(
     [HttpDelete("{id:int}")]
     [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        await patientService.DeletePatientAsync(id, cancellationToken);
-        return NoContent();
+        var response = await patientService.DeletePatientAsync(id, cancellationToken);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 }

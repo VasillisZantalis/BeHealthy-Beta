@@ -12,6 +12,6 @@ public interface IAppointmentService
     Task<AppointmentResponse?> GetAppointmentByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<ServiceResponse> AddAppointmentAsync(AppointmentCreateRequest appointment, CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateAppointmentAsync(AppointmentUpdateRequest appointment, CancellationToken cancellationToken = default);
-    Task DeleteAppointmentAsync(int id, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> DeleteAppointmentAsync(int id, CancellationToken cancellationToken = default);
     Task<IEnumerable<AppointmentResponse>> GetUpcomingAppointmentsAsync(CancellationToken cancellationToken = default);
 }

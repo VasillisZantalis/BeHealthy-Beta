@@ -31,10 +31,10 @@ public class DepartmentService : IDepartmentService
         return departments.MapToDto();
     }
 
-    public async Task<DepartmentResponse> GetDepartmentByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<DepartmentResponse?> GetDepartmentByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var department = await _departmentRepository.GetDepartmentByIdAsync(id, cancellationToken);
-        return department.MapToDto();
+        return department?.MapToDto();
     }
 
     public async Task<ServiceResponse> AddDepartmentAsync(DepartmentCreateRequest departmentDto, CancellationToken cancellationToken = default)

@@ -10,8 +10,6 @@ public class PatientUpdateRequest
 
     public string? Image { get; set; }
 
-    public string UserId { get; set; } = string.Empty;
-
     public DateTime DateOfBirth { get; set; }
 
     public string Gender { get; set; } = string.Empty;

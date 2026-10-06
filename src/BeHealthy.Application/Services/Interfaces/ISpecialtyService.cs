@@ -9,5 +9,5 @@ public interface ISpecialtyService
     Task<SpecialtyResponse?> GetSpecialtyByIdAsync(int id, CancellationToken cancellationToken = default);
     Task AddSpecialtyAsync(SpecialtyCreateRequest specialtyForCreationDto, CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateSpecialtyAsync(SpecialtyUpdateRequest specialtyForUpdateDto, CancellationToken cancellationToken = default);
-    Task DeleteSpecialtyAsync(int id, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> DeleteSpecialtyAsync(int id, CancellationToken cancellationToken = default);
 }

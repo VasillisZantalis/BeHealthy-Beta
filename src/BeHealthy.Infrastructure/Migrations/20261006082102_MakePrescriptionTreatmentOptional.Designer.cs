@@ -3,6 +3,7 @@ using System;
 using BeHealthy.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeHealthy.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261006082102_MakePrescriptionTreatmentOptional")]
+    partial class MakePrescriptionTreatmentOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
@@ -822,7 +825,7 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")
                         .WithMany("Allergies")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Patient");
@@ -833,7 +836,7 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.Doctor", "Doctor")
                         .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeHealthy.Domain.Entities.Nurse", "Nurse")
@@ -844,7 +847,7 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeHealthy.Domain.Entities.Room", "Room")
@@ -923,7 +926,7 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")
                         .WithMany("MedicalRecords")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Patient");
@@ -970,13 +973,13 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.Doctor", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeHealthy.Domain.Entities.Treatment", "Treatment")
@@ -1031,7 +1034,7 @@ namespace BeHealthy.Infrastructure.Migrations
                     b.HasOne("BeHealthy.Domain.Entities.MedicalRecord", "MedicalRecord")
                         .WithMany("Visits")
                         .HasForeignKey("MedicalRecordId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BeHealthy.Domain.Entities.Patient", "Patient")

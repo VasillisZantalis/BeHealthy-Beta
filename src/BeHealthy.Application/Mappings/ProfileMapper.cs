@@ -11,7 +11,6 @@ public static class ProfileMapper
             LastName = profile.LastName,
             Specialty = profile.Specialty ?? string.Empty,
             Image = profile.Image,
-            UserId = profile.UserId
         };
     }
 
@@ -23,7 +22,6 @@ public static class ProfileMapper
             FirstName = profile.FirstName,
             LastName = profile.LastName,
             Image = profile.Image,
-            UserId = profile.UserId
         };
     }
 
@@ -35,7 +33,6 @@ public static class ProfileMapper
             FirstName = profile.FirstName,
             LastName = profile.LastName,
             Image = profile.Image,
-            UserId = profile.UserId
         };
     }
 

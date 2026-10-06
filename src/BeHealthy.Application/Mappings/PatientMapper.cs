@@ -53,7 +53,6 @@ public static class PatientMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,
-            UserId = dto.UserId,
             DepartmentId = dto.DepartmentId
         };
     }
@@ -66,7 +65,6 @@ public static class PatientMapper
             FirstName = patient.FirstName,
             LastName = patient.LastName,
             Image = patient.Image,
-            UserId = patient.UserId,
             PhoneNumber = patient.User?.PhoneNumber ?? string.Empty,
             DepartmentId = patient.DepartmentId
         };
@@ -80,7 +78,6 @@ public static class PatientMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,
-            UserId = dto.UserId ?? string.Empty,
             PhoneNumber = dto.PhoneNumber,
             DepartmentId = dto.DepartmentId
         };
@@ -94,7 +91,6 @@ public static class PatientMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,
-            UserId = dto.UserId ?? string.Empty,
             PhoneNumber = dto.PhoneNumber,
             DepartmentId = dto.DepartmentId
         };
@@ -105,7 +101,6 @@ public static class PatientMapper
         return new PatientResponse
         {
             Id = dto.Id,
-            UserId = dto.UserId,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,

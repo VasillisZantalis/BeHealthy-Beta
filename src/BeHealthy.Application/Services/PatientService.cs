@@ -90,17 +90,14 @@ public class PatientService : IPatientService
 
     public async Task<ServiceResponse> UpdatePatientAsync(PatientUpdateRequest patientDto, CancellationToken cancellationToken = default)
     {
-        var existingUser = await _userService.GetUserByIdAsync(patientDto.UserId, cancellationToken);
-        if (existingUser == null)
+        // The account is always the patient's own; the request can't point at another user.
+        var patient = await _patientRepository.GetByIdWithIncludes(patientDto.Id, cancellationToken, p => p.User!);
+        if (patient?.User is null)
         {
-            return ServiceResponse.Failed(Resource.NotFound);
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
         }
 
-        var patient = await _patientRepository.GetByIdAsync(patientDto.Id, cancellationToken);
-        if (patient is null)
-        {
-            return ServiceResponse.Failed(Resource.NotFound);
-        }
+        var existingUser = patient.User;
 
         existingUser.FirstName = patientDto.FirstName;
         existingUser.LastName = patientDto.LastName;
@@ -126,10 +123,20 @@ public class PatientService : IPatientService
         }, cancellationToken);
     }
 
-    public async Task DeletePatientAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeletePatientAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _patientRepository.DeletePatientAsync(id, cancellationToken);
+        if (await _patientRepository.HasClinicalHistoryAsync(id, cancellationToken))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.CannotDeleteEntityWithRelationships, Resource.Patient, Resource.ClinicalHistory));
+        }
+
+        if (!await _patientRepository.DeletePatientAsync(id, cancellationToken))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Patient));
+        }
+
         await _patientRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 
     public async Task<IEnumerable<DoctorResponse>> GetMyDoctorsAsync(string userId, CancellationToken cancellationToken = default)

@@ -50,12 +50,20 @@ public class MedicalRecordService : IMedicalRecordService
         return ServiceResponse.Successful();
     }
 
-    public async Task DeleteMedicalRecordAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteMedicalRecordAsync(int id, CancellationToken cancellationToken = default)
     {
-        if (await _medicalRecordRepository.DeleteAsync(id, cancellationToken))
+        if (await _medicalRecordRepository.AnyAsync(m => m.Id == id && m.Visits.Any(), cancellationToken))
         {
-            await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
+            return ServiceResponse.Failed(string.Format(Resource.CannotDeleteEntityWithRelationships, Resource.MedicalRecord, Resource.Visits));
         }
+
+        if (!await _medicalRecordRepository.DeleteAsync(id, cancellationToken))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.MedicalRecord));
+        }
+
+        await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 
     public async Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default)
@@ -64,15 +72,16 @@ public class MedicalRecordService : IMedicalRecordService
         return medicalRecords.MapToDto();
     }
 
-    public async Task UpdateMedicalRecordNotesAsync(int id, string? notes, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> UpdateMedicalRecordNotesAsync(int id, string? notes, CancellationToken cancellationToken = default)
     {
         var medicalRecord = await _medicalRecordRepository.GetByIdAsync(id, cancellationToken);
         if (medicalRecord is null)
         {
-            return;
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.MedicalRecord));
         }
 
         medicalRecord.Notes = notes;
         await _medicalRecordRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 }

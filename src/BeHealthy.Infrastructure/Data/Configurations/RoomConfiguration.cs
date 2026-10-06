@@ -21,15 +21,9 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
             .IsRequired();
 
         // Relationships
-        builder.HasMany(r => r.Appointments)
-            .WithOne(a => a.Room)
-            .HasForeignKey(a => a.RoomId)
-            .OnDelete(DeleteBehavior.SetNull);
-
         builder.HasOne(r => r.Department)
             .WithMany(dept => dept.Rooms)
             .HasForeignKey(r => r.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
-
     }
 }

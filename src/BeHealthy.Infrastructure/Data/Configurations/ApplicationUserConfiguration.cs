@@ -19,12 +19,9 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             .IsRequired()
             .HasMaxLength(FieldLengths.PersonName);
 
+        // A calendar date: stored and returned exactly as entered, with no time-zone conversion.
         builder.Property(u => u.DateOfBirth)
-            .IsRequired(false)
-            .HasConversion(
-                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?)null,
-                v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Local) : (DateTime?)null
-            );
+            .IsRequired(false);
 
         builder.Property(u => u.Gender)
             .HasMaxLength(FieldLengths.Gender);

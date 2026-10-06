@@ -25,16 +25,16 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(a => a.Notes)
             .HasMaxLength(FieldLengths.AppointmentNotes);
 
-        // Relationships
+        // Relationships. Appointments are clinical history: a patient or doctor who has any can't be deleted.
         builder.HasOne(a => a.Patient)
             .WithMany(p => p.Appointments)
             .HasForeignKey(a => a.PatientId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(a => a.Doctor)
             .WithMany(d => d.Appointments)
             .HasForeignKey(a => a.DoctorId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(a => a.Nurse)
             .WithMany(d => d.Appointments)
@@ -45,6 +45,5 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .WithMany(r => r.Appointments)
             .HasForeignKey(a => a.RoomId)
             .OnDelete(DeleteBehavior.SetNull);
-
     }
 }

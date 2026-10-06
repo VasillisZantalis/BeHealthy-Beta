@@ -22,21 +22,33 @@ public class PatientRepository : GenericRepository<Patient>, IPatientRepository
         return await _context.Patients.ToListAsync(cancellationToken);
     }
 
-    public async Task DeletePatientAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeletePatientAsync(int id, CancellationToken cancellationToken = default)
     {
         var patient = await _context.Patients
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
-        if (patient != null)
+        if (patient is null)
         {
-            if (patient.User != null)
-            {
-                _context.Users.Remove(patient.User);
-            }
-
-            _context.Patients.Remove(patient);
+            return false;
         }
+
+        if (patient.User != null)
+        {
+            _context.Users.Remove(patient.User);
+        }
+
+        _context.Patients.Remove(patient);
+        return true;
+    }
+
+    public async Task<bool> HasClinicalHistoryAsync(int patientId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Appointments.AnyAsync(a => a.PatientId == patientId, cancellationToken)
+            || await _context.Visits.AnyAsync(v => v.PatientId == patientId, cancellationToken)
+            || await _context.MedicalRecords.AnyAsync(m => m.PatientId == patientId, cancellationToken)
+            || await _context.Prescriptions.AnyAsync(p => p.PatientId == patientId, cancellationToken)
+            || await _context.Allergies.AnyAsync(a => a.PatientId == patientId, cancellationToken);
     }
 
     public async Task<IEnumerable<Patient>> GetPatientsByDepartmentIdAsync(int departmentId, CancellationToken cancellationToken = default)

@@ -60,7 +60,6 @@ public static class DoctorMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,
-            UserId = dto.UserId,
             SpecialtyId = dto.SpecialtyId,
             DepartmentId = dto.DepartmentId
         };
@@ -86,7 +85,6 @@ public static class DoctorMapper
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,
-            UserId = dto.UserId,
             SpecialtyId = dto.SpecialtyId,
             PhoneNumber = dto.PhoneNumber,
             DepartmentId = dto.DepartmentId
@@ -98,7 +96,6 @@ public static class DoctorMapper
         return new DoctorResponse
         {
             Id = dto.Id,
-            UserId = dto.UserId,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Image = dto.Image,

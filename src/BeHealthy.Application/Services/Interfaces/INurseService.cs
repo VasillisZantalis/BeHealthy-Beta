@@ -12,5 +12,5 @@ public interface INurseService
     Task<ServiceResponse> AddNurseAsync(NurseCreateRequest nurse, CancellationToken cancellationToken = default);
     Task<int> GetNurseCountAsync(CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateNurseAsync(NurseUpdateRequest nurse, CancellationToken cancellationToken = default);
-    Task DeleteNurseAsync(int id, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> DeleteNurseAsync(int id, CancellationToken cancellationToken = default);
 }

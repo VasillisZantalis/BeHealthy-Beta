@@ -36,21 +36,6 @@ public class VisitConfiguration : IEntityTypeConfiguration<Visit>
         builder.HasOne(v => v.MedicalRecord)
             .WithMany(mr => mr.Visits)
             .HasForeignKey(v => v.MedicalRecordId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(v => v.Diagnoses)
-            .WithOne(d => d.Visit)
-            .HasForeignKey(d => d.VisitId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(v => v.LabResults)
-            .WithOne(lr => lr.Visit)
-            .HasForeignKey(lr => lr.VisitId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(v => v.Treatments)
-            .WithOne(t => t.Visit)
-            .HasForeignKey(t => t.VisitId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

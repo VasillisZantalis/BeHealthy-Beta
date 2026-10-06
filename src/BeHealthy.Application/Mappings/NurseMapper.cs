@@ -56,7 +56,6 @@ namespace BeHealthy.Application.Mappings
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Image = dto.Image,
-                UserId = dto.UserId,
                 DepartmentId = dto.DepartmentId
             };
         }
@@ -69,7 +68,6 @@ namespace BeHealthy.Application.Mappings
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Image = dto.Image,
-                UserId = dto.UserId ?? string.Empty,
                 PhoneNumber = dto.PhoneNumber,
                 DepartmentId = dto.DepartmentId
             };

@@ -61,7 +61,7 @@ public class AppointmentService : IAppointmentService
         }
 
         var appointments = await _appointmentRepository.QueryAsync(queryOptions, cancellationToken);
-        var totalCount = await _appointmentRepository.GetCountAsync(cancellationToken);
+        var totalCount = await _appointmentRepository.GetCountAsync(predicate, cancellationToken);
 
         return new PaginatedResult<AppointmentResponse>
         {
@@ -128,6 +128,7 @@ public class AppointmentService : IAppointmentService
                 appointmentDto.AppointmentDate,
                 appointmentDto.AppointmentStartTime,
                 appointmentDto.AppointmentEndTime,
+                appointmentDto.Status,
                 cancellationToken: cancellationToken);
 
             if (!conflictCheck.Success)
@@ -182,6 +183,7 @@ public class AppointmentService : IAppointmentService
                 appointmentDto.AppointmentDate,
                 appointmentDto.AppointmentStartTime,
                 appointmentDto.AppointmentEndTime,
+                appointmentDto.Status,
                 appointmentDto.Id,
                 cancellationToken);
 
@@ -212,12 +214,15 @@ public class AppointmentService : IAppointmentService
         }
     }
 
-    public async Task DeleteAppointmentAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteAppointmentAsync(int id, CancellationToken cancellationToken = default)
     {
-        if (await _appointmentRepository.DeleteAsync(id, cancellationToken))
+        if (!await _appointmentRepository.DeleteAsync(id, cancellationToken))
         {
-            await _appointmentRepository.SaveChangesAsync(cancellationToken);
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Appointment));
         }
+
+        await _appointmentRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 
     public async Task<Dictionary<AppointmentReason, int>> GetAppointmentReasonCounts(CancellationToken cancellationToken = default)
@@ -244,15 +249,19 @@ public class AppointmentService : IAppointmentService
         DateOnly appointmentDate,
         TimeOnly appointmentStartTime,
         TimeOnly appointmentEndTime,
+        AppointmentStatus status,
         int? appointmentId = null,
         CancellationToken cancellationToken = default)
     {
-        DateTime newStart = appointmentDate.ToDateTime(appointmentStartTime);
-        DateTime newEnd = appointmentDate.ToDateTime(appointmentEndTime);
+        // A cancelled appointment frees its slot, so it can never conflict.
+        if (status == AppointmentStatus.Cancelled)
+        {
+            return ServiceResponse.Successful();
+        }
 
-        var doctorAppointments = await _appointmentRepository.GetAllAppointmentsByDoctorIdAsync(doctorId, cancellationToken);
-        var doctorConflict = FindConflict(doctorAppointments, newStart, newEnd, appointmentId);
+        var overlapping = OverlappingAppointments(appointmentDate, appointmentStartTime, appointmentEndTime, appointmentId);
 
+        var doctorConflict = await FindConflictAsync(overlapping.And(a => a.DoctorId == doctorId), cancellationToken);
         if (doctorConflict != null)
         {
             var errorMessage = string.Format(
@@ -264,9 +273,7 @@ public class AppointmentService : IAppointmentService
             return ServiceResponse.Failed(errorMessage);
         }
 
-        var patientAppointments = await _appointmentRepository.GetAllAppointmentsByPatientIdAsync(patientId, cancellationToken);
-        var patientConflict = FindConflict(patientAppointments, newStart, newEnd, appointmentId);
-
+        var patientConflict = await FindConflictAsync(overlapping.And(a => a.PatientId == patientId), cancellationToken);
         if (patientConflict != null)
         {
             var errorMessage = string.Format(
@@ -280,9 +287,7 @@ public class AppointmentService : IAppointmentService
 
         if (nurseId.HasValue)
         {
-            var nurseAppointments = await _appointmentRepository.GetAllAppointmentsByNurseIdAsync(nurseId.Value, cancellationToken);
-            var nurseConflict = FindConflict(nurseAppointments, newStart, newEnd, appointmentId);
-
+            var nurseConflict = await FindConflictAsync(overlapping.And(a => a.NurseId == nurseId), cancellationToken);
             if (nurseConflict != null)
             {
                 var errorMessage = string.Format(
@@ -295,49 +300,58 @@ public class AppointmentService : IAppointmentService
             }
         }
 
-        if (roomId.HasValue)
+        if (roomId.HasValue
+            && await FindConflictAsync(overlapping.And(a => a.RoomId == roomId), cancellationToken) != null)
         {
-            var roomAppointments = await _roomRepository.GetRoomAppointmentsAsync(roomId.Value, cancellationToken);
-            var roomConflict = FindConflict(roomAppointments, newStart, newEnd, appointmentId);
-
-            if (roomConflict != null)
-            {
-                return ServiceResponse.Failed(Resource.RoomIsBookedAtThatTime);
-            }
+            return ServiceResponse.Failed(Resource.RoomIsBookedAtThatTime);
         }
 
         return ServiceResponse.Successful();
     }
 
-    private Appointment? FindConflict(IEnumerable<Appointment> appointments, DateTime newStart, DateTime newEnd, int? excludeId)
+    /// <summary>
+    /// Active appointments on the same day whose time range overlaps [start, end).
+    /// Back-to-back slots (one ends when the next starts) do not overlap.
+    /// </summary>
+    private static Expression<Func<Appointment, bool>> OverlappingAppointments(DateOnly date, TimeOnly start, TimeOnly end, int? excludeId)
     {
-        return appointments.FirstOrDefault(existing =>
+        return a => a.AppointmentDate == date
+                    && a.Status != AppointmentStatus.Cancelled
+                    && a.AppointmentStartTime < end
+                    && a.AppointmentEndTime > start
+                    && (excludeId == null || a.Id != excludeId);
+    }
+
+    private async Task<Appointment?> FindConflictAsync(Expression<Func<Appointment, bool>> predicate, CancellationToken cancellationToken)
+    {
+        var queryOptions = new QueryOptions<Appointment>
         {
-            if (excludeId.HasValue && existing.Id == excludeId.Value)
-            {
-                return false;
-            }
+            Predicate = predicate,
+            Includes = { a => a.Doctor!, a => a.Patient!, a => a.Nurse! },
+            OrderBy = a => a.AppointmentStartTime,
+            PageNumber = 1,
+            PageSize = 1
+        };
 
-            DateTime existingStart = existing.AppointmentDate.ToDateTime(existing.AppointmentStartTime);
-            DateTime existingEnd = existing.AppointmentDate.ToDateTime(existing.AppointmentEndTime);
-
-            return newStart <= existingEnd && newEnd >= existingStart;
-        });
+        var conflicts = await _appointmentRepository.QueryAsync(queryOptions, cancellationToken);
+        return conflicts.FirstOrDefault();
     }
 
     public async Task<IEnumerable<AppointmentResponse>> GetUpcomingAppointmentsAsync(CancellationToken cancellationToken = default)
     {
+        // Appointment dates and times are clinic wall-clock values, so "today" is the local date, not UTC.
         var today = DateOnly.FromDateTime(DateTime.Now);
         var threeDaysFromNow = today.AddDays(3);
 
-
-        QueryOptions<Appointment> queryOptions = new QueryOptions<Appointment>
+        var queryOptions = new QueryOptions<Appointment>
         {
             Predicate = a => a.AppointmentDate >= today
                             && a.AppointmentDate <= threeDaysFromNow
                             && a.Status != AppointmentStatus.Cancelled
                             && a.Status != AppointmentStatus.Completed,
+            Includes = { a => a.Doctor!, a => a.Patient! },
             OrderBy = a => a.AppointmentDate,
+            PageNumber = 1,
             PageSize = 5
         };
 
@@ -346,4 +360,3 @@ public class AppointmentService : IAppointmentService
         return appointments.MapToDto();
     }
 }
-

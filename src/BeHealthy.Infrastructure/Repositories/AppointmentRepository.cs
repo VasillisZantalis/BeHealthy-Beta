@@ -47,18 +47,6 @@ public class AppointmentRepository : GenericRepository<Appointment>, IAppointmen
                 .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsByNurseIdAsync(int nurseId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Appointments
-                .AsNoTracking()
-                .Include(a => a.Patient)
-                .Include(a => a.Doctor)
-                .Include(i => i.Room)
-                .Include(i => i.Nurse)
-                .Where(a => a.NurseId == nurseId)
-                .ToListAsync(cancellationToken);
-    }
-
     public async Task<IEnumerable<Appointment>> GetAllAppointmentsByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         return await _context.Appointments

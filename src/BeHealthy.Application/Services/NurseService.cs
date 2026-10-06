@@ -29,12 +29,14 @@ public class NurseService : INurseService
     public async Task<PaginatedResult<NurseResponse>> GetAllNursesAsync(QueryParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         parameters ??= new QueryParameters();
+        Expression<Func<Nurse, bool>> predicate = n =>
+            string.IsNullOrEmpty(parameters.SearchTerm) ||
+            n.FirstName.Contains(parameters.SearchTerm) ||
+            n.LastName.Contains(parameters.SearchTerm);
+
         var queryOptions = new QueryOptions<Nurse>
         {
-            Predicate = n => string.IsNullOrEmpty(parameters.SearchTerm) ||
-                             n.FirstName.Contains(parameters.SearchTerm) ||
-                             n.LastName.Contains(parameters.SearchTerm),
-
+            Predicate = predicate,
             Includes = [n => n.User!],
             PageNumber = parameters.PageNumber,
             PageSize = parameters.PageSize
@@ -47,7 +49,7 @@ public class NurseService : INurseService
         }
 
         var nurses = await _nurseRepository.QueryAsync(queryOptions, cancellationToken);
-        var totalCount = await _nurseRepository.GetCountAsync(cancellationToken);
+        var totalCount = await _nurseRepository.GetCountAsync(predicate, cancellationToken);
 
         return new PaginatedResult<NurseResponse>
         {
@@ -102,17 +104,14 @@ public class NurseService : INurseService
 
     public async Task<ServiceResponse> UpdateNurseAsync(NurseUpdateRequest nurseDto, CancellationToken cancellationToken = default)
     {
-        var existingUser = await _userService.GetUserByIdAsync(nurseDto.UserId, cancellationToken);
-        if (existingUser == null)
+        // The account is always the nurse's own; the request can't point at another user.
+        var nurse = await _nurseRepository.GetByIdWithIncludes(nurseDto.Id, cancellationToken, n => n.User!);
+        if (nurse?.User is null)
         {
-            return ServiceResponse.Failed(Resource.NotFound);
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Nurse));
         }
 
-        var nurse = await _nurseRepository.GetByIdAsync(nurseDto.Id, cancellationToken);
-        if (nurse is null)
-        {
-            return ServiceResponse.Failed(Resource.NotFound);
-        }
+        var existingUser = nurse.User;
 
         existingUser.FirstName = nurseDto.FirstName;
         existingUser.LastName = nurseDto.LastName;
@@ -138,10 +137,15 @@ public class NurseService : INurseService
         }, cancellationToken);
     }
 
-    public async Task DeleteNurseAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<ServiceResponse> DeleteNurseAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _nurseRepository.DeleteNurseAsync(id, cancellationToken);
+        if (!await _nurseRepository.DeleteNurseAsync(id, cancellationToken))
+        {
+            return ServiceResponse.Failed(string.Format(Resource.NotFoundEntity, Resource.Nurse));
+        }
+
         await _nurseRepository.SaveChangesAsync(cancellationToken);
+        return ServiceResponse.Successful();
     }
 
     public async Task<IEnumerable<NurseResponse>> GetNursesOfPatientByUserId(string userId, CancellationToken cancellationToken = default)

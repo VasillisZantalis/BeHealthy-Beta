@@ -11,6 +11,7 @@ public class AppointmentBuilder
     private DateOnly _date = DateOnly.FromDateTime(DateTime.UtcNow);
     private TimeOnly _startTime = TimeOnly.FromDateTime(DateTime.UtcNow);
     private TimeOnly _endTime = TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(1));
+    private AppointmentStatus _status = AppointmentStatus.Scheduled;
 
     public AppointmentBuilder(IFixture fixture) { _fixture = fixture; }
 
@@ -22,6 +23,7 @@ public class AppointmentBuilder
     public AppointmentBuilder WithDate(DateOnly date) { _date = date; return this; }
     public AppointmentBuilder WithStartTime(TimeOnly startTime) { _startTime = startTime; return this; }
     public AppointmentBuilder WithEndTime(TimeOnly endTime) { _endTime = endTime; return this; }
+    public AppointmentBuilder WithStatus(AppointmentStatus status) { _status = status; return this; }
 
     public Appointment Build()
     {
@@ -38,6 +40,7 @@ public class AppointmentBuilder
             .With(a => a.AppointmentDate, _date)
             .With(a => a.AppointmentStartTime, _startTime)
             .With(a => a.AppointmentEndTime, _endTime)
+            .With(a => a.Status, _status)
             .Create();
     }
 

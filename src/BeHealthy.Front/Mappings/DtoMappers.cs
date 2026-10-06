@@ -99,7 +99,6 @@ public static class DtoMappers
         FirstName = dto.FirstName,
         LastName = dto.LastName,
         Image = dto.Image,
-        UserId = dto.UserId,
         SpecialtyId = dto.SpecialtyId,
         PhoneNumber = dto.PhoneNumber,
         DepartmentId = dto.DepartmentId
@@ -108,7 +107,6 @@ public static class DtoMappers
     public static DoctorResponse MapToDto(this DoctorUpdateRequest dto) => new()
     {
         Id = dto.Id,
-        UserId = dto.UserId,
         FirstName = dto.FirstName,
         LastName = dto.LastName,
         Image = dto.Image,
@@ -143,7 +141,6 @@ public static class DtoMappers
         FirstName = dto.FirstName,
         LastName = dto.LastName,
         Image = dto.Image,
-        UserId = dto.UserId ?? string.Empty,
         PhoneNumber = dto.PhoneNumber,
         DepartmentId = dto.DepartmentId
     };
@@ -155,7 +152,6 @@ public static class DtoMappers
         FirstName = dto.FirstName,
         LastName = dto.LastName,
         Image = dto.Image,
-        UserId = dto.UserId ?? string.Empty,
         PhoneNumber = dto.PhoneNumber,
         DepartmentId = dto.DepartmentId
     };
@@ -165,7 +161,6 @@ public static class DtoMappers
     public static PatientResponse MapToDto(this PatientUpdateRequest dto) => new()
     {
         Id = dto.Id,
-        UserId = dto.UserId,
         FirstName = dto.FirstName,
         LastName = dto.LastName,
         Image = dto.Image,

@@ -24,21 +24,31 @@ public class DoctorRepository : GenericRepository<Doctor>, IDoctorRepository
         return await _context.Doctors.ToListAsync(cancellationToken);
     }
 
-    public async Task DeleteDoctorAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteDoctorAsync(int id, CancellationToken cancellationToken = default)
     {
         var doctor = await _context.Doctors
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
-        if (doctor != null)
+        if (doctor is null)
         {
-            if (doctor.User != null)
-            {
-                _context.Users.Remove(doctor.User);
-            }
-
-            _context.Doctors.Remove(doctor);
+            return false;
         }
+
+        if (doctor.User != null)
+        {
+            _context.Users.Remove(doctor.User);
+        }
+
+        _context.Doctors.Remove(doctor);
+        return true;
+    }
+
+    public async Task<bool> HasClinicalHistoryAsync(int doctorId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Appointments.AnyAsync(a => a.DoctorId == doctorId, cancellationToken)
+            || await _context.Visits.AnyAsync(v => v.DoctorId == doctorId, cancellationToken)
+            || await _context.Prescriptions.AnyAsync(p => p.DoctorId == doctorId, cancellationToken);
     }
 
     public async Task<Doctor?> GetDoctorByUserIdAsync(string userId, CancellationToken cancellationToken = default)

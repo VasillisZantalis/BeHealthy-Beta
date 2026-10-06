@@ -54,9 +54,10 @@ public class SpecialtiesController(ISpecialtyService specialtyService) : ApiCont
     [HttpDelete("{id:int}")]
     [Authorize(Roles = RoleGroups.Administration)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        await specialtyService.DeleteSpecialtyAsync(id, cancellationToken);
-        return NoContent();
+        var response = await specialtyService.DeleteSpecialtyAsync(id, cancellationToken);
+        return response.Success ? NoContent() : ProblemFromServiceResponse(response);
     }
 }

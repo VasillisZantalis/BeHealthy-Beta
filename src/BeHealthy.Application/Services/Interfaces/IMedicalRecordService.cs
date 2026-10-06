@@ -10,6 +10,6 @@ public interface IMedicalRecordService
     Task<IEnumerable<MedicalRecordResponse>> GetMedicalRecordsByPatientIdAsync(int patientId, CancellationToken cancellationToken = default);
     Task AddMedicalRecordAsync(MedicalRecordCreateRequest medicalRecordDto, CancellationToken cancellationToken = default);
     Task<ServiceResponse> UpdateMedicalRecordAsync(MedicalRecordUpdateRequest medicalRecordDto, CancellationToken cancellationToken = default);
-    Task DeleteMedicalRecordAsync(int id, CancellationToken cancellationToken = default);
-    Task UpdateMedicalRecordNotesAsync(int id, string? notes, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> DeleteMedicalRecordAsync(int id, CancellationToken cancellationToken = default);
+    Task<ServiceResponse> UpdateMedicalRecordNotesAsync(int id, string? notes, CancellationToken cancellationToken = default);
 }
