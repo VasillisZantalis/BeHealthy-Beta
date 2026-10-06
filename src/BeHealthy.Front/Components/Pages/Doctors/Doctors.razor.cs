@@ -70,7 +70,7 @@ public partial class Doctors : BasePage
 
     private async Task HandleSpecialtyFilter(int? specialtyId)
     {
-        QueryParameters.SpecialtyId = specialtyId;
+        QueryParameters.SpecialtyId = specialtyId > 0 ? specialtyId : null;
         await LoadDoctors();
     }
 

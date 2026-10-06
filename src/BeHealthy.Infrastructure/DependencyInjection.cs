@@ -68,8 +68,6 @@ public static class DependencyInjection
         using (var scope = services.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            context.Database.EnsureDeleted();
-            context.Database.Migrate();
 
             // Seed default admin user
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();

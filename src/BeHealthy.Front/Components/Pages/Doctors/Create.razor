@@ -96,19 +96,16 @@
                     </BeHealthyFormGroup>
                 }
 
-                @if (specialtiesSelect is not null && specialtiesSelect.Any())
-                {
-                    <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="doNotAllowDoctorWithoutSpecialty">
-                        <InputSelect id="specialty" @bind-Value="DoctorCreateRequest.SpecialtyId" class="form-control">
-                            <option value="">@Resource.PleaseSelect</option>
-                            @foreach (var specialty in specialtiesSelect)
-                            {
-                                <option value="@specialty.Value">@specialty.Text</option>
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="() => DoctorCreateRequest.SpecialtyId" class="text-danger" />
-                    </BeHealthyFormGroup>
-                }
+                <BeHealthyFormGroup Label="@Resource.Specialty" InputId="specialty" IsRequired="doNotAllowDoctorWithoutSpecialty">
+                    <InputSelect id="specialty" @bind-Value="DoctorCreateRequest.SpecialtyId" class="form-control">
+                        <option value="">@Resource.PleaseSelect</option>
+                        @foreach (var specialty in specialtiesSelect)
+                        {
+                            <option value="@specialty.Value">@specialty.Text</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => DoctorCreateRequest.SpecialtyId" class="text-danger" />
+                </BeHealthyFormGroup>
             </div>
         </EditForm>
     </Body>
